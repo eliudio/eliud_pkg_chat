@@ -1,7 +1,6 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:eliud_pkg_chat/extensions/widget/rooms.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_component.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
@@ -32,8 +31,7 @@ class Chat extends AbstractChatComponent {
 
   @override
   Widget yourWidget(BuildContext context, ChatModel? value) {
-    return Text("Chat " + value!.documentID!);
-//    return const RoomsPage();
+    return Text("Here comes the chat");
   }
 
 }
