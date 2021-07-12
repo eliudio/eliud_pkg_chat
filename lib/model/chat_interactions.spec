@@ -1,5 +1,5 @@
 {
-  "id": "Chat",
+  "id": "ChatInteractions",
   "packageName": "eliud_pkg_chat",
   "isAppModel": true,
   "generate": {
@@ -43,21 +43,15 @@
       "group": "general"
     },
     {
-      "fieldName": "timestamp",
-      "displayName": "Timestamp",
-      "fieldType": "ServerTimestamp",
-      "group": "general"
-    },
-    {
-      "fieldName": "description",
-      "displayName": "Description",
+      "fieldName": "details",
+      "displayName": "Details",
       "fieldType": "String",
       "iconName": "text_format",
       "group": "general"
     },
     {
-      "fieldName": "members",
-      "displayName": "Members that can write this post.",
+      "fieldName": "readAccess",
+      "displayName": "Members that can read this detail of the chat",
       "fieldType": "String",
       "iconName": "text_format",
       "arrayType": "Array",
@@ -72,7 +66,7 @@
  ],
   "listFields": {
     "title": "documentID!",
-    "subTitle": "description!"
+    "subTitle": "details!"
   },
   "depends": ["eliud_core"]
 }

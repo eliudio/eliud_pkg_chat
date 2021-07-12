@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_entity.dart
+ chat_dashboard_entity.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -21,50 +21,53 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-class ChatEntity {
-  final String? authorId;
+class ChatDashboardEntity {
   final String? appId;
   final String? description;
-  final List<String>? members;
+  final ConditionsSimpleEntity? conditions;
 
-  ChatEntity({this.authorId, this.appId, this.description, this.members, });
+  ChatDashboardEntity({this.appId, this.description, this.conditions, });
 
 
-  List<Object?> get props => [authorId, appId, description, members, ];
+  List<Object?> get props => [appId, description, conditions, ];
 
   @override
   String toString() {
-    String membersCsv = (members == null) ? '' : members!.join(', ');
-
-    return 'ChatEntity{authorId: $authorId, appId: $appId, description: $description, members: String[] { $membersCsv }}';
+    return 'ChatDashboardEntity{appId: $appId, description: $description, conditions: $conditions}';
   }
 
-  static ChatEntity? fromMap(Object? o) {
+  static ChatDashboardEntity? fromMap(Object? o) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
-    return ChatEntity(
-      authorId: map['authorId'], 
+    var conditionsFromMap;
+    conditionsFromMap = map['conditions'];
+    if (conditionsFromMap != null)
+      conditionsFromMap = ConditionsSimpleEntity.fromMap(conditionsFromMap);
+
+    return ChatDashboardEntity(
       appId: map['appId'], 
       description: map['description'], 
-      members: map['members'] == null ? null : List.from(map['members']), 
+      conditions: conditionsFromMap, 
     );
   }
 
   Map<String, Object?> toDocument() {
+    final Map<String, dynamic>? conditionsMap = conditions != null 
+        ? conditions!.toDocument()
+        : null;
+
     Map<String, Object?> theDocument = HashMap();
-    if (authorId != null) theDocument["authorId"] = authorId;
-      else theDocument["authorId"] = null;
     if (appId != null) theDocument["appId"] = appId;
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
-    if (members != null) theDocument["members"] = members!.toList();
-      else theDocument["members"] = null;
+    if (conditions != null) theDocument["conditions"] = conditionsMap;
+      else theDocument["conditions"] = null;
     return theDocument;
   }
 
-  static ChatEntity? fromJsonString(String json) {
+  static ChatDashboardEntity? fromJsonString(String json) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap);
   }

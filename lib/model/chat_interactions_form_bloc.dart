@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_form_bloc.dart
+ chat_interactions_form_bloc.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -37,26 +37,26 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_pkg_chat/model/chat_form_event.dart';
-import 'package:eliud_pkg_chat/model/chat_form_state.dart';
-import 'package:eliud_pkg_chat/model/chat_repository.dart';
+import 'package:eliud_pkg_chat/model/chat_interactions_form_event.dart';
+import 'package:eliud_pkg_chat/model/chat_interactions_form_state.dart';
+import 'package:eliud_pkg_chat/model/chat_interactions_repository.dart';
 
-class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
+class ChatInteractionsFormBloc extends Bloc<ChatInteractionsFormEvent, ChatInteractionsFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  ChatFormBloc(this.appId, { this.formAction }): super(ChatFormUninitialized());
+  ChatInteractionsFormBloc(this.appId, { this.formAction }): super(ChatInteractionsFormUninitialized());
   @override
-  Stream<ChatFormState> mapEventToState(ChatFormEvent event) async* {
+  Stream<ChatInteractionsFormState> mapEventToState(ChatInteractionsFormEvent event) async* {
     final currentState = state;
-    if (currentState is ChatFormUninitialized) {
-      if (event is InitialiseNewChatFormEvent) {
-        ChatFormLoaded loaded = ChatFormLoaded(value: ChatModel(
+    if (currentState is ChatInteractionsFormUninitialized) {
+      if (event is InitialiseNewChatInteractionsFormEvent) {
+        ChatInteractionsFormLoaded loaded = ChatInteractionsFormLoaded(value: ChatInteractionsModel(
                                                documentID: "",
                                  authorId: "",
                                  appId: "",
-                                 description: "",
-                                 members: [],
+                                 details: "",
+                                 readAccess: [],
 
         ));
         yield loaded;
@@ -65,43 +65,43 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
       }
 
 
-      if (event is InitialiseChatFormEvent) {
+      if (event is InitialiseChatInteractionsFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
-        ChatFormLoaded loaded = ChatFormLoaded(value: await chatRepository(appId: appId)!.get(event.value!.documentID));
+        ChatInteractionsFormLoaded loaded = ChatInteractionsFormLoaded(value: await chatInteractionsRepository(appId: appId)!.get(event.value!.documentID));
         yield loaded;
         return;
-      } else if (event is InitialiseChatFormNoLoadEvent) {
-        ChatFormLoaded loaded = ChatFormLoaded(value: event.value);
+      } else if (event is InitialiseChatInteractionsFormNoLoadEvent) {
+        ChatInteractionsFormLoaded loaded = ChatInteractionsFormLoaded(value: event.value);
         yield loaded;
         return;
       }
-    } else if (currentState is ChatFormInitialized) {
-      ChatModel? newValue = null;
-      if (event is ChangedChatDocumentID) {
+    } else if (currentState is ChatInteractionsFormInitialized) {
+      ChatInteractionsModel? newValue = null;
+      if (event is ChangedChatInteractionsDocumentID) {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           yield* _isDocumentIDValid(event.value, newValue).asStream();
         } else {
-          yield SubmittableChatForm(value: newValue);
+          yield SubmittableChatInteractionsForm(value: newValue);
         }
 
         return;
       }
-      if (event is ChangedChatAuthorId) {
+      if (event is ChangedChatInteractionsAuthorId) {
         newValue = currentState.value!.copyWith(authorId: event.value);
-        yield SubmittableChatForm(value: newValue);
+        yield SubmittableChatInteractionsForm(value: newValue);
 
         return;
       }
-      if (event is ChangedChatAppId) {
+      if (event is ChangedChatInteractionsAppId) {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableChatForm(value: newValue);
+        yield SubmittableChatInteractionsForm(value: newValue);
 
         return;
       }
-      if (event is ChangedChatDescription) {
-        newValue = currentState.value!.copyWith(description: event.value);
-        yield SubmittableChatForm(value: newValue);
+      if (event is ChangedChatInteractionsDetails) {
+        newValue = currentState.value!.copyWith(details: event.value);
+        yield SubmittableChatInteractionsForm(value: newValue);
 
         return;
       }
@@ -109,15 +109,15 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
   }
 
 
-  DocumentIDChatFormError error(String message, ChatModel newValue) => DocumentIDChatFormError(message: message, value: newValue);
+  DocumentIDChatInteractionsFormError error(String message, ChatInteractionsModel newValue) => DocumentIDChatInteractionsFormError(message: message, value: newValue);
 
-  Future<ChatFormState> _isDocumentIDValid(String? value, ChatModel newValue) async {
+  Future<ChatInteractionsFormState> _isDocumentIDValid(String? value, ChatInteractionsModel newValue) async {
     if (value == null) return Future.value(error("Provide value for documentID", newValue));
     if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
-    Future<ChatModel?> findDocument = chatRepository(appId: appId)!.get(value);
+    Future<ChatInteractionsModel?> findDocument = chatInteractionsRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {
-        return SubmittableChatForm(value: newValue);
+        return SubmittableChatInteractionsForm(value: newValue);
       } else {
         return error("Invalid documentID: already exists", newValue);
       }

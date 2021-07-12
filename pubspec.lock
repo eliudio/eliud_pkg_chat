@@ -218,15 +218,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  csslib:
-    dependency: transitive
-    description:
-      name: csslib
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.17.0"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
@@ -267,13 +260,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  diffutil_dart:
-    dependency: transitive
-    description:
-      name: diffutil_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0+1"
   eliud_core:
     dependency: "direct main"
     description:
@@ -316,13 +302,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  faker:
-    dependency: "direct main"
-    description:
-      name: faker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   ffi:
     dependency: transitive
     description:
@@ -337,13 +316,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.3"
   firebase_auth:
     dependency: transitive
     description:
@@ -426,20 +398,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.1"
-  flutter_chat_types:
-    dependency: transitive
-    description:
-      name: flutter_chat_types
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.0"
-  flutter_chat_ui:
-    dependency: "direct main"
-    description:
-      name: flutter_chat_ui
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.3"
   flutter_colorful_tab:
     dependency: transitive
     description:
@@ -454,13 +412,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
-  flutter_firebase_chat_core:
-    dependency: "direct main"
-    description:
-      name: flutter_firebase_chat_core
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   flutter_iconpicker:
     dependency: transitive
     description:
@@ -468,20 +419,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  flutter_link_previewer:
-    dependency: transitive
-    description:
-      name: flutter_link_previewer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
-  flutter_linkify:
-    dependency: transitive
-    description:
-      name: flutter_linkify
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.2"
   flutter_lints:
     dependency: "direct main"
     description:
@@ -562,15 +499,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
-  html:
-    dependency: transitive
-    description:
-      name: html
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.15.0"
   http:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -646,13 +576,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
-  linkify:
-    dependency: transitive
-    description:
-      name: linkify
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   lints:
     dependency: transitive
     description:
@@ -689,7 +612,7 @@ packages:
     source: hosted
     version: "1.3.0"
   mime:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: mime
       url: "https://pub.dartlang.org"
@@ -709,13 +632,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  open_file:
-    dependency: "direct main"
-    description:
-      name: open_file
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.2.1"
   package_config:
     dependency: transitive
     description:
@@ -731,7 +647,7 @@ packages:
     source: hosted
     version: "1.8.0"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -945,48 +861,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
-  url_launcher:
-    dependency: transitive
-    description:
-      name: url_launcher
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.0.9"
-  url_launcher_linux:
-    dependency: transitive
-    description:
-      name: url_launcher_linux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  url_launcher_macos:
-    dependency: transitive
-    description:
-      name: url_launcher_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  url_launcher_platform_interface:
-    dependency: transitive
-    description:
-      name: url_launcher_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.4"
-  url_launcher_web:
-    dependency: transitive
-    description:
-      name: url_launcher_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
-  url_launcher_windows:
-    dependency: transitive
-    description:
-      name: url_launcher_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   uuid:
     dependency: transitive
     description:

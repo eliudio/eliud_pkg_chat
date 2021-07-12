@@ -14,3 +14,5 @@
 */
 
 export '../model/chat_repository.dart';
+export '../model/chat_dashboard_repository.dart';
+export '../model/chat_interactions_repository.dart';

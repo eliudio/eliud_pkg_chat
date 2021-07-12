@@ -14,3 +14,5 @@
 */
 
 export '../model/chat_entity.dart';
+export '../model/chat_dashboard_entity.dart';
+export '../model/chat_interactions_entity.dart';

@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_form_event.dart
+ chat_interactions_form_event.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -30,92 +30,92 @@ import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 @immutable
-abstract class ChatFormEvent extends Equatable {
-  const ChatFormEvent();
+abstract class ChatInteractionsFormEvent extends Equatable {
+  const ChatInteractionsFormEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class InitialiseNewChatFormEvent extends ChatFormEvent {
+class InitialiseNewChatInteractionsFormEvent extends ChatInteractionsFormEvent {
 }
 
 
-class InitialiseChatFormEvent extends ChatFormEvent {
-  final ChatModel? value;
+class InitialiseChatInteractionsFormEvent extends ChatInteractionsFormEvent {
+  final ChatInteractionsModel? value;
 
   @override
   List<Object?> get props => [ value ];
 
-  InitialiseChatFormEvent({this.value});
+  InitialiseChatInteractionsFormEvent({this.value});
 }
 
-class InitialiseChatFormNoLoadEvent extends ChatFormEvent {
-  final ChatModel? value;
+class InitialiseChatInteractionsFormNoLoadEvent extends ChatInteractionsFormEvent {
+  final ChatInteractionsModel? value;
 
   @override
   List<Object?> get props => [ value ];
 
-  InitialiseChatFormNoLoadEvent({this.value});
+  InitialiseChatInteractionsFormNoLoadEvent({this.value});
 }
 
-class ChangedChatDocumentID extends ChatFormEvent {
+class ChangedChatInteractionsDocumentID extends ChatInteractionsFormEvent {
   final String? value;
 
-  ChangedChatDocumentID({this.value});
+  ChangedChatInteractionsDocumentID({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedChatDocumentID{ value: $value }';
+  String toString() => 'ChangedChatInteractionsDocumentID{ value: $value }';
 }
 
-class ChangedChatAuthorId extends ChatFormEvent {
+class ChangedChatInteractionsAuthorId extends ChatInteractionsFormEvent {
   final String? value;
 
-  ChangedChatAuthorId({this.value});
+  ChangedChatInteractionsAuthorId({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedChatAuthorId{ value: $value }';
+  String toString() => 'ChangedChatInteractionsAuthorId{ value: $value }';
 }
 
-class ChangedChatAppId extends ChatFormEvent {
+class ChangedChatInteractionsAppId extends ChatInteractionsFormEvent {
   final String? value;
 
-  ChangedChatAppId({this.value});
+  ChangedChatInteractionsAppId({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedChatAppId{ value: $value }';
+  String toString() => 'ChangedChatInteractionsAppId{ value: $value }';
 }
 
-class ChangedChatDescription extends ChatFormEvent {
+class ChangedChatInteractionsDetails extends ChatInteractionsFormEvent {
   final String? value;
 
-  ChangedChatDescription({this.value});
+  ChangedChatInteractionsDetails({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedChatDescription{ value: $value }';
+  String toString() => 'ChangedChatInteractionsDetails{ value: $value }';
 }
 
-class ChangedChatMembers extends ChatFormEvent {
+class ChangedChatInteractionsReadAccess extends ChatInteractionsFormEvent {
   final String? value;
 
-  ChangedChatMembers({this.value});
+  ChangedChatInteractionsReadAccess({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedChatMembers{ value: $value }';
+  String toString() => 'ChangedChatInteractionsReadAccess{ value: $value }';
 }
 

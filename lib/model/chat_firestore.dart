@@ -49,11 +49,11 @@ class ChatFirestore implements ChatRepository {
   }
 
   ChatModel? _populateDoc(DocumentSnapshot value) {
-    return ChatModel.fromEntity(value.id, ChatEntity.fromMap(value.data() as Map<String, dynamic>));
+    return ChatModel.fromEntity(value.id, ChatEntity.fromMap(value.data()));
   }
 
   Future<ChatModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return ChatModel.fromEntityPlus(value.id, ChatEntity.fromMap(value.data() as Map<String, dynamic>), appId: appId);  }
+    return ChatModel.fromEntityPlus(value.id, ChatEntity.fromMap(value.data()), appId: appId);  }
 
   Future<ChatModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

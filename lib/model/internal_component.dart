@@ -39,6 +39,40 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
+import 'package:eliud_pkg_chat/model/chat_dashboard_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_list.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_dropdown_button.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_list_event.dart';
+
+import 'package:eliud_core/model/repository_export.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core/model/model_export.dart';
+import '../tools/bespoke_models.dart';
+import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
+
+import 'package:eliud_pkg_chat/model/chat_interactions_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_interactions_list.dart';
+import 'package:eliud_pkg_chat/model/chat_interactions_dropdown_button.dart';
+import 'package:eliud_pkg_chat/model/chat_interactions_list_event.dart';
+
+import 'package:eliud_core/model/repository_export.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core/model/model_export.dart';
+import '../tools/bespoke_models.dart';
+import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
+
 class ListComponentFactory implements ComponentConstructor {
   Widget? createNew({String? id, Map<String, dynamic>? parameters}) {
     return ListComponent(componentId: id);
@@ -53,12 +87,20 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
   bool supports(String id) {
 
     if (id == "chats") return true;
+    if (id == "chatDashboards") return true;
+    if (id == "chatInteractionss") return true;
     return false;
   }
 
   Widget createNew({String? id, Map<String, dynamic>? parameters, String? value, DropdownButtonChanged? trigger, bool? optional}) {
 
     if (id == "chats")
+      return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
+
+    if (id == "chatDashboards")
+      return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
+
+    if (id == "chatInteractionss")
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     return Text("Id $id not found");
@@ -87,11 +129,15 @@ class ListComponent extends StatelessWidget with HasFab {
   Widget build(BuildContext context) {
 
     if (componentId == 'chats') return _chatBuild(context);
+    if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
+    if (componentId == 'chatInteractionss') return _chatInteractionsBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
   void initWidget() {
     if (componentId == 'chats') widget = ChatListWidget();
+    if (componentId == 'chatDashboards') widget = ChatDashboardListWidget();
+    if (componentId == 'chatInteractionss') widget = ChatInteractionsListWidget();
   }
 
   Widget _chatBuild(BuildContext context) {
@@ -101,6 +147,32 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => ChatListBloc(
             chatRepository: chatRepository(appId: AccessBloc.appId(context))!,
           )..add(LoadChatList()),
+        )
+      ],
+      child: widget!,
+    );
+  }
+
+  Widget _chatDashboardBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatDashboardListBloc>(
+          create: (context) => ChatDashboardListBloc(
+            chatDashboardRepository: chatDashboardRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadChatDashboardList()),
+        )
+      ],
+      child: widget!,
+    );
+  }
+
+  Widget _chatInteractionsBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatInteractionsListBloc>(
+          create: (context) => ChatInteractionsListBloc(
+            chatInteractionsRepository: chatInteractionsRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadChatInteractionsList()),
         )
       ],
       child: widget!,
@@ -124,6 +196,8 @@ class DropdownButtonComponent extends StatelessWidget {
   Widget build(BuildContext context) {
 
     if (componentId == 'chats') return _chatBuild(context);
+    if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
+    if (componentId == 'chatInteractionss') return _chatInteractionsBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
@@ -138,6 +212,32 @@ class DropdownButtonComponent extends StatelessWidget {
         )
       ],
       child: ChatDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+    );
+  }
+
+  Widget _chatDashboardBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatDashboardListBloc>(
+          create: (context) => ChatDashboardListBloc(
+            chatDashboardRepository: chatDashboardRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadChatDashboardList()),
+        )
+      ],
+      child: ChatDashboardDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+    );
+  }
+
+  Widget _chatInteractionsBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatInteractionsListBloc>(
+          create: (context) => ChatInteractionsListBloc(
+            chatInteractionsRepository: chatInteractionsRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadChatInteractionsList()),
+        )
+      ],
+      child: ChatInteractionsDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
     );
   }
 

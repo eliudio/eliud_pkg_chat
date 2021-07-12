@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_form.dart
+ chat_dashboard_form.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -53,20 +53,20 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/chat_list_event.dart';
-import 'package:eliud_pkg_chat/model/chat_model.dart';
-import 'package:eliud_pkg_chat/model/chat_form_bloc.dart';
-import 'package:eliud_pkg_chat/model/chat_form_event.dart';
-import 'package:eliud_pkg_chat/model/chat_form_state.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_list_event.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_form_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_form_event.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_form_state.dart';
 
 
-class ChatForm extends StatelessWidget {
+class ChatDashboardForm extends StatelessWidget {
   FormAction formAction;
-  ChatModel? value;
+  ChatDashboardModel? value;
   ActionModel? submitAction;
 
-  ChatForm({Key? key, required this.formAction, required this.value, this.submitAction}) : super(key: key);
+  ChatDashboardForm({Key? key, required this.formAction, required this.value, this.submitAction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,67 +74,65 @@ class ChatForm extends StatelessWidget {
     var app = AccessBloc.app(context);
     if (app == null) return Text("No app available");
     if (formAction == FormAction.ShowData) {
-      return BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(AccessBloc.appId(context),
+      return BlocProvider<ChatDashboardFormBloc >(
+            create: (context) => ChatDashboardFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
 
-                                                )..add(InitialiseChatFormEvent(value: value)),
+                                                )..add(InitialiseChatDashboardFormEvent(value: value)),
   
-        child: MyChatForm(submitAction: submitAction, formAction: formAction),
+        child: MyChatDashboardForm(submitAction: submitAction, formAction: formAction),
           );
     } if (formAction == FormAction.ShowPreloadedData) {
-      return BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(AccessBloc.appId(context),
+      return BlocProvider<ChatDashboardFormBloc >(
+            create: (context) => ChatDashboardFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
 
-                                                )..add(InitialiseChatFormNoLoadEvent(value: value)),
+                                                )..add(InitialiseChatDashboardFormNoLoadEvent(value: value)),
   
-        child: MyChatForm(submitAction: submitAction, formAction: formAction),
+        child: MyChatDashboardForm(submitAction: submitAction, formAction: formAction),
           );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Chat' : 'Add Chat'),
-        body: BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(AccessBloc.appId(context),
+        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update ChatDashboard' : 'Add ChatDashboard'),
+        body: BlocProvider<ChatDashboardFormBloc >(
+            create: (context) => ChatDashboardFormBloc(AccessBloc.appId(context),
                                        formAction: formAction,
 
-                                                )..add((formAction == FormAction.UpdateAction ? InitialiseChatFormEvent(value: value) : InitialiseNewChatFormEvent())),
+                                                )..add((formAction == FormAction.UpdateAction ? InitialiseChatDashboardFormEvent(value: value) : InitialiseNewChatDashboardFormEvent())),
   
-        child: MyChatForm(submitAction: submitAction, formAction: formAction),
+        child: MyChatDashboardForm(submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
 
-class MyChatForm extends StatefulWidget {
+class MyChatDashboardForm extends StatefulWidget {
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyChatForm({this.formAction, this.submitAction});
+  MyChatDashboardForm({this.formAction, this.submitAction});
 
-  _MyChatFormState createState() => _MyChatFormState(this.formAction);
+  _MyChatDashboardFormState createState() => _MyChatDashboardFormState(this.formAction);
 }
 
 
-class _MyChatFormState extends State<MyChatForm> {
+class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
   final FormAction? formAction;
-  late ChatFormBloc _myFormBloc;
+  late ChatDashboardFormBloc _myFormBloc;
 
   final TextEditingController _documentIDController = TextEditingController();
-  final TextEditingController _authorIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
 
-  _MyChatFormState(this.formAction);
+  _MyChatDashboardFormState(this.formAction);
 
   @override
   void initState() {
     super.initState();
-    _myFormBloc = BlocProvider.of<ChatFormBloc>(context);
+    _myFormBloc = BlocProvider.of<ChatDashboardFormBloc>(context);
     _documentIDController.addListener(_onDocumentIDChanged);
-    _authorIdController.addListener(_onAuthorIdChanged);
     _appIdController.addListener(_onAppIdChanged);
     _descriptionController.addListener(_onDescriptionChanged);
   }
@@ -144,20 +142,16 @@ class _MyChatFormState extends State<MyChatForm> {
     var app = AccessBloc.app(context);
     if (app == null) return Text('No app available');
     var accessState = AccessBloc.getState(context);
-    return BlocBuilder<ChatFormBloc, ChatFormState>(builder: (context, state) {
-      if (state is ChatFormUninitialized) return Center(
+    return BlocBuilder<ChatDashboardFormBloc, ChatDashboardFormState>(builder: (context, state) {
+      if (state is ChatDashboardFormUninitialized) return Center(
         child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
       );
 
-      if (state is ChatFormLoaded) {
+      if (state is ChatDashboardFormLoaded) {
         if (state.value!.documentID != null)
           _documentIDController.text = state.value!.documentID.toString();
         else
           _documentIDController.text = "";
-        if (state.value!.authorId != null)
-          _authorIdController.text = state.value!.authorId.toString();
-        else
-          _authorIdController.text = "";
         if (state.value!.appId != null)
           _appIdController.text = state.value!.appId.toString();
         else
@@ -167,7 +161,7 @@ class _MyChatFormState extends State<MyChatForm> {
         else
           _descriptionController.text = "";
       }
-      if (state is ChatFormInitialized) {
+      if (state is ChatDashboardFormInitialized) {
         List<Widget> children = [];
          children.add(Container(
                   alignment: Alignment.centerLeft,
@@ -177,7 +171,17 @@ class _MyChatFormState extends State<MyChatForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Author ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _authorIdController, keyboardType: TextInputType.text, validator: (_) => state is AuthorIdChatFormError ? state.message : null, hintText: 'field.remark')
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDChatDashboardFormError ? state.message : null, hintText: null)
+          );
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdChatDashboardFormError ? state.message : null, hintText: 'field.remark')
+          );
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionChatDashboardFormError ? state.message : null, hintText: null)
           );
 
 
@@ -188,23 +192,9 @@ class _MyChatFormState extends State<MyChatForm> {
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'General')
+                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'Conditions')
                 ));
 
-        children.add(
-
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDChatFormError ? state.message : null, hintText: null)
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdChatFormError ? state.message : null, hintText: 'field.remark')
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionChatFormError ? state.message : null, hintText: null)
-          );
 
 
         children.add(Container(height: 20.0));
@@ -214,26 +204,24 @@ class _MyChatFormState extends State<MyChatForm> {
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
           children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
-                    if (state is ChatFormError) {
+                    if (state is ChatDashboardFormError) {
                       return null;
                     } else {
                       if (formAction == FormAction.UpdateAction) {
-                        BlocProvider.of<ChatListBloc>(context).add(
-                          UpdateChatList(value: state.value!.copyWith(
+                        BlocProvider.of<ChatDashboardListBloc>(context).add(
+                          UpdateChatDashboardList(value: state.value!.copyWith(
                               documentID: state.value!.documentID, 
-                              authorId: state.value!.authorId, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
-                              members: state.value!.members, 
+                              conditions: state.value!.conditions, 
                         )));
                       } else {
-                        BlocProvider.of<ChatListBloc>(context).add(
-                          AddChatList(value: ChatModel(
+                        BlocProvider.of<ChatDashboardListBloc>(context).add(
+                          AddChatDashboardList(value: ChatDashboardModel(
                               documentID: state.value!.documentID, 
-                              authorId: state.value!.authorId, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
-                              members: state.value!.members, 
+                              conditions: state.value!.conditions, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -261,28 +249,17 @@ class _MyChatFormState extends State<MyChatForm> {
   }
 
   void _onDocumentIDChanged() {
-    _myFormBloc.add(ChangedChatDocumentID(value: _documentIDController.text));
-  }
-
-
-  void _onAuthorIdChanged() {
-    _myFormBloc.add(ChangedChatAuthorId(value: _authorIdController.text));
+    _myFormBloc.add(ChangedChatDashboardDocumentID(value: _documentIDController.text));
   }
 
 
   void _onAppIdChanged() {
-    _myFormBloc.add(ChangedChatAppId(value: _appIdController.text));
+    _myFormBloc.add(ChangedChatDashboardAppId(value: _appIdController.text));
   }
 
 
   void _onDescriptionChanged() {
-    _myFormBloc.add(ChangedChatDescription(value: _descriptionController.text));
-  }
-
-
-  void _onMembersChanged(value) {
-    _myFormBloc.add(ChangedChatMembers(value: value));
-    setState(() {});
+    _myFormBloc.add(ChangedChatDashboardDescription(value: _descriptionController.text));
   }
 
 
@@ -290,13 +267,12 @@ class _MyChatFormState extends State<MyChatForm> {
   @override
   void dispose() {
     _documentIDController.dispose();
-    _authorIdController.dispose();
     _appIdController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
 
-  bool _readOnly(AccessState accessState, ChatFormInitialized state) {
+  bool _readOnly(AccessState accessState, ChatDashboardFormInitialized state) {
     return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner());
   }
   

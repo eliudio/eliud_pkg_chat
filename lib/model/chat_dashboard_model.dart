@@ -7,13 +7,12 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_model.dart
+ chat_dashboard_model.dart
                        
  This code is generated. This is read only. Don't touch!
 
 */
 
-import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
@@ -29,83 +28,76 @@ import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
-import 'package:eliud_pkg_chat/model/chat_entity.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_entity.dart';
 
 import 'package:eliud_core/tools/random.dart';
 
 
 
-class ChatModel {
+class ChatDashboardModel {
   String? documentID;
 
-  // The person initiating the conversation, or the owner of the group
-  String? authorId;
-
-  // This is the identifier of the app to which this feed belongs
+  // This is the identifier of the app to which this belongs
   String? appId;
   String? description;
-  List<String>? members;
+  ConditionsSimpleModel? conditions;
 
-  ChatModel({this.documentID, this.authorId, this.appId, this.description, this.members, })  {
+  ChatDashboardModel({this.documentID, this.appId, this.description, this.conditions, })  {
     assert(documentID != null);
   }
 
-  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? description, List<String>? members, }) {
-    return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, description: description ?? this.description, members: members ?? this.members, );
+  ChatDashboardModel copyWith({String? documentID, String? appId, String? description, ConditionsSimpleModel? conditions, }) {
+    return ChatDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ description.hashCode ^ members.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ conditions.hashCode;
 
   @override
   bool operator ==(Object other) =>
           identical(this, other) ||
-          other is ChatModel &&
+          other is ChatDashboardModel &&
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
-          authorId == other.authorId &&
           appId == other.appId &&
           description == other.description &&
-          ListEquality().equals(members, other.members);
+          conditions == other.conditions;
 
   @override
   String toString() {
-    String membersCsv = (members == null) ? '' : members!.join(', ');
-
-    return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, description: $description, members: String[] { $membersCsv }}';
+    return 'ChatDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
   }
 
-  ChatEntity toEntity({String? appId}) {
-    return ChatEntity(
-          authorId: (authorId != null) ? authorId : null, 
+  ChatDashboardEntity toEntity({String? appId}) {
+    return ChatDashboardEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
-          members: (members != null) ? members : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 
-  static ChatModel? fromEntity(String documentID, ChatEntity? entity) {
+  static ChatDashboardModel? fromEntity(String documentID, ChatDashboardEntity? entity) {
     if (entity == null) return null;
     var counter = 0;
-    return ChatModel(
+    return ChatDashboardModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
           appId: entity.appId, 
           description: entity.description, 
-          members: entity.members, 
+          conditions: 
+            ConditionsSimpleModel.fromEntity(entity.conditions), 
     );
   }
 
-  static Future<ChatModel?> fromEntityPlus(String documentID, ChatEntity? entity, { String? appId}) async {
+  static Future<ChatDashboardModel?> fromEntityPlus(String documentID, ChatDashboardEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
     var counter = 0;
-    return ChatModel(
+    return ChatDashboardModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
           appId: entity.appId, 
           description: entity.description, 
-          members: entity.members, 
+          conditions: 
+            await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 

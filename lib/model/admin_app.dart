@@ -76,9 +76,61 @@ class AdminApp extends AdminAppInstallerBase {
   }
 
 
+  PageModel _chatDashboardsPages() {
+    List<BodyComponentModel> components = [];
+    components.add(BodyComponentModel(
+      documentID: "internalWidget-chatDashboards", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chatDashboards"));
+    PageModel page = PageModel(
+        conditions: ConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
+        ),
+        appId: appId,
+        documentID: "eliud_pkg_chat_chatdashboards_page",
+        title: "ChatDashboards",
+        drawer: _drawer,
+        endDrawer: _endDrawer,
+        appBar: _appBar,
+        homeMenu: _homeMenu,
+        bodyComponents: components,
+        layout: PageLayout.OnlyTheFirstComponent
+    );
+    return page;
+  }
+
+
+  PageModel _chatInteractionssPages() {
+    List<BodyComponentModel> components = [];
+    components.add(BodyComponentModel(
+      documentID: "internalWidget-chatInteractionss", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chatInteractionss"));
+    PageModel page = PageModel(
+        conditions: ConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
+        ),
+        appId: appId,
+        documentID: "eliud_pkg_chat_chatinteractionss_page",
+        title: "ChatInteractionss",
+        drawer: _drawer,
+        endDrawer: _endDrawer,
+        appBar: _appBar,
+        homeMenu: _homeMenu,
+        bodyComponents: components,
+        layout: PageLayout.OnlyTheFirstComponent
+    );
+    return page;
+  }
+
+
   Future<void> _setupAdminPages() {
 
     return pageRepository(appId: appId)!.add(_chatsPages())
+
+        .then((_) => pageRepository(appId: appId)!.add(_chatDashboardsPages()))
+
+        .then((_) => pageRepository(appId: appId)!.add(_chatInteractionssPages()))
 
     ;
   }
@@ -103,6 +155,26 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         description: "Chats",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
         action: GotoPage(appId, pageID: "eliud_pkg_chat_chats_page"))
+    );
+
+
+    menuItems.add(
+      MenuItemModel(
+        documentID: "ChatDashboards",
+        text: "ChatDashboards",
+        description: "ChatDashboards",
+        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
+        action: GotoPage(appId, pageID: "eliud_pkg_chat_chatdashboards_page"))
+    );
+
+
+    menuItems.add(
+      MenuItemModel(
+        documentID: "ChatInteractionss",
+        text: "ChatInteractionss",
+        description: "ChatInteractionss",
+        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
+        action: GotoPage(appId, pageID: "eliud_pkg_chat_chatinteractionss_page"))
     );
 
 

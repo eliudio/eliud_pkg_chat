@@ -17,7 +17,7 @@
 import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
 
-import '../extensions/chat_component.dart';
+import '../extensions/chat_dashboard_component.dart';
 import 'package:eliud_pkg_chat/model/internal_component.dart';
 
 
@@ -26,11 +26,11 @@ import 'package:eliud_pkg_chat/model/internal_component.dart';
 class ComponentRegistry {
 
   void init() {
-    Registry.registry()!.addInternalComponents('eliud_pkg_chat', ["chats", ]);
+    Registry.registry()!.addInternalComponents('eliud_pkg_chat', ["chats", "chatDashboards", "chatInteractionss", ]);
 
     Registry.registry()!.register(componentName: "eliud_pkg_chat_internalWidgets", componentConstructor: ListComponentFactory());
-    Registry.registry()!.addDropDownSupporter("chats", DropdownButtonComponentFactory());
-    Registry.registry()!.register(componentName: "chats", componentConstructor: ChatComponentConstructorDefault());
+    Registry.registry()!.addDropDownSupporter("chatDashboards", DropdownButtonComponentFactory());
+    Registry.registry()!.register(componentName: "chatDashboards", componentConstructor: ChatDashboardComponentConstructorDefault());
 
   }
 }

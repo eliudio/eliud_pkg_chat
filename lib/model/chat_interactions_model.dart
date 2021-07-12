@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_model.dart
+ chat_interactions_model.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -29,13 +29,13 @@ import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
-import 'package:eliud_pkg_chat/model/chat_entity.dart';
+import 'package:eliud_pkg_chat/model/chat_interactions_entity.dart';
 
 import 'package:eliud_core/tools/random.dart';
 
 
 
-class ChatModel {
+class ChatInteractionsModel {
   String? documentID;
 
   // The person initiating the conversation, or the owner of the group
@@ -43,69 +43,69 @@ class ChatModel {
 
   // This is the identifier of the app to which this feed belongs
   String? appId;
-  String? description;
-  List<String>? members;
+  String? details;
+  List<String>? readAccess;
 
-  ChatModel({this.documentID, this.authorId, this.appId, this.description, this.members, })  {
+  ChatInteractionsModel({this.documentID, this.authorId, this.appId, this.details, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? description, List<String>? members, }) {
-    return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, description: description ?? this.description, members: members ?? this.members, );
+  ChatInteractionsModel copyWith({String? documentID, String? authorId, String? appId, String? details, List<String>? readAccess, }) {
+    return ChatInteractionsModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, details: details ?? this.details, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ description.hashCode ^ members.hashCode;
+  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ details.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
           identical(this, other) ||
-          other is ChatModel &&
+          other is ChatInteractionsModel &&
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
           authorId == other.authorId &&
           appId == other.appId &&
-          description == other.description &&
-          ListEquality().equals(members, other.members);
+          details == other.details &&
+          ListEquality().equals(readAccess, other.readAccess);
 
   @override
   String toString() {
-    String membersCsv = (members == null) ? '' : members!.join(', ');
+    String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, description: $description, members: String[] { $membersCsv }}';
+    return 'ChatInteractionsModel{documentID: $documentID, authorId: $authorId, appId: $appId, details: $details, readAccess: String[] { $readAccessCsv }}';
   }
 
-  ChatEntity toEntity({String? appId}) {
-    return ChatEntity(
+  ChatInteractionsEntity toEntity({String? appId}) {
+    return ChatInteractionsEntity(
           authorId: (authorId != null) ? authorId : null, 
           appId: (appId != null) ? appId : null, 
-          description: (description != null) ? description : null, 
-          members: (members != null) ? members : null, 
+          details: (details != null) ? details : null, 
+          readAccess: (readAccess != null) ? readAccess : null, 
     );
   }
 
-  static ChatModel? fromEntity(String documentID, ChatEntity? entity) {
+  static ChatInteractionsModel? fromEntity(String documentID, ChatInteractionsEntity? entity) {
     if (entity == null) return null;
     var counter = 0;
-    return ChatModel(
+    return ChatInteractionsModel(
           documentID: documentID, 
           authorId: entity.authorId, 
           appId: entity.appId, 
-          description: entity.description, 
-          members: entity.members, 
+          details: entity.details, 
+          readAccess: entity.readAccess, 
     );
   }
 
-  static Future<ChatModel?> fromEntityPlus(String documentID, ChatEntity? entity, { String? appId}) async {
+  static Future<ChatInteractionsModel?> fromEntityPlus(String documentID, ChatInteractionsEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
     var counter = 0;
-    return ChatModel(
+    return ChatInteractionsModel(
           documentID: documentID, 
           authorId: entity.authorId, 
           appId: entity.appId, 
-          description: entity.description, 
-          members: entity.members, 
+          details: entity.details, 
+          readAccess: entity.readAccess, 
     );
   }
 
