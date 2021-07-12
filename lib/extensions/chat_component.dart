@@ -32,7 +32,8 @@ class Chat extends AbstractChatComponent {
 
   @override
   Widget yourWidget(BuildContext context, ChatModel? value) {
-    return const RoomsPage();
+    return Text("Chat " + value!.documentID!);
+//    return const RoomsPage();
   }
 
 }
