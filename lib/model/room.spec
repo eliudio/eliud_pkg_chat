@@ -50,6 +50,12 @@
       "group": "general"
     },
     {
+      "fieldName": "isRoom",
+      "displayName": "Is Room",
+      "fieldType": "bool",
+      "group": "general"
+    },
+    {
       "fieldName": "members",
       "displayName": "Members that can write this post.",
       "fieldType": "String",

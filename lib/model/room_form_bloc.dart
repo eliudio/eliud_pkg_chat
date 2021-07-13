@@ -105,6 +105,12 @@ class RoomFormBloc extends Bloc<RoomFormEvent, RoomFormState> {
 
         return;
       }
+      if (event is ChangedRoomIsRoom) {
+        newValue = currentState.value!.copyWith(isRoom: event.value);
+        yield SubmittableRoomForm(value: newValue);
+
+        return;
+      }
     }
   }
 

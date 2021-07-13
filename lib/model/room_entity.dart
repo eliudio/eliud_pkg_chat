@@ -25,18 +25,19 @@ class RoomEntity {
   final String? ownerId;
   final String? appId;
   final String? description;
+  final bool? isRoom;
   final List<String>? members;
 
-  RoomEntity({this.ownerId, this.appId, this.description, this.members, });
+  RoomEntity({this.ownerId, this.appId, this.description, this.isRoom, this.members, });
 
 
-  List<Object?> get props => [ownerId, appId, description, members, ];
+  List<Object?> get props => [ownerId, appId, description, isRoom, members, ];
 
   @override
   String toString() {
     String membersCsv = (members == null) ? '' : members!.join(', ');
 
-    return 'RoomEntity{ownerId: $ownerId, appId: $appId, description: $description, members: String[] { $membersCsv }}';
+    return 'RoomEntity{ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }}';
   }
 
   static RoomEntity? fromMap(Object? o) {
@@ -47,6 +48,7 @@ class RoomEntity {
       ownerId: map['ownerId'], 
       appId: map['appId'], 
       description: map['description'], 
+      isRoom: map['isRoom'], 
       members: map['members'] == null ? null : List.from(map['members']), 
     );
   }
@@ -59,6 +61,8 @@ class RoomEntity {
       else theDocument["appId"] = null;
     if (description != null) theDocument["description"] = description;
       else theDocument["description"] = null;
+    if (isRoom != null) theDocument["isRoom"] = isRoom;
+      else theDocument["isRoom"] = null;
     if (members != null) theDocument["members"] = members!.toList();
       else theDocument["members"] = null;
     return theDocument;

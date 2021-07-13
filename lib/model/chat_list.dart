@@ -152,7 +152,7 @@ class ChatListWidgetState extends State<ChatListWidget> {
 
           return ChatListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<ChatListBloc>(context)
                   .add(DeleteChatList(value: value));
@@ -199,7 +199,6 @@ class ChatListWidgetState extends State<ChatListWidget> {
 class ChatListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final ChatModel? value;
 
   ChatListItem({
@@ -207,7 +206,6 @@ class ChatListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

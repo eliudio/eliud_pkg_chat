@@ -127,6 +127,22 @@ class DescriptionRoomFormError extends RoomFormError {
 }
 
 
+class IsRoomRoomFormError extends RoomFormError { 
+  const IsRoomRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''IsRoomRoomFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class MembersRoomFormError extends RoomFormError { 
   const MembersRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
 

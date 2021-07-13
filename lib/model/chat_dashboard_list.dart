@@ -152,7 +152,7 @@ class ChatDashboardListWidgetState extends State<ChatDashboardListWidget> {
 
           return ChatDashboardListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<ChatDashboardListBloc>(context)
                   .add(DeleteChatDashboardList(value: value));
@@ -199,7 +199,6 @@ class ChatDashboardListWidgetState extends State<ChatDashboardListWidget> {
 class ChatDashboardListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final ChatDashboardModel? value;
 
   ChatDashboardListItem({
@@ -207,7 +206,6 @@ class ChatDashboardListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

@@ -125,6 +125,7 @@ class _MyRoomFormState extends State<MyRoomForm> {
   final TextEditingController _ownerIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  bool? _isRoomSelection;
 
 
   _MyRoomFormState(this.formAction);
@@ -137,6 +138,7 @@ class _MyRoomFormState extends State<MyRoomForm> {
     _ownerIdController.addListener(_onOwnerIdChanged);
     _appIdController.addListener(_onAppIdChanged);
     _descriptionController.addListener(_onDescriptionChanged);
+    _isRoomSelection = false;
   }
 
   @override
@@ -166,6 +168,10 @@ class _MyRoomFormState extends State<MyRoomForm> {
           _descriptionController.text = state.value!.description.toString();
         else
           _descriptionController.text = "";
+        if (state.value!.isRoom != null)
+        _isRoomSelection = state.value!.isRoom;
+        else
+        _isRoomSelection = false;
       }
       if (state is RoomFormInitialized) {
         List<Widget> children = [];
@@ -206,6 +212,11 @@ class _MyRoomFormState extends State<MyRoomForm> {
                   StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionRoomFormError ? state.message : null, hintText: null)
           );
 
+        children.add(
+
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().checkboxListTile(context, 'Is Room', _isRoomSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionIsRoom(val))
+          );
+
 
         children.add(Container(height: 20.0));
         children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
@@ -224,6 +235,7 @@ class _MyRoomFormState extends State<MyRoomForm> {
                               ownerId: state.value!.ownerId, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
+                              isRoom: state.value!.isRoom, 
                               members: state.value!.members, 
                         )));
                       } else {
@@ -233,6 +245,7 @@ class _MyRoomFormState extends State<MyRoomForm> {
                               ownerId: state.value!.ownerId, 
                               appId: state.value!.appId, 
                               description: state.value!.description, 
+                              isRoom: state.value!.isRoom, 
                               members: state.value!.members, 
                           )));
                       }
@@ -279,6 +292,13 @@ class _MyRoomFormState extends State<MyRoomForm> {
     _myFormBloc.add(ChangedRoomDescription(value: _descriptionController.text));
   }
 
+
+  void setSelectionIsRoom(bool? val) {
+    setState(() {
+      _isRoomSelection = val;
+    });
+    _myFormBloc.add(ChangedRoomIsRoom(value: val));
+  }
 
   void _onMembersChanged(value) {
     _myFormBloc.add(ChangedRoomMembers(value: value));

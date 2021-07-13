@@ -152,7 +152,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
 
           return RoomListItem(
             value: value,
-            app: accessState.app,
+//            app: accessState.app,
             onDismissed: (direction) {
               BlocProvider.of<RoomListBloc>(context)
                   .add(DeleteRoomList(value: value));
@@ -199,7 +199,6 @@ class RoomListWidgetState extends State<RoomListWidget> {
 class RoomListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final AppModel app;
   final RoomModel? value;
 
   RoomListItem({
@@ -207,7 +206,6 @@ class RoomListItem extends StatelessWidget {
     required this.onDismissed,
     required this.onTap,
     required this.value,
-    required this.app,
   }) : super(key: key);
 
   @override

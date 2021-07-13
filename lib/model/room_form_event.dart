@@ -107,6 +107,18 @@ class ChangedRoomDescription extends RoomFormEvent {
   String toString() => 'ChangedRoomDescription{ value: $value }';
 }
 
+class ChangedRoomIsRoom extends RoomFormEvent {
+  final bool? value;
+
+  ChangedRoomIsRoom({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedRoomIsRoom{ value: $value }';
+}
+
 class ChangedRoomMembers extends RoomFormEvent {
   final String? value;
 
