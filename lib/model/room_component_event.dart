@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_interactions_component_event.dart
+ room_component_event.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -15,14 +15,14 @@
 
 import 'package:equatable/equatable.dart';
 
-abstract class ChatInteractionsComponentEvent extends Equatable {
+abstract class RoomComponentEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class FetchChatInteractionsComponent extends ChatInteractionsComponentEvent {
+class FetchRoomComponent extends RoomComponentEvent {
   final String? id;
 
-  FetchChatInteractionsComponent({ this.id });
+  FetchRoomComponent({ this.id });
 }
 

@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_interactions_list.dart
+ room_list.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -24,34 +24,34 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 
 
-import 'package:eliud_pkg_chat/model/chat_interactions_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_list_state.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_model.dart';
+import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/room_list_state.dart';
+import 'package:eliud_pkg_chat/model/room_model.dart';
 
 
-typedef ChatInteractionsChanged(String? value);
+typedef RoomChanged(String? value);
 
-class ChatInteractionsDropdownButtonWidget extends StatefulWidget {
+class RoomDropdownButtonWidget extends StatefulWidget {
   final String? value;
-  final ChatInteractionsChanged? trigger;
+  final RoomChanged? trigger;
   final bool? optional;
 
-  ChatInteractionsDropdownButtonWidget({ this.value, this.trigger, this.optional, Key? key }): super(key: key);
+  RoomDropdownButtonWidget({ this.value, this.trigger, this.optional, Key? key }): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return ChatInteractionsDropdownButtonWidgetState();
+    return RoomDropdownButtonWidgetState();
   }
 }
 
-class ChatInteractionsDropdownButtonWidgetState extends State<ChatInteractionsDropdownButtonWidget> {
-  ChatInteractionsListBloc? bloc;
+class RoomDropdownButtonWidgetState extends State<RoomDropdownButtonWidget> {
+  RoomListBloc? bloc;
 
-  ChatInteractionsDropdownButtonWidgetState();
+  RoomDropdownButtonWidgetState();
 
   @override
   void didChangeDependencies() {
-    bloc = BlocProvider.of<ChatInteractionsListBloc>(context);
+    bloc = BlocProvider.of<RoomListBloc>(context);
     super.didChangeDependencies();
   }
 
@@ -61,10 +61,10 @@ class ChatInteractionsDropdownButtonWidgetState extends State<ChatInteractionsDr
     super.dispose();
   }
 
-List<Widget> widgets(ChatInteractionsModel pm) {
+List<Widget> widgets(RoomModel pm) {
 var widgets = <Widget>[];
 if (pm.documentID! != null) widgets.add(new Text(pm.documentID!));
-if (pm.details! != null) widgets.add(new Text(pm.details!));
+if (pm.description! != null) widgets.add(new Text(pm.description!));
 return widgets;
 }
 
@@ -72,10 +72,10 @@ return widgets;
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    return BlocBuilder<ChatInteractionsListBloc, ChatInteractionsListState>(builder: (context, state) {
-      if (state is ChatInteractionsListLoading) {
+    return BlocBuilder<RoomListBloc, RoomListState>(builder: (context, state) {
+      if (state is RoomListLoading) {
         return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
-      } else if (state is ChatInteractionsListLoaded) {
+      } else if (state is RoomListLoaded) {
         String? valueChosen;
         if (state.values!.indexWhere((v) => (v!.documentID == widget.value)) >= 0)
           valueChosen = widget.value;
@@ -116,7 +116,7 @@ return widgets;
                       isExpanded: false,
                       items: items,
                       value: valueChosen,
-                      hint: Text('Select a chatInteractions'),
+                      hint: Text('Select a room'),
                       onChanged: !accessState.memberIsOwner() ? null : _onChange,
                     );
         if (false) {

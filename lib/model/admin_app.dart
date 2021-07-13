@@ -100,10 +100,10 @@ class AdminApp extends AdminAppInstallerBase {
   }
 
 
-  PageModel _chatInteractionssPages() {
+  PageModel _roomsPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
-      documentID: "internalWidget-chatInteractionss", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chatInteractionss"));
+      documentID: "internalWidget-rooms", componentName: "eliud_pkg_chat_internalWidgets", componentId: "rooms"));
     PageModel page = PageModel(
         conditions: ConditionsModel(
           privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
@@ -111,8 +111,8 @@ class AdminApp extends AdminAppInstallerBase {
           conditionOverride: null,
         ),
         appId: appId,
-        documentID: "eliud_pkg_chat_chatinteractionss_page",
-        title: "ChatInteractionss",
+        documentID: "eliud_pkg_chat_rooms_page",
+        title: "Rooms",
         drawer: _drawer,
         endDrawer: _endDrawer,
         appBar: _appBar,
@@ -130,7 +130,7 @@ class AdminApp extends AdminAppInstallerBase {
 
         .then((_) => pageRepository(appId: appId)!.add(_chatDashboardsPages()))
 
-        .then((_) => pageRepository(appId: appId)!.add(_chatInteractionssPages()))
+        .then((_) => pageRepository(appId: appId)!.add(_roomsPages()))
 
     ;
   }
@@ -170,11 +170,11 @@ class AdminMenu extends AdminAppMenuInstallerBase {
 
     menuItems.add(
       MenuItemModel(
-        documentID: "ChatInteractionss",
-        text: "ChatInteractionss",
-        description: "ChatInteractionss",
+        documentID: "Rooms",
+        text: "Rooms",
+        description: "Rooms",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_chat_chatinteractionss_page"))
+        action: GotoPage(appId, pageID: "eliud_pkg_chat_rooms_page"))
     );
 
 

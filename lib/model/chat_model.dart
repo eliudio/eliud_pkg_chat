@@ -43,19 +43,20 @@ class ChatModel {
 
   // This is the identifier of the app to which this feed belongs
   String? appId;
-  String? description;
-  List<String>? members;
+  String? timestamp;
+  String? saying;
+  List<String>? readAccess;
 
-  ChatModel({this.documentID, this.authorId, this.appId, this.description, this.members, })  {
+  ChatModel({this.documentID, this.authorId, this.appId, this.timestamp, this.saying, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? description, List<String>? members, }) {
-    return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, description: description ?? this.description, members: members ?? this.members, );
+  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? timestamp, String? saying, List<String>? readAccess, }) {
+    return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, timestamp: timestamp ?? this.timestamp, saying: saying ?? this.saying, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ description.hashCode ^ members.hashCode;
+  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ timestamp.hashCode ^ saying.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -65,22 +66,24 @@ class ChatModel {
           documentID == other.documentID &&
           authorId == other.authorId &&
           appId == other.appId &&
-          description == other.description &&
-          ListEquality().equals(members, other.members);
+          timestamp == other.timestamp &&
+          saying == other.saying &&
+          ListEquality().equals(readAccess, other.readAccess);
 
   @override
   String toString() {
-    String membersCsv = (members == null) ? '' : members!.join(', ');
+    String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, description: $description, members: String[] { $membersCsv }}';
+    return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }}';
   }
 
   ChatEntity toEntity({String? appId}) {
     return ChatEntity(
           authorId: (authorId != null) ? authorId : null, 
           appId: (appId != null) ? appId : null, 
-          description: (description != null) ? description : null, 
-          members: (members != null) ? members : null, 
+          timestamp: timestamp, 
+          saying: (saying != null) ? saying : null, 
+          readAccess: (readAccess != null) ? readAccess : null, 
     );
   }
 
@@ -91,8 +94,9 @@ class ChatModel {
           documentID: documentID, 
           authorId: entity.authorId, 
           appId: entity.appId, 
-          description: entity.description, 
-          members: entity.members, 
+          timestamp: entity.timestamp.toString(), 
+          saying: entity.saying, 
+          readAccess: entity.readAccess, 
     );
   }
 
@@ -104,8 +108,9 @@ class ChatModel {
           documentID: documentID, 
           authorId: entity.authorId, 
           appId: entity.appId, 
-          description: entity.description, 
-          members: entity.members, 
+          timestamp: entity.timestamp.toString(), 
+          saying: entity.saying, 
+          readAccess: entity.readAccess, 
     );
   }
 

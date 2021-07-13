@@ -95,27 +95,39 @@ class ChangedChatAppId extends ChatFormEvent {
   String toString() => 'ChangedChatAppId{ value: $value }';
 }
 
-class ChangedChatDescription extends ChatFormEvent {
+class ChangedChatTimestamp extends ChatFormEvent {
   final String? value;
 
-  ChangedChatDescription({this.value});
+  ChangedChatTimestamp({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedChatDescription{ value: $value }';
+  String toString() => 'ChangedChatTimestamp{ value: $value }';
 }
 
-class ChangedChatMembers extends ChatFormEvent {
+class ChangedChatSaying extends ChatFormEvent {
   final String? value;
 
-  ChangedChatMembers({this.value});
+  ChangedChatSaying({this.value});
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'ChangedChatMembers{ value: $value }';
+  String toString() => 'ChangedChatSaying{ value: $value }';
+}
+
+class ChangedChatReadAccess extends ChatFormEvent {
+  final String? value;
+
+  ChangedChatReadAccess({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatReadAccess{ value: $value }';
 }
 

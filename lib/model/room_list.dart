@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_interactions_list.dart
+ room_list.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -32,45 +32,45 @@ import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/enums.dart';
 import 'package:eliud_core/eliud.dart';
 
-import 'package:eliud_pkg_chat/model/chat_interactions_list_event.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_list_state.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_model.dart';
+import 'package:eliud_pkg_chat/model/room_list_event.dart';
+import 'package:eliud_pkg_chat/model/room_list_state.dart';
+import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/room_model.dart';
 
 import 'package:eliud_core/model/app_model.dart';
 
 
-import 'chat_interactions_form.dart';
+import 'room_form.dart';
 
 
-typedef ChatInteractionsWidgetProvider(ChatInteractionsModel? value);
+typedef RoomWidgetProvider(RoomModel? value);
 
-class ChatInteractionsListWidget extends StatefulWidget with HasFab {
+class RoomListWidget extends StatefulWidget with HasFab {
   BackgroundModel? listBackground;
-  ChatInteractionsWidgetProvider? widgetProvider;
+  RoomWidgetProvider? widgetProvider;
   bool? readOnly;
   String? form;
-  ChatInteractionsListWidgetState? state;
+  RoomListWidgetState? state;
   bool? isEmbedded;
 
-  ChatInteractionsListWidget({ Key? key, this.readOnly, this.form, this.widgetProvider, this.isEmbedded, this.listBackground }): super(key: key);
+  RoomListWidget({ Key? key, this.readOnly, this.form, this.widgetProvider, this.isEmbedded, this.listBackground }): super(key: key);
 
   @override
-  ChatInteractionsListWidgetState createState() {
-    state ??= ChatInteractionsListWidgetState();
+  RoomListWidgetState createState() {
+    state ??= RoomListWidgetState();
     return state!;
   }
 
   @override
   Widget? fab(BuildContext context) {
     if ((readOnly != null) && readOnly!) return null;
-    state ??= ChatInteractionsListWidgetState();
+    state ??= RoomListWidgetState();
     var accessState = AccessBloc.getState(context);
     return state!.fab(context, accessState);
   }
 }
 
-class ChatInteractionsListWidgetState extends State<ChatInteractionsListWidget> {
+class RoomListWidgetState extends State<RoomListWidget> {
   @override
   Widget? fab(BuildContext aContext, AccessState accessState) {
     if (accessState is AppLoaded) {
@@ -80,8 +80,8 @@ class ChatInteractionsListWidgetState extends State<ChatInteractionsListWidget> 
         onPressed: () {
           Navigator.of(context).push(
             pageRouteBuilder(accessState.app, page: BlocProvider.value(
-                value: BlocProvider.of<ChatInteractionsListBloc>(context),
-                child: ChatInteractionsForm(
+                value: BlocProvider.of<RoomListBloc>(context),
+                child: RoomForm(
                     value: null,
                     formAction: FormAction.AddAction)
             )),
@@ -97,10 +97,10 @@ class ChatInteractionsListWidgetState extends State<ChatInteractionsListWidget> 
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
     if (accessState is AppLoaded) {
-      return BlocBuilder<ChatInteractionsListBloc, ChatInteractionsListState>(builder: (context, state) {
-        if (state is ChatInteractionsListLoading) {
+      return BlocBuilder<RoomListBloc, RoomListState>(builder: (context, state) {
+        if (state is RoomListLoading) {
           return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
-        } else if (state is ChatInteractionsListLoaded) {
+        } else if (state is RoomListLoaded) {
           final values = state.values;
           if ((widget.isEmbedded != null) && widget.isEmbedded!) {
             var children = <Widget>[];
@@ -111,8 +111,8 @@ class ChatInteractionsListWidgetState extends State<ChatInteractionsListWidget> 
                     onPressed: () {
                       Navigator.of(context).push(
                                 pageRouteBuilder(accessState.app, page: BlocProvider.value(
-                                    value: BlocProvider.of<ChatInteractionsListBloc>(context),
-                                    child: ChatInteractionsForm(
+                                    value: BlocProvider.of<RoomListBloc>(context),
+                                    child: RoomForm(
                                         value: null,
                                         formAction: FormAction.AddAction)
                                 )),
@@ -150,29 +150,29 @@ class ChatInteractionsListWidgetState extends State<ChatInteractionsListWidget> 
           
           if (widget.widgetProvider != null) return widget.widgetProvider!(value);
 
-          return ChatInteractionsListItem(
+          return RoomListItem(
             value: value,
             app: accessState.app,
             onDismissed: (direction) {
-              BlocProvider.of<ChatInteractionsListBloc>(context)
-                  .add(DeleteChatInteractionsList(value: value));
+              BlocProvider.of<RoomListBloc>(context)
+                  .add(DeleteRoomList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "ChatInteractions " + value.documentID,
-                onUndo: () => BlocProvider.of<ChatInteractionsListBloc>(context)
-                    .add(AddChatInteractionsList(value: value)),
+                message: "Room " + value.documentID,
+                onUndo: () => BlocProvider.of<RoomListBloc>(context)
+                    .add(AddRoomList(value: value)),
               ));
             },
             onTap: () async {
                                    final removedItem = await Navigator.of(context).push(
                         pageRouteBuilder(accessState.app, page: BlocProvider.value(
-                              value: BlocProvider.of<ChatInteractionsListBloc>(context),
+                              value: BlocProvider.of<RoomListBloc>(context),
                               child: getForm(value, FormAction.UpdateAction))));
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "ChatInteractions " + value.documentID,
-                            onUndo: () => BlocProvider.of<ChatInteractionsListBloc>(context)
-                                .add(AddChatInteractionsList(value: value)),
+                        message: "Room " + value.documentID,
+                            onUndo: () => BlocProvider.of<RoomListBloc>(context)
+                                .add(AddRoomList(value: value)),
                           ),
                         );
                       }
@@ -186,7 +186,7 @@ class ChatInteractionsListWidgetState extends State<ChatInteractionsListWidget> 
   
   Widget? getForm(value, action) {
     if (widget.form == null) {
-      return ChatInteractionsForm(value: value, formAction: action);
+      return RoomForm(value: value, formAction: action);
     } else {
       return null;
     }
@@ -196,13 +196,13 @@ class ChatInteractionsListWidgetState extends State<ChatInteractionsListWidget> 
 }
 
 
-class ChatInteractionsListItem extends StatelessWidget {
+class RoomListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
   final AppModel app;
-  final ChatInteractionsModel? value;
+  final RoomModel? value;
 
-  ChatInteractionsListItem({
+  RoomListItem({
     Key? key,
     required this.onDismissed,
     required this.onTap,
@@ -213,19 +213,19 @@ class ChatInteractionsListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key('__ChatInteractions_item_${value!.documentID}'),
+      key: Key('__Room_item_${value!.documentID}'),
       onDismissed: onDismissed,
       child: ListTile(
         onTap: onTap,
         title: Hero(
-          tag: '${value!.documentID}__ChatInteractionsheroTag',
+          tag: '${value!.documentID}__RoomheroTag',
           child: Container(
             width: fullScreenWidth(context),
             child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
           ),
         ),
-        subtitle: (value!.details! != null) && (value!.details!.isNotEmpty)
-            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.details!))
+        subtitle: (value!.description! != null) && (value!.description!.isNotEmpty)
+            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.description!))
             : null,
       ),
     );

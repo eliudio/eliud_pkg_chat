@@ -64,7 +64,7 @@ class ChatDropdownButtonWidgetState extends State<ChatDropdownButtonWidget> {
 List<Widget> widgets(ChatModel pm) {
 var widgets = <Widget>[];
 if (pm.documentID! != null) widgets.add(new Text(pm.documentID!));
-if (pm.description! != null) widgets.add(new Text(pm.description!));
+if (pm.saying! != null) widgets.add(new Text(pm.saying!));
 return widgets;
 }
 

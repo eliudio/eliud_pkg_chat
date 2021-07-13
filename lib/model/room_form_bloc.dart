@@ -7,7 +7,7 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_form_bloc.dart
+ room_form_bloc.dart
                        
  This code is generated. This is read only. Don't touch!
 
@@ -37,26 +37,26 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_pkg_chat/model/chat_form_event.dart';
-import 'package:eliud_pkg_chat/model/chat_form_state.dart';
-import 'package:eliud_pkg_chat/model/chat_repository.dart';
+import 'package:eliud_pkg_chat/model/room_form_event.dart';
+import 'package:eliud_pkg_chat/model/room_form_state.dart';
+import 'package:eliud_pkg_chat/model/room_repository.dart';
 
-class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
+class RoomFormBloc extends Bloc<RoomFormEvent, RoomFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  ChatFormBloc(this.appId, { this.formAction }): super(ChatFormUninitialized());
+  RoomFormBloc(this.appId, { this.formAction }): super(RoomFormUninitialized());
   @override
-  Stream<ChatFormState> mapEventToState(ChatFormEvent event) async* {
+  Stream<RoomFormState> mapEventToState(RoomFormEvent event) async* {
     final currentState = state;
-    if (currentState is ChatFormUninitialized) {
-      if (event is InitialiseNewChatFormEvent) {
-        ChatFormLoaded loaded = ChatFormLoaded(value: ChatModel(
+    if (currentState is RoomFormUninitialized) {
+      if (event is InitialiseNewRoomFormEvent) {
+        RoomFormLoaded loaded = RoomFormLoaded(value: RoomModel(
                                                documentID: "",
-                                 authorId: "",
+                                 ownerId: "",
                                  appId: "",
-                                 saying: "",
-                                 readAccess: [],
+                                 description: "",
+                                 members: [],
 
         ));
         yield loaded;
@@ -65,49 +65,43 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
       }
 
 
-      if (event is InitialiseChatFormEvent) {
+      if (event is InitialiseRoomFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
-        ChatFormLoaded loaded = ChatFormLoaded(value: await chatRepository(appId: appId)!.get(event.value!.documentID));
+        RoomFormLoaded loaded = RoomFormLoaded(value: await roomRepository(appId: appId)!.get(event.value!.documentID));
         yield loaded;
         return;
-      } else if (event is InitialiseChatFormNoLoadEvent) {
-        ChatFormLoaded loaded = ChatFormLoaded(value: event.value);
+      } else if (event is InitialiseRoomFormNoLoadEvent) {
+        RoomFormLoaded loaded = RoomFormLoaded(value: event.value);
         yield loaded;
         return;
       }
-    } else if (currentState is ChatFormInitialized) {
-      ChatModel? newValue = null;
-      if (event is ChangedChatDocumentID) {
+    } else if (currentState is RoomFormInitialized) {
+      RoomModel? newValue = null;
+      if (event is ChangedRoomDocumentID) {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           yield* _isDocumentIDValid(event.value, newValue).asStream();
         } else {
-          yield SubmittableChatForm(value: newValue);
+          yield SubmittableRoomForm(value: newValue);
         }
 
         return;
       }
-      if (event is ChangedChatAuthorId) {
-        newValue = currentState.value!.copyWith(authorId: event.value);
-        yield SubmittableChatForm(value: newValue);
+      if (event is ChangedRoomOwnerId) {
+        newValue = currentState.value!.copyWith(ownerId: event.value);
+        yield SubmittableRoomForm(value: newValue);
 
         return;
       }
-      if (event is ChangedChatAppId) {
+      if (event is ChangedRoomAppId) {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableChatForm(value: newValue);
+        yield SubmittableRoomForm(value: newValue);
 
         return;
       }
-      if (event is ChangedChatTimestamp) {
-        newValue = currentState.value!.copyWith(timestamp: event.value);
-        yield SubmittableChatForm(value: newValue);
-
-        return;
-      }
-      if (event is ChangedChatSaying) {
-        newValue = currentState.value!.copyWith(saying: event.value);
-        yield SubmittableChatForm(value: newValue);
+      if (event is ChangedRoomDescription) {
+        newValue = currentState.value!.copyWith(description: event.value);
+        yield SubmittableRoomForm(value: newValue);
 
         return;
       }
@@ -115,15 +109,15 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
   }
 
 
-  DocumentIDChatFormError error(String message, ChatModel newValue) => DocumentIDChatFormError(message: message, value: newValue);
+  DocumentIDRoomFormError error(String message, RoomModel newValue) => DocumentIDRoomFormError(message: message, value: newValue);
 
-  Future<ChatFormState> _isDocumentIDValid(String? value, ChatModel newValue) async {
+  Future<RoomFormState> _isDocumentIDValid(String? value, RoomModel newValue) async {
     if (value == null) return Future.value(error("Provide value for documentID", newValue));
     if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
-    Future<ChatModel?> findDocument = chatRepository(appId: appId)!.get(value);
+    Future<RoomModel?> findDocument = roomRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {
-        return SubmittableChatForm(value: newValue);
+        return SubmittableRoomForm(value: newValue);
       } else {
         return error("Invalid documentID: already exists", newValue);
       }

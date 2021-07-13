@@ -1,5 +1,5 @@
 {
-  "id": "ChatInteractions",
+  "id": "Room",
   "packageName": "eliud_pkg_chat",
   "isAppModel": true,
   "generate": {
@@ -29,9 +29,9 @@
       "group": "general"
     },
     {
-      "fieldName": "authorId",
-      "remark": "The person initiating the conversation, or the owner of the group",
-      "displayName": "Author ID",
+      "fieldName": "ownerId",
+      "remark": "The person creating the room",
+      "displayName": "Owner ID",
       "fieldType": "String",
       "group": "member"
     },
@@ -43,15 +43,15 @@
       "group": "general"
     },
     {
-      "fieldName": "details",
-      "displayName": "Details",
+      "fieldName": "description",
+      "displayName": "Description",
       "fieldType": "String",
       "iconName": "text_format",
       "group": "general"
     },
     {
-      "fieldName": "readAccess",
-      "displayName": "Members that can read this detail of the chat",
+      "fieldName": "members",
+      "displayName": "Members that can write this post.",
       "fieldType": "String",
       "iconName": "text_format",
       "arrayType": "Array",
@@ -66,7 +66,7 @@
  ],
   "listFields": {
     "title": "documentID!",
-    "subTitle": "details!"
+    "subTitle": "description!"
   },
   "depends": ["eliud_core"]
 }

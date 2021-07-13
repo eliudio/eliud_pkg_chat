@@ -56,10 +56,10 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_pkg_chat/model/chat_interactions_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_list.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_dropdown_button.dart';
-import 'package:eliud_pkg_chat/model/chat_interactions_list_event.dart';
+import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/room_list.dart';
+import 'package:eliud_pkg_chat/model/room_dropdown_button.dart';
+import 'package:eliud_pkg_chat/model/room_list_event.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -88,7 +88,7 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
 
     if (id == "chats") return true;
     if (id == "chatDashboards") return true;
-    if (id == "chatInteractionss") return true;
+    if (id == "rooms") return true;
     return false;
   }
 
@@ -100,7 +100,7 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
     if (id == "chatDashboards")
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
-    if (id == "chatInteractionss")
+    if (id == "rooms")
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     return Text("Id $id not found");
@@ -130,14 +130,14 @@ class ListComponent extends StatelessWidget with HasFab {
 
     if (componentId == 'chats') return _chatBuild(context);
     if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
-    if (componentId == 'chatInteractionss') return _chatInteractionsBuild(context);
+    if (componentId == 'rooms') return _roomBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
   void initWidget() {
     if (componentId == 'chats') widget = ChatListWidget();
     if (componentId == 'chatDashboards') widget = ChatDashboardListWidget();
-    if (componentId == 'chatInteractionss') widget = ChatInteractionsListWidget();
+    if (componentId == 'rooms') widget = RoomListWidget();
   }
 
   Widget _chatBuild(BuildContext context) {
@@ -166,13 +166,13 @@ class ListComponent extends StatelessWidget with HasFab {
     );
   }
 
-  Widget _chatInteractionsBuild(BuildContext context) {
+  Widget _roomBuild(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ChatInteractionsListBloc>(
-          create: (context) => ChatInteractionsListBloc(
-            chatInteractionsRepository: chatInteractionsRepository(appId: AccessBloc.appId(context))!,
-          )..add(LoadChatInteractionsList()),
+        BlocProvider<RoomListBloc>(
+          create: (context) => RoomListBloc(
+            roomRepository: roomRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadRoomList()),
         )
       ],
       child: widget!,
@@ -197,7 +197,7 @@ class DropdownButtonComponent extends StatelessWidget {
 
     if (componentId == 'chats') return _chatBuild(context);
     if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
-    if (componentId == 'chatInteractionss') return _chatInteractionsBuild(context);
+    if (componentId == 'rooms') return _roomBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
@@ -228,16 +228,16 @@ class DropdownButtonComponent extends StatelessWidget {
     );
   }
 
-  Widget _chatInteractionsBuild(BuildContext context) {
+  Widget _roomBuild(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ChatInteractionsListBloc>(
-          create: (context) => ChatInteractionsListBloc(
-            chatInteractionsRepository: chatInteractionsRepository(appId: AccessBloc.appId(context))!,
-          )..add(LoadChatInteractionsList()),
+        BlocProvider<RoomListBloc>(
+          create: (context) => RoomListBloc(
+            roomRepository: roomRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadRoomList()),
         )
       ],
-      child: ChatInteractionsDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+      child: RoomDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
     );
   }
 

@@ -15,4 +15,4 @@
 
 export '../model/chat_cache.dart';
 export '../model/chat_dashboard_cache.dart';
-export '../model/chat_interactions_cache.dart';
+export '../model/room_cache.dart';

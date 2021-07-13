@@ -37,7 +37,15 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatFirestore implements ChatRepository {
   Future<ChatModel> add(ChatModel value) {
-    return ChatCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
+    return ChatCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+      var newValue = await get(value.documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
   }
 
   Future<void> delete(ChatModel value) {
@@ -45,7 +53,15 @@ class ChatFirestore implements ChatRepository {
   }
 
   Future<ChatModel> update(ChatModel value) {
-    return ChatCollection.doc(value.documentID).update(value.toEntity(appId: appId).toDocument()).then((_) => value);
+    return ChatCollection.doc(value.documentID).update(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+      var newValue = await get(value.documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
   }
 
   ChatModel? _populateDoc(DocumentSnapshot value) {

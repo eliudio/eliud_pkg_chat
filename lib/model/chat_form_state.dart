@@ -111,15 +111,15 @@ class AppIdChatFormError extends ChatFormError {
 }
 
 
-class DescriptionChatFormError extends ChatFormError { 
-  const DescriptionChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
+class TimestampChatFormError extends ChatFormError { 
+  const TimestampChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''DescriptionChatFormError {
+    return '''TimestampChatFormError {
       value: $value,
       message: $message,
     }''';
@@ -127,15 +127,31 @@ class DescriptionChatFormError extends ChatFormError {
 }
 
 
-class MembersChatFormError extends ChatFormError { 
-  const MembersChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
+class SayingChatFormError extends ChatFormError { 
+  const SayingChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''MembersChatFormError {
+    return '''SayingChatFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class ReadAccessChatFormError extends ChatFormError { 
+  const ReadAccessChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ReadAccessChatFormError {
       value: $value,
       message: $message,
     }''';

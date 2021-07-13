@@ -124,7 +124,7 @@ class _MyChatFormState extends State<MyChatForm> {
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _authorIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _sayingController = TextEditingController();
 
 
   _MyChatFormState(this.formAction);
@@ -136,7 +136,7 @@ class _MyChatFormState extends State<MyChatForm> {
     _documentIDController.addListener(_onDocumentIDChanged);
     _authorIdController.addListener(_onAuthorIdChanged);
     _appIdController.addListener(_onAppIdChanged);
-    _descriptionController.addListener(_onDescriptionChanged);
+    _sayingController.addListener(_onSayingChanged);
   }
 
   @override
@@ -162,10 +162,10 @@ class _MyChatFormState extends State<MyChatForm> {
           _appIdController.text = state.value!.appId.toString();
         else
           _appIdController.text = "";
-        if (state.value!.description != null)
-          _descriptionController.text = state.value!.description.toString();
+        if (state.value!.saying != null)
+          _sayingController.text = state.value!.saying.toString();
         else
-          _descriptionController.text = "";
+          _sayingController.text = "";
       }
       if (state is ChatFormInitialized) {
         List<Widget> children = [];
@@ -201,9 +201,10 @@ class _MyChatFormState extends State<MyChatForm> {
                   StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdChatFormError ? state.message : null, hintText: 'field.remark')
           );
 
+
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionChatFormError ? state.message : null, hintText: null)
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Saying', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _sayingController, keyboardType: TextInputType.text, validator: (_) => state is SayingChatFormError ? state.message : null, hintText: null)
           );
 
 
@@ -223,8 +224,9 @@ class _MyChatFormState extends State<MyChatForm> {
                               documentID: state.value!.documentID, 
                               authorId: state.value!.authorId, 
                               appId: state.value!.appId, 
-                              description: state.value!.description, 
-                              members: state.value!.members, 
+                              timestamp: state.value!.timestamp, 
+                              saying: state.value!.saying, 
+                              readAccess: state.value!.readAccess, 
                         )));
                       } else {
                         BlocProvider.of<ChatListBloc>(context).add(
@@ -232,8 +234,9 @@ class _MyChatFormState extends State<MyChatForm> {
                               documentID: state.value!.documentID, 
                               authorId: state.value!.authorId, 
                               appId: state.value!.appId, 
-                              description: state.value!.description, 
-                              members: state.value!.members, 
+                              timestamp: state.value!.timestamp, 
+                              saying: state.value!.saying, 
+                              readAccess: state.value!.readAccess, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -275,13 +278,13 @@ class _MyChatFormState extends State<MyChatForm> {
   }
 
 
-  void _onDescriptionChanged() {
-    _myFormBloc.add(ChangedChatDescription(value: _descriptionController.text));
+  void _onSayingChanged() {
+    _myFormBloc.add(ChangedChatSaying(value: _sayingController.text));
   }
 
 
-  void _onMembersChanged(value) {
-    _myFormBloc.add(ChangedChatMembers(value: value));
+  void _onReadAccessChanged(value) {
+    _myFormBloc.add(ChangedChatReadAccess(value: value));
     setState(() {});
   }
 
@@ -292,7 +295,7 @@ class _MyChatFormState extends State<MyChatForm> {
     _documentIDController.dispose();
     _authorIdController.dispose();
     _appIdController.dispose();
-    _descriptionController.dispose();
+    _sayingController.dispose();
     super.dispose();
   }
 

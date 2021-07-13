@@ -49,15 +49,15 @@
       "group": "general"
     },
     {
-      "fieldName": "description",
-      "displayName": "Description",
+      "fieldName": "saying",
+      "displayName": "Saying",
       "fieldType": "String",
       "iconName": "text_format",
       "group": "general"
     },
     {
-      "fieldName": "members",
-      "displayName": "Members that can write this post.",
+      "fieldName": "readAccess",
+      "displayName": "Members that can read this detail of the chat",
       "fieldType": "String",
       "iconName": "text_format",
       "arrayType": "Array",
@@ -72,7 +72,7 @@
  ],
   "listFields": {
     "title": "documentID!",
-    "subTitle": "description!"
+    "subTitle": "saying!"
   },
   "depends": ["eliud_core"]
 }

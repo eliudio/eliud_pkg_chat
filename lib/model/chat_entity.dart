@@ -24,19 +24,22 @@ import 'package:eliud_pkg_chat/model/entity_export.dart';
 class ChatEntity {
   final String? authorId;
   final String? appId;
-  final String? description;
-  final List<String>? members;
+  final Object? timestamp;
+  final String? saying;
+  final List<String>? readAccess;
 
-  ChatEntity({this.authorId, this.appId, this.description, this.members, });
+  ChatEntity({this.authorId, this.appId, this.timestamp, this.saying, this.readAccess, });
 
-
-  List<Object?> get props => [authorId, appId, description, members, ];
+  ChatEntity copyWith({Object? timestamp, }) {
+    return ChatEntity(authorId: authorId, appId: appId, timestamp : timestamp, saying: saying, readAccess: readAccess, );
+  }
+  List<Object?> get props => [authorId, appId, timestamp, saying, readAccess, ];
 
   @override
   String toString() {
-    String membersCsv = (members == null) ? '' : members!.join(', ');
+    String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'ChatEntity{authorId: $authorId, appId: $appId, description: $description, members: String[] { $membersCsv }}';
+    return 'ChatEntity{authorId: $authorId, appId: $appId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }}';
   }
 
   static ChatEntity? fromMap(Object? o) {
@@ -46,8 +49,9 @@ class ChatEntity {
     return ChatEntity(
       authorId: map['authorId'], 
       appId: map['appId'], 
-      description: map['description'], 
-      members: map['members'] == null ? null : List.from(map['members']), 
+      timestamp: chatRepository(appId: map['appId'])!.timeStampToString(map['timestamp']), 
+      saying: map['saying'], 
+      readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }
 
@@ -57,10 +61,11 @@ class ChatEntity {
       else theDocument["authorId"] = null;
     if (appId != null) theDocument["appId"] = appId;
       else theDocument["appId"] = null;
-    if (description != null) theDocument["description"] = description;
-      else theDocument["description"] = null;
-    if (members != null) theDocument["members"] = members!.toList();
-      else theDocument["members"] = null;
+    theDocument["timestamp"] = timestamp;
+    if (saying != null) theDocument["saying"] = saying;
+      else theDocument["saying"] = null;
+    if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
+      else theDocument["readAccess"] = null;
     return theDocument;
   }
 
