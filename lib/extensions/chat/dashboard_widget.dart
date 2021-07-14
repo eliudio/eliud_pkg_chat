@@ -35,13 +35,16 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   void _handleTabSelection() {
     if ((_tabController != null) && (_tabController!.indexIsChanging)) {
+      if (_tabController!.index == 6) {
+        Navigator.of(context).pop();
+      }
       setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var items = ['Unread', 'Start chat', 'Create room', 'Chats', 'Rooms', 'Status'];
+    var items = ['Unread', 'Chat', 'Room', 'Chats', 'Rooms', 'Close'];
     var widget;
     switch (_tabController!.index) {
       case 0: widget = const Text('A list of unread messages'); break;
@@ -50,6 +53,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
       case 3: widget = const Text('Here a list of existing chats, i.e. RoomWidget where isRoom = false (or create another entity specific for this)'); break;
       case 4: widget = const RoomWidget(); break;
       case 5: widget = const Text('Here perhaps status'); break;
+      case 6: widget = Container(); break;
     }
     return Column(children: [
         StyleRegistry.registry().styleWithContext(context)
