@@ -17,7 +17,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   @override
   void initState() {
-    var size = 5;
+    var size = 6;
     _tabController = TabController(vsync: this, length: size);
     _tabController!.addListener(_handleTabSelection);
     _tabController!.index = 0;
@@ -41,14 +41,15 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    var items = ['New chat', 'New room', 'Chats', 'Rooms', 'Status'];
+    var items = ['Unread', 'Start chat', 'Create room', 'Chats', 'Rooms', 'Status'];
     var widget;
     switch (_tabController!.index) {
-      case 0: widget = const Text('A list of members, when selected start a chat'); break;
-      case 1: widget = const Text('A form with details to create a new room, including name of room and ok button'); break;
-      case 2: widget = const Text('Here a list of existing chats, i.e. RoomWidget where isRoom = false (or create another entity specific for this)'); break;
-      case 3: widget = const RoomWidget(); break;
-      case 4: widget = const Text('Here perhaps status'); break;
+      case 0: widget = const Text('A list of unread messages'); break;
+      case 1: widget = const Text('A list of members, when selected start a chat'); break;
+      case 2: widget = const Text('A form with details to create a new room, including name of room and ok button'); break;
+      case 3: widget = const Text('Here a list of existing chats, i.e. RoomWidget where isRoom = false (or create another entity specific for this)'); break;
+      case 4: widget = const RoomWidget(); break;
+      case 5: widget = const Text('Here perhaps status'); break;
     }
     return Column(children: [
         StyleRegistry.registry().styleWithContext(context)
