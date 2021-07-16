@@ -124,6 +124,7 @@ class _MyChatFormState extends State<MyChatForm> {
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _authorIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
+  final TextEditingController _roomIdController = TextEditingController();
   final TextEditingController _sayingController = TextEditingController();
 
 
@@ -136,6 +137,7 @@ class _MyChatFormState extends State<MyChatForm> {
     _documentIDController.addListener(_onDocumentIDChanged);
     _authorIdController.addListener(_onAuthorIdChanged);
     _appIdController.addListener(_onAppIdChanged);
+    _roomIdController.addListener(_onRoomIdChanged);
     _sayingController.addListener(_onSayingChanged);
   }
 
@@ -162,6 +164,10 @@ class _MyChatFormState extends State<MyChatForm> {
           _appIdController.text = state.value!.appId.toString();
         else
           _appIdController.text = "";
+        if (state.value!.roomId != null)
+          _roomIdController.text = state.value!.roomId.toString();
+        else
+          _roomIdController.text = "";
         if (state.value!.saying != null)
           _sayingController.text = state.value!.saying.toString();
         else
@@ -201,6 +207,11 @@ class _MyChatFormState extends State<MyChatForm> {
                   StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdChatFormError ? state.message : null, hintText: 'field.remark')
           );
 
+        children.add(
+
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Room Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _roomIdController, keyboardType: TextInputType.text, validator: (_) => state is RoomIdChatFormError ? state.message : null, hintText: 'field.remark')
+          );
+
 
         children.add(
 
@@ -224,6 +235,7 @@ class _MyChatFormState extends State<MyChatForm> {
                               documentID: state.value!.documentID, 
                               authorId: state.value!.authorId, 
                               appId: state.value!.appId, 
+                              roomId: state.value!.roomId, 
                               timestamp: state.value!.timestamp, 
                               saying: state.value!.saying, 
                               readAccess: state.value!.readAccess, 
@@ -234,6 +246,7 @@ class _MyChatFormState extends State<MyChatForm> {
                               documentID: state.value!.documentID, 
                               authorId: state.value!.authorId, 
                               appId: state.value!.appId, 
+                              roomId: state.value!.roomId, 
                               timestamp: state.value!.timestamp, 
                               saying: state.value!.saying, 
                               readAccess: state.value!.readAccess, 
@@ -278,6 +291,11 @@ class _MyChatFormState extends State<MyChatForm> {
   }
 
 
+  void _onRoomIdChanged() {
+    _myFormBloc.add(ChangedChatRoomId(value: _roomIdController.text));
+  }
+
+
   void _onSayingChanged() {
     _myFormBloc.add(ChangedChatSaying(value: _sayingController.text));
   }
@@ -295,6 +313,7 @@ class _MyChatFormState extends State<MyChatForm> {
     _documentIDController.dispose();
     _authorIdController.dispose();
     _appIdController.dispose();
+    _roomIdController.dispose();
     _sayingController.dispose();
     super.dispose();
   }

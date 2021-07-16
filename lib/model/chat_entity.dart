@@ -24,22 +24,23 @@ import 'package:eliud_pkg_chat/model/entity_export.dart';
 class ChatEntity {
   final String? authorId;
   final String? appId;
+  final String? roomId;
   final Object? timestamp;
   final String? saying;
   final List<String>? readAccess;
 
-  ChatEntity({this.authorId, this.appId, this.timestamp, this.saying, this.readAccess, });
+  ChatEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.readAccess, });
 
   ChatEntity copyWith({Object? timestamp, }) {
-    return ChatEntity(authorId: authorId, appId: appId, timestamp : timestamp, saying: saying, readAccess: readAccess, );
+    return ChatEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, saying: saying, readAccess: readAccess, );
   }
-  List<Object?> get props => [authorId, appId, timestamp, saying, readAccess, ];
+  List<Object?> get props => [authorId, appId, roomId, timestamp, saying, readAccess, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'ChatEntity{authorId: $authorId, appId: $appId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }}';
+    return 'ChatEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }}';
   }
 
   static ChatEntity? fromMap(Object? o) {
@@ -49,6 +50,7 @@ class ChatEntity {
     return ChatEntity(
       authorId: map['authorId'], 
       appId: map['appId'], 
+      roomId: map['roomId'], 
       timestamp: chatRepository(appId: map['appId'])!.timeStampToString(map['timestamp']), 
       saying: map['saying'], 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
@@ -61,6 +63,8 @@ class ChatEntity {
       else theDocument["authorId"] = null;
     if (appId != null) theDocument["appId"] = appId;
       else theDocument["appId"] = null;
+    if (roomId != null) theDocument["roomId"] = roomId;
+      else theDocument["roomId"] = null;
     theDocument["timestamp"] = timestamp;
     if (saying != null) theDocument["saying"] = saying;
       else theDocument["saying"] = null;

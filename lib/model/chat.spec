@@ -38,7 +38,14 @@
     {
       "fieldName": "appId",
       "displayName": "App Identifier",
-      "remark": "This is the identifier of the app to which this feed belongs",
+      "remark": "This is the identifier of the app to which this chat belongs",
+      "fieldType": "String",
+      "group": "general"
+    },
+    {
+      "fieldName": "roomId",
+      "displayName": "Room Identifier",
+      "remark": "This is the identifier of the room to which this chat belongs",
       "fieldType": "String",
       "group": "general"
     },

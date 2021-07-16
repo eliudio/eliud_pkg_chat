@@ -111,6 +111,22 @@ class AppIdChatFormError extends ChatFormError {
 }
 
 
+class RoomIdChatFormError extends ChatFormError { 
+  const RoomIdChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''RoomIdChatFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class TimestampChatFormError extends ChatFormError { 
   const TimestampChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
 

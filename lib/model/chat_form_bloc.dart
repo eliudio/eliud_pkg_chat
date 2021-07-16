@@ -55,6 +55,7 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
                                                documentID: "",
                                  authorId: "",
                                  appId: "",
+                                 roomId: "",
                                  saying: "",
                                  readAccess: [],
 
@@ -95,6 +96,12 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
       }
       if (event is ChangedChatAppId) {
         newValue = currentState.value!.copyWith(appId: event.value);
+        yield SubmittableChatForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedChatRoomId) {
+        newValue = currentState.value!.copyWith(roomId: event.value);
         yield SubmittableChatForm(value: newValue);
 
         return;

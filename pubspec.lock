@@ -106,6 +106,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.1.1"
+  camera:
+    dependency: transitive
+    description:
+      name: camera
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.1"
+  camera_platform_interface:
+    dependency: transitive
+    description:
+      name: camera_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   characters:
     dependency: transitive
     description:
@@ -127,6 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  chewie:
+    dependency: transitive
+    description:
+      name: chewie
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.2"
   cli_util:
     dependency: transitive
     description:
@@ -204,6 +225,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  crop_your_image:
+    dependency: transitive
+    description:
+      name: crop_your_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.3"
   cross_file:
     dependency: transitive
     description:
@@ -274,6 +302,34 @@ packages:
       relative: true
     source: path
     version: "1.0.0+1"
+  eliud_pkg_etc:
+    dependency: transitive
+    description:
+      path: "../eliud_pkg_etc"
+      relative: true
+    source: path
+    version: "0.0.1"
+  eliud_pkg_follow:
+    dependency: "direct main"
+    description:
+      path: "../eliud_pkg_follow"
+      relative: true
+    source: path
+    version: "0.0.1"
+  eliud_pkg_medium:
+    dependency: transitive
+    description:
+      path: "../eliud_pkg_medium"
+      relative: true
+    source: path
+    version: "0.0.1"
+  eliud_pkg_notifications:
+    dependency: transitive
+    description:
+      path: "../eliud_pkg_notifications"
+      relative: true
+    source: path
+    version: "0.0.1"
   equatable:
     dependency: transitive
     description:
@@ -316,6 +372,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
+  file_picker:
+    dependency: transitive
+    description:
+      name: file_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2+2"
   firebase_auth:
     dependency: transitive
     description:
@@ -398,6 +461,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.1"
+  flutter_carousel_slider:
+    dependency: transitive
+    description:
+      name: flutter_carousel_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.8"
   flutter_colorful_tab:
     dependency: transitive
     description:
@@ -440,6 +510,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  flutter_staggered_grid_view:
+    dependency: transitive
+    description:
+      name: flutter_staggered_grid_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   flutter_test:
     dependency: transitive
     description: flutter
@@ -541,6 +618,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  image_picker_gallery_camera:
+    dependency: transitive
+    description:
+      name: image_picker_gallery_camera
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -709,6 +793,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.1"
+  pinch_zoom:
+    dependency: transitive
+    description:
+      name: pinch_zoom
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   platform:
     dependency: transitive
     description:
@@ -903,6 +994,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3"
+  wakelock:
+    dependency: transitive
+    description:
+      name: wakelock
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.2"
+  wakelock_macos:
+    dependency: transitive
+    description:
+      name: wakelock_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+1"
+  wakelock_platform_interface:
+    dependency: transitive
+    description:
+      name: wakelock_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1+1"
+  wakelock_web:
+    dependency: transitive
+    description:
+      name: wakelock_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0+1"
+  wakelock_windows:
+    dependency: transitive
+    description:
+      name: wakelock_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   watcher:
     dependency: transitive
     description:

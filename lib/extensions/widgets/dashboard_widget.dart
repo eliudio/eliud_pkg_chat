@@ -1,19 +1,29 @@
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_pkg_chat/extensions/chat/room_widget.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/room_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'members_widget.dart';
+
 class DashboardWidget extends StatefulWidget {
+  final String appId;
+  final String memberId;
+
   const DashboardWidget({
-    Key? key,
+    Key? key, required this.appId, required this.memberId,
   }) : super(key: key);
 
   @override
-  DashboardWidgetState createState() => DashboardWidgetState();
+  DashboardWidgetState createState() => DashboardWidgetState(appId, memberId);
 }
 
 class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProviderStateMixin {
+  final String appId;
+  final String memberId;
+
   TabController? _tabController;
+
+  DashboardWidgetState(this.appId, this.memberId);
 
   @override
   void initState() {
@@ -35,7 +45,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   void _handleTabSelection() {
     if ((_tabController != null) && (_tabController!.indexIsChanging)) {
-      if (_tabController!.index == 6) {
+      if (_tabController!.index == 5) {
         Navigator.of(context).pop();
       }
       setState(() {});
@@ -48,12 +58,11 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
     var widget;
     switch (_tabController!.index) {
       case 0: widget = const Text('A list of unread messages'); break;
-      case 1: widget = const Text('A list of members, when selected start a chat'); break;
+      case 1: widget = MembersWidget(appId: appId, memberId: memberId); break;
       case 2: widget = const Text('A form with details to create a new room, including name of room and ok button'); break;
       case 3: widget = const Text('Here a list of existing chats, i.e. RoomWidget where isRoom = false (or create another entity specific for this)'); break;
-      case 4: widget = const RoomWidget(); break;
-      case 5: widget = const Text('Here perhaps status'); break;
-      case 6: widget = Container(); break;
+      case 4: widget = RoomsWidget(appId: appId, memberId: memberId); break;
+      case 5: widget = Container(); break;
     }
     return Column(children: [
         StyleRegistry.registry().styleWithContext(context)

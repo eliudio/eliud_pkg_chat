@@ -95,6 +95,18 @@ class ChangedChatAppId extends ChatFormEvent {
   String toString() => 'ChangedChatAppId{ value: $value }';
 }
 
+class ChangedChatRoomId extends ChatFormEvent {
+  final String? value;
+
+  ChangedChatRoomId({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatRoomId{ value: $value }';
+}
+
 class ChangedChatTimestamp extends ChatFormEvent {
   final String? value;
 
