@@ -7,18 +7,17 @@
   \___|_|_|\__,_|\__,_|
                        
  
- chat_repository.dart
+ chat_member_info_repository.dart
                        
  This code is generated. This is read only. Don't touch!
 
 */
 
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
-import 'package:eliud_pkg_chat/model/chat_model.dart';
-import 'package:eliud_pkg_chat/model/chat_repository.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_repository.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -34,27 +33,27 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-class ChatCache implements ChatRepository {
+class ChatMemberInfoCache implements ChatMemberInfoRepository {
 
-  final ChatRepository reference;
-  final Map<String?, ChatModel?> fullCache = Map();
+  final ChatMemberInfoRepository reference;
+  final Map<String?, ChatMemberInfoModel?> fullCache = Map();
 
-  ChatCache(this.reference);
+  ChatMemberInfoCache(this.reference);
 
-  Future<ChatModel> add(ChatModel value) {
+  Future<ChatMemberInfoModel> add(ChatMemberInfoModel value) {
     return reference.add(value).then((newValue) {
       fullCache[value.documentID] = newValue;
       return newValue;
     });
   }
 
-  Future<void> delete(ChatModel value){
+  Future<void> delete(ChatMemberInfoModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);
     return Future.value();
   }
 
-  Future<ChatModel?> get(String? id, {Function(Exception)? onError}) async {
+  Future<ChatMemberInfoModel?> get(String? id, {Function(Exception)? onError}) async {
     var value = fullCache[id];
     if (value != null) return refreshRelations(value);
     value = await reference.get(id, onError: onError);
@@ -62,7 +61,7 @@ class ChatCache implements ChatRepository {
     return value;
   }
 
-  Future<ChatModel> update(ChatModel value) {
+  Future<ChatMemberInfoModel> update(ChatMemberInfoModel value) {
     return reference.update(value).then((newValue) {
       fullCache[value.documentID] = newValue;
       return newValue;
@@ -70,22 +69,22 @@ class ChatCache implements ChatRepository {
   }
 
   @override
-  Stream<List<ChatModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+  Stream<List<ChatMemberInfoModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     return reference.values(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
 
   @override
-  Stream<List<ChatModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+  Stream<List<ChatMemberInfoModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     return reference.valuesWithDetails(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
 
   @override
-  Future<List<ChatModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+  Future<List<ChatMemberInfoModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     return await reference.valuesList(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
   
   @override
-  Future<List<ChatModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+  Future<List<ChatMemberInfoModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     return await reference.valuesListWithDetails(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
 
@@ -101,7 +100,7 @@ class ChatCache implements ChatRepository {
     return reference.getSubCollection(documentId, name);
   }
 
-  Future<ChatModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
+  Future<ChatMemberInfoModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
     return reference.changeValue(documentId, fieldName, changeByThisValue).then((newValue) {
       fullCache[documentId] = newValue;
       return newValue!;
@@ -113,30 +112,25 @@ class ChatCache implements ChatRepository {
   }
 
   @override
-  StreamSubscription<List<ChatModel?>> listen(trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
+  StreamSubscription<List<ChatMemberInfoModel?>> listen(trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     return reference.listen(trigger, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
 
   @override
-  StreamSubscription<List<ChatModel?>> listenWithDetails(trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
+  StreamSubscription<List<ChatMemberInfoModel?>> listenWithDetails(trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     return reference.listenWithDetails(trigger, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
 
   @override
-  StreamSubscription<ChatModel?> listenTo(String documentId, ChatChanged changed) {
+  StreamSubscription<ChatMemberInfoModel?> listenTo(String documentId, ChatMemberInfoChanged changed) {
     return reference.listenTo(documentId, changed);
   }
 
-  static Future<ChatModel> refreshRelations(ChatModel model) async {
+  static Future<ChatMemberInfoModel> refreshRelations(ChatMemberInfoModel model) async {
 
     return model.copyWith(
 
     );
-  }
-
-  @override
-  Stream<QuerySnapshot<Object?>> stream({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-    return reference.stream(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
 
 }

@@ -51,7 +51,7 @@ class ChatEntity {
       authorId: map['authorId'], 
       appId: map['appId'], 
       roomId: map['roomId'], 
-      timestamp: chatRepository(appId: map['appId'])!.timeStampToString(map['timestamp']), 
+      timestamp: chatRepository(appId: map['appId'], roomId: map['roomId'])!.timeStampToString(map['timestamp']), 
       saying: map['saying'], 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );

@@ -17,7 +17,7 @@
     "generateInternalComponent": true,
     "generateEmbeddedComponent": false,
     "isExtension": false,
-    "isDocumentCollection": true
+    "documentSubCollectionOf": "room"
   },
   "memberIdentifier": "authorId",
   "fields": [

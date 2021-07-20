@@ -15,4 +15,5 @@
 
 export '../model/chat_model.dart';
 export '../model/chat_dashboard_model.dart';
+export '../model/chat_member_info_model.dart';
 export '../model/room_model.dart';

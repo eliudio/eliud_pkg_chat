@@ -194,6 +194,10 @@ class ChatFirestore implements ChatRepository {
     return ChatCollection.doc(documentId).collection(name);
   }
 
+  Stream<QuerySnapshot<Object?>> stream({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+    return getQuery(ChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots();
+  }
+
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   } 

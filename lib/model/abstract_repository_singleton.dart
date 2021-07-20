@@ -15,27 +15,33 @@
 
 import '../model/chat_repository.dart';
 import '../model/chat_dashboard_repository.dart';
+import '../model/chat_member_info_repository.dart';
 import '../model/room_repository.dart';
 import 'package:eliud_core/core/access/bloc/user_repository.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_core/package/package.dart';
 
-ChatRepository? chatRepository({ String? appId }) => AbstractRepositorySingleton.singleton.chatRepository(appId);
+ChatRepository? chatRepository({ String? appId,  String? roomId}) => AbstractRepositorySingleton.singleton.chatRepository(appId, roomId);
 ChatDashboardRepository? chatDashboardRepository({ String? appId }) => AbstractRepositorySingleton.singleton.chatDashboardRepository(appId);
+ChatMemberInfoRepository? chatMemberInfoRepository({ String? appId,  String? roomId}) => AbstractRepositorySingleton.singleton.chatMemberInfoRepository(appId, roomId);
 RoomRepository? roomRepository({ String? appId }) => AbstractRepositorySingleton.singleton.roomRepository(appId);
 
 abstract class AbstractRepositorySingleton {
   static List<MemberCollectionInfo> collections = [
     MemberCollectionInfo('chat', 'authorId'),
+    MemberCollectionInfo('chatmemberinfo', 'memberId'),
     MemberCollectionInfo('room', 'authorId'),
   ];
   static late AbstractRepositorySingleton singleton;
 
-  ChatRepository? chatRepository(String? appId);
+  ChatRepository? chatRepository(String? appId, String? roomId);
   ChatDashboardRepository? chatDashboardRepository(String? appId);
+  ChatMemberInfoRepository? chatMemberInfoRepository(String? appId, String? roomId);
   RoomRepository? roomRepository(String? appId);
 
   void flush(String? appId) {
+    chatDashboardRepository(appId)!.flush();
+    roomRepository(appId)!.flush();
   }
 }

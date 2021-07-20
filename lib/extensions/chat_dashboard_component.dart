@@ -1,13 +1,20 @@
+import 'package:eliud_core/style/style_registry.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/component_constructor.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/dashboard_widget.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_component.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_repository.dart';
-import 'package:flutter/cupertino.dart';
+
+import 'dashboard/bloc/chat_bloc.dart';
+import 'dashboard/bloc/chat_event.dart';
+import 'dashboard/dashboard_widget.dart';
 
 class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
   @override
@@ -36,7 +43,10 @@ class ChatDashboard extends AbstractChatDashboardComponent {
       var appId = accessState.app.documentID;
       if (accessState.getMember() != null) {
         var memberId = accessState.getMember()!.documentID!;
-        return DashboardWidget(appId: appId!, memberId: memberId);
+
+        return BlocProvider<ChatBloc>(
+            create: (context) => ChatBloc(appId!)..add(OpenUnreadWidgetEvent()),
+            child: DashboardWidget(appId: appId!, memberId: memberId));
       } else {
         return const Text('Member not available');
       }

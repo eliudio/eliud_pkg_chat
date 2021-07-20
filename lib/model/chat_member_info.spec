@@ -1,5 +1,5 @@
 {
-  "id": "Room",
+  "id": "ChatMemberInfo",
   "packageName": "eliud_pkg_chat",
   "isAppModel": true,
   "generate": {
@@ -17,9 +17,9 @@
     "generateInternalComponent": true,
     "generateEmbeddedComponent": false,
     "isExtension": false,
-    "documentSubCollectionOf": "app"
+    "documentSubCollectionOf": "room"
   },
-  "memberIdentifier": "authorId",
+  "memberIdentifier": "memberId",
   "fields": [
     {
       "fieldName": "documentID",
@@ -29,39 +29,23 @@
       "group": "general"
     },
     {
-      "fieldName": "ownerId",
-      "remark": "The person creating the room",
-      "displayName": "Owner ID",
+      "fieldName": "memberId",
+      "displayName": "Member ID",
       "fieldType": "String",
       "group": "member"
     },
     {
-      "fieldName": "appId",
-      "displayName": "App Identifier",
-      "remark": "This is the identifier of the app to which this feed belongs",
+      "fieldName": "roomId",
+      "displayName": "Chat ID",
       "fieldType": "String",
-      "group": "general"
+      "group": "chat"
     },
     {
-      "fieldName": "description",
-      "displayName": "Description",
-      "fieldType": "String",
-      "iconName": "text_format",
+      "fieldName": "timestamp",
+      "displayName": "Last Read Timestamp",
+      "remark": "Last Read entry in Chat in this room Timestamp",
+      "fieldType": "ServerTimestampUninitialized",
       "group": "general"
-    },
-    {
-      "fieldName": "isRoom",
-      "displayName": "Is Room",
-      "fieldType": "bool",
-      "group": "general"
-    },
-    {
-      "fieldName": "members",
-      "displayName": "Members that can write this post.",
-      "fieldType": "String",
-      "iconName": "text_format",
-      "arrayType": "Array",
-      "hidden": true
     }
   ],
   "groups": [
@@ -72,7 +56,7 @@
  ],
   "listFields": {
     "title": "documentID!",
-    "subTitle": "description!"
+    "subTitle": "memberId!"
   },
   "depends": ["eliud_core"]
 }

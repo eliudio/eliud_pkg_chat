@@ -15,4 +15,5 @@
 
 export '../model/chat_repository.dart';
 export '../model/chat_dashboard_repository.dart';
+export '../model/chat_member_info_repository.dart';
 export '../model/room_repository.dart';

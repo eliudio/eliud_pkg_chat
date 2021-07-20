@@ -1,28 +1,17 @@
-import 'dart:io';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-/*
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-*/
-import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
-/*
-import 'package:open_file/open_file.dart';
-*/
-import 'package:path_provider/path_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_pkg_chat/model/chat_entity.dart';
 
 class ChatPage extends StatefulWidget {
   final String appId;
   final String roomId;
+  final String memberId;
 
   const ChatPage({
-    Key? key, required this.appId, required this.roomId,
+    Key? key, required this.appId, required this.roomId, required this.memberId
 /*
     required this.room,
 */
@@ -203,39 +192,39 @@ class _ChatPageState extends State<ChatPage> {
   }
 */
 
+  EliudQuery getEliudQuery() {
+    return EliudQuery()
+        .withCondition(EliudQueryCondition('readAccess', arrayContains: widget.memberId));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Text("todo");
-/*
-    return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.dark,
-        title: const Text('Chat'),
-      ),
-      body: StreamBuilder<ChatModel>(
-//        initialData: widget.room,
-        stream: roomRepository(appId: widget.appId).getSubCollection(widget.roomId, 'chat')streamWithDetails((list) => null),
+    return StreamBuilder<QuerySnapshot>(
+        stream: chatRepository(appId: widget.appId, roomId: widget.roomId)!.stream(orderBy: 'timestamp', descending: true, eliudQuery: getEliudQuery()),
+          builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final List<DocumentSnapshot> documents = snapshot.data!.docs;
+            return ListView(
+                    children: documents
+                        .map((theDoc) =>
+                        Card(child: theTile(theDoc)))
+                        .toList());
+              }
+          return Center(child: CircularProgressIndicator());
+        });
+  }
+
+  Widget theTile(DocumentSnapshot value) {
+    return FutureBuilder<ChatModel?>(
+        future: ChatModel.fromEntityPlus(value.id, ChatEntity.fromMap(value.data()), appId: widget.appId),
         builder: (context, snapshot) {
-          return StreamBuilder<List<types.Message>>(
-            initialData: const [],
-            stream: FirebaseChatCore.instance.messages(snapshot.data!),
-            builder: (context, snapshot) {
-              return Chat(
-                isAttachmentUploading: _isAttachmentUploading,
-                messages: snapshot.data ?? [],
-                onAttachmentPressed: _handleAtachmentPress,
-                onMessageTap: _handleMessageTap,
-                onPreviewDataFetched: _handlePreviewDataFetched,
-                onSendPressed: _handleSendPressed,
-                user: types.User(
-                  id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-                ),
-              );
-            },
-          );
-        },
-      ),
+          if (snapshot.hasData) {
+            return ListTile(
+              title: Text(snapshot.data!.saying!),
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        }
     );
-    */
   }
 }

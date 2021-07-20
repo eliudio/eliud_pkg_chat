@@ -56,6 +56,23 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
+import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_list.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_dropdown_button.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart';
+
+import 'package:eliud_core/model/repository_export.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core/model/model_export.dart';
+import '../tools/bespoke_models.dart';
+import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
+
 import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_list.dart';
 import 'package:eliud_pkg_chat/model/room_dropdown_button.dart';
@@ -88,6 +105,7 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
 
     if (id == "chats") return true;
     if (id == "chatDashboards") return true;
+    if (id == "chatMemberInfos") return true;
     if (id == "rooms") return true;
     return false;
   }
@@ -98,6 +116,9 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "chatDashboards")
+      return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
+
+    if (id == "chatMemberInfos")
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "rooms")
@@ -130,6 +151,7 @@ class ListComponent extends StatelessWidget with HasFab {
 
     if (componentId == 'chats') return _chatBuild(context);
     if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
+    if (componentId == 'chatMemberInfos') return _chatMemberInfoBuild(context);
     if (componentId == 'rooms') return _roomBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
@@ -137,6 +159,7 @@ class ListComponent extends StatelessWidget with HasFab {
   void initWidget() {
     if (componentId == 'chats') widget = ChatListWidget();
     if (componentId == 'chatDashboards') widget = ChatDashboardListWidget();
+    if (componentId == 'chatMemberInfos') widget = ChatMemberInfoListWidget();
     if (componentId == 'rooms') widget = RoomListWidget();
   }
 
@@ -160,6 +183,19 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => ChatDashboardListBloc(
             chatDashboardRepository: chatDashboardRepository(appId: AccessBloc.appId(context))!,
           )..add(LoadChatDashboardList()),
+        )
+      ],
+      child: widget!,
+    );
+  }
+
+  Widget _chatMemberInfoBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatMemberInfoListBloc>(
+          create: (context) => ChatMemberInfoListBloc(
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadChatMemberInfoList()),
         )
       ],
       child: widget!,
@@ -197,6 +233,7 @@ class DropdownButtonComponent extends StatelessWidget {
 
     if (componentId == 'chats') return _chatBuild(context);
     if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
+    if (componentId == 'chatMemberInfos') return _chatMemberInfoBuild(context);
     if (componentId == 'rooms') return _roomBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
@@ -225,6 +262,19 @@ class DropdownButtonComponent extends StatelessWidget {
         )
       ],
       child: ChatDashboardDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+    );
+  }
+
+  Widget _chatMemberInfoBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatMemberInfoListBloc>(
+          create: (context) => ChatMemberInfoListBloc(
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadChatMemberInfoList()),
+        )
+      ],
+      child: ChatMemberInfoDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
     );
   }
 
