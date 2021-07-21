@@ -64,4 +64,3 @@ abstract class ChatRepository {
   Future<void> deleteAll();
 }
 
-

@@ -5,16 +5,16 @@ import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
-import 'chat_event.dart';
-import 'chat_state.dart';
+import 'chat_dashboard_event.dart';
+import 'chat_dashboard_state.dart';
 
-class ChatBloc extends Bloc<ChatEvent, ChatState> {
+class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
   final String appId;
 
-  ChatBloc(this.appId) : super(ChatStateUninitialized());
+  ChatDashboardBloc(this.appId) : super(ChatDashboardStateUninitialized());
 
   @override
-  Stream<ChatState> mapEventToState(ChatEvent event) async* {
+  Stream<ChatDashboardState> mapEventToState(ChatDashboardEvent event) async* {
     if (event is OpenUnreadWidgetEvent) {
       yield UnreadWidgetState();
     } else if (event is OpenMemberRoomsWidgetEvent) {

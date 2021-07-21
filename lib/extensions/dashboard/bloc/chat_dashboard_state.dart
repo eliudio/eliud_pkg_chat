@@ -6,17 +6,17 @@ import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
 
 @immutable
-abstract class ChatState extends Equatable {
-  const ChatState();
+abstract class ChatDashboardState extends Equatable {
+  const ChatDashboardState();
 
   @override
   List<Object?> get props => [];
 }
 
-class ChatError extends ChatState {
+class ChatDashboardError extends ChatDashboardState {
   final String message;
 
-  ChatError(this.message);
+  ChatDashboardError(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -24,16 +24,16 @@ class ChatError extends ChatState {
   @override
   bool operator == (Object other) =>
       identical(this, other) ||
-      other is ChatError &&
+      other is ChatDashboardError &&
           runtimeType == other.runtimeType &&
           message == other.message;
 }
 
 // Startup: menu has not been initialised yet and so we should show a "loading indicator" or something
-class ChatStateUninitialized extends ChatState {
+class ChatDashboardStateUninitialized extends ChatDashboardState {
   @override
   String toString() {
-    return '''ChatStateUninitialized()''';
+    return '''ChatDashboardStateUninitialized()''';
   }
 
   @override
@@ -42,11 +42,11 @@ class ChatStateUninitialized extends ChatState {
   @override
   bool operator == (Object other) =>
       identical(this, other) ||
-      other is ChatStateUninitialized && runtimeType == other.runtimeType;
+      other is ChatDashboardStateUninitialized && runtimeType == other.runtimeType;
 }
 
 // UnreadWidgetState: List the items in unread
-class UnreadWidgetState extends ChatState {
+class UnreadWidgetState extends ChatDashboardState {
   // list of unread items
   // this is determined by _chatMemberInfoRepository which holds the last read entry per member, per room
   @override
@@ -60,7 +60,7 @@ class UnreadWidgetState extends ChatState {
 }
 
 // MemberRoomsWidgetState: List all members and allow to open a chat with one of these members, i.e. MembersWidget
-class MemberRoomsWidgetState extends ChatState {
+class MemberRoomsWidgetState extends ChatDashboardState {
   // nothing
   @override
   List<Object?> get props => [];
@@ -73,7 +73,7 @@ class MemberRoomsWidgetState extends ChatState {
 }
 
 // RealRoomFormsWidgetState: open a form to create a room
-class RealRoomFormsWidgetState extends ChatState {
+class RealRoomFormsWidgetState extends ChatDashboardState {
   // nothing
   @override
   List<Object?> get props => [];
@@ -86,7 +86,7 @@ class RealRoomFormsWidgetState extends ChatState {
 }
 
 // ExistingMemberRoomsWidgetState: List all rooms which are not real roonms, i.e. RoomWidget with isRoom = false
-class ExistingMemberRoomsWidgetState extends ChatState {
+class ExistingMemberRoomsWidgetState extends ChatDashboardState {
   // nothing
   @override
   List<Object?> get props => [];
@@ -99,7 +99,7 @@ class ExistingMemberRoomsWidgetState extends ChatState {
 }
 
 // ExistingRealRoomsWidgetState: List all rooms which are real roonms, i.e. RoomWidget. Allow to open the chat (send the OpenChatWidget event)
-class ExistingRealRoomsWidgetState extends ChatState {
+class ExistingRealRoomsWidgetState extends ChatDashboardState {
   // nothing
   @override
   List<Object?> get props => [];
@@ -111,7 +111,7 @@ class ExistingRealRoomsWidgetState extends ChatState {
               runtimeType == other.runtimeType;
 }
 
-class ChatWidgetState extends ChatState {
+class ChatWidgetState extends ChatDashboardState {
   final RoomModel room;
 
   ChatWidgetState(this.room);

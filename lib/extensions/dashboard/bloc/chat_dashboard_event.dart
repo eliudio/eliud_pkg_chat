@@ -7,14 +7,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class ChatEvent extends Equatable {
-  const ChatEvent();
+abstract class ChatDashboardEvent extends Equatable {
+  const ChatDashboardEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class OpenUnreadWidgetEvent extends ChatEvent {
+class OpenUnreadWidgetEvent extends ChatDashboardEvent {
   @override
   List<Object?> get props => [];
 
@@ -25,7 +25,7 @@ class OpenUnreadWidgetEvent extends ChatEvent {
               runtimeType == other.runtimeType;
 }
 
-class OpenMemberRoomsWidgetEvent extends ChatEvent {
+class OpenMemberRoomsWidgetEvent extends ChatDashboardEvent {
   @override
   List<Object?> get props => [];
 
@@ -36,7 +36,7 @@ class OpenMemberRoomsWidgetEvent extends ChatEvent {
               runtimeType == other.runtimeType;
 }
 
-class OpenRealRoomFormsWidgetEvent extends ChatEvent {
+class OpenRealRoomFormsWidgetEvent extends ChatDashboardEvent {
   @override
   List<Object?> get props => [];
 
@@ -47,7 +47,7 @@ class OpenRealRoomFormsWidgetEvent extends ChatEvent {
               runtimeType == other.runtimeType;
 }
 
-class OpenExistingMemberRoomsWidgetEvent extends ChatEvent {
+class OpenExistingMemberRoomsWidgetEvent extends ChatDashboardEvent {
   @override
   List<Object?> get props => [];
 
@@ -58,7 +58,7 @@ class OpenExistingMemberRoomsWidgetEvent extends ChatEvent {
               runtimeType == other.runtimeType;
 }
 
-class OpenExistingRealRoomsWidgetEvent extends ChatEvent {
+class OpenExistingRealRoomsWidgetEvent extends ChatDashboardEvent {
   @override
   List<Object?> get props => [];
 
@@ -69,7 +69,7 @@ class OpenExistingRealRoomsWidgetEvent extends ChatEvent {
               runtimeType == other.runtimeType;
 }
 
-abstract class ChatWidgetEvent extends ChatEvent {
+abstract class ChatWidgetEvent extends ChatDashboardEvent {
   ChatWidgetEvent();
 }
 

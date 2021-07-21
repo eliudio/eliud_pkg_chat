@@ -7,9 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'bloc/chat_bloc.dart';
-import 'bloc/chat_event.dart';
-import 'bloc/chat_state.dart';
+import 'bloc/chat_dashboard_bloc.dart';
+import 'bloc/chat_dashboard_event.dart';
+import 'bloc/chat_dashboard_state.dart';
 
 class DashboardWidget extends StatefulWidget {
   final String appId;
@@ -54,31 +54,31 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
       switch (_tabController!.index) {
         case 0:
           {
-            BlocProvider.of<ChatBloc>(context)
+            BlocProvider.of<ChatDashboardBloc>(context)
                 .add(OpenUnreadWidgetEvent());
             break;
           }
         case 1:
           {
-            BlocProvider.of<ChatBloc>(context)
+            BlocProvider.of<ChatDashboardBloc>(context)
                 .add(OpenMemberRoomsWidgetEvent());
             break;
           }
         case 2:
           {
-            BlocProvider.of<ChatBloc>(context)
+            BlocProvider.of<ChatDashboardBloc>(context)
                 .add(OpenRealRoomFormsWidgetEvent());
             break;
           }
         case 3:
           {
-            BlocProvider.of<ChatBloc>(context)
+            BlocProvider.of<ChatDashboardBloc>(context)
                 .add(OpenExistingMemberRoomsWidgetEvent());
             break;
           }
         case 4:
           {
-            BlocProvider.of<ChatBloc>(context)
+            BlocProvider.of<ChatDashboardBloc>(context)
                 .add(OpenExistingRealRoomsWidgetEvent());
             break;
           }
@@ -94,7 +94,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
+    return BlocBuilder<ChatDashboardBloc, ChatDashboardState>(builder: (context, state) {
       if (state is UnreadWidgetState) {
         return tabbed(const Text('A list of unread messages'));
       } else if (state is MemberRoomsWidgetState) {
@@ -106,7 +106,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
       } else if (state is ExistingRealRoomsWidgetState) {
         return tabbed(RoomsWidget(appId: appId, memberId: memberId));
       } else if (state is ChatWidgetState) {
-        return contained(ChatPage(appId: state.room.appId!, roomId: state.room.documentID!, memberId: memberId,));
+        return contained(ChatPage(appId: state.room.appId!, roomId: state.room.documentID!, memberId: memberId, readAccess: state.room.members!,));
       }
       return StyleRegistry.registry().styleWithContext(context)
           .frontEndStyle().progressIndicatorStyle().progressIndicator(context);

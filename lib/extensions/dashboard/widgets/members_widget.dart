@@ -1,6 +1,6 @@
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_bloc.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_event.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_event.dart';
 import 'package:eliud_pkg_follow/model/following_list.dart';
 import 'package:eliud_pkg_follow/model/following_list_event.dart';
 import 'package:eliud_pkg_follow/model/following_model.dart';
@@ -87,7 +87,7 @@ class FollowingDashboardItem extends StatelessWidget {
     }
     return ListTile(
         onTap: () async {
-          BlocProvider.of<ChatBloc>(context)
+          BlocProvider.of<ChatDashboardBloc>(context)
               .add(CreateChatWithMemberEvent(value!.followed!.documentID!, value!.follower!.documentID!));
         },
         leading: const Icon(Icons.chat_bubble_outline),
