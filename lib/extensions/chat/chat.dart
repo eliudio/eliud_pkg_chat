@@ -1,21 +1,16 @@
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_list_event.dart';
+import 'package:eliud_pkg_chat/model/chat_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eliud_pkg_chat/model/chat_entity.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/widgets/members_widget.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/widgets/room_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'bloc/chat_bloc.dart';
-import 'bloc/chat_event.dart';
-import 'bloc/chat_state.dart';
 
 class ChatPage extends StatefulWidget {
   final String appId;
@@ -32,20 +27,24 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  EliudQuery getEliudQuery() {
-    return EliudQuery()
-        .withCondition(EliudQueryCondition('readAccess', arrayContains: widget.memberId));
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ChatBloc >(
-      create: (context) => ChatBloc(widget.memberId, widget.appId, widget.roomId, widget.readAccess, getEliudQuery(), chatRepository: chatRepository(appId: widget.appId, roomId: widget.roomId)!,
-
-      )..add(ChatFetched()),
-
-      child:     ChatWidget(appId: widget.appId, roomId: widget.roomId, memberId: widget.memberId, readAccess: widget.readAccess,)
+    var eliudQuery = EliudQuery()
+        .withCondition(EliudQueryCondition('readAccess', arrayContains: widget.memberId));
+    return BlocProvider<ChatListBloc>(
+      create: (context) => ChatListBloc(paged: true, orderBy: 'timestamp', descending: true, detailed: true, eliudQuery: eliudQuery,
+        chatRepository: chatRepository(appId: widget.appId, roomId: widget.roomId)!,
+      )..add(LoadChatList()),
+        child:     ChatWidget(appId: widget.appId, roomId: widget.roomId, memberId: widget.memberId, readAccess: widget.readAccess,)
     );
+
+    /*
+    return BlocProvider<ChatBloc >(
+        create: (context) => ChatBloc(widget.memberId, widget.appId, widget.roomId, widget.readAccess, chatRepository: chatRepository(appId: widget.appId, roomId: widget.roomId)!,
+        )..add(ChatFetched()),
+        child:     ChatWidget(appId: widget.appId, roomId: widget.roomId, memberId: widget.memberId, readAccess: widget.readAccess,)
+    );
+*/
   }
 }
 
@@ -64,29 +63,48 @@ class ChatWidget extends StatefulWidget {
 }
 
 class _ChatWidgetState extends State<ChatWidget> {
-  EliudQuery getEliudQuery(String chatId) {
-    return EliudQuery()
-        .withCondition(EliudQueryCondition('chatId', isEqualTo: chatId))
-        .withCondition(EliudQueryCondition('readAccess', arrayContainsAny: [widget.memberId]));
-  }
-
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
-      if (state is ChatState) {
-        List<Widget> widgets = [];
-        for (int i = 0; i < state.values.length; i++) {
-          widgets.add(Text(state.values[i]!.saying!));
+    return BlocBuilder<ChatListBloc, ChatListState>(builder: (context, state) {
+      if (state is ChatListState) {
+        if (state is ChatListLoaded) {
+          List<Widget> widgets = [];
+          for (int i = 0; i < state.values!.length; i++) {
+            widgets.add(Text(state.values![i]!.saying!));
+          }
+          widgets.add(buttonAdd());
+          widgets.add(_buttonNextPage(state.mightHaveMore!));
+          return ListView(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              children: widgets);
         }
-        widgets.add(_buttonNextPage(!state.hasReachedMax));
-        return ListView(
-            shrinkWrap: true,
-            physics: ScrollPhysics(),
-            children: widgets);      }
+      }
       return StyleRegistry.registry().styleWithContext(context)
           .frontEndStyle().progressIndicatorStyle().progressIndicator(context);
     });
+  }
+
+  Widget buttonAdd() {
+    return StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .buttonStyle()
+        .button(
+      context,
+      label: 'Say something ',
+      onPressed: () {
+        BlocProvider.of<ChatListBloc>(context).add(AddChatList(value: ChatModel(
+          documentID: newRandomKey(),
+          appId: widget.appId,
+          roomId: widget.roomId,
+          authorId: widget.memberId,
+          readAccess: widget.readAccess,
+          saying: 'Lalalal ' + newRandomKey(),
+        )));
+      },
+    );
   }
 
   Widget _buttonNextPage(bool mightHaveMore) {
@@ -120,7 +138,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   void _onClick() {
-    BlocProvider.of<ChatBloc>(context).add(ChatFetched());
+    BlocProvider.of<ChatListBloc>(context).add(NewPage());
   }
 }
 

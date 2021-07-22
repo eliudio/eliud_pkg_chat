@@ -19,9 +19,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final List<String> readAccess;
   final ChatRepository _chatRepository;
   Object? lastRowFetched;
-  EliudQuery eliudQuery;
 
-  ChatBloc(this.memberId, this.appId, this.roomId, this.readAccess, this.eliudQuery,
+  ChatBloc(this.memberId, this.appId, this.roomId, this.readAccess,
       {required ChatRepository chatRepository})
       : _chatRepository = chatRepository,
         super(const ChatState());
@@ -151,6 +150,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   Future<List<ChatModel?>> _fetchChats(
       {Object? lastRowFetched, int? limit}) async {
+    var eliudQuery = EliudQuery()
+          .withCondition(EliudQueryCondition('readAccess', arrayContains: memberId));
+
     var values = await _chatRepository.valuesListWithDetails(
         orderBy: null,//'timestamp',
         descending: true,
