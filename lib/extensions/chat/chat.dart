@@ -1,4 +1,4 @@
-import 'package:bubble/bubble.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
@@ -88,11 +88,15 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   final TextEditingController _commentController = TextEditingController();
   final ScrollController controller1 = ScrollController();
+  bool requestedNewPage = false;
+
+  String _roomName() {
+    return 'room name';
+  }
 
   @override
   void initState() {
     super.initState();
-    _gotoBottom();
   }
 
   @override
@@ -122,19 +126,23 @@ class _ChatWidgetState extends State<ChatWidget> {
             } else {
               saying = 'Eek2 - This is an error';
             }
-            widgets.add(Bubble(
-              margin: const BubbleEdges.only(top: 10),
-              alignment: Alignment.topRight,
-              nip: BubbleNip.rightTop,
-              color: const Color.fromRGBO(225, 255, 199, 1.0),
-              child: Text(saying, textAlign: TextAlign.right),
-            ),);
+            widgets.add(
+              BubbleSpecialOne(
+                  text: saying,
+                  isSender: true,
+                  color: const Color(0xFF1B97F3),
+                  textStyle: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .textStyleStyle()
+                      .styleText(context)!),
+            );
           }
           List<Widget> reorderedWidgets = [];
           reorderedWidgets.add(_buttonNextPage(state.mightHaveMore!));
           reorderedWidgets.addAll(widgets);
           var listWidget = ListView(
-            controller: controller1,
+              controller: controller1,
               shrinkWrap: true,
 //              physics: ScrollPhysics(),
               children: reorderedWidgets);
@@ -153,14 +161,18 @@ class _ChatWidgetState extends State<ChatWidget> {
               child: listWidget);
 */
 
-          var allWidgets = [
-            SizedBox(height: widget.height - 50, child: listWidget),
-            _speakRow()
-          ];
-          return ListView(
-              shrinkWrap: true,
+          if (!requestedNewPage) {
+            _gotoBottom();
+          }
+          requestedNewPage = false;
+          return ListView(padding: const EdgeInsets.all(0), shrinkWrap: true,
 //              physics: ScrollPhysics(),
-              children: allWidgets);
+              children: [
+                _header(),
+                SizedBox(height: widget.height - 110, child: listWidget),
+                _divider(),
+                _speakRow()
+              ]);
         }
       }
       return StyleRegistry.registry()
@@ -171,13 +183,49 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
   }
 
+  Widget _header() {
+    return ListView(
+      shrinkWrap: true,
+      padding: const EdgeInsets.all(0),
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        Container(
+            height: 35,
+            child:
+                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .textStyle()
+                  .h4(context, _roomName()),
+              const Spacer(),
+              StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .buttonStyle()
+                  .dialogButton(context,
+                      label: 'Close', onPressed: () => Navigator.pop(context))
+            ])),
+        _divider()
+      ],
+    );
+  }
+
+  Widget _divider() {
+    return const Divider(
+      height: 15,
+      thickness: 5,
+      color: Colors.red,
+    );
+  }
+
   Widget _speakField() {
     return TextField(
       textAlign: TextAlign.left,
       controller: _commentController,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
-        hintText: 'Say something...',
+        hintText: '`Say som`ething...',
         hintStyle: TextStyle(fontSize: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -205,7 +253,7 @@ class _ChatWidgetState extends State<ChatWidget> {
             alignment: Alignment.center, height: 30, child: _speakField()),
       ),
       Container(width: 8),
-      Container(height:50, child: buttonAdd()),
+      Container(height: 50, child: buttonAdd()),
     ]);
   }
 
@@ -243,12 +291,14 @@ class _ChatWidgetState extends State<ChatWidget> {
         controller1.animateTo(
           controller1.position.maxScrollExtent,
           duration: const Duration(milliseconds: 10),
-          curve: Curves.easeOut,);
+          curve: Curves.easeOut,
+        );
       });
     }
   }
 
   void _onClick() {
+    requestedNewPage = true;
     BlocProvider.of<ChatListBloc>(context).add(NewPage());
   }
 
@@ -274,15 +324,14 @@ class _ChatWidgetState extends State<ChatWidget> {
                       .frontEndStyle()
                       .textStyle()
                       .h5(
-                    context,
-                    "That's all folks",
-                  ));
+                        context,
+                        "That's all folks",
+                      ));
             }
           });
     }
   }
 }
-
 
 class MyButton extends StatefulWidget {
   //final RgbModel? buttonColor;
@@ -298,16 +347,16 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
-      return StyleRegistry.registry()
-          .styleWithContext(context)
-          .frontEndStyle()
-          .buttonStyle()
-          .button(
-        context,
-        label: 'More...',
-        onPressed: () {
-          widget.onClickFunction!();
-        },
-      );
+    return StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .buttonStyle()
+        .button(
+      context,
+      label: 'More...',
+      onPressed: () {
+        widget.onClickFunction!();
+      },
+    );
   }
 }

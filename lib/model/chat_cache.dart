@@ -14,7 +14,6 @@
 */
 
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
@@ -132,11 +131,6 @@ class ChatCache implements ChatRepository {
     return model.copyWith(
 
     );
-  }
-
-  @override
-  Stream<QuerySnapshot<Object?>> stream({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-    return reference.stream(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
   }
 
 }

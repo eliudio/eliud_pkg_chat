@@ -33,8 +33,6 @@ import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 typedef ChatModelTrigger(List<ChatModel?> list);
 typedef ChatChanged(ChatModel? value);
 
@@ -49,8 +47,6 @@ abstract class ChatRepository {
   Future<List<ChatModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
   Future<List<ChatModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
 
-  Stream<QuerySnapshot<Object?>> stream({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
-
   StreamSubscription<List<ChatModel?>> listen(ChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<ChatModel?>> listenWithDetails(ChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<ChatModel?> listenTo(String documentId, ChatChanged changed);
@@ -63,4 +59,5 @@ abstract class ChatRepository {
 
   Future<void> deleteAll();
 }
+
 
