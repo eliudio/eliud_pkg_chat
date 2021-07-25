@@ -23,7 +23,6 @@ import 'package:eliud_pkg_chat/model/chat_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _chatLimit = 5;
 
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final ChatRepository _chatRepository;
@@ -34,8 +33,9 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int chatLimit;
 
-  ChatListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatRepository chatRepository})
+  ChatListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatRepository chatRepository, this.chatLimit = 5})
       : assert(chatRepository != null),
         _chatRepository = chatRepository,
         super(ChatListLoading());
@@ -48,7 +48,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _chatLimit : null
+      limit: ((paged != null) && paged!) ? pages * chatLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _chatLimit : null
+        limit: ((paged != null) && paged!) ? pages * chatLimit : null
     );
   }
 

@@ -88,11 +88,10 @@ class ChatFirestore implements ChatRepository {
 
   StreamSubscription<List<ChatModel?>> listen(ChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<ChatModel?>> stream;
-//    stream = getQuery(ChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((data) {
-//    The above line is replaced by the below line. The reason is because the same collection can not be subscribed to twice
-//    The reason we're subscribing twice to the same list, is because the close on bloc isn't called. This needs to be fixed.
+//    stream = getQuery(appRepository()!.getSubCollection(appId, 'chat'), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((data) {
+//    The above line is replaced by the below line. The reason we had the above line is because we could not be subscribed to this collecction twice
 //    See https://github.com/felangel/bloc/issues/2073.
-//    In the meantime:
+//    However... I believe this issue seems now resolved and hence we use the below. In case we do seem the issue re-occuring (in admin, then let's revisit... the above github has some other suggestions)
       stream = getQuery(ChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((data) {
       Iterable<ChatModel?> chats  = data.docs.map((doc) {
         ChatModel? value = _populateDoc(doc);
@@ -107,7 +106,7 @@ class ChatFirestore implements ChatRepository {
 
   StreamSubscription<List<ChatModel?>> listenWithDetails(ChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<ChatModel?>> stream;
-//  stream = getQuery(ChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId).snapshots()
+//  stream = getQuery(appRepository()!.getSubCollection(appId, 'chat'), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
 //  see comment listen(...) above
     stream = getQuery(ChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
         .asyncMap((data) async {

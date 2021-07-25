@@ -76,15 +76,19 @@ abstract class ChatWidgetEvent extends ChatDashboardEvent {
 class CreateChatWithMemberEvent extends ChatWidgetEvent {
   final String currentMemberId;
   final String otherMemberId;
+  final int selectedOptionBeforeChat;
 
-  CreateChatWithMemberEvent(this.currentMemberId, this.otherMemberId);
+  CreateChatWithMemberEvent(this.currentMemberId, this.otherMemberId, this.selectedOptionBeforeChat);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [currentMemberId, otherMemberId, selectedOptionBeforeChat];
 
   @override
   bool operator == (Object other) =>
       identical(this, other) ||
           other is CreateChatWithMemberEvent &&
+              currentMemberId == other.currentMemberId &&
+              otherMemberId == other.otherMemberId &&
+              selectedOptionBeforeChat == other.selectedOptionBeforeChat &&
               runtimeType == other.runtimeType;
 }

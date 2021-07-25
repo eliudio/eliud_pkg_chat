@@ -113,18 +113,20 @@ class ExistingRealRoomsWidgetState extends ChatDashboardState {
 
 class ChatWidgetState extends ChatDashboardState {
   final RoomModel room;
+  final int selectedOptionBeforeChat;
 
-  ChatWidgetState(this.room);
+  const ChatWidgetState(this.room, this.selectedOptionBeforeChat);
 
   @override
-  List<Object?> get props => [room];
+  List<Object?> get props => [room, selectedOptionBeforeChat];
 
   @override
   bool operator == (Object other) =>
       identical(this, other) ||
           other is ChatWidgetState &&
           runtimeType == other.runtimeType &&
-          room == other.room;
+          room == other.room &&
+          selectedOptionBeforeChat == other.selectedOptionBeforeChat;
 }
 
 // there might be ChatWidgetState subclasses

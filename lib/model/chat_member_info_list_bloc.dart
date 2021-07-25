@@ -23,7 +23,6 @@ import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _chatMemberInfoLimit = 5;
 
 class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInfoListState> {
   final ChatMemberInfoRepository _chatMemberInfoRepository;
@@ -34,8 +33,9 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int chatMemberInfoLimit;
 
-  ChatMemberInfoListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMemberInfoRepository chatMemberInfoRepository})
+  ChatMemberInfoListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMemberInfoRepository chatMemberInfoRepository, this.chatMemberInfoLimit = 5})
       : assert(chatMemberInfoRepository != null),
         _chatMemberInfoRepository = chatMemberInfoRepository,
         super(ChatMemberInfoListLoading());
@@ -48,7 +48,7 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _chatMemberInfoLimit : null
+      limit: ((paged != null) && paged!) ? pages * chatMemberInfoLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _chatMemberInfoLimit : null
+        limit: ((paged != null) && paged!) ? pages * chatMemberInfoLimit : null
     );
   }
 

@@ -63,7 +63,7 @@ class FollowingDashboardItem extends StatelessWidget {
   final FollowingModel? value;
   final String? appId;
 
-  FollowingDashboardItem({
+  const FollowingDashboardItem({
     Key? key,
     required this.currentMemberId,
     required this.value,
@@ -88,7 +88,7 @@ class FollowingDashboardItem extends StatelessWidget {
     return ListTile(
         onTap: () async {
           BlocProvider.of<ChatDashboardBloc>(context)
-              .add(CreateChatWithMemberEvent(value!.followed!.documentID!, value!.follower!.documentID!));
+              .add(CreateChatWithMemberEvent(value!.followed!.documentID!, value!.follower!.documentID!, 1));
         },
         leading: const Icon(Icons.chat_bubble_outline),
         trailing: Container(

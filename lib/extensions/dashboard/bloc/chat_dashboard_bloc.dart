@@ -5,8 +5,17 @@ import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'chat_dashboard_event.dart';
 import 'chat_dashboard_state.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/widgets/members_widget.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/widgets/room_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 
 class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
   final String appId;
@@ -29,7 +38,7 @@ class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
       // check if room with this member exists, create it if needed, then open the chat with this room
       // fillChat(appId, event.currentMemberId, event.otherMemberId);
       var room = await getRoomForMember(appId, event.currentMemberId, event.otherMemberId);
-      yield ChatWidgetState(room);
+      yield ChatWidgetState(room, event.selectedOptionBeforeChat);
     }
   }
 
@@ -76,6 +85,46 @@ class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
         // add entry to chat
         _chatRepository!.add(chatModel);
       }
+    }
+  }
+
+  static void selectOption(BuildContext context, int option) {
+    switch (option) {
+      case 0:
+        {
+          BlocProvider.of<ChatDashboardBloc>(context)
+              .add(OpenUnreadWidgetEvent());
+          break;
+        }
+      case 1:
+        {
+          BlocProvider.of<ChatDashboardBloc>(context)
+              .add(OpenMemberRoomsWidgetEvent());
+          break;
+        }
+      case 2:
+        {
+          BlocProvider.of<ChatDashboardBloc>(context)
+              .add(OpenRealRoomFormsWidgetEvent());
+          break;
+        }
+      case 3:
+        {
+          BlocProvider.of<ChatDashboardBloc>(context)
+              .add(OpenExistingMemberRoomsWidgetEvent());
+          break;
+        }
+      case 4:
+        {
+          BlocProvider.of<ChatDashboardBloc>(context)
+              .add(OpenExistingRealRoomsWidgetEvent());
+          break;
+        }
+      case 5:
+        {
+          Navigator.of(context).pop();
+          break;
+        }
     }
   }
 }

@@ -51,43 +51,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   void _handleTabSelection() {
     if ((_tabController != null) && (_tabController!.indexIsChanging)) {
-      switch (_tabController!.index) {
-        case 0:
-          {
-            BlocProvider.of<ChatDashboardBloc>(context)
-                .add(OpenUnreadWidgetEvent());
-            break;
-          }
-        case 1:
-          {
-            BlocProvider.of<ChatDashboardBloc>(context)
-                .add(OpenMemberRoomsWidgetEvent());
-            break;
-          }
-        case 2:
-          {
-            BlocProvider.of<ChatDashboardBloc>(context)
-                .add(OpenRealRoomFormsWidgetEvent());
-            break;
-          }
-        case 3:
-          {
-            BlocProvider.of<ChatDashboardBloc>(context)
-                .add(OpenExistingMemberRoomsWidgetEvent());
-            break;
-          }
-        case 4:
-          {
-            BlocProvider.of<ChatDashboardBloc>(context)
-                .add(OpenExistingRealRoomsWidgetEvent());
-            break;
-          }
-        case 5:
-          {
-            Navigator.of(context).pop();
-            break;
-          }
-      }
+      ChatDashboardBloc.selectOption(context, _tabController!.index);
       setState(() {});
     }
   }
@@ -106,7 +70,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
       } else if (state is ExistingRealRoomsWidgetState) {
         return tabbed(RoomsWidget(appId: appId, memberId: memberId));
       } else if (state is ChatWidgetState) {
-        return contained(ChatPage(appId: state.room.appId!, roomId: state.room.documentID!, memberId: memberId, readAccess: state.room.members!, height: height(context)));
+        return contained(ChatPage(appId: state.room.appId!, roomId: state.room.documentID!, memberId: memberId, readAccess: state.room.members!, height: height(context), selectedOptionBeforeChat: state.selectedOptionBeforeChat));
       }
       return StyleRegistry.registry().styleWithContext(context)
           .frontEndStyle().progressIndicatorStyle().progressIndicator(context);

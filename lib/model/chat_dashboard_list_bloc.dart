@@ -23,7 +23,6 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _chatDashboardLimit = 5;
 
 class ChatDashboardListBloc extends Bloc<ChatDashboardListEvent, ChatDashboardListState> {
   final ChatDashboardRepository _chatDashboardRepository;
@@ -34,8 +33,9 @@ class ChatDashboardListBloc extends Bloc<ChatDashboardListEvent, ChatDashboardLi
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int chatDashboardLimit;
 
-  ChatDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatDashboardRepository chatDashboardRepository})
+  ChatDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatDashboardRepository chatDashboardRepository, this.chatDashboardLimit = 5})
       : assert(chatDashboardRepository != null),
         _chatDashboardRepository = chatDashboardRepository,
         super(ChatDashboardListLoading());
@@ -48,7 +48,7 @@ class ChatDashboardListBloc extends Bloc<ChatDashboardListEvent, ChatDashboardLi
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _chatDashboardLimit : null
+      limit: ((paged != null) && paged!) ? pages * chatDashboardLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class ChatDashboardListBloc extends Bloc<ChatDashboardListEvent, ChatDashboardLi
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _chatDashboardLimit : null
+        limit: ((paged != null) && paged!) ? pages * chatDashboardLimit : null
     );
   }
 

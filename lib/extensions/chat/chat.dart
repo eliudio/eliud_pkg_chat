@@ -1,6 +1,8 @@
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_list_event.dart';
@@ -19,6 +21,7 @@ class ChatPage extends StatefulWidget {
   final String memberId;
   final List<String> readAccess;
   final double height;
+  final int selectedOptionBeforeChat;
 
   const ChatPage({
     Key? key,
@@ -27,6 +30,7 @@ class ChatPage extends StatefulWidget {
     required this.memberId,
     required this.readAccess,
     required this.height,
+    required this.selectedOptionBeforeChat,
   }) : super(key: key);
 
   @override
@@ -45,6 +49,7 @@ class _ChatPageState extends State<ChatPage> {
               descending: true,
               detailed: true,
               eliudQuery: eliudQuery,
+              chatLimit: 5,
               chatRepository:
                   chatRepository(appId: widget.appId, roomId: widget.roomId)!,
             )..add(LoadChatList()),
@@ -53,7 +58,9 @@ class _ChatPageState extends State<ChatPage> {
             roomId: widget.roomId,
             memberId: widget.memberId,
             readAccess: widget.readAccess,
-            height: widget.height));
+            height: widget.height,
+          selectedOptionBeforeChat: widget.selectedOptionBeforeChat,
+        ));
 
     /*
     return BlocProvider<ChatBloc >(
@@ -71,6 +78,7 @@ class ChatWidget extends StatefulWidget {
   final String memberId;
   final List<String> readAccess;
   final double height;
+  final int selectedOptionBeforeChat;
 
   const ChatWidget({
     Key? key,
@@ -79,6 +87,7 @@ class ChatWidget extends StatefulWidget {
     required this.memberId,
     required this.readAccess,
     required this.height,
+    required this.selectedOptionBeforeChat,
   }) : super(key: key);
 
   @override
@@ -113,24 +122,43 @@ class _ChatWidgetState extends State<ChatWidget> {
         if (state is ChatListLoaded) {
           List<Widget> widgets = [];
           int len = state.values!.length;
+          var oldDate;
+          var saying;
+          var itsMe = true;
           for (int i = 0; i < len; i++) {
-            var saying;
+            var newDate;
             if (state.values![len - i - 1] != null) {
               ChatModel value = state.values![len - i - 1]!;
+              itsMe = value.authorId == widget.memberId;
               var timestamp = value.timestamp;
-              if (value.saying != null) {
-                saying = value.saying!;
+              saying = value.saying;
+              if (saying == null) {
+                saying = 'Eek 1a - This is an error';
+              } else if (timestamp == null) {
+                saying = 'Eek 1b - This is an error';
               } else {
-                saying = 'Eek1 - This is an error';
+                if (timestamp == 'null') {
+                  newDate = DateTime.now();
+                } else {
+                  newDate = dateFromTimestampString(timestamp);
+                }
+                saying = saying;
               }
             } else {
               saying = 'Eek2 - This is an error';
             }
+            if ((oldDate == null) || (newDate != oldDate)) {
+              widgets.add(Center(child: DateChip(
+                date: newDate,
+                color: const Color(0x558AD3D5),
+              )));
+            }
+            oldDate = newDate;
             widgets.add(
               BubbleSpecialOne(
                   text: saying,
-                  isSender: true,
-                  color: const Color(0xFF1B97F3),
+                  isSender: itsMe,
+                  color: Colors.white,//const Color(0xFF1B97F3),
                   textStyle: StyleRegistry.registry()
                       .styleWithContext(context)
                       .frontEndStyle()
@@ -144,23 +172,7 @@ class _ChatWidgetState extends State<ChatWidget> {
           var listWidget = ListView(
               controller: controller1,
               shrinkWrap: true,
-//              physics: ScrollPhysics(),
               children: reorderedWidgets);
-/*
-          var widget1 = NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if ((!scrolling) &&
-                    (scrollInfo.metrics.pixels ==
-                        scrollInfo.metrics.maxScrollExtent) &&
-                    (scrollInfo.metrics.axisDirection == AxisDirection.down)) {
-                  BlocProvider.of<ChatListBloc>(context).add(NewPage());
-                  scrolling = true;
-                }
-                return false;
-              },
-              child: listWidget);
-*/
-
           if (!requestedNewPage) {
             _gotoBottom();
           }
@@ -169,7 +181,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 //              physics: ScrollPhysics(),
               children: [
                 _header(),
-                SizedBox(height: widget.height - 110, child: listWidget),
+                SizedBox(height: widget.height - 115, child: listWidget),
                 _divider(),
                 _speakRow()
               ]);
@@ -204,7 +216,10 @@ class _ChatWidgetState extends State<ChatWidget> {
                   .frontEndStyle()
                   .buttonStyle()
                   .dialogButton(context,
-                      label: 'Close', onPressed: () => Navigator.pop(context))
+                      label: 'Close', onPressed: () =>
+                      ChatDashboardBloc.selectOption(context, widget.selectedOptionBeforeChat)
+
+              )
             ])),
         _divider()
       ],
@@ -225,7 +240,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       controller: _commentController,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
-        hintText: '`Say som`ething...',
+        hintText: 'Say something...',
         hintStyle: TextStyle(fontSize: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -347,7 +362,7 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
-    return StyleRegistry.registry()
+    return Center(child: StyleRegistry.registry()
         .styleWithContext(context)
         .frontEndStyle()
         .buttonStyle()
@@ -357,6 +372,6 @@ class _MyButtonState extends State<MyButton> {
       onPressed: () {
         widget.onClickFunction!();
       },
-    );
+    ));
   }
 }

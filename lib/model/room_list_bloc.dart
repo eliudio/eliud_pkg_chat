@@ -23,7 +23,6 @@ import 'package:eliud_pkg_chat/model/room_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 
-const _roomLimit = 5;
 
 class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
   final RoomRepository _roomRepository;
@@ -34,8 +33,9 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
   final String? orderBy;
   final bool? descending;
   final bool? detailed;
+  final int roomLimit;
 
-  RoomListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required RoomRepository roomRepository})
+  RoomListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required RoomRepository roomRepository, this.roomLimit = 5})
       : assert(roomRepository != null),
         _roomRepository = roomRepository,
         super(RoomListLoading());
@@ -48,7 +48,7 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * _roomLimit : null
+      limit: ((paged != null) && paged!) ? pages * roomLimit : null
     );
   }
 
@@ -60,7 +60,7 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * _roomLimit : null
+        limit: ((paged != null) && paged!) ? pages * roomLimit : null
     );
   }
 
