@@ -142,7 +142,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 } else {
                   newDate = dateFromTimestampString(timestamp);
                 }
-                saying = saying;
+                saying = timestamp + ' ' + saying;
               }
             } else {
               saying = 'Eek2 - This is an error';
