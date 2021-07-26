@@ -37,9 +37,7 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatFirestore implements ChatRepository {
   Future<ChatModel> add(ChatModel value) {
-    var entity = value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), );
-    var doc = entity.toDocument();
-    return ChatCollection.doc(value.documentID).set(doc).then((v) async {
+    return ChatCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
       if (newValue == null) {
         return value;

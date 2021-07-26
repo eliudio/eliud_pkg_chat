@@ -8,6 +8,7 @@ import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
+import 'package:eliud_pkg_chat/tools/indicate_read.dart';
 import 'package:flutter/material.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/scheduler.dart';
@@ -125,6 +126,7 @@ class _ChatWidgetState extends State<ChatWidget> {
           var oldDate;
           var saying;
           var itsMe = true;
+          var lastRead;
           for (int i = 0; i < len; i++) {
             var newDate;
             if (state.values![len - i - 1] != null) {
@@ -141,6 +143,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   newDate = DateTime.now();
                 } else {
                   newDate = dateFromTimestampString(timestamp);
+                  lastRead = value;
                 }
                 saying = timestamp + ' ' + saying;
               }
@@ -153,6 +156,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 color: const Color(0x558AD3D5),
               )));
             }
+            IndicateRead.setRead(widget.appId, widget.roomId, widget.memberId, lastRead);
             oldDate = newDate;
             widgets.add(
               BubbleSpecialOne(
