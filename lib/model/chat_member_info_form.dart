@@ -122,7 +122,8 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
   late ChatMemberInfoFormBloc _myFormBloc;
 
   final TextEditingController _documentIDController = TextEditingController();
-  final TextEditingController _memberIdController = TextEditingController();
+  final TextEditingController _authorIdController = TextEditingController();
+  final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _roomIdController = TextEditingController();
 
 
@@ -133,7 +134,8 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
     super.initState();
     _myFormBloc = BlocProvider.of<ChatMemberInfoFormBloc>(context);
     _documentIDController.addListener(_onDocumentIDChanged);
-    _memberIdController.addListener(_onMemberIdChanged);
+    _authorIdController.addListener(_onAuthorIdChanged);
+    _appIdController.addListener(_onAppIdChanged);
     _roomIdController.addListener(_onRoomIdChanged);
   }
 
@@ -152,10 +154,14 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
           _documentIDController.text = state.value!.documentID.toString();
         else
           _documentIDController.text = "";
-        if (state.value!.memberId != null)
-          _memberIdController.text = state.value!.memberId.toString();
+        if (state.value!.authorId != null)
+          _authorIdController.text = state.value!.authorId.toString();
         else
-          _memberIdController.text = "";
+          _authorIdController.text = "";
+        if (state.value!.appId != null)
+          _appIdController.text = state.value!.appId.toString();
+        else
+          _appIdController.text = "";
         if (state.value!.roomId != null)
           _roomIdController.text = state.value!.roomId.toString();
         else
@@ -171,7 +177,7 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Member ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _memberIdController, keyboardType: TextInputType.text, validator: (_) => state is MemberIdChatMemberInfoFormError ? state.message : null, hintText: null)
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Author ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _authorIdController, keyboardType: TextInputType.text, validator: (_) => state is AuthorIdChatMemberInfoFormError ? state.message : null, hintText: 'field.remark')
           );
 
         children.add(
@@ -192,7 +198,12 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
 
         children.add(
 
-                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDChatMemberInfoFormError ? state.message : null, hintText: null)
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'Document ID of this read indication', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDChatMemberInfoFormError ? state.message : null, hintText: null)
+          );
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithContext(context).adminFormStyle().textFormField(context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdChatMemberInfoFormError ? state.message : null, hintText: 'field.remark')
           );
 
 
@@ -211,17 +222,21 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
                         BlocProvider.of<ChatMemberInfoListBloc>(context).add(
                           UpdateChatMemberInfoList(value: state.value!.copyWith(
                               documentID: state.value!.documentID, 
-                              memberId: state.value!.memberId, 
+                              authorId: state.value!.authorId, 
+                              appId: state.value!.appId, 
                               roomId: state.value!.roomId, 
                               timestamp: state.value!.timestamp, 
+                              readAccess: state.value!.readAccess, 
                         )));
                       } else {
                         BlocProvider.of<ChatMemberInfoListBloc>(context).add(
                           AddChatMemberInfoList(value: ChatMemberInfoModel(
                               documentID: state.value!.documentID, 
-                              memberId: state.value!.memberId, 
+                              authorId: state.value!.authorId, 
+                              appId: state.value!.appId, 
                               roomId: state.value!.roomId, 
                               timestamp: state.value!.timestamp, 
+                              readAccess: state.value!.readAccess, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -253,8 +268,13 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
   }
 
 
-  void _onMemberIdChanged() {
-    _myFormBloc.add(ChangedChatMemberInfoMemberId(value: _memberIdController.text));
+  void _onAuthorIdChanged() {
+    _myFormBloc.add(ChangedChatMemberInfoAuthorId(value: _authorIdController.text));
+  }
+
+
+  void _onAppIdChanged() {
+    _myFormBloc.add(ChangedChatMemberInfoAppId(value: _appIdController.text));
   }
 
 
@@ -263,11 +283,18 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
   }
 
 
+  void _onReadAccessChanged(value) {
+    _myFormBloc.add(ChangedChatMemberInfoReadAccess(value: value));
+    setState(() {});
+  }
+
+
 
   @override
   void dispose() {
     _documentIDController.dispose();
-    _memberIdController.dispose();
+    _authorIdController.dispose();
+    _appIdController.dispose();
     _roomIdController.dispose();
     super.dispose();
   }

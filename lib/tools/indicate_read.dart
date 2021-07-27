@@ -17,7 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
 class IndicateRead {
-  static Future<void> setRead(String appId, String roomId, String memberId, ChatModel lastRead) async {
+  static Future<void> setRead(String appId, String roomId, String memberId, ChatModel lastRead, List<String> readAccess) async {
     if (lastRead.timestamp != 'null') {
       var _chatMemberInfoRepository = chatMemberInfoRepository(
           appId: appId, roomId: roomId);
@@ -25,13 +25,16 @@ class IndicateRead {
         var _chatMemberInfoDocumentId = memberId + '-' + roomId;
         var _chatMemberInfoModel = await _chatMemberInfoRepository.get(
             _chatMemberInfoDocumentId);
-        _chatMemberInfoModel ??= ChatMemberInfoModel(
-              documentID: _chatMemberInfoDocumentId,
-              memberId: memberId,
-              roomId: roomId,
-              timestamp: lastRead.timestamp
+        if ((_chatMemberInfoModel == null) || (dateTimeFromTimestampString(_chatMemberInfoModel.timestamp!).compareTo(dateTimeFromTimestampString(lastRead.timestamp!))) < 0) {
+          _chatMemberInfoModel = ChatMemberInfoModel(
+            documentID: _chatMemberInfoDocumentId,
+            authorId: memberId,
+            roomId: roomId,
+            timestamp: lastRead.timestamp,
+            readAccess: readAccess,
           );
-        _chatMemberInfoRepository.update(_chatMemberInfoModel);
+          _chatMemberInfoRepository.add(_chatMemberInfoModel);
+        }
       }
     }
   }

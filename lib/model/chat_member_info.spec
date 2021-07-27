@@ -23,16 +23,24 @@
   "fields": [
     {
       "fieldName": "documentID",
-      "displayName": "Document ID",
+      "displayName": "Document ID of this read indication",
       "fieldType": "String",
       "iconName": "vpn_key",
       "group": "general"
     },
     {
-      "fieldName": "memberId",
-      "displayName": "Member ID",
+      "fieldName": "authorId",
+      "remark": "The person initiating the conversation, or the owner of the group",
+      "displayName": "Author ID",
       "fieldType": "String",
       "group": "member"
+    },
+    {
+      "fieldName": "appId",
+      "displayName": "App Identifier",
+      "remark": "This is the identifier of the app to which this chat belongs",
+      "fieldType": "String",
+      "group": "general"
     },
     {
       "fieldName": "roomId",
@@ -43,9 +51,17 @@
     {
       "fieldName": "timestamp",
       "displayName": "Last Read Timestamp",
-      "remark": "Last Read entry in Chat in this room Timestamp",
+      "remark": "Last Read entry in Chat in this room for this member",
       "fieldType": "ServerTimestampUninitialized",
       "group": "general"
+    },
+    {
+      "fieldName": "readAccess",
+      "displayName": "Members that can read this detail of the read indication",
+      "fieldType": "String",
+      "iconName": "text_format",
+      "arrayType": "Array",
+      "hidden": true
     }
   ],
   "groups": [
@@ -56,7 +72,7 @@
  ],
   "listFields": {
     "title": "documentID!",
-    "subTitle": "memberId!"
+    "subTitle": "authorId!"
   },
   "depends": ["eliud_core"]
 }

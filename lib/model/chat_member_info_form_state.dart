@@ -79,15 +79,31 @@ class DocumentIDChatMemberInfoFormError extends ChatMemberInfoFormError {
 }
 
 
-class MemberIdChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const MemberIdChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class AuthorIdChatMemberInfoFormError extends ChatMemberInfoFormError { 
+  const AuthorIdChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
 
   @override
   List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
-    return '''MemberIdChatMemberInfoFormError {
+    return '''AuthorIdChatMemberInfoFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AppIdChatMemberInfoFormError extends ChatMemberInfoFormError { 
+  const AppIdChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AppIdChatMemberInfoFormError {
       value: $value,
       message: $message,
     }''';
@@ -120,6 +136,22 @@ class TimestampChatMemberInfoFormError extends ChatMemberInfoFormError {
   @override
   String toString() {
     return '''TimestampChatMemberInfoFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class ReadAccessChatMemberInfoFormError extends ChatMemberInfoFormError { 
+  const ReadAccessChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ReadAccessChatMemberInfoFormError {
       value: $value,
       message: $message,
     }''';

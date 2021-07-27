@@ -222,8 +222,8 @@ class ChatMemberInfoListItem extends StatelessWidget {
             child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
           ),
         ),
-        subtitle: (value!.memberId! != null) && (value!.memberId!.isNotEmpty)
-            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.memberId!))
+        subtitle: (value!.authorId! != null) && (value!.authorId!.isNotEmpty)
+            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.authorId!))
             : null,
       ),
     );

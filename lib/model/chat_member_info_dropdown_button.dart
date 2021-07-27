@@ -64,7 +64,7 @@ class ChatMemberInfoDropdownButtonWidgetState extends State<ChatMemberInfoDropdo
 List<Widget> widgets(ChatMemberInfoModel pm) {
 var widgets = <Widget>[];
 if (pm.documentID! != null) widgets.add(new Text(pm.documentID!));
-if (pm.memberId! != null) widgets.add(new Text(pm.memberId!));
+if (pm.authorId! != null) widgets.add(new Text(pm.authorId!));
 return widgets;
 }
 

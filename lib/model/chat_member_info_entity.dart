@@ -22,20 +22,24 @@ import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 class ChatMemberInfoEntity {
-  final String? memberId;
+  final String? authorId;
+  final String? appId;
   final String? roomId;
   final Object? timestamp;
+  final List<String>? readAccess;
 
-  ChatMemberInfoEntity({this.memberId, this.roomId, this.timestamp, });
+  ChatMemberInfoEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.readAccess, });
 
   ChatMemberInfoEntity copyWith({Object? timestamp, }) {
-    return ChatMemberInfoEntity(memberId: memberId, roomId: roomId, timestamp : timestamp, );
+    return ChatMemberInfoEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, readAccess: readAccess, );
   }
-  List<Object?> get props => [memberId, roomId, timestamp, ];
+  List<Object?> get props => [authorId, appId, roomId, timestamp, readAccess, ];
 
   @override
   String toString() {
-    return 'ChatMemberInfoEntity{memberId: $memberId, roomId: $roomId, timestamp: $timestamp}';
+    String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
+
+    return 'ChatMemberInfoEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, readAccess: String[] { $readAccessCsv }}';
   }
 
   static ChatMemberInfoEntity? fromMap(Object? o) {
@@ -43,19 +47,25 @@ class ChatMemberInfoEntity {
     var map = o as Map<String, dynamic>;
 
     return ChatMemberInfoEntity(
-      memberId: map['memberId'], 
+      authorId: map['authorId'], 
+      appId: map['appId'], 
       roomId: map['roomId'], 
-      timestamp: map['timestamp']
+      timestamp: map['timestamp'],
+      readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }
 
   Map<String, Object?> toDocument() {
     Map<String, Object?> theDocument = HashMap();
-    if (memberId != null) theDocument["memberId"] = memberId;
-      else theDocument["memberId"] = null;
+    if (authorId != null) theDocument["authorId"] = authorId;
+      else theDocument["authorId"] = null;
+    if (appId != null) theDocument["appId"] = appId;
+      else theDocument["appId"] = null;
     if (roomId != null) theDocument["roomId"] = roomId;
       else theDocument["roomId"] = null;
     theDocument["timestamp"] = timestamp;
+    if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
+      else theDocument["readAccess"] = null;
     return theDocument;
   }
 

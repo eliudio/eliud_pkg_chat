@@ -53,8 +53,10 @@ class ChatMemberInfoFormBloc extends Bloc<ChatMemberInfoFormEvent, ChatMemberInf
       if (event is InitialiseNewChatMemberInfoFormEvent) {
         ChatMemberInfoFormLoaded loaded = ChatMemberInfoFormLoaded(value: ChatMemberInfoModel(
                                                documentID: "",
-                                 memberId: "",
+                                 authorId: "",
+                                 appId: "",
                                  roomId: "",
+                                 readAccess: [],
 
         ));
         yield loaded;
@@ -85,8 +87,14 @@ class ChatMemberInfoFormBloc extends Bloc<ChatMemberInfoFormEvent, ChatMemberInf
 
         return;
       }
-      if (event is ChangedChatMemberInfoMemberId) {
-        newValue = currentState.value!.copyWith(memberId: event.value);
+      if (event is ChangedChatMemberInfoAuthorId) {
+        newValue = currentState.value!.copyWith(authorId: event.value);
+        yield SubmittableChatMemberInfoForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedChatMemberInfoAppId) {
+        newValue = currentState.value!.copyWith(appId: event.value);
         yield SubmittableChatMemberInfoForm(value: newValue);
 
         return;

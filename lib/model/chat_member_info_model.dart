@@ -13,6 +13,7 @@
 
 */
 
+import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
@@ -36,22 +37,28 @@ import 'package:eliud_core/tools/random.dart';
 
 class ChatMemberInfoModel {
   String? documentID;
-  String? memberId;
+
+  // The person initiating the conversation, or the owner of the group
+  String? authorId;
+
+  // This is the identifier of the app to which this chat belongs
+  String? appId;
   String? roomId;
 
-  // Last Read entry in Chat in this room Timestamp
+  // Last Read entry in Chat in this room for this member
   String? timestamp;
+  List<String>? readAccess;
 
-  ChatMemberInfoModel({this.documentID, this.memberId, this.roomId, this.timestamp, })  {
+  ChatMemberInfoModel({this.documentID, this.authorId, this.appId, this.roomId, this.timestamp, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  ChatMemberInfoModel copyWith({String? documentID, String? memberId, String? roomId, String? timestamp, }) {
-    return ChatMemberInfoModel(documentID: documentID ?? this.documentID, memberId: memberId ?? this.memberId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, );
+  ChatMemberInfoModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, String? timestamp, List<String>? readAccess, }) {
+    return ChatMemberInfoModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, readAccess: readAccess ?? this.readAccess, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ memberId.hashCode ^ roomId.hashCode ^ timestamp.hashCode;
+  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ roomId.hashCode ^ timestamp.hashCode ^ readAccess.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -59,20 +66,26 @@ class ChatMemberInfoModel {
           other is ChatMemberInfoModel &&
           runtimeType == other.runtimeType && 
           documentID == other.documentID &&
-          memberId == other.memberId &&
+          authorId == other.authorId &&
+          appId == other.appId &&
           roomId == other.roomId &&
-          timestamp == other.timestamp;
+          timestamp == other.timestamp &&
+          ListEquality().equals(readAccess, other.readAccess);
 
   @override
   String toString() {
-    return 'ChatMemberInfoModel{documentID: $documentID, memberId: $memberId, roomId: $roomId, timestamp: $timestamp}';
+    String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
+
+    return 'ChatMemberInfoModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, readAccess: String[] { $readAccessCsv }}';
   }
 
   ChatMemberInfoEntity toEntity({String? appId}) {
     return ChatMemberInfoEntity(
-          memberId: (memberId != null) ? memberId : null, 
+          authorId: (authorId != null) ? authorId : null, 
+          appId: (appId != null) ? appId : null, 
           roomId: (roomId != null) ? roomId : null, 
           timestamp: timestamp, 
+          readAccess: (readAccess != null) ? readAccess : null, 
     );
   }
 
@@ -81,9 +94,11 @@ class ChatMemberInfoModel {
     var counter = 0;
     return ChatMemberInfoModel(
           documentID: documentID, 
-          memberId: entity.memberId, 
+          authorId: entity.authorId, 
+          appId: entity.appId, 
           roomId: entity.roomId, 
           timestamp: entity.timestamp.toString(), 
+          readAccess: entity.readAccess, 
     );
   }
 
@@ -93,9 +108,11 @@ class ChatMemberInfoModel {
     var counter = 0;
     return ChatMemberInfoModel(
           documentID: documentID, 
-          memberId: entity.memberId, 
+          authorId: entity.authorId, 
+          appId: entity.appId, 
           roomId: entity.roomId, 
           timestamp: entity.timestamp.toString(), 
+          readAccess: entity.readAccess, 
     );
   }
 

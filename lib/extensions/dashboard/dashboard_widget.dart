@@ -70,7 +70,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
       } else if (state is ExistingRealRoomsWidgetState) {
         return tabbed(RoomsWidget(appId: appId, memberId: memberId));
       } else if (state is ChatWidgetState) {
-        return contained(ChatPage(appId: state.room.appId!, roomId: state.room.documentID!, memberId: memberId, readAccess: state.room.members!, height: height(context), selectedOptionBeforeChat: state.selectedOptionBeforeChat));
+        return ChatPage(appId: state.room.appId!, roomId: state.room.documentID!, memberId: memberId, members: state.room.members!, height: height(context), selectedOptionBeforeChat: state.selectedOptionBeforeChat);
       }
       return StyleRegistry.registry().styleWithContext(context)
           .frontEndStyle().progressIndicatorStyle().progressIndicator(context);
@@ -89,10 +89,14 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
   }
 
   double height(BuildContext context) {
-    return MediaQuery.of(context).size.height *.8;
+    return MediaQuery.of(context).size.height * .8;
+  }
+
+  double remainingHeight(BuildContext context) {
+    return height(context) - 55;
   }
 
   Widget contained(Widget widget) {
-    return Container(height: height(context), child: widget);
+    return Container(height: remainingHeight(context), child: widget);
   }
 }
