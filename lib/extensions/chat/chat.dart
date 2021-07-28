@@ -10,8 +10,6 @@ import 'package:eliud_pkg_chat/model/chat_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
     as ChatMemberInfoListEvent;
-import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/tools/indicate_read.dart';
@@ -54,7 +52,8 @@ class _ChatPageState extends State<ChatPage> {
         EliudQueryCondition('readAccess', arrayContains: widget.memberId));
 
     var otherMember;
-    if (widget.members.length == 2) { // currently we support read-indication for 1 member only
+    if (widget.members.length == 2) {
+      // currently we support read-indication for 1 member only
       if (widget.members[0] == widget.memberId) {
         otherMember = widget.members[1];
       } else {
@@ -65,8 +64,7 @@ class _ChatPageState extends State<ChatPage> {
     var eliudQueryChatMemberInfoList = EliudQuery()
         .withCondition(EliudQueryCondition('appId', isEqualTo: widget.appId))
         .withCondition(EliudQueryCondition('roomId', isEqualTo: widget.roomId))
-        .withCondition(
-            EliudQueryCondition('authorId', isEqualTo: otherMember))
+        .withCondition(EliudQueryCondition('authorId', isEqualTo: otherMember))
         .withCondition(
             EliudQueryCondition('readAccess', arrayContains: widget.memberId));
 
@@ -156,56 +154,55 @@ class _ChatWidgetState extends State<ChatWidget> {
     DateTime? otherMemberLastRead;
     return BlocBuilder<ChatMemberInfoListBloc, ChatMemberInfoListState>(
         builder: (chatMemberInfoContext, chatMemberInfoState) {
-          if (chatMemberInfoState is ChatMemberInfoListLoaded) {
-            if ((chatMemberInfoState.values != null) && (chatMemberInfoState.values!.isNotEmpty)) {
-              var value = chatMemberInfoState.values![0];
-              if ((value != null) && (value.timestamp != null)) {
-                otherMemberLastRead = dateTimeFromTimestampString(value.timestamp!);
-              }
-            }
+      if (chatMemberInfoState is ChatMemberInfoListLoaded) {
+        if ((chatMemberInfoState.values != null) &&
+            (chatMemberInfoState.values!.isNotEmpty)) {
+          var value = chatMemberInfoState.values![0];
+          if ((value != null) && (value.timestamp != null)) {
+            otherMemberLastRead = dateTimeFromTimestampString(value.timestamp!);
           }
+        }
+      }
       return BlocBuilder<ChatListBloc, ChatListState>(
           builder: (context, state) {
-        bool scrolling = false;
         if (state is ChatListState) {
           if (state is ChatListLoaded) {
             List<Widget> widgets = [];
             int len = state.values!.length;
-            var oldDate;
-            var saying;
+            DateTime? oldDate;
+            String saying;
             var itsMe = true;
             var lastRead; // what's the last item I've just read?
             for (int i = 0; i < len; i++) {
               var newDate;
-              var hasRead = false;  // did the other member read the message yet?
+              var hasRead = false; // did the other member read the message yet?
               if (state.values![len - i - 1] != null) {
                 ChatModel value = state.values![len - i - 1]!;
                 itsMe = value.authorId == widget.memberId;
                 var timestamp = value.timestamp;
-                saying = value.saying;
-                if (saying == null) {
+                if (value.saying == null) {
                   saying = 'Eek 1a - This is an error';
-                } else if (timestamp == null) {
-                  saying = 'Eek 1b - This is an error';
                 } else {
-                  if (timestamp == 'null') {
+                  saying = value.saying!;
+                  if ((timestamp == 'null') || (timestamp == null)) {
                     newDate = DateTime.now();
                   } else {
                     newDate = dateFromTimestampString(timestamp);
                     if (itsMe) {
-                      DateTime newDateTime = dateTimeFromTimestampString(timestamp);
-                      if ((otherMemberLastRead != null) && (otherMemberLastRead!.compareTo(newDateTime) >= 0)) {
+                      DateTime newDateTime =
+                          dateTimeFromTimestampString(timestamp);
+                      if ((otherMemberLastRead != null) &&
+                          (otherMemberLastRead!.compareTo(newDateTime) >= 0)) {
                         hasRead = true;
                       }
                     }
                     lastRead = value;
                   }
-                  saying = timestamp + ' ' + saying;
                 }
               } else {
                 saying = 'Eek2 - This is an error';
               }
-              if ((oldDate == null) || (newDate != oldDate)) {
+              if ((oldDate == null) || !isSameDate(newDate, oldDate)) {
                 widgets.add(Center(
                     child: DateChip(
                   date: newDate,
@@ -227,8 +224,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                         .styleText(context)!),
               );
             }
-            IndicateRead.setRead(
-                widget.appId, widget.roomId, widget.memberId, lastRead, widget.readAccess);
+            IndicateRead.setRead(widget.appId, widget.roomId, widget.memberId,
+                lastRead, widget.readAccess);
             List<Widget> reorderedWidgets = [];
             reorderedWidgets.add(_buttonNextPage(state.mightHaveMore!));
             reorderedWidgets.addAll(widgets);
@@ -298,25 +295,20 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Widget _speakField() {
-    return TextField(
-      textAlign: TextAlign.left,
-      controller: _commentController,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        hintText: 'Say something...',
-        hintStyle: TextStyle(fontSize: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            width: 0,
-            style: BorderStyle.none,
-          ),
-        ),
-        filled: true,
-        contentPadding: EdgeInsets.only(left: 8),
-        fillColor: Colors.grey,
-      ),
-    );
+    return StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .texFormFieldStyle()
+        .textField(
+          context,
+          readOnly: false,
+          textAlign: TextAlign.left,
+          textInputAction: TextInputAction.send,
+          onSubmitted: (value) => _comment(value),
+          controller: _commentController,
+          keyboardType: TextInputType.text,
+          hintText: 'Say something...',
+        );
   }
 
   Widget _speakRow() {
@@ -336,7 +328,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Widget buttonAdd() {
-    var addIcon = Icon(Icons.more_horiz);
     return StyleRegistry.registry()
         .styleWithContext(context)
         .frontEndStyle()
@@ -345,22 +336,25 @@ class _ChatWidgetState extends State<ChatWidget> {
       context,
       label: 'Ok',
       onPressed: () {
-        if ((_commentController.text != null) &&
-            (_commentController.text.length > 0)) {
-          BlocProvider.of<ChatListBloc>(context).add(ChatListEvent.AddChatList(
-              value: ChatModel(
-            documentID: newRandomKey(),
-            appId: widget.appId,
-            roomId: widget.roomId,
-            authorId: widget.memberId,
-            readAccess: widget.readAccess,
-            saying: _commentController.text,
-          )));
-          _commentController.clear();
-          _gotoBottom();
-        }
+        _comment(_commentController.text);
       },
     );
+  }
+
+  void _comment(String? value) {
+    if ((value != null) && (value.isNotEmpty)) {
+      BlocProvider.of<ChatListBloc>(context).add(ChatListEvent.AddChatList(
+          value: ChatModel(
+        documentID: newRandomKey(),
+        appId: widget.appId,
+        roomId: widget.roomId,
+        authorId: widget.memberId,
+        readAccess: widget.readAccess,
+        saying: value,
+      )));
+      _commentController.clear();
+      _gotoBottom();
+    }
   }
 
   void _gotoBottom() {

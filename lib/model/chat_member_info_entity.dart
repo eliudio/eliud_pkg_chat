@@ -50,7 +50,7 @@ class ChatMemberInfoEntity {
       authorId: map['authorId'], 
       appId: map['appId'], 
       roomId: map['roomId'], 
-      timestamp: map['timestamp'],
+      timestamp: chatMemberInfoRepository(appId: map['appId'], roomId: map['roomId'])!.timeStampToString(map['timestamp']), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }

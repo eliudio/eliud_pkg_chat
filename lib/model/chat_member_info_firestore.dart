@@ -37,7 +37,7 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
   Future<ChatMemberInfoModel> add(ChatMemberInfoModel value) {
-    return ChatMemberInfoCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value).then((v) async {
+    return ChatMemberInfoCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
       if (newValue == null) {
         return value;
@@ -53,7 +53,7 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
   }
 
   Future<ChatMemberInfoModel> update(ChatMemberInfoModel value) {
-    return ChatMemberInfoCollection.doc(value.documentID).update(value.toEntity(appId: appId).toDocument()).then((_) => value).then((v) async {
+    return ChatMemberInfoCollection.doc(value.documentID).update(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
       if (newValue == null) {
         return value;

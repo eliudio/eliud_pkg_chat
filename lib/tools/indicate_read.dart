@@ -30,7 +30,6 @@ class IndicateRead {
             documentID: _chatMemberInfoDocumentId,
             authorId: memberId,
             roomId: roomId,
-            timestamp: lastRead.timestamp,
             readAccess: readAccess,
           );
           _chatMemberInfoRepository.add(_chatMemberInfoModel);

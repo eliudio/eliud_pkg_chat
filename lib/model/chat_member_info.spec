@@ -52,7 +52,7 @@
       "fieldName": "timestamp",
       "displayName": "Last Read Timestamp",
       "remark": "Last Read entry in Chat in this room for this member",
-      "fieldType": "ServerTimestampUninitialized",
+      "fieldType": "ServerTimestamp",
       "group": "general"
     },
     {
