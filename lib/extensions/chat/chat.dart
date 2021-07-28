@@ -172,6 +172,7 @@ class _ChatWidgetState extends State<ChatWidget> {
             DateTime? oldDate;
             String saying;
             var itsMe = true;
+            String? timeString = null;
             var lastRead; // what's the last item I've just read?
             for (int i = 0; i < len; i++) {
               var newDate;
@@ -186,15 +187,14 @@ class _ChatWidgetState extends State<ChatWidget> {
                   saying = value.saying!;
                   if ((timestamp == 'null') || (timestamp == null)) {
                     newDate = DateTime.now();
+                    timeString = 'Now';
                   } else {
                     newDate = dateFromTimestampString(timestamp);
-                    if (itsMe) {
-                      DateTime newDateTime =
-                          dateTimeFromTimestampString(timestamp);
-                      if ((otherMemberLastRead != null) &&
-                          (otherMemberLastRead!.compareTo(newDateTime) >= 0)) {
-                        hasRead = true;
-                      }
+                    DateTime newDateTime = dateTimeFromTimestampString(timestamp);
+                    timeString = formatHHMM(newDateTime);
+                    if ((itsMe) && ((otherMemberLastRead != null) &&
+                          (otherMemberLastRead!.compareTo(newDateTime) >= 0))) {
+                      hasRead = true;
                     }
                     lastRead = value;
                   }
@@ -217,11 +217,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                     sent: itsMe,
                     seen: hasRead,
                     color: Colors.white, //const Color(0xFF1B97F3),
+                    time: timeString,
                     textStyle: StyleRegistry.registry()
                         .styleWithContext(context)
                         .frontEndStyle()
                         .textStyleStyle()
-                        .styleText(context)!),
+                        .styleText(context)!,
+                    timeTextStyle: StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .textStyleStyle()
+                      .styleSmallText(context)!
+                ),
               );
             }
             IndicateRead.setRead(widget.appId, widget.roomId, widget.memberId,
