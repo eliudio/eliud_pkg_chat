@@ -22,6 +22,8 @@ import '../model/chat_cache.dart';
 import '../model/chat_dashboard_firestore.dart';
 import '../model/chat_dashboard_repository.dart';
 import '../model/chat_dashboard_cache.dart';
+import '../model/chat_medium_repository.dart';
+import '../model/chat_medium_cache.dart';
 import '../model/chat_member_info_firestore.dart';
 import '../model/chat_member_info_repository.dart';
 import '../model/chat_member_info_cache.dart';
@@ -29,6 +31,7 @@ import '../model/room_firestore.dart';
 import '../model/room_repository.dart';
 import '../model/room_cache.dart';
 
+import '../model/chat_medium_model.dart';
 
 class RepositorySingleton extends AbstractRepositorySingleton {
     var _chatRepository = HashMap<String, ChatRepository>();

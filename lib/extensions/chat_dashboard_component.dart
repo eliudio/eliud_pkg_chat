@@ -36,6 +36,10 @@ class ChatDashboard extends AbstractChatDashboardComponent {
     return chatDashboardRepository(appId: AccessBloc.appId(context))!;
   }
 
+  double height(BuildContext context) {
+    return MediaQuery.of(context).size.height * .8;
+  }
+
   @override
   Widget yourWidget(BuildContext context, ChatDashboardModel? value) {
     var accessState = AccessBloc.getState(context);
@@ -44,9 +48,9 @@ class ChatDashboard extends AbstractChatDashboardComponent {
       if (accessState.getMember() != null) {
         var memberId = accessState.getMember()!.documentID!;
 
-        return BlocProvider<ChatDashboardBloc>(
+        return SizedBox(height: height(context), child: BlocProvider<ChatDashboardBloc>(
             create: (context) => ChatDashboardBloc(appId!)..add(OpenUnreadWidgetEvent()),
-            child: DashboardWidget(appId: appId!, memberId: memberId));
+            child: DashboardWidget(appId: appId!, memberId: memberId)));
       } else {
         return const Text('Member not available');
       }

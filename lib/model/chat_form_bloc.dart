@@ -58,6 +58,7 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
                                  roomId: "",
                                  saying: "",
                                  readAccess: [],
+                                 chatMedia: [],
 
         ));
         yield loaded;
@@ -114,6 +115,12 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
       }
       if (event is ChangedChatSaying) {
         newValue = currentState.value!.copyWith(saying: event.value);
+        yield SubmittableChatForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedChatChatMedia) {
+        newValue = currentState.value!.copyWith(chatMedia: event.value);
         yield SubmittableChatForm(value: newValue);
 
         return;

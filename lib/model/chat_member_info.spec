@@ -19,7 +19,7 @@
     "isExtension": false,
     "documentSubCollectionOf": "room"
   },
-  "memberIdentifier": "memberId",
+  "memberIdentifier": "authorId",
   "fields": [
     {
       "fieldName": "documentID",

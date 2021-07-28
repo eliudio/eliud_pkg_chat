@@ -223,6 +223,25 @@ class _MyChatFormState extends State<MyChatForm> {
         children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
 
 
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'Media')
+                ));
+
+        children.add(
+
+                new Container(
+                    height: (fullScreenHeight(context) / 2.5), 
+                    child: chatMediumsList(context, state.value!.chatMedia, _onChatMediaChanged)
+                )
+          );
+
+
+        children.add(Container(height: 20.0));
+        children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
+
+
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
           children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
@@ -239,6 +258,7 @@ class _MyChatFormState extends State<MyChatForm> {
                               timestamp: state.value!.timestamp, 
                               saying: state.value!.saying, 
                               readAccess: state.value!.readAccess, 
+                              chatMedia: state.value!.chatMedia, 
                         )));
                       } else {
                         BlocProvider.of<ChatListBloc>(context).add(
@@ -250,6 +270,7 @@ class _MyChatFormState extends State<MyChatForm> {
                               timestamp: state.value!.timestamp, 
                               saying: state.value!.saying, 
                               readAccess: state.value!.readAccess, 
+                              chatMedia: state.value!.chatMedia, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -303,6 +324,12 @@ class _MyChatFormState extends State<MyChatForm> {
 
   void _onReadAccessChanged(value) {
     _myFormBloc.add(ChangedChatReadAccess(value: value));
+    setState(() {});
+  }
+
+
+  void _onChatMediaChanged(value) {
+    _myFormBloc.add(ChangedChatChatMedia(value: value));
     setState(() {});
   }
 

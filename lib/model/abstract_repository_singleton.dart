@@ -15,6 +15,7 @@
 
 import '../model/chat_repository.dart';
 import '../model/chat_dashboard_repository.dart';
+import '../model/chat_medium_repository.dart';
 import '../model/chat_member_info_repository.dart';
 import '../model/room_repository.dart';
 import 'package:eliud_core/core/access/bloc/user_repository.dart';

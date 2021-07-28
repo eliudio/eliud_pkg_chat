@@ -175,6 +175,22 @@ class ReadAccessChatFormError extends ChatFormError {
 }
 
 
+class ChatMediaChatFormError extends ChatFormError { 
+  const ChatMediaChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''ChatMediaChatFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ChatFormLoaded extends ChatFormInitialized { 
   const ChatFormLoaded({ ChatModel? value }): super(value: value);
 

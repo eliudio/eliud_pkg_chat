@@ -18,6 +18,9 @@ dependencies:
   eliud_core:
     path: ../eliud_core
 
+  eliud_pkg_medium:
+    path: ../eliud_pkg_medium
+
   eliud_pkg_follow:
     path: ../eliud_pkg_follow
 
@@ -26,6 +29,9 @@ dev_dependencies:
 
   eliud_generator:
     path: ../eliud_generator
+
+  eliud_pkg_medium:
+    path: ../eliud_pkg_medium
 
 flutter:
   uses-material-design: true

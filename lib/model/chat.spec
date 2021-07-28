@@ -69,12 +69,23 @@
       "iconName": "text_format",
       "arrayType": "Array",
       "hidden": true
+    },
+    {
+      "fieldName": "chatMedia",
+      "fieldType": "ChatMedium",
+      "displayName": "Media",
+      "group": "media",
+      "arrayType": "Array"
     }
   ],
   "groups": [
     {
         "group": "general",
         "description": "General"
+    },
+    {
+        "group": "media",
+        "description": "Media"
     }
  ],
   "listFields": {

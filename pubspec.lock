@@ -324,7 +324,7 @@ packages:
     source: path
     version: "0.0.1"
   eliud_pkg_medium:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "../eliud_pkg_medium"
       relative: true
@@ -786,6 +786,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
+  percent_indicator:
+    dependency: transitive
+    description:
+      name: percent_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   petitparser:
     dependency: transitive
     description:

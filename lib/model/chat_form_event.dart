@@ -143,3 +143,15 @@ class ChangedChatReadAccess extends ChatFormEvent {
   String toString() => 'ChangedChatReadAccess{ value: $value }';
 }
 
+class ChangedChatChatMedia extends ChatFormEvent {
+  final List<ChatMediumModel>? value;
+
+  ChangedChatChatMedia({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatChatMedia{ value: $value }';
+}
+

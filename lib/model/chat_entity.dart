@@ -28,24 +28,35 @@ class ChatEntity {
   final Object? timestamp;
   final String? saying;
   final List<String>? readAccess;
+  final List<ChatMediumEntity>? chatMedia;
 
-  ChatEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.readAccess, });
+  ChatEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.readAccess, this.chatMedia, });
 
   ChatEntity copyWith({Object? timestamp, }) {
-    return ChatEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, saying: saying, readAccess: readAccess, );
+    return ChatEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, saying: saying, readAccess: readAccess, chatMedia: chatMedia, );
   }
-  List<Object?> get props => [authorId, appId, roomId, timestamp, saying, readAccess, ];
+  List<Object?> get props => [authorId, appId, roomId, timestamp, saying, readAccess, chatMedia, ];
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
+    String chatMediaCsv = (chatMedia == null) ? '' : chatMedia!.join(', ');
 
-    return 'ChatEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }}';
+    return 'ChatEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
   static ChatEntity? fromMap(Object? o) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
+
+    var chatMediaFromMap;
+    chatMediaFromMap = map['chatMedia'];
+    var chatMediaList;
+    if (chatMediaFromMap != null)
+      chatMediaList = (map['chatMedia'] as List<dynamic>)
+        .map((dynamic item) =>
+        ChatMediumEntity.fromMap(item as Map)!)
+        .toList();
 
     return ChatEntity(
       authorId: map['authorId'], 
@@ -54,10 +65,15 @@ class ChatEntity {
       timestamp: chatRepository(appId: map['appId'], roomId: map['roomId'])!.timeStampToString(map['timestamp']), 
       saying: map['saying'], 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
+      chatMedia: chatMediaList, 
     );
   }
 
   Map<String, Object?> toDocument() {
+    final List<Map<String?, dynamic>>? chatMediaListMap = chatMedia != null 
+        ? chatMedia!.map((item) => item.toDocument()).toList()
+        : null;
+
     Map<String, Object?> theDocument = HashMap();
     if (authorId != null) theDocument["authorId"] = authorId;
       else theDocument["authorId"] = null;
@@ -70,6 +86,8 @@ class ChatEntity {
       else theDocument["saying"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
+    if (chatMedia != null) theDocument["chatMedia"] = chatMediaListMap;
+      else theDocument["chatMedia"] = null;
     return theDocument;
   }
 

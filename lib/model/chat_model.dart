@@ -49,17 +49,18 @@ class ChatModel {
   String? timestamp;
   String? saying;
   List<String>? readAccess;
+  List<ChatMediumModel>? chatMedia;
 
-  ChatModel({this.documentID, this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.readAccess, })  {
+  ChatModel({this.documentID, this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.readAccess, this.chatMedia, })  {
     assert(documentID != null);
   }
 
-  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, String? timestamp, String? saying, List<String>? readAccess, }) {
-    return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, saying: saying ?? this.saying, readAccess: readAccess ?? this.readAccess, );
+  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, String? timestamp, String? saying, List<String>? readAccess, List<ChatMediumModel>? chatMedia, }) {
+    return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, saying: saying ?? this.saying, readAccess: readAccess ?? this.readAccess, chatMedia: chatMedia ?? this.chatMedia, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ roomId.hashCode ^ timestamp.hashCode ^ saying.hashCode ^ readAccess.hashCode;
+  int get hashCode => documentID.hashCode ^ authorId.hashCode ^ appId.hashCode ^ roomId.hashCode ^ timestamp.hashCode ^ saying.hashCode ^ readAccess.hashCode ^ chatMedia.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -72,13 +73,15 @@ class ChatModel {
           roomId == other.roomId &&
           timestamp == other.timestamp &&
           saying == other.saying &&
-          ListEquality().equals(readAccess, other.readAccess);
+          ListEquality().equals(readAccess, other.readAccess) &&
+          ListEquality().equals(chatMedia, other.chatMedia);
 
   @override
   String toString() {
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
+    String chatMediaCsv = (chatMedia == null) ? '' : chatMedia!.join(', ');
 
-    return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }}';
+    return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
   ChatEntity toEntity({String? appId}) {
@@ -89,6 +92,9 @@ class ChatModel {
           timestamp: timestamp, 
           saying: (saying != null) ? saying : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
+          chatMedia: (chatMedia != null) ? chatMedia
+            !.map((item) => item.toEntity(appId: appId))
+            .toList() : null, 
     );
   }
 
@@ -103,6 +109,14 @@ class ChatModel {
           timestamp: entity.timestamp.toString(), 
           saying: entity.saying, 
           readAccess: entity.readAccess, 
+          chatMedia: 
+            entity.chatMedia == null ? null :
+            entity.chatMedia
+            !.map((item) {
+              counter++; 
+              return ChatMediumModel.fromEntity(counter.toString(), item)!;
+            })
+            .toList(), 
     );
   }
 
@@ -118,6 +132,12 @@ class ChatModel {
           timestamp: entity.timestamp.toString(), 
           saying: entity.saying, 
           readAccess: entity.readAccess, 
+          chatMedia: 
+            entity. chatMedia == null ? null : List<ChatMediumModel>.from(await Future.wait(entity. chatMedia
+            !.map((item) {
+            counter++;
+            return ChatMediumModel.fromEntityPlus(counter.toString(), item, appId: appId);})
+            .toList())), 
     );
   }
 
