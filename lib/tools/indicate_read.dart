@@ -18,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 
 class IndicateRead {
   static Future<void> setRead(String appId, String roomId, String memberId, ChatModel lastRead, List<String> readAccess) async {
+    print('setRead($appId, $roomId, $memberId, ' + lastRead.saying!);
     if (lastRead.timestamp != 'null') {
       var _chatMemberInfoRepository = chatMemberInfoRepository(
           appId: appId, roomId: roomId);

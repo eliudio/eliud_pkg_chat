@@ -231,6 +231,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 ),
               );
             }
+
             IndicateRead.setRead(widget.appId, widget.roomId, widget.memberId,
                 lastRead, widget.readAccess);
             List<Widget> reorderedWidgets = [];
