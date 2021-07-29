@@ -31,7 +31,7 @@ RoomRepository? roomRepository({ String? appId }) => AbstractRepositorySingleton
 abstract class AbstractRepositorySingleton {
   static List<MemberCollectionInfo> collections = [
     MemberCollectionInfo('chat', 'authorId'),
-    MemberCollectionInfo('chatmemberinfo', 'memberId'),
+    MemberCollectionInfo('chatmemberinfo', 'authorId'),
     MemberCollectionInfo('room', 'authorId'),
   ];
   static late AbstractRepositorySingleton singleton;

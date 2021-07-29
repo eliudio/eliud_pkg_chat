@@ -159,6 +159,22 @@ class MembersRoomFormError extends RoomFormError {
 }
 
 
+class TimestampRoomFormError extends RoomFormError { 
+  const TimestampRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''TimestampRoomFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class RoomFormLoaded extends RoomFormInitialized { 
   const RoomFormLoaded({ RoomModel? value }): super(value: value);
 

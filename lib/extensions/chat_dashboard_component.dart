@@ -49,7 +49,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
         var memberId = accessState.getMember()!.documentID!;
 
         return SizedBox(height: height(context), child: BlocProvider<ChatDashboardBloc>(
-            create: (context) => ChatDashboardBloc(appId!)..add(OpenUnreadWidgetEvent()),
+            create: (context) => ChatDashboardBloc(appId!)..add(OpenMemberRoomsWidgetEvent()),
             child: DashboardWidget(appId: appId!, memberId: memberId)));
       } else {
         return const Text('Member not available');

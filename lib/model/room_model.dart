@@ -46,17 +46,18 @@ class RoomModel {
   String? description;
   bool? isRoom;
   List<String>? members;
+  String? timestamp;
 
-  RoomModel({this.documentID, this.ownerId, this.appId, this.description, this.isRoom, this.members, })  {
+  RoomModel({this.documentID, this.ownerId, this.appId, this.description, this.isRoom, this.members, this.timestamp, })  {
     assert(documentID != null);
   }
 
-  RoomModel copyWith({String? documentID, String? ownerId, String? appId, String? description, bool? isRoom, List<String>? members, }) {
-    return RoomModel(documentID: documentID ?? this.documentID, ownerId: ownerId ?? this.ownerId, appId: appId ?? this.appId, description: description ?? this.description, isRoom: isRoom ?? this.isRoom, members: members ?? this.members, );
+  RoomModel copyWith({String? documentID, String? ownerId, String? appId, String? description, bool? isRoom, List<String>? members, String? timestamp, }) {
+    return RoomModel(documentID: documentID ?? this.documentID, ownerId: ownerId ?? this.ownerId, appId: appId ?? this.appId, description: description ?? this.description, isRoom: isRoom ?? this.isRoom, members: members ?? this.members, timestamp: timestamp ?? this.timestamp, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ ownerId.hashCode ^ appId.hashCode ^ description.hashCode ^ isRoom.hashCode ^ members.hashCode;
+  int get hashCode => documentID.hashCode ^ ownerId.hashCode ^ appId.hashCode ^ description.hashCode ^ isRoom.hashCode ^ members.hashCode ^ timestamp.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -68,13 +69,14 @@ class RoomModel {
           appId == other.appId &&
           description == other.description &&
           isRoom == other.isRoom &&
-          ListEquality().equals(members, other.members);
+          ListEquality().equals(members, other.members) &&
+          timestamp == other.timestamp;
 
   @override
   String toString() {
     String membersCsv = (members == null) ? '' : members!.join(', ');
 
-    return 'RoomModel{documentID: $documentID, ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }}';
+    return 'RoomModel{documentID: $documentID, ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
   RoomEntity toEntity({String? appId}) {
@@ -84,6 +86,7 @@ class RoomModel {
           description: (description != null) ? description : null, 
           isRoom: (isRoom != null) ? isRoom : null, 
           members: (members != null) ? members : null, 
+          timestamp: timestamp, 
     );
   }
 
@@ -97,6 +100,7 @@ class RoomModel {
           description: entity.description, 
           isRoom: entity.isRoom, 
           members: entity.members, 
+          timestamp: entity.timestamp.toString(), 
     );
   }
 
@@ -111,6 +115,7 @@ class RoomModel {
           description: entity.description, 
           isRoom: entity.isRoom, 
           members: entity.members, 
+          timestamp: entity.timestamp.toString(), 
     );
   }
 

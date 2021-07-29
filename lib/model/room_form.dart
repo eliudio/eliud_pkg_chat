@@ -218,6 +218,7 @@ class _MyRoomFormState extends State<MyRoomForm> {
           );
 
 
+
         children.add(Container(height: 20.0));
         children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
 
@@ -237,6 +238,7 @@ class _MyRoomFormState extends State<MyRoomForm> {
                               description: state.value!.description, 
                               isRoom: state.value!.isRoom, 
                               members: state.value!.members, 
+                              timestamp: state.value!.timestamp, 
                         )));
                       } else {
                         BlocProvider.of<RoomListBloc>(context).add(
@@ -247,6 +249,7 @@ class _MyRoomFormState extends State<MyRoomForm> {
                               description: state.value!.description, 
                               isRoom: state.value!.isRoom, 
                               members: state.value!.members, 
+                              timestamp: state.value!.timestamp, 
                           )));
                       }
                       if (widget.submitAction != null) {

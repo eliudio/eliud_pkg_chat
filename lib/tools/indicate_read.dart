@@ -9,6 +9,7 @@ import 'package:eliud_pkg_chat/model/chat_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
+import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:flutter/scheduler.dart';
@@ -22,7 +23,7 @@ class IndicateRead {
       var _chatMemberInfoRepository = chatMemberInfoRepository(
           appId: appId, roomId: roomId);
       if (_chatMemberInfoRepository != null) {
-        var _chatMemberInfoDocumentId = memberId + '-' + roomId;
+        var _chatMemberInfoDocumentId = RoomHelper.getChatMemberInfoId(memberId, roomId);
         var _chatMemberInfoModel = await _chatMemberInfoRepository.get(
             _chatMemberInfoDocumentId);
         if ((_chatMemberInfoModel == null) || (dateTimeFromTimestampString(_chatMemberInfoModel.timestamp!).compareTo(dateTimeFromTimestampString(lastRead.timestamp!))) < 0) {

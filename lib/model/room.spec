@@ -62,6 +62,12 @@
       "iconName": "text_format",
       "arrayType": "Array",
       "hidden": true
+    },
+    {
+      "fieldName": "timestamp",
+      "displayName": "Timestamp",
+      "fieldType": "ServerTimestamp",
+      "group": "general"
     }
   ],
   "groups": [

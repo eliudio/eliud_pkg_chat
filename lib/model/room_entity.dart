@@ -27,17 +27,20 @@ class RoomEntity {
   final String? description;
   final bool? isRoom;
   final List<String>? members;
+  final Object? timestamp;
 
-  RoomEntity({this.ownerId, this.appId, this.description, this.isRoom, this.members, });
+  RoomEntity({this.ownerId, this.appId, this.description, this.isRoom, this.members, this.timestamp, });
 
-
-  List<Object?> get props => [ownerId, appId, description, isRoom, members, ];
+  RoomEntity copyWith({Object? timestamp, }) {
+    return RoomEntity(ownerId: ownerId, appId: appId, description: description, isRoom: isRoom, members: members, timestamp : timestamp, );
+  }
+  List<Object?> get props => [ownerId, appId, description, isRoom, members, timestamp, ];
 
   @override
   String toString() {
     String membersCsv = (members == null) ? '' : members!.join(', ');
 
-    return 'RoomEntity{ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }}';
+    return 'RoomEntity{ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
   static RoomEntity? fromMap(Object? o) {
@@ -50,6 +53,7 @@ class RoomEntity {
       description: map['description'], 
       isRoom: map['isRoom'], 
       members: map['members'] == null ? null : List.from(map['members']), 
+      timestamp: roomRepository(appId: map['appId'])!.timeStampToString(map['timestamp']), 
     );
   }
 
@@ -65,6 +69,7 @@ class RoomEntity {
       else theDocument["isRoom"] = null;
     if (members != null) theDocument["members"] = members!.toList();
       else theDocument["members"] = null;
+    theDocument["timestamp"] = timestamp;
     return theDocument;
   }
 

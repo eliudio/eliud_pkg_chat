@@ -33,7 +33,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   @override
   void initState() {
-    var size = 6;
+    var size = 4;
     _tabController = TabController(vsync: this, length: size);
     _tabController!.addListener(_handleTabSelection);
     _tabController!.index = 0;
@@ -58,15 +58,25 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    //
+    // We basically need
+    //
+    // I. Overview chats
+    // 1 query which lists all rooms where member is part of members
+    //      reverse order it by write time
+    //      then for each entry, query the chatmemberinfo and indicate the roomn in bold if the timestamp is lower
+    //
+    // 1 extra query of followers. Exclude those followers we already have in the list. Indicate if you can start a chat
+    // or require to follow back first.
+    //
+    // II. Create room
+    // an ability to create a room with multiple members
+    //
     return BlocBuilder<ChatDashboardBloc, ChatDashboardState>(builder: (context, state) {
-      if (state is UnreadWidgetState) {
-        return tabbed(const Text('A list of unread messages'));
-      } else if (state is MemberRoomsWidgetState) {
+      if (state is MemberRoomsWidgetState) {
         return tabbed(MembersWidget(appId: appId, memberId: memberId));
       } else if (state is RealRoomFormsWidgetState) {
         return tabbed(const Text('A form with details to create a new room, including name of room and ok button'));
-      } else if (state is ExistingMemberRoomsWidgetState) {
-        return tabbed(const Text('Here a list of existing chats, i.e. RoomWidget where isRoom = false (or create another entity specific for this)'));
       } else if (state is ExistingRealRoomsWidgetState) {
         return tabbed(RoomsWidget(appId: appId, memberId: memberId));
       } else if (state is ChatWidgetState) {
@@ -78,7 +88,7 @@ class DashboardWidgetState extends State<DashboardWidget>  with SingleTickerProv
   }
 
   Widget tabbed(Widget widget) {
-    var items = ['Unread', 'Chat', 'Room', 'Chats', 'Rooms', 'Close'];
+    var items = ['Members', 'Create room', 'Chats', 'Close'];
     return Column(children: [
       StyleRegistry.registry().styleWithContext(context)
           .frontEndStyle()

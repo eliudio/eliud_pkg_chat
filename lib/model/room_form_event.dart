@@ -131,3 +131,15 @@ class ChangedRoomMembers extends RoomFormEvent {
   String toString() => 'ChangedRoomMembers{ value: $value }';
 }
 
+class ChangedRoomTimestamp extends RoomFormEvent {
+  final String? value;
+
+  ChangedRoomTimestamp({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedRoomTimestamp{ value: $value }';
+}
+

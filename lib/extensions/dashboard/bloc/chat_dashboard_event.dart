@@ -14,17 +14,6 @@ abstract class ChatDashboardEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class OpenUnreadWidgetEvent extends ChatDashboardEvent {
-  @override
-  List<Object?> get props => [];
-
-  @override
-  bool operator == (Object other) =>
-      identical(this, other) ||
-          other is OpenUnreadWidgetEvent &&
-              runtimeType == other.runtimeType;
-}
-
 class OpenMemberRoomsWidgetEvent extends ChatDashboardEvent {
   @override
   List<Object?> get props => [];
@@ -44,17 +33,6 @@ class OpenRealRoomFormsWidgetEvent extends ChatDashboardEvent {
   bool operator == (Object other) =>
       identical(this, other) ||
           other is OpenRealRoomFormsWidgetEvent &&
-              runtimeType == other.runtimeType;
-}
-
-class OpenExistingMemberRoomsWidgetEvent extends ChatDashboardEvent {
-  @override
-  List<Object?> get props => [];
-
-  @override
-  bool operator == (Object other) =>
-      identical(this, other) ||
-          other is OpenExistingMemberRoomsWidgetEvent &&
               runtimeType == other.runtimeType;
 }
 

@@ -15,6 +15,7 @@ import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/tools/indicate_read.dart';
+import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
 import 'package:flutter/material.dart';
@@ -66,12 +67,18 @@ class _ChatPageState extends State<ChatPage> {
       }
     }
 
+/*
     var eliudQueryChatMemberInfoList = EliudQuery()
         .withCondition(EliudQueryCondition('appId', isEqualTo: widget.appId))
         .withCondition(EliudQueryCondition('roomId', isEqualTo: widget.roomId))
         .withCondition(EliudQueryCondition('authorId', isEqualTo: otherMember))
         .withCondition(
             EliudQueryCondition('readAccess', arrayContains: widget.memberId));
+
+*/
+    var chatMemberInfoId = RoomHelper.getChatMemberInfoId(otherMember, widget.roomId);
+    var eliudQueryChatMemberInfoList = EliudQuery()
+        .withCondition(EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
 
     return MultiBlocProvider(
         providers: <BlocProvider>[
@@ -251,7 +258,6 @@ class _ChatWidgetState extends State<ChatWidget> {
               }
 
               if (itemMedia != null) {
-                dontGoToBottom = true;
                 var mediaWidget = MediaHelper.staggeredMemberMediumModel(
                     context, itemMedia,
                     reverse: itsMe,
@@ -285,15 +291,6 @@ class _ChatWidgetState extends State<ChatWidget> {
                           : null,
                       widget: mediaWidget),
                 );
-/*
-                if (itsMe) {
-                  widgets.add(Padding(
-                      padding: const EdgeInsets.only(right: 20), child: mediaWidget));
-                } else {
-                  widgets.add(Padding(
-                      padding: const EdgeInsets.only(left: 20), child: mediaWidget));
-                }
-*/
               }
             }
 
@@ -417,11 +414,6 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   Widget _speakRow() {
     return Row(children: [
-/*
-      Container(
-          height: 60, width: 60, child: avatar == null ? Container() : avatar),
-      Container(width: 8),
-*/
       Flexible(
         child: Container(
             alignment: Alignment.center, height: 30, child: _speakField()),
@@ -478,7 +470,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       SchedulerBinding.instance!.addPostFrameCallback((_) {
         controller1.animateTo(
           controller1.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 10),
+          duration: const Duration(milliseconds: 100),
           curve: Curves.easeOut,
         );
       });

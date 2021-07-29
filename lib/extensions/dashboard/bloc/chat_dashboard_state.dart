@@ -45,21 +45,7 @@ class ChatDashboardStateUninitialized extends ChatDashboardState {
       other is ChatDashboardStateUninitialized && runtimeType == other.runtimeType;
 }
 
-// UnreadWidgetState: List the items in unread
-class UnreadWidgetState extends ChatDashboardState {
-  // list of unread items
-  // this is determined by _chatMemberInfoRepository which holds the last read entry per member, per room
-  @override
-  List<Object?> get props => [];
-
-  @override
-  bool operator == (Object other) =>
-      identical(this, other) ||
-          other is UnreadWidgetState &&
-              runtimeType == other.runtimeType;
-}
-
-// MemberRoomsWidgetState: List all members and allow to open a chat with one of these members, i.e. MembersWidget
+// MemberRoomsWidgetState: List all members and allow to open a chat with one of these members, i.e. MembersWidget!
 class MemberRoomsWidgetState extends ChatDashboardState {
   // nothing
   @override
@@ -72,7 +58,7 @@ class MemberRoomsWidgetState extends ChatDashboardState {
               runtimeType == other.runtimeType;
 }
 
-// RealRoomFormsWidgetState: open a form to create a room
+// RealRoomFormsWidgetState: open a form to create a room!
 class RealRoomFormsWidgetState extends ChatDashboardState {
   // nothing
   @override
@@ -85,20 +71,7 @@ class RealRoomFormsWidgetState extends ChatDashboardState {
               runtimeType == other.runtimeType;
 }
 
-// ExistingMemberRoomsWidgetState: List all rooms which are not real roonms, i.e. RoomWidget with isRoom = false
-class ExistingMemberRoomsWidgetState extends ChatDashboardState {
-  // nothing
-  @override
-  List<Object?> get props => [];
-
-  @override
-  bool operator == (Object other) =>
-      identical(this, other) ||
-          other is ExistingMemberRoomsWidgetState &&
-              runtimeType == other.runtimeType;
-}
-
-// ExistingRealRoomsWidgetState: List all rooms which are real roonms, i.e. RoomWidget. Allow to open the chat (send the OpenChatWidget event)
+// ExistingRealRoomsWidgetState: List all rooms which are real roonms, i.e. RoomWidget. Allow to open the chat (send the OpenChatWidget event)!
 class ExistingRealRoomsWidgetState extends ChatDashboardState {
   // nothing
   @override
@@ -111,6 +84,7 @@ class ExistingRealRoomsWidgetState extends ChatDashboardState {
               runtimeType == other.runtimeType;
 }
 
+// Open the chat!
 class ChatWidgetState extends ChatDashboardState {
   final RoomModel room;
   final int selectedOptionBeforeChat;

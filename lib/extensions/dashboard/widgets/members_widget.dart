@@ -1,6 +1,16 @@
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/firestore/firestore_tools.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
+    as ChatMemberInfoListEvent;
 import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_event.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
+import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/room_list_event.dart';
+import 'package:eliud_pkg_chat/model/room_list_state.dart';
+import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:eliud_pkg_follow/model/following_list.dart';
 import 'package:eliud_pkg_follow/model/following_list_event.dart';
 import 'package:eliud_pkg_follow/model/following_model.dart';
@@ -58,6 +68,16 @@ class MembersWidgetState extends State<MembersWidget> {
   }
 }
 
+/*
+          BlocProvider<ChatMemberInfoListBloc>(
+              create: (context) => ChatMemberInfoListBloc(
+                eliudQuery: eliudQueryChatMemberInfoList,
+                chatMemberInfoRepository: chatMemberInfoRepository(
+                    appId: widget.appId, roomId: widget.roomId)!,
+              )..add(ChatMemberInfoListEvent.LoadChatMemberInfoList())),
+
+ */
+// todo: search for the member in the room and if the room has messages that I didn't read yet then put this member bold
 class FollowingDashboardItem extends StatelessWidget {
   final String currentMemberId;
   final FollowingModel? value;
@@ -72,7 +92,69 @@ class FollowingDashboardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = value!.followed;
+    var otherMember = value!.follower!.documentID!;
+    var roomId = RoomHelper.getRoomKey(currentMemberId, otherMember);
+    var eliudQueryRoomList = EliudQuery()
+        .withCondition(EliudQueryCondition('__name__', isEqualTo: roomId));
+    var chatMemberInfoId = RoomHelper.getChatMemberInfoId(currentMemberId, roomId);
+    var eliudQueryChatMemberInfoList = EliudQuery()
+        .withCondition(EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
+    return MultiBlocProvider(
+        providers: <BlocProvider>[
+          BlocProvider<RoomListBloc>(
+              create: (context) => RoomListBloc(
+                    paged: true,
+                    eliudQuery: eliudQueryRoomList,
+                    roomRepository: roomRepository(appId: appId)!,
+                  )..add(LoadRoomList())),
+          BlocProvider<ChatMemberInfoListBloc>(
+              create: (context) => ChatMemberInfoListBloc(
+                    eliudQuery: eliudQueryChatMemberInfoList,
+                    chatMemberInfoRepository:
+                        chatMemberInfoRepository(appId: appId, roomId: roomId)!,
+                  )..add(ChatMemberInfoListEvent.LoadChatMemberInfoList())),
+        ],
+        child: child(context));
+  }
+
+  Widget child(BuildContext context) {
+    DateTime? memberLastRead;
+    return BlocBuilder<ChatMemberInfoListBloc, ChatMemberInfoListState>(
+        builder: (chatMemberInfoContext, chatMemberInfoState) {
+      if (chatMemberInfoState is ChatMemberInfoListLoaded) {
+        if ((chatMemberInfoState.values != null) &&
+            (chatMemberInfoState.values!.isNotEmpty)) {
+          var value = chatMemberInfoState.values![0];
+          if ((value != null) && (value.timestamp != null)) {
+            memberLastRead = dateTimeFromTimestampString(value.timestamp!);
+          }
+        }
+      }
+      return BlocBuilder<RoomListBloc, RoomListState>(
+          builder: (context, state) {
+        if (state is RoomListState) {
+          if (state is RoomListLoaded) {
+            if (state.values != null) {
+              if (state.values!.isNotEmpty) {
+                var room = state.values![0];
+                if (room != null) {
+                  if (memberLastRead == null) return member(context, true);
+                  var timestampRoom = dateTimeFromTimestampString(room.timestamp!);
+                  var hasUnread = (timestampRoom.compareTo(memberLastRead!) >
+                      0);
+                  return member(context, hasUnread);
+                }
+              }
+            }
+          }
+        }
+        return member(context, false);
+      });
+    });
+  }
+
+  Widget member(BuildContext context, bool hasUnread) {
+    var data = value!.follower;
     var photo;
     var name;
     if (data == null) {
@@ -87,8 +169,12 @@ class FollowingDashboardItem extends StatelessWidget {
     }
     return ListTile(
         onTap: () async {
-          BlocProvider.of<ChatDashboardBloc>(context)
-              .add(CreateChatWithMemberEvent(value!.followed!.documentID!, value!.follower!.documentID!, 1));
+          // todo:
+          // am I following this person? If not: send invite
+          // else:
+          BlocProvider.of<ChatDashboardBloc>(context).add(
+              CreateChatWithMemberEvent(value!.followed!.documentID!,
+                  value!.follower!.documentID!, 0));
         },
         leading: const Icon(Icons.chat_bubble_outline),
         trailing: Container(
@@ -96,13 +182,22 @@ class FollowingDashboardItem extends StatelessWidget {
           width: 100,
           child: photo,
         ),
-        title: StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(
-              context,
-              name,
-            ));
+        title: hasUnread
+            ? StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .textStyle()
+                .highLight1(
+                  context,
+                  name,
+                )
+            : StyleRegistry.registry()
+                .styleWithContext(context)
+                .frontEndStyle()
+                .textStyle()
+                .text(
+                  context,
+                  name,
+                ));
   }
 }

@@ -37,7 +37,15 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class RoomFirestore implements RoomRepository {
   Future<RoomModel> add(RoomModel value) {
-    return RoomCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
+    return RoomCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+      var newValue = await get(value.documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
   }
 
   Future<void> delete(RoomModel value) {
@@ -45,7 +53,15 @@ class RoomFirestore implements RoomRepository {
   }
 
   Future<RoomModel> update(RoomModel value) {
-    return RoomCollection.doc(value.documentID).update(value.toEntity(appId: appId).toDocument()).then((_) => value);
+    return RoomCollection.doc(value.documentID).update(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+      var newValue = await get(value.documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
   }
 
   RoomModel? _populateDoc(DocumentSnapshot value) {

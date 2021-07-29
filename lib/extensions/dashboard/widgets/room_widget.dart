@@ -32,8 +32,8 @@ class RoomsWidgetState extends State<RoomsWidget> {
     return BlocProvider(
       create: (_) =>
       RoomListBloc(
-          orderBy: 'timestamp',
-          descending: true,
+//          orderBy: 'timestamp',
+//          descending: true,
           eliudQuery: eliudQuery,
           roomRepository: roomRepository(appId: widget.appId)!)
         ..add(LoadRoomList()),
@@ -51,6 +51,7 @@ class RoomListWidget extends StatefulWidget {
   RoomListWidgetState createState() => RoomListWidgetState();
 }
 
+// todo : mark bold if the room contains messages that I didn't read yet
 class RoomListWidgetState extends State<RoomListWidget> {
   @override
   Widget build(BuildContext context) {
@@ -76,6 +77,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
                         // delete the Room
                       },
                       onTap: () async {
+                        print("ghhjjhgghjhgj");
                         // open the Room
                       },
                     );
