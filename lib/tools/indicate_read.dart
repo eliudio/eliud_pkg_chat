@@ -33,7 +33,7 @@ class IndicateRead {
             roomId: roomId,
             readAccess: readAccess,
           );
-          _chatMemberInfoRepository.add(_chatMemberInfoModel);
+          await _chatMemberInfoRepository.add(_chatMemberInfoModel);
         }
       }
     }
