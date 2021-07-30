@@ -148,6 +148,30 @@ class AdminApp extends AdminAppInstallerBase {
   }
 
 
+  PageModel _memberHasChatsPages() {
+    List<BodyComponentModel> components = [];
+    components.add(BodyComponentModel(
+      documentID: "internalWidget-memberHasChats", componentName: "eliud_pkg_chat_internalWidgets", componentId: "memberHasChats"));
+    PageModel page = PageModel(
+        conditions: ConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
+          packageCondition: null,
+          conditionOverride: null,
+        ),
+        appId: appId,
+        documentID: "eliud_pkg_chat_memberhaschats_page",
+        title: "MemberHasChats",
+        drawer: _drawer,
+        endDrawer: _endDrawer,
+        appBar: _appBar,
+        homeMenu: _homeMenu,
+        bodyComponents: components,
+        layout: PageLayout.OnlyTheFirstComponent
+    );
+    return page;
+  }
+
+
   Future<void> _setupAdminPages() {
 
     return pageRepository(appId: appId)!.add(_chatsPages())
@@ -157,6 +181,8 @@ class AdminApp extends AdminAppInstallerBase {
         .then((_) => pageRepository(appId: appId)!.add(_chatMemberInfosPages()))
 
         .then((_) => pageRepository(appId: appId)!.add(_roomsPages()))
+
+        .then((_) => pageRepository(appId: appId)!.add(_memberHasChatsPages()))
 
     ;
   }
@@ -211,6 +237,16 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         description: "Rooms",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
         action: GotoPage(appId, pageID: "eliud_pkg_chat_rooms_page"))
+    );
+
+
+    menuItems.add(
+      MenuItemModel(
+        documentID: "MemberHasChats",
+        text: "MemberHasChats",
+        description: "MemberHasChats",
+        icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
+        action: GotoPage(appId, pageID: "eliud_pkg_chat_memberhaschats_page"))
     );
 
 

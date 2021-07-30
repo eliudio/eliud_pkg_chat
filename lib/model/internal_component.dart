@@ -90,6 +90,23 @@ import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
+import 'package:eliud_pkg_chat/model/member_has_chat_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/member_has_chat_list.dart';
+import 'package:eliud_pkg_chat/model/member_has_chat_dropdown_button.dart';
+import 'package:eliud_pkg_chat/model/member_has_chat_list_event.dart';
+
+import 'package:eliud_core/model/repository_export.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core/model/model_export.dart';
+import '../tools/bespoke_models.dart';
+import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
+
 class ListComponentFactory implements ComponentConstructor {
   Widget? createNew({String? id, Map<String, dynamic>? parameters}) {
     return ListComponent(componentId: id);
@@ -107,6 +124,7 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
     if (id == "chatDashboards") return true;
     if (id == "chatMemberInfos") return true;
     if (id == "rooms") return true;
+    if (id == "memberHasChats") return true;
     return false;
   }
 
@@ -122,6 +140,9 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "rooms")
+      return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
+
+    if (id == "memberHasChats")
       return DropdownButtonComponent(componentId: id, value: value, trigger: trigger, optional: optional);
 
     return Text("Id $id not found");
@@ -153,6 +174,7 @@ class ListComponent extends StatelessWidget with HasFab {
     if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
     if (componentId == 'chatMemberInfos') return _chatMemberInfoBuild(context);
     if (componentId == 'rooms') return _roomBuild(context);
+    if (componentId == 'memberHasChats') return _memberHasChatBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
@@ -161,6 +183,7 @@ class ListComponent extends StatelessWidget with HasFab {
     if (componentId == 'chatDashboards') widget = ChatDashboardListWidget();
     if (componentId == 'chatMemberInfos') widget = ChatMemberInfoListWidget();
     if (componentId == 'rooms') widget = RoomListWidget();
+    if (componentId == 'memberHasChats') widget = MemberHasChatListWidget();
   }
 
   Widget _chatBuild(BuildContext context) {
@@ -215,6 +238,19 @@ class ListComponent extends StatelessWidget with HasFab {
     );
   }
 
+  Widget _memberHasChatBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MemberHasChatListBloc>(
+          create: (context) => MemberHasChatListBloc(
+            memberHasChatRepository: memberHasChatRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadMemberHasChatList()),
+        )
+      ],
+      child: widget!,
+    );
+  }
+
 }
 
 
@@ -235,6 +271,7 @@ class DropdownButtonComponent extends StatelessWidget {
     if (componentId == 'chatDashboards') return _chatDashboardBuild(context);
     if (componentId == 'chatMemberInfos') return _chatMemberInfoBuild(context);
     if (componentId == 'rooms') return _roomBuild(context);
+    if (componentId == 'memberHasChats') return _memberHasChatBuild(context);
     return Text('Component with componentId == $componentId not found');
   }
 
@@ -288,6 +325,19 @@ class DropdownButtonComponent extends StatelessWidget {
         )
       ],
       child: RoomDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+    );
+  }
+
+  Widget _memberHasChatBuild(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MemberHasChatListBloc>(
+          create: (context) => MemberHasChatListBloc(
+            memberHasChatRepository: memberHasChatRepository(appId: AccessBloc.appId(context))!,
+          )..add(LoadMemberHasChatList()),
+        )
+      ],
+      child: MemberHasChatDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
     );
   }
 

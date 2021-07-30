@@ -26,7 +26,7 @@ import 'package:eliud_pkg_chat/model/internal_component.dart';
 class ComponentRegistry {
 
   void init() {
-    Registry.registry()!.addInternalComponents('eliud_pkg_chat', ["chats", "chatDashboards", "chatMemberInfos", "rooms", ]);
+    Registry.registry()!.addInternalComponents('eliud_pkg_chat', ["chats", "chatDashboards", "chatMemberInfos", "rooms", "memberHasChats", ]);
 
     Registry.registry()!.register(componentName: "eliud_pkg_chat_internalWidgets", componentConstructor: ListComponentFactory());
     Registry.registry()!.addDropDownSupporter("chatDashboards", DropdownButtonComponentFactory());

@@ -30,6 +30,9 @@ import '../model/chat_member_info_cache.dart';
 import '../model/room_firestore.dart';
 import '../model/room_repository.dart';
 import '../model/room_cache.dart';
+import '../model/member_has_chat_firestore.dart';
+import '../model/member_has_chat_repository.dart';
+import '../model/member_has_chat_cache.dart';
 
 import '../model/chat_medium_model.dart';
 
@@ -38,6 +41,7 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     var _chatDashboardRepository = HashMap<String, ChatDashboardRepository>();
     var _chatMemberInfoRepository = HashMap<String, ChatMemberInfoRepository>();
     var _roomRepository = HashMap<String, RoomRepository>();
+    var _memberHasChatRepository = HashMap<String, MemberHasChatRepository>();
 
     ChatRepository? chatRepository(String? appId, String? roomId) {
       var key = appId == null || roomId == null ? null : appId + '-' + roomId;
@@ -56,6 +60,11 @@ class RepositorySingleton extends AbstractRepositorySingleton {
     RoomRepository? roomRepository(String? appId) {
       if ((appId != null) && (_roomRepository[appId] == null)) _roomRepository[appId] = RoomCache(RoomFirestore(appRepository()!.getSubCollection(appId, 'room'), appId));
       return _roomRepository[appId];
+    }
+    MemberHasChatRepository? memberHasChatRepository(String? appId, String? roomId) {
+      var key = appId == null || roomId == null ? null : appId + '-' + roomId;
+      if ((key != null) && (_memberHasChatRepository[key] == null)) _memberHasChatRepository[key] = MemberHasChatCache(MemberHasChatFirestore(roomRepository(appId)!.getSubCollection(roomId!, 'memberhaschat'), appId!));
+      return _memberHasChatRepository[key];
     }
 
 }
