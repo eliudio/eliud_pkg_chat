@@ -26,14 +26,21 @@ class IndicateRead {
         var _chatMemberInfoDocumentId = RoomHelper.getChatMemberInfoId(memberId, roomId);
         var _chatMemberInfoModel = await _chatMemberInfoRepository.get(
             _chatMemberInfoDocumentId);
-        if ((_chatMemberInfoModel == null) || (dateTimeFromTimestampString(_chatMemberInfoModel.timestamp!).compareTo(dateTimeFromTimestampString(lastRead.timestamp!))) < 0) {
-          _chatMemberInfoModel = ChatMemberInfoModel(
-            documentID: _chatMemberInfoDocumentId,
-            authorId: memberId,
-            roomId: roomId,
-            readAccess: readAccess,
-          );
-          await _chatMemberInfoRepository.add(_chatMemberInfoModel);
+        try {
+          if ((_chatMemberInfoModel == null) ||
+              (dateTimeFromTimestampString(_chatMemberInfoModel.timestamp!)
+                  .compareTo(
+                  dateTimeFromTimestampString(lastRead.timestamp!))) < 0) {
+            _chatMemberInfoModel = ChatMemberInfoModel(
+              documentID: _chatMemberInfoDocumentId,
+              authorId: memberId,
+              roomId: roomId,
+              readAccess: readAccess,
+            );
+            await _chatMemberInfoRepository.add(_chatMemberInfoModel);
+          }
+        } catch (_) {
+          // issue with timestamp: ignore
         }
       }
     }
