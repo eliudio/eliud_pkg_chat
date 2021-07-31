@@ -61,10 +61,9 @@ class RepositorySingleton extends AbstractRepositorySingleton {
       if ((appId != null) && (_roomRepository[appId] == null)) _roomRepository[appId] = RoomCache(RoomFirestore(appRepository()!.getSubCollection(appId, 'room'), appId));
       return _roomRepository[appId];
     }
-    MemberHasChatRepository? memberHasChatRepository(String? appId, String? roomId) {
-      var key = appId == null || roomId == null ? null : appId + '-' + roomId;
-      if ((key != null) && (_memberHasChatRepository[key] == null)) _memberHasChatRepository[key] = MemberHasChatCache(MemberHasChatFirestore(roomRepository(appId)!.getSubCollection(roomId!, 'memberhaschat'), appId!));
-      return _memberHasChatRepository[key];
+    MemberHasChatRepository? memberHasChatRepository(String? appId) {
+      if ((appId != null) && (_memberHasChatRepository[appId] == null)) _memberHasChatRepository[appId] = MemberHasChatCache(MemberHasChatFirestore(appRepository()!.getSubCollection(appId, 'memberhaschat'), appId));
+      return _memberHasChatRepository[appId];
     }
 
 }

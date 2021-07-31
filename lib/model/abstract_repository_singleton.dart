@@ -28,7 +28,7 @@ ChatRepository? chatRepository({ String? appId,  String? roomId}) => AbstractRep
 ChatDashboardRepository? chatDashboardRepository({ String? appId }) => AbstractRepositorySingleton.singleton.chatDashboardRepository(appId);
 ChatMemberInfoRepository? chatMemberInfoRepository({ String? appId,  String? roomId}) => AbstractRepositorySingleton.singleton.chatMemberInfoRepository(appId, roomId);
 RoomRepository? roomRepository({ String? appId }) => AbstractRepositorySingleton.singleton.roomRepository(appId);
-MemberHasChatRepository? memberHasChatRepository({ String? appId,  String? roomId}) => AbstractRepositorySingleton.singleton.memberHasChatRepository(appId, roomId);
+MemberHasChatRepository? memberHasChatRepository({ String? appId }) => AbstractRepositorySingleton.singleton.memberHasChatRepository(appId);
 
 abstract class AbstractRepositorySingleton {
   static List<MemberCollectionInfo> collections = [
@@ -43,10 +43,11 @@ abstract class AbstractRepositorySingleton {
   ChatDashboardRepository? chatDashboardRepository(String? appId);
   ChatMemberInfoRepository? chatMemberInfoRepository(String? appId, String? roomId);
   RoomRepository? roomRepository(String? appId);
-  MemberHasChatRepository? memberHasChatRepository(String? appId, String? roomId);
+  MemberHasChatRepository? memberHasChatRepository(String? appId);
 
   void flush(String? appId) {
     chatDashboardRepository(appId)!.flush();
     roomRepository(appId)!.flush();
+    memberHasChatRepository(appId)!.flush();
   }
 }
