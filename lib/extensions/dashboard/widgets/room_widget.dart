@@ -23,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+import '../../chat_dashboard_component.dart';
+
 class RoomsWidget extends StatefulWidget {
   final String appId;
   final String memberId;
@@ -247,7 +249,7 @@ class RoomItem extends StatelessWidget {
                     roomId: value!.documentID!,
                     members: value!.members!,
                     selectedOptionBeforeChat: 0,
-                    height: 200,
+                    height: MediaQuery.of(context).size.height - ChatDashboard.HEADER_HEIGHT,
                     appId: value!.appId!,
                   ),
                   buttons: [

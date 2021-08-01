@@ -24,6 +24,8 @@ class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
 }
 
 class ChatDashboard extends AbstractChatDashboardComponent {
+  static double HEADER_HEIGHT =  155;
+
   ChatDashboard({String? id}) : super(chatDashboardID: id);
 
   @override
@@ -36,10 +38,6 @@ class ChatDashboard extends AbstractChatDashboardComponent {
     return chatDashboardRepository(appId: AccessBloc.appId(context))!;
   }
 
-  double height(BuildContext context) {
-    return MediaQuery.of(context).size.height * .8;
-  }
-
   @override
   Widget yourWidget(BuildContext context, ChatDashboardModel? value) {
     var accessState = AccessBloc.getState(context);
@@ -48,7 +46,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
       if (accessState.getMember() != null) {
         var memberId = accessState.getMember()!.documentID!;
 
-        return SizedBox(height: height(context), child: BlocProvider<ChatDashboardBloc>(
+        return SizedBox(height: MediaQuery.of(context).size.height -ChatDashboard.HEADER_HEIGHT, child: BlocProvider<ChatDashboardBloc>(
             create: (context) => ChatDashboardBloc(appId!)..add(OpenMemberRoomsWidgetEvent()),
             child: DashboardWidget(appId: appId!, memberId: memberId)));
       } else {

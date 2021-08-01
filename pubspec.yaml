@@ -36,3 +36,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/publicdomainvectors.org/
+    - assets/images/pixabay.com/
+    - assets/images/
