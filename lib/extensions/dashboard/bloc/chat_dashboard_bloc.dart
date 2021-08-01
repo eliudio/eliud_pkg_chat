@@ -34,6 +34,8 @@ class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
     } else if (event is CreateChatWithMemberEvent) {
       var room = await getRoomForMember(appId, event.currentMemberId, event.otherMemberId);
       yield ChatWidgetState(room, event.selectedOptionBeforeChat);
+    } else if (event is OpenRoomEvent) {
+      yield ChatWidgetState(event.room, 2);
     }
   }
 

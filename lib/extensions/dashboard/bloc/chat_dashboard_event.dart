@@ -2,6 +2,7 @@ import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/model/member_public_info_model.dart';
+import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
@@ -68,5 +69,21 @@ class CreateChatWithMemberEvent extends ChatWidgetEvent {
               currentMemberId == other.currentMemberId &&
               otherMemberId == other.otherMemberId &&
               selectedOptionBeforeChat == other.selectedOptionBeforeChat &&
+              runtimeType == other.runtimeType;
+}
+
+class OpenRoomEvent extends ChatDashboardEvent {
+  final RoomModel room;
+
+  OpenRoomEvent(this.room);
+
+  @override
+  List<Object?> get props => [room];
+
+  @override
+  bool operator == (Object other) =>
+      identical(this, other) ||
+          other is OpenRoomEvent &&
+              room == other.room &&
               runtimeType == other.runtimeType;
 }
