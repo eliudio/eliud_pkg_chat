@@ -148,10 +148,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   final List<MemberMediumModel> media = [];
   double? progressValue = null;
 
-  String _roomName() {
-    return 'room name';
-  }
-
   @override
   void initState() {
     super.initState();
@@ -312,7 +308,6 @@ class _ChatWidgetState extends State<ChatWidget> {
             return ListView(padding: const EdgeInsets.all(0), shrinkWrap: true,
 //              physics: ScrollPhysics(),
                 children: [
-                  _header(),
                   SizedBox(
                       height: widget.height -
                           (((media.isNotEmpty) || (progressValue != null))
@@ -333,37 +328,6 @@ class _ChatWidgetState extends State<ChatWidget> {
       });
     });
   }
-
-  Widget _header() {
-    return ListView(
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(0),
-      physics: const NeverScrollableScrollPhysics(),
-      children: [
-        Container(
-            height: 35,
-            child:
-                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .frontEndStyle()
-                  .textStyle()
-                  .h4(context, _roomName()),
-              const Spacer(),
-              StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .frontEndStyle()
-                  .buttonStyle()
-                  .dialogButton(context,
-                      label: 'Close',
-                      onPressed: () => ChatDashboardBloc.selectOption(
-                          context, widget.selectedOptionBeforeChat))
-            ])),
-        _divider()
-      ],
-    );
-  }
-
   Widget _divider() {
     return const Divider(
       height: 15,

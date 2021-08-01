@@ -1,4 +1,5 @@
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/screen_size.dart';
 import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/widgets/members_widget.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/widgets/room_widget.dart';
@@ -42,7 +43,7 @@ class DashboardWidgetState extends State<DashboardWidget>
     _tabController = TabController(vsync: this, length: size);
     _tabController!.addListener(_handleTabSelection);
     _tabController!.index = 0;
-    position = Offset(20.0, 20.0);
+    position = const Offset(double.infinity, double.infinity);
 
     super.initState();
   }
@@ -79,12 +80,6 @@ class DashboardWidgetState extends State<DashboardWidget>
     // an ability to create a room with multiple members
     //
     return Stack(key: _parentKey, children: <Widget>[
-/*
-      Align(
-          alignment: Alignment.bottomRight,
-          child:
-              FloatingActionButton(child: Icon(Icons.add), onPressed: () {})),
-*/
       BlocBuilder<ChatDashboardBloc, ChatDashboardState>(
           builder: (context, state) {
         if (state is MemberRoomsWidgetState) {
@@ -126,7 +121,6 @@ class DashboardWidgetState extends State<DashboardWidget>
             ),
             child: Icon(Icons.more_horiz, color: Colors.black, size: 30),
           ),
-          initialOffset: const Offset(100, 100),
           parentKey: _parentKey,
           onPressed: () {
             print('Button is clicked');
@@ -161,13 +155,13 @@ class DashboardWidgetState extends State<DashboardWidget>
 
 class DraggableFloatingActionButton extends StatefulWidget {
   final Widget child;
-  final Offset initialOffset;
+  final Offset? initialOffset;
   final VoidCallback onPressed;
   final GlobalKey parentKey;
 
   DraggableFloatingActionButton({
     required this.child,
-    required this.initialOffset,
+    this.initialOffset,
     required this.onPressed,
     required this.parentKey,
   });
@@ -188,7 +182,11 @@ class _DraggableFloatingActionButtonState
   @override
   void initState() {
     super.initState();
-    _offset = widget.initialOffset;
+    if (widget.initialOffset != null) {
+      _offset = widget.initialOffset!;
+    } else {
+      _offset = const Offset(20.0, 20.0);
+    }
 
     WidgetsBinding.instance?.addPostFrameCallback(_setBoundary);
   }
@@ -207,6 +205,9 @@ class _DraggableFloatingActionButtonState
         _minOffset = const Offset(0, 0);
         _maxOffset = Offset(
             parentSize.width - size.width, parentSize.height - size.height);
+        if (widget.initialOffset == null) {
+          _offset = Offset((parentSize.width - size.width), (parentSize.height - size.width));
+        }
       });
     } catch (e) {
       print('catch: $e');

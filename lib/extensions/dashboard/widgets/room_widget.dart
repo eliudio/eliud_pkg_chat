@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/access/bloc/access_bloc.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
+import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
     as ChatMemberInfoListEvent;
 import 'package:eliud_core/core/access/bloc/access_state.dart';
@@ -91,25 +92,28 @@ class RoomListWidgetState extends State<RoomListWidget> {
 
                     var roomId = value!.documentID!;
                     var chatMemberInfoId =
-                    RoomHelper.getChatMemberInfoId(widget.memberId, roomId);
-                    var eliudQueryChatMemberInfoList = EliudQuery().withCondition(
-                        EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
+                        RoomHelper.getChatMemberInfoId(widget.memberId, roomId);
+                    var eliudQueryChatMemberInfoList = EliudQuery()
+                        .withCondition(EliudQueryCondition('__name__',
+                            isEqualTo: chatMemberInfoId));
 
                     return BlocProvider<ChatMemberInfoListBloc>(
                         create: (_) => ChatMemberInfoListBloc(
-                          eliudQuery: eliudQueryChatMemberInfoList,
-                          chatMemberInfoRepository:
-                          chatMemberInfoRepository(appId: widget.appId, roomId: roomId)!,
-                        )..add(ChatMemberInfoListEvent.LoadChatMemberInfoList()),
+                              eliudQuery: eliudQueryChatMemberInfoList,
+                              chatMemberInfoRepository:
+                                  chatMemberInfoRepository(
+                                      appId: widget.appId, roomId: roomId)!,
+                            )..add(ChatMemberInfoListEvent
+                                .LoadChatMemberInfoList()),
                         child: RoomItem(
-                      value: value,
-                      currentMemberId: widget.memberId,
+                          value: value,
+                          currentMemberId: widget.memberId,
 /*
                       onDismissed: (direction) {
                         // delete the Room
                       },
 */
-                    ));
+                        ));
                   }));
         } else {
           return const Text("No active conversations");
@@ -189,7 +193,10 @@ class RoomItem extends StatelessWidget {
             (chatMemberInfoState.values!.isNotEmpty)) {
           var value = chatMemberInfoState.values![0];
           if ((value != null) && (value.timestamp != null)) {
-            memberLastRead = dateTimeFromTimestampString(value.timestamp!);
+            try {
+              memberLastRead = dateTimeFromTimestampString(value.timestamp!);
+            } catch (_) {
+            }
           }
         }
       }
@@ -198,7 +205,8 @@ class RoomItem extends StatelessWidget {
       if (memberLastRead == null) {
         return member(context, true, timestampRoom);
       } else {
-        return member(context, (timestampRoom.compareTo(memberLastRead!) > 0),timestampRoom);
+        return member(context, (timestampRoom.compareTo(memberLastRead!) > 0),
+            timestampRoom);
       }
     });
   }
@@ -228,8 +236,33 @@ class RoomItem extends StatelessWidget {
     var name = 'No name';
     return ListTile(
         onTap: () async {
+          StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .dialogStyle()
+              .openFlexibleDialog(context,
+                  title: 'Chat',
+                  child: ChatPage(
+                    memberId: currentMemberId,
+                    roomId: value!.documentID!,
+                    members: value!.members!,
+                    selectedOptionBeforeChat: 0,
+                    height: 200,
+                    appId: value!.appId!,
+                  ),
+                  buttons: [
+                StyleRegistry.registry()
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .buttonStyle()
+                    .dialogButton(context,
+                        label: 'Close',
+                        onPressed: () => Navigator.of(context).pop()),
+              ]);
+/*
           BlocProvider.of<ChatDashboardBloc>(context)
               .add(OpenRoomEvent(value!));
+*/
           // open the Room
         },
         trailing: StyleRegistry.registry()
