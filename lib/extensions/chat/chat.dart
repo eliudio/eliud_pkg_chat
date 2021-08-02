@@ -3,7 +3,6 @@ import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_list_event.dart' as ChatListEvent;
@@ -14,6 +13,7 @@ import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
     as ChatMemberInfoListEvent;
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
+import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/indicate_read.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
@@ -27,22 +27,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 
 class ChatPage extends StatefulWidget {
+  final RoomModel room;
   final String appId;
   final String roomId;
   final String memberId;
   final List<String> members;
   late List<String> readAccess;
   final double height;
-  final int selectedOptionBeforeChat;
 
   ChatPage({
     Key? key,
+    required this.room,
     required this.appId,
     required this.roomId,
     required this.memberId,
     required this.members,
     required this.height,
-    required this.selectedOptionBeforeChat,
   }) : super(key: key) {
     readAccess = members;
   }
@@ -106,7 +106,6 @@ class _ChatPageState extends State<ChatPage> {
           memberId: widget.memberId,
           readAccess: widget.readAccess,
           height: widget.height,
-          selectedOptionBeforeChat: widget.selectedOptionBeforeChat,
         ));
 
     /*
@@ -125,7 +124,6 @@ class ChatWidget extends StatefulWidget {
   final String memberId;
   final List<String> readAccess;
   final double height;
-  final int selectedOptionBeforeChat;
 
   const ChatWidget({
     Key? key,
@@ -134,7 +132,6 @@ class ChatWidget extends StatefulWidget {
     required this.memberId,
     required this.readAccess,
     required this.height,
-    required this.selectedOptionBeforeChat,
   }) : super(key: key);
 
   @override

@@ -24,23 +24,23 @@ import 'package:transparent_image/transparent_image.dart';
 
 class MembersWidget extends StatefulWidget {
   final String appId;
-  final String memberId;
+  final String currentMemberId;
 
   const MembersWidget({
     required this.appId,
-    required this.memberId,
+    required this.currentMemberId,
     Key? key,
   }) : super(key: key);
 
   @override
-  MembersWidgetState createState() => MembersWidgetState(appId, memberId);
+  MembersWidgetState createState() => MembersWidgetState(appId, currentMemberId);
 }
 
 class MembersWidgetState extends State<MembersWidget> {
   final String appId;
-  final String memberId;
+  final String currentMemberId;
 
-  MembersWidgetState(this.appId, this.memberId);
+  MembersWidgetState(this.appId, this.currentMemberId);
 
   static EliudQuery? getQuery(String memberId) {
     return EliudQuery(theConditions: [
@@ -50,14 +50,14 @@ class MembersWidgetState extends State<MembersWidget> {
 
   Widget widgetProvider(String appId, FollowingModel value) {
     return FollowingDashboardItem(
-        currentMemberId: memberId, appId: appId, value: value);
+        currentMemberId: currentMemberId, appId: appId, value: value);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FollowingListBloc>(
         create: (context) => FollowingListBloc(
-              eliudQuery: getQuery(widget.memberId),
+              eliudQuery: getQuery(widget.currentMemberId),
               detailed: true,
               followingRepository: followingRepository(appId: widget.appId)!,
             )..add(LoadFollowingList()),

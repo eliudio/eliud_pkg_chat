@@ -1,18 +1,14 @@
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
     as ChatMemberInfoListEvent;
-import 'package:eliud_core/core/access/bloc/access_state.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_core/tools/screen_size.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_event.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
-import 'package:eliud_pkg_chat/model/room_list.dart';
 import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_list_event.dart';
 import 'package:eliud_pkg_chat/model/room_list_state.dart';
@@ -197,8 +193,7 @@ class RoomItem extends StatelessWidget {
           if ((value != null) && (value.timestamp != null)) {
             try {
               memberLastRead = dateTimeFromTimestampString(value.timestamp!);
-            } catch (_) {
-            }
+            } catch (_) {}
           }
         }
       }
@@ -214,85 +209,129 @@ class RoomItem extends StatelessWidget {
   }
 
   Widget member(BuildContext context, bool hasUnread, DateTime timestampRoom) {
-    // retrieve icon and name for the member(s)
-/*
-    if (value!.members.length > 2) {
+    return FutureBuilder<OtherMembersRoomInfo?>(
+        future: getOtherMembersRoomInfo(value!.appId!, value!.members!),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            OtherMembersRoomInfo otherMembersRoomInfo = snapshot.data!;
+            var nameList = otherMembersRoomInfo.otherMembersRoomInfo
+                .map((e) => e.name)
+                .toList();
+            var names = nameList.join(", ");
 
-    } else {
-      var data = value!.follower;
-    }
-    var photo;
-    var name;
-    if (data == null) {
-      photo = const Text('No photo provided');
-      name = 'No name';
-    } else {
-      photo = FadeInImage.memoryNetwork(
-        placeholder: kTransparentImage,
-        image: data.photoURL!,
-      );
-      name = data.name;
-    }
-*/
-    var photo = const Text('No photo provided');
-    var name = 'No name';
-    return ListTile(
-        onTap: () async {
-          StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .dialogStyle()
-              .openFlexibleDialog(context,
-                  title: 'Chat',
-                  child: ChatPage(
-                    memberId: currentMemberId,
-                    roomId: value!.documentID!,
-                    members: value!.members!,
-                    selectedOptionBeforeChat: 0,
-                    height: MediaQuery.of(context).size.height - ChatDashboard.HEADER_HEIGHT,
-                    appId: value!.appId!,
-                  ),
-                  buttons: [
-                StyleRegistry.registry()
+            var nameWidget = hasUnread
+                ? StyleRegistry.registry()
                     .styleWithContext(context)
                     .frontEndStyle()
-                    .buttonStyle()
-                    .dialogButton(context,
-                        label: 'Close',
-                        onPressed: () => Navigator.of(context).pop()),
-              ]);
-/*
-          BlocProvider.of<ChatDashboardBloc>(context)
-              .add(OpenRoomEvent(value!));
-*/
-          // open the Room
-        },
-        trailing: StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .textStyle()
-            .text(context, formatHHMM(timestampRoom)),
-        leading: Container(
-          height: 100,
-          width: 100,
-          child: photo,
-        ),
-        title: hasUnread
-            ? StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .highLight1(
-                  context,
-                  name,
-                )
-            : StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(
-                  context,
-                  name,
-                ));
+                    .textStyle()
+                    .highLight1(
+                      context,
+                      names,
+                    )
+                : StyleRegistry.registry()
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .textStyle()
+                    .text(
+                      context,
+                      names,
+                    );
+            Widget staggeredPhotos = StaggeredGridView.extentBuilder(
+              scrollDirection: Axis.horizontal,
+              primary: true,
+              maxCrossAxisExtent: 150,
+              itemCount: otherMembersRoomInfo.otherMembersRoomInfo.length,
+              itemBuilder: (context, i) =>
+                  otherMembersRoomInfo.otherMembersRoomInfo[i].avatar,
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              mainAxisSpacing: 5.0,
+              crossAxisSpacing: 5.0,
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              staggeredTileBuilder: (_) => const StaggeredTile.fit(100),
+            );
+
+            return ListTile(
+                onTap: () async {
+                  StyleRegistry.registry()
+                      .styleWithContext(context)
+                      .frontEndStyle()
+                      .dialogStyle()
+                      .openFlexibleDialog(context,
+                          title: 'Chat',
+                          child: ChatPage(
+                            room: value!,
+                            memberId: currentMemberId,
+                            roomId: value!.documentID!,
+                            members: value!.members!,
+                            height: MediaQuery.of(context).size.height -
+                                ChatDashboard.HEADER_HEIGHT,
+                            appId: value!.appId!,
+                          ),
+                          buttons: [
+                        StyleRegistry.registry()
+                            .styleWithContext(context)
+                            .frontEndStyle()
+                            .buttonStyle()
+                            .dialogButton(context,
+                                label: 'Close',
+                                onPressed: () => Navigator.of(context).pop()),
+                      ]);
+                },
+                trailing: StyleRegistry.registry()
+                    .styleWithContext(context)
+                    .frontEndStyle()
+                    .textStyle()
+                    .text(context, formatHHMM(timestampRoom)),
+                leading: Container(
+                  height: 100,
+                  width: 100,
+                  child: staggeredPhotos,
+                ),
+                title: nameWidget);
+          }
+          return StyleRegistry.registry()
+              .styleWithContext(context)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(context);
+        });
   }
+
+  Future<OtherMembersRoomInfo> getOtherMembersRoomInfo(
+      String appId, List<String> memberIds) async {
+    List<OtherMemberRoomInfo> otherMembersRoomInfo = [];
+    for (var memberId in memberIds) {
+      if (memberId != currentMemberId) {
+        var member =
+            await memberPublicInfoRepository(appId: appId)!.get(memberId);
+        if (member != null) {
+          var otherMemberRoomInfo = OtherMemberRoomInfo(
+              name: member.name != null ? member.name! : 'No name',
+              avatar: member.photoURL != null
+                  ? FadeInImage.memoryNetwork(
+                      height: 50,
+                      placeholder: kTransparentImage,
+                      image: member.photoURL!,
+                    )
+                  : const Center(child: Text('No photo')));
+          otherMembersRoomInfo.add(otherMemberRoomInfo);
+        }
+      }
+    }
+    return OtherMembersRoomInfo(otherMembersRoomInfo);
+  }
+}
+
+class OtherMemberRoomInfo {
+  final String name;
+  final Widget avatar;
+
+  OtherMemberRoomInfo({required this.name, required this.avatar});
+}
+
+class OtherMembersRoomInfo {
+  final List<OtherMemberRoomInfo> otherMembersRoomInfo;
+
+  OtherMembersRoomInfo(this.otherMembersRoomInfo);
 }

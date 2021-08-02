@@ -49,7 +49,7 @@ class DashboardWidgetState extends State<DashboardWidget>
         "assets/images/publicdomainvectors.org/technoargia_Bulle_droite_montre_bas.png",
         package: "eliud_pkg_chat");
 */
-    var speakPng = Image.asset("assets/images/speech-28662_640.png", package: "eliud_pkg_chat");
+    var speakPng = Image.asset("assets/images/cry-1636046_640.png", package: "eliud_pkg_chat");
     return Stack(key: _parentKey, children: <Widget>[
       SizedBox(
           height:
@@ -66,7 +66,7 @@ class DashboardWidgetState extends State<DashboardWidget>
 /*
             decoration: const ShapeDecoration(
               shape: CircleBorder(),
-              color: Colors.red,
+//              color: Colors.red,
               shadows: [
                 BoxShadow(
                   color: Colors.grey,

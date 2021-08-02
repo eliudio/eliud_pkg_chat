@@ -10,14 +10,20 @@ import 'model/repository_singleton.dart';
 
 import 'dart:async';
 
-
 abstract class ChatPackage extends PackageWithSubscription {
   static final String CONDITION_MEMBER_HAS_UNREAD_CHAT = 'Unread Chats';
-  static final String CONDITION_MEMBER_DOES_NOT_HAVE_UNREAD_CHAT = 'No unread Chats';
+  static final String CONDITION_MEMBER_DOES_NOT_HAVE_UNREAD_CHAT =
+      'No unread Chats';
   bool? state_CONDITION_MEMBER_HAS_UNREAD_CHAT = null;
 
   @override
-  Future<bool?> isConditionOk(String pluginCondition, AppModel app, MemberModel? member, bool isOwner, bool? isBlocked, PrivilegeLevel? privilegeLevel) async {
+  Future<bool?> isConditionOk(
+      String pluginCondition,
+      AppModel app,
+      MemberModel? member,
+      bool isOwner,
+      bool? isBlocked,
+      PrivilegeLevel? privilegeLevel) async {
     if (pluginCondition == CONDITION_MEMBER_HAS_UNREAD_CHAT) {
       if (state_CONDITION_MEMBER_HAS_UNREAD_CHAT == null) return false;
       return state_CONDITION_MEMBER_HAS_UNREAD_CHAT;
@@ -31,7 +37,10 @@ abstract class ChatPackage extends PackageWithSubscription {
 
   @override
   List<String> retrieveAllPackageConditions() {
-    return [ CONDITION_MEMBER_HAS_UNREAD_CHAT, CONDITION_MEMBER_DOES_NOT_HAVE_UNREAD_CHAT ];
+    return [
+      CONDITION_MEMBER_HAS_UNREAD_CHAT,
+      CONDITION_MEMBER_DOES_NOT_HAVE_UNREAD_CHAT
+    ];
   }
 
   @override
@@ -48,9 +57,14 @@ abstract class ChatPackage extends PackageWithSubscription {
   void resubscribe(AppModel app, MemberModel? currentMember) {
     String? appId = app.documentID;
     if (currentMember != null) {
-      subscription = memberHasChatRepository(appId: appId, )!.listenTo(currentMember.documentID!, (value) =>
-        _setState(value!.hasUnread!, currentMember: currentMember)
-      );
+      subscription = memberHasChatRepository(
+        appId: appId,
+      )!
+          .listenTo(currentMember.documentID!, (value) {
+        if (value != null) {
+          _setState(value!.hasUnread!, currentMember: currentMember);
+        }
+      });
     } else {
       _setState(false);
     }
@@ -69,5 +83,3 @@ abstract class ChatPackage extends PackageWithSubscription {
     }
   }
 }
-
-
