@@ -151,17 +151,21 @@ class RoomItem extends StatelessWidget {
         }
       }
       var room = value;
-      var timestampRoom = dateTimeFromTimestampString(room!.timestamp!);
-      if (memberLastRead == null) {
-        return member(context, true, timestampRoom);
-      } else {
-        return member(context, (timestampRoom.compareTo(memberLastRead!) > 0),
-            timestampRoom);
+      try {
+        var timestampRoom = dateTimeFromTimestampString(room!.timestamp!);
+        if (memberLastRead == null) {
+          return member(context, true, timestampRoom);
+        } else {
+          return member(context, (timestampRoom.compareTo(memberLastRead!) > 0),
+              timestampRoom);
+        }
+      } catch(_) {
+        return member(context, false, null);
       }
     });
   }
 
-  Widget member(BuildContext context, bool hasUnread, DateTime timestampRoom) {
+  Widget member(BuildContext context, bool hasUnread, DateTime? timestampRoom) {
     return FutureBuilder<OtherMembersRoomInfo?>(
         future: getOtherMembersRoomInfo(value!.appId!, value!.members!),
         builder: (context, snapshot) {
@@ -212,7 +216,7 @@ class RoomItem extends StatelessWidget {
                     .styleWithContext(context)
                     .frontEndStyle()
                     .textStyle()
-                    .text(context, formatHHMM(timestampRoom)),
+                    .text(context, timestampRoom != null ? formatHHMM(timestampRoom) : 'now'),
                 leading: Container(
                   height: 100,
                   width: 100,

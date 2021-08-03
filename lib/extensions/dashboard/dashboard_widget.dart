@@ -103,7 +103,7 @@ class DashboardWidgetState extends State<DashboardWidget>
                     .frontEndStyle()
                     .dialogStyle()
                     .openFlexibleDialog(context,
-                        title: 'Chat',
+                        title: 'Chat with one of your followers',
                         child: MembersWidget(
                           appId: appId,
                           selectedMember: (String memberId) async {

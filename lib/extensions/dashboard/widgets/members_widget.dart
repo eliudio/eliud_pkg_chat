@@ -24,6 +24,16 @@ import 'package:transparent_image/transparent_image.dart';
 
 typedef SelectedMember = Function(String memberId);
 
+// It seems fair:
+// - You can invite one of your followers to chat.
+// - You can't invite some you are following to a chat.
+// It seems fair because, if someone follows you he has allowed this
+// But: This is not enforced through rules
+// Also it means that, ones you do not follow someone, but that someone is following you and started a chat
+// then you have a conversation with someone you do not follow
+// We'll introduce blocking functionality at some point
+// Also, we should allow the initiator of a chat to delete the chat
+// Also, we should allow the initiator of a chat to delete the chat
 class MembersWidget extends StatefulWidget {
   final String appId;
   final String currentMemberId;
@@ -49,7 +59,7 @@ class MembersWidgetState extends State<MembersWidget> {
 
   static EliudQuery? getQuery(String memberId) {
     return EliudQuery(theConditions: [
-      EliudQueryCondition('followerId', isEqualTo: memberId),
+      EliudQueryCondition('followedId', isEqualTo: memberId),
     ]);
   }
 

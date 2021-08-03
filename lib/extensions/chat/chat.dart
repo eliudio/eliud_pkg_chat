@@ -67,15 +67,6 @@ class _ChatPageState extends State<ChatPage> {
       }
     }
 
-/*
-    var eliudQueryChatMemberInfoList = EliudQuery()
-        .withCondition(EliudQueryCondition('appId', isEqualTo: widget.appId))
-        .withCondition(EliudQueryCondition('roomId', isEqualTo: widget.roomId))
-        .withCondition(EliudQueryCondition('authorId', isEqualTo: otherMember))
-        .withCondition(
-            EliudQueryCondition('readAccess', arrayContains: widget.memberId));
-
-*/
     var chatMemberInfoId = RoomHelper.getChatMemberInfoId(otherMember, widget.roomId);
     var eliudQueryChatMemberInfoList = EliudQuery()
         .withCondition(EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
@@ -184,14 +175,16 @@ class _ChatWidgetState extends State<ChatWidget> {
             for (int i = 0; i < len; i++) {
               var newDate;
               var hasRead = false; // did the other member read the message yet?
-              List<MemberMediumModel>? itemMedia;
+              List<MemberMediumModel> itemMedia = [];
               if (state.values![len - i - 1] != null) {
                 ChatModel value = state.values![len - i - 1]!;
                 if ((value.chatMedia != null) &&
                     (value.chatMedia!.isNotEmpty)) {
-                  itemMedia = value.chatMedia!
-                      .map((medium) => medium.memberMedium!)
-                      .toList();
+                  for (var medium in value.chatMedia!) {
+                    if (medium.memberMedium != null) {
+                      itemMedia.add(medium.memberMedium!);
+                    }
+                  }
                 }
                 itsMe = value.authorId == widget.memberId;
                 var timestamp = value.timestamp;
@@ -250,7 +243,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 );
               }
 
-              if (itemMedia != null) {
+              if (itemMedia.isNotEmpty)  {
                 var mediaWidget = MediaHelper.staggeredMemberMediumModel(
                     context, itemMedia,
                     reverse: itsMe,
@@ -449,19 +442,21 @@ class _ChatWidgetState extends State<ChatWidget> {
         context, widget.appId, widget.memberId, widget.readAccess,
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
-          if (photo != null) {
-            setState(() {
-              progressValue = null;
-              media.add(photo);
-            });
-          }
+          setState(() {
+            progressValue = null;
+            if (photo != null) {
+                media.add(photo);
+            }
+          });
         },
         photoFeedbackProgress: _uploading,
         videoFeedbackFunction: (video) {
-          if (video != null) {
+          setState(() {
             progressValue = null;
-            media.add(video);
-          }
+            if (video != null) {
+              media.add(video);
+            }
+          });
         },
         videoFeedbackProgress: _uploading);
   }
