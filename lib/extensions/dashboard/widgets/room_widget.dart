@@ -1,4 +1,5 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
@@ -106,11 +107,6 @@ class RoomListWidgetState extends State<RoomListWidget> {
                         child: RoomItem(
                           value: value,
                           currentMemberId: widget.memberId,
-/*
-                      onDismissed: (direction) {
-                        // delete the Room
-                      },
-*/
                         ));
                   }));
         } else {
@@ -125,49 +121,6 @@ class RoomListWidgetState extends State<RoomListWidget> {
     });
   }
 }
-/*
-
-class MyRoomListItem extends StatelessWidget {
-  final DismissDirectionCallback onDismissed;
-  final GestureTapCallback onTap;
-  final RoomModel? value;
-
-  MyRoomListItem({
-    Key? key,
-    required this.onDismissed,
-    required this.onTap,
-    required this.value,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: Colors.red,
-      onTap: onTap,
-      trailing: Text(value!.timestamp!),
-      title: Hero(
-        tag: '${value!.documentID}__RoomheroTag',
-        child: Container(
-          width: fullScreenWidth(context),
-          child: Center(
-              child: StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .adminListStyle()
-                  .listItem(context, value!.documentID!)),
-        ),
-      ),
-      subtitle:
-          (value!.description! != null) && (value!.description!.isNotEmpty)
-              ? Center(
-                  child: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .adminListStyle()
-                      .listItem(context, value!.description!))
-              : null,
-    );
-  }
-}
-*/
 
 class RoomItem extends StatelessWidget {
   final String currentMemberId;
@@ -253,30 +206,7 @@ class RoomItem extends StatelessWidget {
 
             return ListTile(
                 onTap: () async {
-                  StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .dialogStyle()
-                      .openFlexibleDialog(context,
-                          title: 'Chat',
-                          child: ChatPage(
-                            room: value!,
-                            memberId: currentMemberId,
-                            roomId: value!.documentID!,
-                            members: value!.members!,
-                            height: MediaQuery.of(context).size.height -
-                                ChatDashboard.HEADER_HEIGHT,
-                            appId: value!.appId!,
-                          ),
-                          buttons: [
-                        StyleRegistry.registry()
-                            .styleWithContext(context)
-                            .frontEndStyle()
-                            .buttonStyle()
-                            .dialogButton(context,
-                                label: 'Close',
-                                onPressed: () => Navigator.of(context).pop()),
-                      ]);
+                  ChatDashboardBloc.openRoom(context, value!, currentMemberId);
                 },
                 trailing: StyleRegistry.registry()
                     .styleWithContext(context)

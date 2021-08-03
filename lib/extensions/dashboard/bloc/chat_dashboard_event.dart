@@ -26,6 +26,7 @@ class OpenMemberRoomsWidgetEvent extends ChatDashboardEvent {
               runtimeType == other.runtimeType;
 }
 
+/*
 class OpenRealRoomFormsWidgetEvent extends ChatDashboardEvent {
   @override
   List<Object?> get props => [];
@@ -86,4 +87,4 @@ class OpenRoomEvent extends ChatDashboardEvent {
           other is OpenRoomEvent &&
               room == other.room &&
               runtimeType == other.runtimeType;
-}
+}*/

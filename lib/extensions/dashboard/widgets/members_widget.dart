@@ -22,18 +22,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+typedef SelectedMember = Function(String memberId);
+
 class MembersWidget extends StatefulWidget {
   final String appId;
   final String currentMemberId;
+  final SelectedMember selectedMember;
 
   const MembersWidget({
     required this.appId,
     required this.currentMemberId,
+    required this.selectedMember,
     Key? key,
   }) : super(key: key);
 
   @override
-  MembersWidgetState createState() => MembersWidgetState(appId, currentMemberId);
+  MembersWidgetState createState() =>
+      MembersWidgetState(appId, currentMemberId);
 }
 
 class MembersWidgetState extends State<MembersWidget> {
@@ -50,7 +55,10 @@ class MembersWidgetState extends State<MembersWidget> {
 
   Widget widgetProvider(String appId, FollowingModel value) {
     return FollowingDashboardItem(
-        currentMemberId: currentMemberId, appId: appId, value: value);
+        selectedMember: widget.selectedMember,
+        currentMemberId: currentMemberId,
+        appId: appId,
+        value: value);
   }
 
   @override
@@ -68,23 +76,15 @@ class MembersWidgetState extends State<MembersWidget> {
   }
 }
 
-/*
-          BlocProvider<ChatMemberInfoListBloc>(
-              create: (context) => ChatMemberInfoListBloc(
-                eliudQuery: eliudQueryChatMemberInfoList,
-                chatMemberInfoRepository: chatMemberInfoRepository(
-                    appId: widget.appId, roomId: widget.roomId)!,
-              )..add(ChatMemberInfoListEvent.LoadChatMemberInfoList())),
-
- */
-// todo: search for the member in the room and if the room has messages that I didn't read yet then put this member bold
 class FollowingDashboardItem extends StatelessWidget {
+  final SelectedMember selectedMember;
   final String currentMemberId;
   final FollowingModel? value;
   final String? appId;
 
   const FollowingDashboardItem({
     Key? key,
+    required this.selectedMember,
     required this.currentMemberId,
     required this.value,
     this.appId,
@@ -92,68 +92,6 @@ class FollowingDashboardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var otherMember = value!.follower!.documentID!;
-    var roomId = RoomHelper.getRoomKey(currentMemberId, otherMember);
-    var eliudQueryRoomList = EliudQuery()
-        .withCondition(EliudQueryCondition('__name__', isEqualTo: roomId));
-    var chatMemberInfoId = RoomHelper.getChatMemberInfoId(currentMemberId, roomId);
-    var eliudQueryChatMemberInfoList = EliudQuery()
-        .withCondition(EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
-    return MultiBlocProvider(
-        providers: <BlocProvider>[
-          BlocProvider<RoomListBloc>(
-              create: (context) => RoomListBloc(
-                    paged: true,
-                    eliudQuery: eliudQueryRoomList,
-                    roomRepository: roomRepository(appId: appId)!,
-                  )..add(LoadRoomList())),
-          BlocProvider<ChatMemberInfoListBloc>(
-              create: (context) => ChatMemberInfoListBloc(
-                    eliudQuery: eliudQueryChatMemberInfoList,
-                    chatMemberInfoRepository:
-                        chatMemberInfoRepository(appId: appId, roomId: roomId)!,
-                  )..add(ChatMemberInfoListEvent.LoadChatMemberInfoList())),
-        ],
-        child: child(context));
-  }
-
-  Widget child(BuildContext context) {
-    DateTime? memberLastRead;
-    return BlocBuilder<ChatMemberInfoListBloc, ChatMemberInfoListState>(
-        builder: (chatMemberInfoContext, chatMemberInfoState) {
-      if (chatMemberInfoState is ChatMemberInfoListLoaded) {
-        if ((chatMemberInfoState.values != null) &&
-            (chatMemberInfoState.values!.isNotEmpty)) {
-          var value = chatMemberInfoState.values![0];
-          if ((value != null) && (value.timestamp != null)) {
-            memberLastRead = dateTimeFromTimestampString(value.timestamp!);
-          }
-        }
-      }
-      return BlocBuilder<RoomListBloc, RoomListState>(
-          builder: (context, state) {
-        if (state is RoomListState) {
-          if (state is RoomListLoaded) {
-            if (state.values != null) {
-              if (state.values!.isNotEmpty) {
-                var room = state.values![0];
-                if (room != null) {
-                  if (memberLastRead == null) return member(context, true);
-                  var timestampRoom = dateTimeFromTimestampString(room.timestamp!);
-                  var hasUnread = (timestampRoom.compareTo(memberLastRead!) >
-                      0);
-                  return member(context, hasUnread);
-                }
-              }
-            }
-          }
-        }
-        return member(context, false);
-      });
-    });
-  }
-
-  Widget member(BuildContext context, bool hasUnread) {
     var data = value!.follower;
     var photo;
     var name;
@@ -169,12 +107,8 @@ class FollowingDashboardItem extends StatelessWidget {
     }
     return ListTile(
         onTap: () async {
-          // todo:
-          // am I following this person? If not: send invite
-          // else:
-          BlocProvider.of<ChatDashboardBloc>(context).add(
-              CreateChatWithMemberEvent(value!.followed!.documentID!,
-                  value!.follower!.documentID!, 0));
+          Navigator.of(context).pop();
+          selectedMember(value!.follower!.documentID!);
         },
         leading: const Icon(Icons.chat_bubble_outline),
         trailing: Container(
@@ -182,16 +116,7 @@ class FollowingDashboardItem extends StatelessWidget {
           width: 100,
           child: photo,
         ),
-        title: hasUnread
-            ? StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .highLight1(
-                  context,
-                  name,
-                )
-            : StyleRegistry.registry()
+        title: StyleRegistry.registry()
                 .styleWithContext(context)
                 .frontEndStyle()
                 .textStyle()

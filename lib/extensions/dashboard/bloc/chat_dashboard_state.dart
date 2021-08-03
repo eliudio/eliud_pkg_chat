@@ -58,6 +58,7 @@ class MemberRoomsWidgetState extends ChatDashboardState {
               runtimeType == other.runtimeType;
 }
 
+/*
 // RealRoomFormsWidgetState: open a form to create a room!
 class RealRoomFormsWidgetState extends ChatDashboardState {
   // nothing
@@ -102,5 +103,4 @@ class ChatWidgetState extends ChatDashboardState {
           room == other.room &&
           selectedOptionBeforeChat == other.selectedOptionBeforeChat;
 }
-
-// there might be ChatWidgetState subclasses
+*/
