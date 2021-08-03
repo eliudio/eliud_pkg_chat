@@ -67,9 +67,10 @@ class _ChatPageState extends State<ChatPage> {
       }
     }
 
-    var chatMemberInfoId = RoomHelper.getChatMemberInfoId(otherMember, widget.roomId);
-    var eliudQueryChatMemberInfoList = EliudQuery()
-        .withCondition(EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
+    var chatMemberInfoId =
+        RoomHelper.getChatMemberInfoId(otherMember, widget.roomId);
+    var eliudQueryChatMemberInfoList = EliudQuery().withCondition(
+        EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
 
     return MultiBlocProvider(
         providers: <BlocProvider>[
@@ -243,7 +244,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 );
               }
 
-              if (itemMedia.isNotEmpty)  {
+              if (itemMedia.isNotEmpty) {
                 var mediaWidget = MediaHelper.staggeredMemberMediumModel(
                     context, itemMedia,
                     reverse: itsMe,
@@ -318,6 +319,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       });
     });
   }
+
   Widget _divider() {
     return const Divider(
       height: 15,
@@ -376,6 +378,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       _mediaButtons(context),
       Container(width: 8),
       Container(height: 50, child: buttonAdd()),
+      Container(height: 50, child: buttonAddMember()),
     ]);
   }
 
@@ -389,6 +392,25 @@ class _ChatWidgetState extends State<ChatWidget> {
       label: 'Ok',
       onPressed: () {
         _submit(_commentController.text);
+      },
+    );
+  }
+
+  Widget buttonAddMember() {
+    return StyleRegistry.registry()
+        .styleWithContext(context)
+        .frontEndStyle()
+        .buttonStyle()
+        .iconButton(
+      context,
+      icon: const Icon(
+        Icons.people,
+        size: 30.0,
+      ),
+      onPressed: () {
+        // Introduce listening to the room
+        // Does this room has 2 members, then we need to create a new room and open that room
+        // Does this room has more members, then we need to add the member to the room
       },
     );
   }
@@ -445,7 +467,7 @@ class _ChatWidgetState extends State<ChatWidget> {
           setState(() {
             progressValue = null;
             if (photo != null) {
-                media.add(photo);
+              media.add(photo);
             }
           });
         },
