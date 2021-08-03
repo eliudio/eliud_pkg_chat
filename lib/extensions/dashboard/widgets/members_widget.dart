@@ -49,7 +49,7 @@ class MembersWidgetState extends State<MembersWidget> {
 
   static EliudQuery? getQuery(String memberId) {
     return EliudQuery(theConditions: [
-      EliudQueryCondition('followedId', isEqualTo: memberId),
+      EliudQueryCondition('followerId', isEqualTo: memberId),
     ]);
   }
 
