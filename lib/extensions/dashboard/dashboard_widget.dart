@@ -46,29 +46,6 @@ class DashboardWidgetState extends State<DashboardWidget>
     super.dispose();
   }
 
-  Future<RoomModel> getRoomForMember(
-      String appId, String currentMemberId, String otherMemberId) async {
-    var roomId = RoomHelper.getRoomKey(currentMemberId, otherMemberId);
-    var roomModel =
-        await roomRepository(appId: appId)!.get(roomId, onError: (_) {});
-    if (roomModel == null) {
-      roomModel = RoomModel(
-        documentID: roomId,
-        ownerId: currentMemberId,
-        appId: appId,
-        description:
-            'Chat between ' + currentMemberId + ' and ' + otherMemberId,
-        isRoom: false,
-        members: [
-          currentMemberId,
-          otherMemberId,
-        ],
-      );
-      await roomRepository(appId: appId)!.add(roomModel);
-    }
-    return roomModel;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
@@ -107,7 +84,7 @@ class DashboardWidgetState extends State<DashboardWidget>
                         child: MembersWidget(
                           appId: appId,
                           selectedMember: (String memberId) async {
-                            var room = await getRoomForMember(
+                            var room = await RoomHelper.getRoomForMember(
                                 appId, widget.memberId, memberId);
                             ChatDashboardBloc.openRoom(
                                 context, room, widget.memberId);

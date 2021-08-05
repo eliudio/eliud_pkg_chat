@@ -30,15 +30,13 @@ class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
         .frontEndStyle()
         .dialogStyle()
         .openFlexibleDialog(context,
-        title: 'Chat',
+        title: value.members!.length == 2 ? 'Chat' : 'Chatroom',
         child: ChatPage(
-          room: value,
-          memberId: currentMemberId,
           roomId: value.documentID!,
-          members: value.members!,
+          appId: value.appId!,
+          memberId: currentMemberId,
           height: MediaQuery.of(context).size.height -
               ChatDashboard.HEADER_HEIGHT,
-          appId: value.appId!,
         ),
         buttons: [
           StyleRegistry.registry()

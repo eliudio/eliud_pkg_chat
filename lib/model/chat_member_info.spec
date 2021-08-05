@@ -30,7 +30,7 @@
     },
     {
       "fieldName": "authorId",
-      "remark": "The person initiating the conversation, or the owner of the group",
+      "remark": "The person who this info is about",
       "displayName": "Author ID",
       "fieldType": "String",
       "group": "member"

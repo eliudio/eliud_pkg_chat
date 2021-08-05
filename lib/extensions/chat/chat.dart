@@ -3,6 +3,8 @@ import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
+import 'package:eliud_pkg_chat/extensions/dashboard/widgets/members_widget.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_list_event.dart' as ChatListEvent;
@@ -13,6 +15,9 @@ import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
     as ChatMemberInfoListEvent;
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
+import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/room_list_event.dart';
+import 'package:eliud_pkg_chat/model/room_list_state.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/indicate_read.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
@@ -27,25 +32,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 
 class ChatPage extends StatefulWidget {
-  final RoomModel room;
-  final String appId;
   final String roomId;
   final String memberId;
-  final List<String> members;
-  late List<String> readAccess;
   final double height;
+  final String appId;
 
   ChatPage({
     Key? key,
-    required this.room,
-    required this.appId,
     required this.roomId,
+    required this.appId,
     required this.memberId,
-    required this.members,
     required this.height,
-  }) : super(key: key) {
-    readAccess = members;
-  }
+  }) : super(key: key) {}
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -54,23 +52,42 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
+    var eliudQueryRoomList = EliudQuery().withCondition(
+        EliudQueryCondition('__name__', isEqualTo: widget.roomId));
+
+    return BlocProvider<RoomListBloc>(
+        create: (context) => RoomListBloc(
+            roomRepository: roomRepository(appId: widget.appId)!,
+            eliudQuery: eliudQueryRoomList)
+          ..add(LoadRoomList()),
+        child: child());
+  }
+
+  Widget child() {
+    return BlocBuilder<RoomListBloc, RoomListState>(builder: (context, state) {
+      if ((state is RoomListLoaded) &&
+          (state.values != null) &&
+          (state.values!.isNotEmpty)) {
+        return room(state.values![0]!);
+      } else {
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .progressIndicatorStyle()
+            .progressIndicator(context);
+      }
+    });
+  }
+
+  Widget room(RoomModel room) {
     var eliudQueryChatList = EliudQuery().withCondition(
         EliudQueryCondition('readAccess', arrayContains: widget.memberId));
 
-    var otherMember;
-    if (widget.members.length == 2) {
-      // currently we support read-indication for 1 member only
-      if (widget.members[0] == widget.memberId) {
-        otherMember = widget.members[1];
-      } else {
-        otherMember = widget.members[0];
-      }
-    }
-
-    var chatMemberInfoId =
-        RoomHelper.getChatMemberInfoId(otherMember, widget.roomId);
-    var eliudQueryChatMemberInfoList = EliudQuery().withCondition(
-        EliudQueryCondition('__name__', isEqualTo: chatMemberInfoId));
+    var eliudQueryChatMemberInfoList = EliudQuery()
+//        .withCondition(EliudQueryCondition('appId', isEqualTo: widget.appId))
+//        .withCondition(EliudQueryCondition('roomId', isEqualTo: widget.roomId))
+        .withCondition(
+            EliudQueryCondition('readAccess', arrayContainsAny: [widget.memberId]));
 
     return MultiBlocProvider(
         providers: <BlocProvider>[
@@ -81,22 +98,20 @@ class _ChatPageState extends State<ChatPage> {
                     descending: true,
                     detailed: true,
                     eliudQuery: eliudQueryChatList,
-                    chatLimit: 5,
+                    chatLimit: 100,
                     chatRepository: chatRepository(
-                        appId: widget.appId, roomId: widget.roomId)!,
+                        appId: room.appId, roomId: room.documentID!)!,
                   )..add(ChatListEvent.LoadChatList())),
           BlocProvider<ChatMemberInfoListBloc>(
               create: (context) => ChatMemberInfoListBloc(
                     eliudQuery: eliudQueryChatMemberInfoList,
                     chatMemberInfoRepository: chatMemberInfoRepository(
-                        appId: widget.appId, roomId: widget.roomId)!,
+                        appId: room.appId, roomId: room.documentID!)!,
                   )..add(ChatMemberInfoListEvent.LoadChatMemberInfoList())),
         ],
         child: ChatWidget(
-          appId: widget.appId,
-          roomId: widget.roomId,
+          room: room,
           memberId: widget.memberId,
-          readAccess: widget.readAccess,
           height: widget.height,
         ));
 
@@ -111,18 +126,14 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 class ChatWidget extends StatefulWidget {
-  final String appId;
-  final String roomId;
+  final RoomModel room;
   final String memberId;
-  final List<String> readAccess;
   final double height;
 
   const ChatWidget({
     Key? key,
-    required this.appId,
-    required this.roomId,
+    required this.room,
     required this.memberId,
-    required this.readAccess,
     required this.height,
   }) : super(key: key);
 
@@ -156,12 +167,20 @@ class _ChatWidgetState extends State<ChatWidget> {
       if (chatMemberInfoState is ChatMemberInfoListLoaded) {
         if ((chatMemberInfoState.values != null) &&
             (chatMemberInfoState.values!.isNotEmpty)) {
-          var value = chatMemberInfoState.values![0];
-          if ((value != null) && (value.timestamp != null)) {
-            otherMemberLastRead = dateTimeFromTimestampString(value.timestamp!);
+          for (var value in chatMemberInfoState.values!) {
+            if (value!.authorId != widget.memberId) {
+              var otherMemberLastReadThisOne =
+                  dateTimeFromTimestampString(value.timestamp!);
+              if ((otherMemberLastRead == null) ||
+                  (otherMemberLastReadThisOne.compareTo(otherMemberLastRead!) <
+                      0)) {
+                otherMemberLastRead = otherMemberLastReadThisOne;
+              }
+            }
           }
         }
       }
+
       return BlocBuilder<ChatListBloc, ChatListState>(
           builder: (context, state) {
         if (state is ChatListState) {
@@ -282,8 +301,8 @@ class _ChatWidgetState extends State<ChatWidget> {
             }
 
             if (lastRead != null) {
-              IndicateRead.setRead(widget.appId, widget.roomId, widget.memberId,
-                  lastRead, widget.readAccess);
+              IndicateRead.setRead(widget.room.appId!, widget.room.documentID!,
+                  widget.memberId, lastRead, widget.room.members!);
             }
             List<Widget> reorderedWidgets = [];
             reorderedWidgets.add(_buttonNextPage(state.mightHaveMore!));
@@ -370,6 +389,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   Widget _speakRow() {
     return Row(children: [
+      Container(height: 50, child: buttonAddMember()),
       Flexible(
         child: Container(
             alignment: Alignment.center, height: 30, child: _speakField()),
@@ -378,7 +398,6 @@ class _ChatWidgetState extends State<ChatWidget> {
       _mediaButtons(context),
       Container(width: 8),
       Container(height: 50, child: buttonAdd()),
-      Container(height: 50, child: buttonAddMember()),
     ]);
   }
 
@@ -408,9 +427,44 @@ class _ChatWidgetState extends State<ChatWidget> {
         size: 30.0,
       ),
       onPressed: () {
-        // Introduce listening to the room
-        // Does this room has 2 members, then we need to create a new room and open that room
-        // Does this room has more members, then we need to add the member to the room
+        StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .dialogStyle()
+            .openFlexibleDialog(context,
+                title: 'Add one of your followers to the chat',
+                child: MembersWidget(
+                  appId: widget.room.appId!,
+                  selectedMember: (String newMemberId) async {
+                    List<String> newMembers = widget.room.members!;
+                    if (!newMembers.contains(newMemberId)) {
+                      newMembers.add(newMemberId);
+                      if (widget.room.members!.length == 3) {
+                        // was 2, so we need to create a new room with multiple members
+                        Navigator.of(context).pop();
+                        var newRoom = await RoomHelper.getRoomForMembers(
+                            widget.room.appId!, widget.memberId, newMembers);
+                        ChatDashboardBloc.openRoom(
+                            context, newRoom, widget.memberId);
+                      } else {
+                        BlocProvider.of<RoomListBloc>(context).add(
+                            UpdateRoomList(
+                                value:
+                                    widget.room.copyWith(members: newMembers)));
+                      }
+                    }
+                  },
+                  currentMemberId: widget.memberId,
+                ),
+                buttons: [
+              StyleRegistry.registry()
+                  .styleWithContext(context)
+                  .frontEndStyle()
+                  .buttonStyle()
+                  .dialogButton(context,
+                      label: 'Close',
+                      onPressed: () => Navigator.of(context).pop()),
+            ]);
       },
     );
   }
@@ -428,10 +482,10 @@ class _ChatWidgetState extends State<ChatWidget> {
       BlocProvider.of<ChatListBloc>(context).add(ChatListEvent.AddChatList(
           value: ChatModel(
         documentID: newRandomKey(),
-        appId: widget.appId,
-        roomId: widget.roomId,
+        appId: widget.room.appId!,
+        roomId: widget.room.documentID,
         authorId: widget.memberId,
-        readAccess: widget.readAccess,
+        readAccess: widget.room.members,
         chatMedia: mappedMedia,
         saying: value,
       )));
@@ -461,7 +515,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   PopupMenuButton _mediaButtons(BuildContext context) {
     return MediaButtons.mediaButtons(
-        context, widget.appId, widget.memberId, widget.readAccess,
+        context, widget.room.appId!, widget.memberId, widget.room.members,
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           setState(() {

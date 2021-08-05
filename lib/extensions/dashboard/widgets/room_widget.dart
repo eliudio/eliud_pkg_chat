@@ -1,8 +1,8 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
-import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
     as ChatMemberInfoListEvent;
 import 'package:eliud_core/style/style_registry.dart';
@@ -92,22 +92,45 @@ class RoomListWidgetState extends State<RoomListWidget> {
                     var roomId = value!.documentID!;
                     var chatMemberInfoId =
                         RoomHelper.getChatMemberInfoId(widget.memberId, roomId);
-                    var eliudQueryChatMemberInfoList = EliudQuery()
-                        .withCondition(EliudQueryCondition('__name__',
-                            isEqualTo: chatMemberInfoId));
 
-                    return BlocProvider<ChatMemberInfoListBloc>(
-                        create: (_) => ChatMemberInfoListBloc(
-                              eliudQuery: eliudQueryChatMemberInfoList,
-                              chatMemberInfoRepository:
-                                  chatMemberInfoRepository(
-                                      appId: widget.appId, roomId: roomId)!,
-                            )..add(ChatMemberInfoListEvent
-                                .LoadChatMemberInfoList()),
-                        child: RoomItem(
-                          value: value,
-                          currentMemberId: widget.memberId,
-                        ));
+                    return StreamBuilder<List<ChatMemberInfoModel?>> (
+                      stream:chatMemberInfoRepository(
+                          appId: widget.appId, roomId: roomId)!.values(eliudQuery: EliudQuery()
+                          .withCondition(EliudQueryCondition('__name__',
+                          isEqualTo: chatMemberInfoId))),
+                      builder: (context, snapshot) {
+                        DateTime? memberLastRead = null;
+                        if (snapshot.connectionState == ConnectionState.active) {
+                          var list = snapshot.data;
+                          if ((list != null) && (list.isNotEmpty)) {
+                            var value = list[0];
+                            if ((value != null) && (value.timestamp != null)) {
+                              try {
+                                memberLastRead = dateTimeFromTimestampString(value.timestamp!);
+                              } catch (_) {}
+                            }
+                          }
+                        }
+
+                        var timestampRoom = dateTimeFromTimestampString(value.timestamp!);
+                        try {
+                          if (memberLastRead != null) {
+                            return member(
+                                context,
+                                (timestampRoom.compareTo(memberLastRead) >
+                                    0),
+                                timestampRoom,
+                                value);
+                          }
+                        } catch (_) {}
+
+                        return member(
+                            context,
+                            true,
+                            timestampRoom,
+                            value);
+                      });
+
                   }));
         } else {
           return const Text("No active conversations");
@@ -120,54 +143,11 @@ class RoomListWidgetState extends State<RoomListWidget> {
       }
     });
   }
-}
 
-class RoomItem extends StatelessWidget {
-  final String currentMemberId;
-  final RoomModel? value;
-  final String? appId;
-
-  const RoomItem({
-    Key? key,
-    required this.currentMemberId,
-    required this.value,
-    this.appId,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    DateTime? memberLastRead;
-    return BlocBuilder<ChatMemberInfoListBloc, ChatMemberInfoListState>(
-        builder: (chatMemberInfoContext, chatMemberInfoState) {
-      if (chatMemberInfoState is ChatMemberInfoListLoaded) {
-        if ((chatMemberInfoState.values != null) &&
-            (chatMemberInfoState.values!.isNotEmpty)) {
-          var value = chatMemberInfoState.values![0];
-          if ((value != null) && (value.timestamp != null)) {
-            try {
-              memberLastRead = dateTimeFromTimestampString(value.timestamp!);
-            } catch (_) {}
-          }
-        }
-      }
-      var room = value;
-      try {
-        var timestampRoom = dateTimeFromTimestampString(room!.timestamp!);
-        if (memberLastRead == null) {
-          return member(context, true, timestampRoom);
-        } else {
-          return member(context, (timestampRoom.compareTo(memberLastRead!) > 0),
-              timestampRoom);
-        }
-      } catch(_) {
-        return member(context, false, null);
-      }
-    });
-  }
-
-  Widget member(BuildContext context, bool hasUnread, DateTime? timestampRoom) {
+  Widget member(BuildContext context, bool hasUnread, DateTime? timestampRoom,
+      RoomModel room) {
     return FutureBuilder<OtherMembersRoomInfo?>(
-        future: getOtherMembersRoomInfo(value!.appId!, value!.members!),
+        future: getOtherMembersRoomInfo(room.appId!, room.members!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             OtherMembersRoomInfo otherMembersRoomInfo = snapshot.data!;
@@ -204,19 +184,24 @@ class RoomItem extends StatelessWidget {
               physics: const ScrollPhysics(),
               mainAxisSpacing: 5.0,
               crossAxisSpacing: 5.0,
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
               staggeredTileBuilder: (_) => const StaggeredTile.fit(100),
             );
 
             return ListTile(
                 onTap: () async {
-                  ChatDashboardBloc.openRoom(context, value!, currentMemberId);
+                  ChatDashboardBloc.openRoom(context, room, widget.memberId);
                 },
                 trailing: StyleRegistry.registry()
                     .styleWithContext(context)
                     .frontEndStyle()
                     .textStyle()
-                    .text(context, timestampRoom != null ? formatHHMM(timestampRoom) : 'now'),
+                    .text(
+                        context,
+                        timestampRoom != null
+                            ? formatHHMM(timestampRoom)
+                            : 'now'),
                 leading: Container(
                   height: 100,
                   width: 100,
@@ -236,7 +221,7 @@ class RoomItem extends StatelessWidget {
       String appId, List<String> memberIds) async {
     List<OtherMemberRoomInfo> otherMembersRoomInfo = [];
     for (var memberId in memberIds) {
-      if (memberId != currentMemberId) {
+      if (memberId != widget.memberId) {
         var member =
             await memberPublicInfoRepository(appId: appId)!.get(memberId);
         if (member != null) {
