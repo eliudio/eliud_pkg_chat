@@ -15,12 +15,13 @@
 
 import 'dart:collection';
 import 'dart:convert';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'abstract_repository_singleton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/model/entity_export.dart';
 import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
+import 'package:eliud_core/tools/common_tools.dart';
 class ChatMemberInfoEntity {
   final String? authorId;
   final String? appId;
@@ -50,7 +51,7 @@ class ChatMemberInfoEntity {
       authorId: map['authorId'], 
       appId: map['appId'], 
       roomId: map['roomId'], 
-      timestamp: chatMemberInfoRepository(appId: map['appId'], roomId: map['roomId'])!.timeStampToString(map['timestamp']), 
+      timestamp: map['timestamp'] == null ? null : (map['timestamp']  as Timestamp).millisecondsSinceEpoch,
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }

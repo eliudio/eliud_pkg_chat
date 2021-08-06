@@ -28,9 +28,8 @@ class IndicateRead {
             _chatMemberInfoDocumentId);
         try {
           if ((_chatMemberInfoModel == null) ||
-              (dateTimeFromTimestampString(_chatMemberInfoModel.timestamp!)
-                  .compareTo(
-                  dateTimeFromTimestampString(lastRead.timestamp!))) < 0) {
+              (_chatMemberInfoModel.timestamp!
+                  .compareTo(lastRead.timestamp!)) < 0) {
             _chatMemberInfoModel = ChatMemberInfoModel(
               documentID: _chatMemberInfoDocumentId,
               authorId: memberId,

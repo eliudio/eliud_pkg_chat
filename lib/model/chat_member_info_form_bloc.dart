@@ -16,6 +16,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:eliud_core/tools/enums.dart';
@@ -106,7 +107,7 @@ class ChatMemberInfoFormBloc extends Bloc<ChatMemberInfoFormEvent, ChatMemberInf
         return;
       }
       if (event is ChangedChatMemberInfoTimestamp) {
-        newValue = currentState.value!.copyWith(timestamp: event.value);
+        newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
         yield SubmittableChatMemberInfoForm(value: newValue);
 
         return;

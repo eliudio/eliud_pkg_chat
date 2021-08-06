@@ -15,6 +15,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -38,7 +39,7 @@ import 'package:eliud_core/tools/random.dart';
 class ChatMemberInfoModel {
   String? documentID;
 
-  // The person initiating the conversation, or the owner of the group
+  // The person who this info is about
   String? authorId;
 
   // This is the identifier of the app to which this chat belongs
@@ -46,14 +47,14 @@ class ChatMemberInfoModel {
   String? roomId;
 
   // Last Read entry in Chat in this room for this member
-  String? timestamp;
+  DateTime? timestamp;
   List<String>? readAccess;
 
   ChatMemberInfoModel({this.documentID, this.authorId, this.appId, this.roomId, this.timestamp, this.readAccess, })  {
     assert(documentID != null);
   }
 
-  ChatMemberInfoModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, String? timestamp, List<String>? readAccess, }) {
+  ChatMemberInfoModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, DateTime? timestamp, List<String>? readAccess, }) {
     return ChatMemberInfoModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, readAccess: readAccess ?? this.readAccess, );
   }
 
@@ -84,7 +85,7 @@ class ChatMemberInfoModel {
           authorId: (authorId != null) ? authorId : null, 
           appId: (appId != null) ? appId : null, 
           roomId: (roomId != null) ? roomId : null, 
-          timestamp: timestamp, 
+          timestamp: (timestamp == null) ? null : timestamp!.millisecondsSinceEpoch, 
           readAccess: (readAccess != null) ? readAccess : null, 
     );
   }
@@ -97,7 +98,7 @@ class ChatMemberInfoModel {
           authorId: entity.authorId, 
           appId: entity.appId, 
           roomId: entity.roomId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           readAccess: entity.readAccess, 
     );
   }
@@ -111,7 +112,7 @@ class ChatMemberInfoModel {
           authorId: entity.authorId, 
           appId: entity.appId, 
           roomId: entity.roomId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           readAccess: entity.readAccess, 
     );
   }

@@ -15,6 +15,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -46,13 +47,13 @@ class RoomModel {
   String? description;
   bool? isRoom;
   List<String>? members;
-  String? timestamp;
+  DateTime? timestamp;
 
   RoomModel({this.documentID, this.ownerId, this.appId, this.description, this.isRoom, this.members, this.timestamp, })  {
     assert(documentID != null);
   }
 
-  RoomModel copyWith({String? documentID, String? ownerId, String? appId, String? description, bool? isRoom, List<String>? members, String? timestamp, }) {
+  RoomModel copyWith({String? documentID, String? ownerId, String? appId, String? description, bool? isRoom, List<String>? members, DateTime? timestamp, }) {
     return RoomModel(documentID: documentID ?? this.documentID, ownerId: ownerId ?? this.ownerId, appId: appId ?? this.appId, description: description ?? this.description, isRoom: isRoom ?? this.isRoom, members: members ?? this.members, timestamp: timestamp ?? this.timestamp, );
   }
 
@@ -86,7 +87,7 @@ class RoomModel {
           description: (description != null) ? description : null, 
           isRoom: (isRoom != null) ? isRoom : null, 
           members: (members != null) ? members : null, 
-          timestamp: timestamp, 
+          timestamp: (timestamp == null) ? null : timestamp!.millisecondsSinceEpoch, 
     );
   }
 
@@ -100,7 +101,7 @@ class RoomModel {
           description: entity.description, 
           isRoom: entity.isRoom, 
           members: entity.members, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
     );
   }
 
@@ -115,7 +116,7 @@ class RoomModel {
           description: entity.description, 
           isRoom: entity.isRoom, 
           members: entity.members, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
     );
   }
 

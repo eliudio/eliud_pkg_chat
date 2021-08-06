@@ -17,5 +17,5 @@ export '../model/chat_cache.dart';
 export '../model/chat_dashboard_cache.dart';
 export '../model/chat_medium_cache.dart';
 export '../model/chat_member_info_cache.dart';
-export '../model/room_cache.dart';
 export '../model/member_has_chat_cache.dart';
+export '../model/room_cache.dart';

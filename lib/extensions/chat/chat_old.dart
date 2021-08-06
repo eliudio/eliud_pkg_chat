@@ -10,7 +10,10 @@ import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_list_event.dart' as ChatListEvent;
 import 'package:eliud_pkg_chat/model/chat_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
+    as ChatMemberInfoListEvent;
+import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_list_event.dart';
@@ -80,17 +83,32 @@ class _ChatPageState extends State<ChatPage> {
     var eliudQueryChatList = EliudQuery().withCondition(
         EliudQueryCondition('readAccess', arrayContains: widget.memberId));
 
-    return BlocProvider<ChatListBloc>(
-        create: (context) => ChatListBloc(
-              paged: true,
-              orderBy: 'timestamp',
-              descending: true,
-              detailed: true,
-              eliudQuery: eliudQueryChatList,
-              chatLimit: 100,
-              chatRepository:
-                  chatRepository(appId: room.appId, roomId: room.documentID!)!,
-            )..add(ChatListEvent.LoadChatList()),
+    var eliudQueryChatMemberInfoList = EliudQuery()
+//        .withCondition(EliudQueryCondition('appId', isEqualTo: widget.appId))
+//        .withCondition(EliudQueryCondition('roomId', isEqualTo: widget.roomId))
+        .withCondition(
+            EliudQueryCondition('readAccess', arrayContainsAny: [widget.memberId]));
+
+    return MultiBlocProvider(
+        providers: <BlocProvider>[
+          BlocProvider<ChatListBloc>(
+              create: (context) => ChatListBloc(
+                    paged: true,
+                    orderBy: 'timestamp',
+                    descending: true,
+                    detailed: true,
+                    eliudQuery: eliudQueryChatList,
+                    chatLimit: 100,
+                    chatRepository: chatRepository(
+                        appId: room.appId, roomId: room.documentID!)!,
+                  )..add(ChatListEvent.LoadChatList())),
+          BlocProvider<ChatMemberInfoListBloc>(
+              create: (context) => ChatMemberInfoListBloc(
+                    eliudQuery: eliudQueryChatMemberInfoList,
+                    chatMemberInfoRepository: chatMemberInfoRepository(
+                        appId: room.appId, roomId: room.documentID!)!,
+                  )..add(ChatMemberInfoListEvent.LoadChatMemberInfoList())),
+        ],
         child: ChatWidget(
           room: room,
           memberId: widget.memberId,
@@ -143,195 +161,180 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<ChatMemberInfoModel?>>(
-        stream: chatMemberInfoRepository(
-                appId: widget.room.appId, roomId: widget.room.documentID!)!
-            .values(
-                eliudQuery: EliudQuery().withCondition(EliudQueryCondition(
-                    'readAccess',
-                    arrayContains: widget.memberId))),
-        builder: (context, snapshot) {
-          DateTime? otherMemberLastRead;
-          if (snapshot.connectionState == ConnectionState.active) {
-            var values = snapshot.data;
-
-            if ((values != null) &&
-                (values.isNotEmpty)) {
-              for (var value in values) {
-                if (value!.authorId != widget.memberId) {
-                  var otherMemberLastReadThisOne = value.timestamp!;
-                  if ((otherMemberLastRead == null) ||
-                      (otherMemberLastReadThisOne.compareTo(otherMemberLastRead) <
-                          0)) {
-                    otherMemberLastRead = otherMemberLastReadThisOne;
-                  }
-                }
+    DateTime? otherMemberLastRead;
+    return BlocBuilder<ChatMemberInfoListBloc, ChatMemberInfoListState>(
+        builder: (chatMemberInfoContext, chatMemberInfoState) {
+      if (chatMemberInfoState is ChatMemberInfoListLoaded) {
+        if ((chatMemberInfoState.values != null) &&
+            (chatMemberInfoState.values!.isNotEmpty)) {
+          for (var value in chatMemberInfoState.values!) {
+            if (value!.authorId != widget.memberId) {
+              var otherMemberLastReadThisOne = value.timestamp!;
+              if ((otherMemberLastRead == null) ||
+                  (otherMemberLastReadThisOne.compareTo(otherMemberLastRead!) <
+                      0)) {
+                otherMemberLastRead = otherMemberLastReadThisOne;
               }
             }
           }
-          return BlocBuilder<ChatListBloc, ChatListState>(
-              builder: (context, state) {
-            if (state is ChatListState) {
-              if (state is ChatListLoaded) {
-                List<Widget> widgets = [];
-                int len = state.values!.length;
-                DateTime? oldDate;
-                String saying;
-                var itsMe = true;
-                String? timeString;
-                ChatModel? lastRead; // what's the last item I've just read?
-                for (int i = 0; i < len; i++) {
-                  DateTime? newDate;
-                  var hasRead =
-                      false; // did the other member read the message yet?
-                  List<MemberMediumModel> itemMedia = [];
-                  if (state.values![len - i - 1] != null) {
-                    ChatModel value = state.values![len - i - 1]!;
-                    if ((value.chatMedia != null) &&
-                        (value.chatMedia!.isNotEmpty)) {
-                      for (var medium in value.chatMedia!) {
-                        if (medium.memberMedium != null) {
-                          itemMedia.add(medium.memberMedium!);
-                        }
-                      }
+        }
+      }
+
+      return BlocBuilder<ChatListBloc, ChatListState>(
+          builder: (context, state) {
+        if (state is ChatListState) {
+          if (state is ChatListLoaded) {
+            List<Widget> widgets = [];
+            int len = state.values!.length;
+            DateTime? oldDate;
+            String saying;
+            var itsMe = true;
+            String? timeString = null;
+            var lastRead; // what's the last item I've just read?
+            for (int i = 0; i < len; i++) {
+              var newDate;
+              var hasRead = false; // did the other member read the message yet?
+              List<MemberMediumModel> itemMedia = [];
+              if (state.values![len - i - 1] != null) {
+                ChatModel value = state.values![len - i - 1]!;
+                if ((value.chatMedia != null) &&
+                    (value.chatMedia!.isNotEmpty)) {
+                  for (var medium in value.chatMedia!) {
+                    if (medium.memberMedium != null) {
+                      itemMedia.add(medium.memberMedium!);
                     }
-                    itsMe = value.authorId == widget.memberId;
-                    var timestamp = value.timestamp;
-                    if (value.saying == null) {
-                      saying = 'Eek 1a - This is an error';
-                    } else {
-                      saying = value.saying!;
-                      if ((timestamp == 'null') || (timestamp == null)) {
-                        newDate = DateTime.now();
-                        timeString = 'Now';
-                      } else {
-                        newDate = timestamp;
-                        DateTime newDateTime = timestamp;
-                        timeString = formatHHMM(newDateTime);
-                        if ((itsMe) &&
-                            ((otherMemberLastRead != null) &&
-                                (otherMemberLastRead.compareTo(newDateTime) >=
-                                    0))) {
-                          hasRead = true;
-                        }
-                        lastRead = value;
-                      }
-                    }
+                  }
+                }
+                itsMe = value.authorId == widget.memberId;
+                var timestamp = value.timestamp;
+                if (value.saying == null) {
+                  saying = 'Eek 1a - This is an error';
+                } else {
+                  saying = value.saying!;
+                  if ((timestamp == 'null') || (timestamp == null)) {
+                    newDate = DateTime.now();
+                    timeString = 'Now';
                   } else {
-                    saying = 'Eek2 - This is an error';
+                    newDate = timestamp;
+                    DateTime newDateTime = timestamp;
+                    timeString = formatHHMM(newDateTime);
+                    if ((itsMe) &&
+                        ((otherMemberLastRead != null) &&
+                            (otherMemberLastRead!.compareTo(newDateTime) >=
+                                0))) {
+                      hasRead = true;
+                    }
+                    lastRead = value;
                   }
-                  if ((oldDate == null) || newDate != null && !isSameDate(newDate, oldDate)) {
-                    widgets.add(Center(
-                        child: DateChip(
-                      date: newDate!,
-                      color: const Color(0x558AD3D5),
-                    )));
-                  }
-                  oldDate = newDate;
-                  if (saying.isNotEmpty) {
-                    widgets.add(
-                      BubbleSpecialOne(
-                          text: saying,
-                          isSender: itsMe,
-                          sent: itsMe,
-                          seen: hasRead,
-                          color: Colors.white,
-                          //const Color(0xFF1B97F3),
-                          time: timeString,
-                          textStyle: StyleRegistry.registry()
-                              .styleWithContext(context)
-                              .frontEndStyle()
-                              .textStyleStyle()
-                              .styleText(context)!,
-                          timeTextStyle: StyleRegistry.registry()
-                              .styleWithContext(context)
-                              .frontEndStyle()
-                              .textStyleStyle()
-                              .styleSmallText(context)!),
-                    );
-                  }
+                }
+              } else {
+                saying = 'Eek2 - This is an error';
+              }
+              if ((oldDate == null) || !isSameDate(newDate, oldDate)) {
+                widgets.add(Center(
+                    child: DateChip(
+                  date: newDate,
+                  color: const Color(0x558AD3D5),
+                )));
+              }
+              oldDate = newDate;
+              if (saying.isNotEmpty) {
+                widgets.add(
+                  BubbleSpecialOne(
+                      text: saying,
+                      isSender: itsMe,
+                      sent: itsMe,
+                      seen: hasRead,
+                      color: Colors.white,
+                      //const Color(0xFF1B97F3),
+                      time: timeString,
+                      textStyle: StyleRegistry.registry()
+                          .styleWithContext(context)
+                          .frontEndStyle()
+                          .textStyleStyle()
+                          .styleText(context)!,
+                      timeTextStyle: StyleRegistry.registry()
+                          .styleWithContext(context)
+                          .frontEndStyle()
+                          .textStyleStyle()
+                          .styleSmallText(context)!),
+                );
+              }
 
-                  if (itemMedia.isNotEmpty) {
-                    var mediaWidget = MediaHelper.staggeredMemberMediumModel(
-                        context, itemMedia,
-                        reverse: itsMe,
-                        shrinkWrap: true,
-                        height: 150,
-                        progressExtra: null, viewAction: (index) {
-                      var medium = itemMedia[index];
-                      if (medium.mediumType == MediumType.Photo) {
-                        var photos = itemMedia;
-                        AbstractMediumPlatform.platform!
-                            .showPhotos(context, photos, index);
-                      } else {
-                        AbstractMediumPlatform.platform!
-                            .showVideo(context, medium);
-                      }
-                    });
-                    widgets.add(
-                      FlexibleBubbleSpecialOne(
-                          isSender: itsMe,
-                          sent: itsMe,
-                          seen: hasRead,
-                          color: Colors.white, //const Color(0xFF1B97F3),
-                          timeWidget: timeString != null
-                              ? Text(
-                                  timeString,
-                                  style: StyleRegistry.registry()
-                                      .styleWithContext(context)
-                                      .frontEndStyle()
-                                      .textStyleStyle()
-                                      .styleSmallText(context),
-                                )
-                              : null,
-                          widget: mediaWidget),
-                    );
+              if (itemMedia.isNotEmpty) {
+                var mediaWidget = MediaHelper.staggeredMemberMediumModel(
+                    context, itemMedia,
+                    reverse: itsMe,
+                    shrinkWrap: true,
+                    height: 150,
+                    progressExtra: null, viewAction: (index) {
+                  var medium = itemMedia![index];
+                  if (medium.mediumType == MediumType.Photo) {
+                    var photos = itemMedia;
+                    AbstractMediumPlatform.platform!
+                        .showPhotos(context, photos, index);
+                  } else {
+                    AbstractMediumPlatform.platform!.showVideo(context, medium);
                   }
-                }
-
-                if (lastRead != null) {
-                  IndicateRead.setRead(
-                      widget.room.appId!,
-                      widget.room.documentID!,
-                      widget.memberId,
-                      lastRead,
-                      widget.room.members!);
-                }
-                List<Widget> reorderedWidgets = [];
-                reorderedWidgets.add(_buttonNextPage(state.mightHaveMore!));
-                reorderedWidgets.addAll(widgets);
-                var listWidget = ListView(
-                    controller: controller1,
-                    shrinkWrap: true,
-                    children: reorderedWidgets);
-                if (!dontGoToBottom) {
-                  _gotoBottom();
-                }
-                dontGoToBottom = false;
-                return ListView(
-                    padding: const EdgeInsets.all(0),
-                    shrinkWrap: true,
-//              physics: ScrollPhysics(),
-                    children: [
-                      SizedBox(
-                          height: widget.height -
-                              (((media.isNotEmpty) || (progressValue != null))
-                                  ? 216
-                                  : 116),
-                          child: listWidget),
-                      _divider(),
-                      _speakRow(),
-                      _mediaRow(context),
-                    ]);
+                });
+                widgets.add(
+                  FlexibleBubbleSpecialOne(
+                      isSender: itsMe,
+                      sent: itsMe,
+                      seen: hasRead,
+                      color: Colors.white, //const Color(0xFF1B97F3),
+                      timeWidget: timeString != null
+                          ? Text(
+                              timeString,
+                              style: StyleRegistry.registry()
+                                  .styleWithContext(context)
+                                  .frontEndStyle()
+                                  .textStyleStyle()
+                                  .styleSmallText(context),
+                            )
+                          : null,
+                      widget: mediaWidget),
+                );
               }
             }
-            return StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .progressIndicatorStyle()
-                .progressIndicator(context);
-          });
-        });
+
+            if (lastRead != null) {
+              IndicateRead.setRead(widget.room.appId!, widget.room.documentID!,
+                  widget.memberId, lastRead, widget.room.members!);
+            }
+            List<Widget> reorderedWidgets = [];
+            reorderedWidgets.add(_buttonNextPage(state.mightHaveMore!));
+            reorderedWidgets.addAll(widgets);
+            var listWidget = ListView(
+                controller: controller1,
+                shrinkWrap: true,
+                children: reorderedWidgets);
+            if (!dontGoToBottom) {
+              _gotoBottom();
+            }
+            dontGoToBottom = false;
+            return ListView(padding: const EdgeInsets.all(0), shrinkWrap: true,
+//              physics: ScrollPhysics(),
+                children: [
+                  SizedBox(
+                      height: widget.height -
+                          (((media.isNotEmpty) || (progressValue != null))
+                              ? 216
+                              : 116),
+                      child: listWidget),
+                  _divider(),
+                  _speakRow(),
+                  _mediaRow(context),
+                ]);
+          }
+        }
+        return StyleRegistry.registry()
+            .styleWithContext(context)
+            .frontEndStyle()
+            .progressIndicatorStyle()
+            .progressIndicator(context);
+      });
+    });
   }
 
   Widget _divider() {

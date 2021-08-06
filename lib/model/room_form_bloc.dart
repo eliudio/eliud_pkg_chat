@@ -16,6 +16,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:eliud_core/tools/enums.dart';
@@ -112,7 +113,7 @@ class RoomFormBloc extends Bloc<RoomFormEvent, RoomFormState> {
         return;
       }
       if (event is ChangedRoomTimestamp) {
-        newValue = currentState.value!.copyWith(timestamp: event.value);
+        newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
         yield SubmittableRoomForm(value: newValue);
 
         return;

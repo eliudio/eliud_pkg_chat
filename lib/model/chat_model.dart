@@ -15,6 +15,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -46,7 +47,7 @@ class ChatModel {
 
   // This is the identifier of the room to which this chat belongs
   String? roomId;
-  String? timestamp;
+  DateTime? timestamp;
   String? saying;
   List<String>? readAccess;
   List<ChatMediumModel>? chatMedia;
@@ -55,7 +56,7 @@ class ChatModel {
     assert(documentID != null);
   }
 
-  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, String? timestamp, String? saying, List<String>? readAccess, List<ChatMediumModel>? chatMedia, }) {
+  ChatModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, DateTime? timestamp, String? saying, List<String>? readAccess, List<ChatMediumModel>? chatMedia, }) {
     return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, saying: saying ?? this.saying, readAccess: readAccess ?? this.readAccess, chatMedia: chatMedia ?? this.chatMedia, );
   }
 
@@ -89,7 +90,7 @@ class ChatModel {
           authorId: (authorId != null) ? authorId : null, 
           appId: (appId != null) ? appId : null, 
           roomId: (roomId != null) ? roomId : null, 
-          timestamp: timestamp, 
+          timestamp: (timestamp == null) ? null : timestamp!.millisecondsSinceEpoch, 
           saying: (saying != null) ? saying : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           chatMedia: (chatMedia != null) ? chatMedia
@@ -106,7 +107,7 @@ class ChatModel {
           authorId: entity.authorId, 
           appId: entity.appId, 
           roomId: entity.roomId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           saying: entity.saying, 
           readAccess: entity.readAccess, 
           chatMedia: 
@@ -129,7 +130,7 @@ class ChatModel {
           authorId: entity.authorId, 
           appId: entity.appId, 
           roomId: entity.roomId, 
-          timestamp: entity.timestamp.toString(), 
+          timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           saying: entity.saying, 
           readAccess: entity.readAccess, 
           chatMedia: 

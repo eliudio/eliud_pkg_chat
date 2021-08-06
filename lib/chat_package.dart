@@ -62,7 +62,7 @@ abstract class ChatPackage extends PackageWithSubscription {
       )!
           .listenTo(currentMember.documentID!, (value) {
         if (value != null) {
-          _setState(value!.hasUnread!, currentMember: currentMember);
+          _setState(value.hasUnread!, currentMember: currentMember);
         }
       });
     } else {

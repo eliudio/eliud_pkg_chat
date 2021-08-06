@@ -90,47 +90,48 @@ class RoomListWidgetState extends State<RoomListWidget> {
                     final value = values[index];
 
                     var roomId = value!.documentID!;
-                    var chatMemberInfoId =
-                        RoomHelper.getChatMemberInfoId(widget.memberId, roomId);
-
-                    return StreamBuilder<List<ChatMemberInfoModel?>> (
-                      stream:chatMemberInfoRepository(
-                          appId: widget.appId, roomId: roomId)!.values(eliudQuery: EliudQuery()
-                          .withCondition(EliudQueryCondition('__name__',
-                          isEqualTo: chatMemberInfoId))),
-                      builder: (context, snapshot) {
-                        DateTime? memberLastRead = null;
-                        if (snapshot.connectionState == ConnectionState.active) {
-                          var list = snapshot.data;
-                          if ((list != null) && (list.isNotEmpty)) {
-                            var value = list[0];
-                            if ((value != null) && (value.timestamp != null)) {
-                              try {
-                                memberLastRead = dateTimeFromTimestampString(value.timestamp!);
-                              } catch (_) {}
+                    return StreamBuilder<List<ChatMemberInfoModel?>>(
+                        stream: chatMemberInfoRepository(
+                                appId: widget.appId, roomId: roomId)!
+                            .values(
+                                eliudQuery: EliudQuery()
+                                    .withCondition(EliudQueryCondition(
+                                        'readAccess',
+                                        arrayContains: widget.memberId))),
+                        builder: (context, snapshot) {
+                          DateTime? memberLastRead;
+                          if (snapshot.connectionState ==
+                              ConnectionState.active) {
+                            var list = snapshot.data;
+                            if ((list != null) && (list.isNotEmpty)) {
+                              var memberValue = list.firstWhere((element) => element!.authorId == widget.memberId);
+                              if ((memberValue != null) &&
+                                  (memberValue.timestamp != null)) {
+                                try {
+                                  memberLastRead = memberValue.timestamp!;
+                                } catch (_) {}
+                              }
                             }
                           }
-                        }
 
-                        var timestampRoom = dateTimeFromTimestampString(value.timestamp!);
-                        try {
-                          if (memberLastRead != null) {
-                            return member(
-                                context,
-                                (timestampRoom.compareTo(memberLastRead) >
-                                    0),
-                                timestampRoom,
-                                value);
+                          var timestampRoom;
+                          if (value.timestamp != null) {
+                            timestampRoom = value.timestamp;
+                          } else {
+                            timestampRoom = DateTime.now();
                           }
-                        } catch (_) {}
+                          try {
+                            if (memberLastRead != null) {
+                              return member(
+                                  context,
+                                  (timestampRoom.compareTo(memberLastRead) > 0),
+                                  timestampRoom,
+                                  value);
+                            }
+                          } catch (_) {}
 
-                        return member(
-                            context,
-                            true,
-                            timestampRoom,
-                            value);
-                      });
-
+                          return member(context, true, timestampRoom, value);
+                        });
                   }));
         } else {
           return const Text("No active conversations");
