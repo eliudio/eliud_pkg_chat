@@ -44,9 +44,6 @@ abstract class ChatPackage extends PackageWithSubscription {
   }
 
   @override
-  List<MemberCollectionInfo> getMemberCollectionInfo() => [];
-
-  @override
   void init() {
     ComponentRegistry().init();
 
@@ -82,4 +79,7 @@ abstract class ChatPackage extends PackageWithSubscription {
       accessBloc!.add(MemberUpdated(currentMember));
     }
   }
+
+  @override
+  List<MemberCollectionInfo> getMemberCollectionInfo() => AbstractRepositorySingleton.collections;
 }

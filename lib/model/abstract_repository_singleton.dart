@@ -35,7 +35,7 @@ abstract class AbstractRepositorySingleton {
     MemberCollectionInfo('chat', 'authorId'),
     MemberCollectionInfo('chatmemberinfo', 'authorId'),
     MemberCollectionInfo('memberhaschat', 'memberId'),
-    MemberCollectionInfo('room', 'authorId'),
+    MemberCollectionInfo('room', 'ownerId'),
   ];
   static late AbstractRepositorySingleton singleton;
 

@@ -19,7 +19,7 @@
     "isExtension": false,
     "documentSubCollectionOf": "app"
   },
-  "memberIdentifier": "authorId",
+  "memberIdentifier": "ownerId",
   "fields": [
     {
       "fieldName": "documentID",
