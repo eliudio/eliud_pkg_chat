@@ -104,7 +104,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
                               ConnectionState.active) {
                             var list = snapshot.data;
                             if ((list != null) && (list.isNotEmpty)) {
-                              var memberValue = list.firstWhere((element) => element!.authorId == widget.memberId);
+                              var memberValue = list.firstWhere((element) => element!.authorId == widget.memberId, orElse: () => null);
                               if ((memberValue != null) &&
                                   (memberValue.timestamp != null)) {
                                 try {
