@@ -139,8 +139,8 @@ class RoomListWidgetState extends State<RoomListWidget> {
       } else {
         return StyleRegistry.registry()
             .styleWithContext(context)
-            .adminListStyle()
-            .progressIndicator(context);
+            .frontEndStyle()
+            .progressIndicatorStyle().progressIndicator(context);
       }
     });
   }
