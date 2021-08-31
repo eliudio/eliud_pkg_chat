@@ -27,7 +27,7 @@ abstract class AbstractChatComponent extends StatelessWidget {
   static String componentName = "chats";
   final String? chatID;
 
-  AbstractChatComponent({this.chatID});
+  AbstractChatComponent({Key? key, this.chatID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

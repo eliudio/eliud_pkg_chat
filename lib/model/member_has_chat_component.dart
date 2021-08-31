@@ -27,7 +27,7 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
   static String componentName = "memberHasChats";
   final String? memberHasChatID;
 
-  AbstractMemberHasChatComponent({this.memberHasChatID});
+  AbstractMemberHasChatComponent({Key? key, this.memberHasChatID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -27,7 +27,7 @@ abstract class AbstractRoomComponent extends StatelessWidget {
   static String componentName = "rooms";
   final String? roomID;
 
-  AbstractRoomComponent({this.roomID});
+  AbstractRoomComponent({Key? key, this.roomID}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

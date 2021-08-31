@@ -18,15 +18,15 @@ import 'dashboard/dashboard_widget.dart';
 
 class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
   @override
-  Widget createNew({String? id, Map<String, dynamic>? parameters}) {
-    return ChatDashboard(id: id);
+  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
+    return ChatDashboard(key: key, id: id);
   }
 }
 
 class ChatDashboard extends AbstractChatDashboardComponent {
   static double HEADER_HEIGHT =  155;
 
-  ChatDashboard({String? id}) : super(chatDashboardID: id);
+  ChatDashboard({Key? key, required String id}) : super(key: key, chatDashboardID: id);
 
   @override
   Widget alertWidget({title = String, content = String}) {
