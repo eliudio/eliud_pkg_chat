@@ -71,8 +71,8 @@
     }
  ],
   "listFields": {
-    "title": "documentID!",
-    "subTitle": "authorId!"
+    "title": "value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container()",
+    "subTitle": "value!.authorId != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.authorId!)) : Container()"
   },
   "depends": ["eliud_core"]
 }

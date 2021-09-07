@@ -199,7 +199,7 @@ class ChatMemberInfoListWidgetState extends State<ChatMemberInfoListWidget> {
 class ChatMemberInfoListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final ChatMemberInfoModel? value;
+  final ChatMemberInfoModel value;
 
   ChatMemberInfoListItem({
     Key? key,
@@ -215,16 +215,8 @@ class ChatMemberInfoListItem extends StatelessWidget {
       onDismissed: onDismissed,
       child: ListTile(
         onTap: onTap,
-        title: Hero(
-          tag: '${value!.documentID}__ChatMemberInfoheroTag',
-          child: Container(
-            width: fullScreenWidth(context),
-            child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
-          ),
-        ),
-        subtitle: (value!.authorId! != null) && (value!.authorId!.isNotEmpty)
-            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.authorId!))
-            : null,
+        title: value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container(),
+        subtitle: value!.authorId != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.authorId!)) : Container(),
       ),
     );
   }

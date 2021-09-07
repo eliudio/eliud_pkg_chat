@@ -199,7 +199,7 @@ class MemberHasChatListWidgetState extends State<MemberHasChatListWidget> {
 class MemberHasChatListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final MemberHasChatModel? value;
+  final MemberHasChatModel value;
 
   MemberHasChatListItem({
     Key? key,
@@ -215,16 +215,8 @@ class MemberHasChatListItem extends StatelessWidget {
       onDismissed: onDismissed,
       child: ListTile(
         onTap: onTap,
-        title: Hero(
-          tag: '${value!.documentID}__MemberHasChatheroTag',
-          child: Container(
-            width: fullScreenWidth(context),
-            child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
-          ),
-        ),
-        subtitle: (value!.memberId! != null) && (value!.memberId!.isNotEmpty)
-            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.memberId!))
-            : null,
+        title: value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container(),
+        subtitle: value!.memberId != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.memberId!)) : Container(),
       ),
     );
   }

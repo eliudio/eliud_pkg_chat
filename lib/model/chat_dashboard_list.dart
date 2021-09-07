@@ -199,7 +199,7 @@ class ChatDashboardListWidgetState extends State<ChatDashboardListWidget> {
 class ChatDashboardListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final ChatDashboardModel? value;
+  final ChatDashboardModel value;
 
   ChatDashboardListItem({
     Key? key,
@@ -215,16 +215,8 @@ class ChatDashboardListItem extends StatelessWidget {
       onDismissed: onDismissed,
       child: ListTile(
         onTap: onTap,
-        title: Hero(
-          tag: '${value!.documentID}__ChatDashboardheroTag',
-          child: Container(
-            width: fullScreenWidth(context),
-            child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
-          ),
-        ),
-        subtitle: (value!.description! != null) && (value!.description!.isNotEmpty)
-            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.description!))
-            : null,
+        title: value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container(),
+        subtitle: value!.description != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.description!)) : Container(),
       ),
     );
   }

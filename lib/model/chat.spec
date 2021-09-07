@@ -89,8 +89,8 @@
     }
  ],
   "listFields": {
-    "title": "documentID!",
-    "subTitle": "saying!"
+    "title": "value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container()",
+    "subTitle": "value!.saying != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.saying!)) : Container()"
   },
   "depends": ["eliud_core"]
 }

@@ -199,7 +199,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
 class RoomListItem extends StatelessWidget {
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
-  final RoomModel? value;
+  final RoomModel value;
 
   RoomListItem({
     Key? key,
@@ -215,16 +215,8 @@ class RoomListItem extends StatelessWidget {
       onDismissed: onDismissed,
       child: ListTile(
         onTap: onTap,
-        title: Hero(
-          tag: '${value!.documentID}__RoomheroTag',
-          child: Container(
-            width: fullScreenWidth(context),
-            child: Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)),
-          ),
-        ),
-        subtitle: (value!.description! != null) && (value!.description!.isNotEmpty)
-            ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.description!))
-            : null,
+        title: value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container(),
+        subtitle: value!.description != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.description!)) : Container(),
       ),
     );
   }
