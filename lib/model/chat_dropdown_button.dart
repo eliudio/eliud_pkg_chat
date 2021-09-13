@@ -63,8 +63,8 @@ class ChatDropdownButtonWidgetState extends State<ChatDropdownButtonWidget> {
 
 List<Widget> widgets(ChatModel value) {
 var widgets = <Widget>[];
-widgets.add(value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container());
-widgets.add(value!.saying != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.saying!)) : Container());
+widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.documentID!)) : Container());
+widgets.add(value.saying != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.saying!)) : Container());
 return widgets;
 }
 

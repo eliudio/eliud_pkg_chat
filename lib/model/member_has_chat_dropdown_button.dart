@@ -63,8 +63,8 @@ class MemberHasChatDropdownButtonWidgetState extends State<MemberHasChatDropdown
 
 List<Widget> widgets(MemberHasChatModel value) {
 var widgets = <Widget>[];
-widgets.add(value!.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.documentID!)) : Container());
-widgets.add(value!.memberId != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value!.memberId!)) : Container());
+widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.documentID!)) : Container());
+widgets.add(value.memberId != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.memberId!)) : Container());
 return widgets;
 }
 
