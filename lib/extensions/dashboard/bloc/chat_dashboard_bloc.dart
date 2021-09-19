@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core/style/frontend/has_button.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_chat/extensions/chat/chat.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
@@ -25,11 +27,7 @@ class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
   }
 
   static void openRoom(BuildContext context, RoomModel value, String currentMemberId) {
-    StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .dialogStyle()
-        .openFlexibleDialog(context,
+    openFlexibleDialog(context,
         title: value.members!.length == 2 ? 'Chat' : 'Chatroom',
         child: ChatPage(
           roomId: value.documentID!,
@@ -39,11 +37,7 @@ class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
               ChatDashboard.HEADER_HEIGHT,
         ),
         buttons: [
-          StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .buttonStyle()
-              .dialogButton(context,
+          dialogButton(context,
               label: 'Close',
               onPressed: () => Navigator.of(context).pop()),
         ]);

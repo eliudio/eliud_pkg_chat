@@ -1,3 +1,5 @@
+import 'package:eliud_core/style/frontend/has_button.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/widgets/members_widget.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/widgets/room_widget.dart';
@@ -75,11 +77,7 @@ class DashboardWidgetState extends State<DashboardWidget>
                       child: Image.asset("assets/images/cry-1636046_640.png",
                           package: "eliud_pkg_chat"))),
               onTap: () {
-                StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .dialogStyle()
-                    .openFlexibleDialog(context,
+                openFlexibleDialog(context,
                         title: 'Chat with one of your followers',
                         child: MembersWidget(
                           appId: appId,
@@ -92,11 +90,7 @@ class DashboardWidgetState extends State<DashboardWidget>
                           currentMemberId: memberId,
                         ),
                         buttons: [
-                      StyleRegistry.registry()
-                          .styleWithContext(context)
-                          .frontEndStyle()
-                          .buttonStyle()
-                          .dialogButton(context,
+                      dialogButton(context,
                               label: 'Close',
                               onPressed: () => Navigator.of(context).pop()),
                     ]);

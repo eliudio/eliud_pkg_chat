@@ -1,3 +1,4 @@
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
@@ -126,11 +127,7 @@ class FollowingDashboardItem extends StatelessWidget {
           width: 100,
           child: photo,
         ),
-        title: StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .textStyle()
-                .text(
+        title: text(
                   context,
                   name,
                 ));

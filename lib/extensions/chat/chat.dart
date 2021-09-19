@@ -1,5 +1,11 @@
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/style/frontend/has_button.dart';
+import 'package:eliud_core/style/frontend/has_dialog.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_style.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
+import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/random.dart';
@@ -67,11 +73,7 @@ class _ChatPageState extends State<ChatPage> {
           (state.values!.isNotEmpty)) {
         return room(state.values![0]!);
       } else {
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .progressIndicatorStyle()
-            .progressIndicator(context);
+        return progressIndicator(context);
       }
     });
   }
@@ -277,11 +279,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           timeWidget: timeString != null
                               ? Text(
                                   timeString,
-                                  style: StyleRegistry.registry()
-                                      .styleWithContext(context)
-                                      .frontEndStyle()
-                                      .textStyleStyle()
-                                      .styleSmallText(context),
+                                  style: styleSmallText(context),
                                 )
                               : null,
                           widget: mediaWidget),
@@ -325,11 +323,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     ]);
               }
             }
-            return StyleRegistry.registry()
-                .styleWithContext(context)
-                .frontEndStyle()
-                .progressIndicatorStyle()
-                .progressIndicator(context);
+            return progressIndicator(context);
           });
         });
   }
@@ -343,11 +337,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Widget _speakField() {
-    return StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .texFormFieldStyle()
-        .textField(
+    return textField(
           context,
           readOnly: false,
           textAlign: TextAlign.left,
@@ -397,11 +387,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Widget buttonAdd() {
-    return StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .buttonStyle()
-        .button(
+    return button(
       context,
       label: 'Ok',
       onPressed: () {
@@ -411,22 +397,14 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   Widget buttonAddMember() {
-    return StyleRegistry.registry()
-        .styleWithContext(context)
-        .frontEndStyle()
-        .buttonStyle()
-        .iconButton(
+    return iconButton(
       context,
       icon: const Icon(
         Icons.people,
         size: 30.0,
       ),
       onPressed: () {
-        StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .dialogStyle()
-            .openFlexibleDialog(context,
+        openFlexibleDialog(context,
                 title: 'Add one of your followers to the chat',
                 child: MembersWidget(
                   appId: widget.room.appId!,
@@ -452,11 +430,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   currentMemberId: widget.memberId,
                 ),
                 buttons: [
-              StyleRegistry.registry()
-                  .styleWithContext(context)
-                  .frontEndStyle()
-                  .buttonStyle()
-                  .dialogButton(context,
+              dialogButton(context,
                       label: 'Close',
                       onPressed: () => Navigator.of(context).pop()),
             ]);
@@ -554,11 +528,7 @@ class _ChatWidgetState extends State<ChatWidget> {
               );
             } else {
               return Center(
-                  child: StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .textStyle()
-                      .h5(
+                  child: h5(
                         context,
                         "That's all folks",
                       ));
@@ -583,11 +553,7 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .buttonStyle()
-            .button(
+        child: button(
       context,
       label: 'More...',
       onPressed: () {

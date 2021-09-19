@@ -1,4 +1,7 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_core/style/frontend/has_divider.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -78,11 +81,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
         if (values != null) {
           return Container(
               child: ListView.separated(
-                  separatorBuilder: (context, index) => StyleRegistry.registry()
-                      .styleWithContext(context)
-                      .frontEndStyle()
-                      .dividerStyle()
-                      .divider(context),
+                  separatorBuilder: (context, index) => divider(context),
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
                   itemCount: values.length,
@@ -137,10 +136,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
           return const Text("No active conversations");
         }
       } else {
-        return StyleRegistry.registry()
-            .styleWithContext(context)
-            .frontEndStyle()
-            .progressIndicatorStyle().progressIndicator(context);
+        return progressIndicator(context);
       }
     });
   }
@@ -158,19 +154,11 @@ class RoomListWidgetState extends State<RoomListWidget> {
             var names = nameList.join(", ");
 
             var nameWidget = hasUnread
-                ? StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .textStyle()
-                    .highLight1(
+                ? highLight1(
                       context,
                       names,
                     )
-                : StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .textStyle()
-                    .text(
+                : text(
                       context,
                       names,
                     );
@@ -194,11 +182,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
                 onTap: () async {
                   ChatDashboardBloc.openRoom(context, room, widget.memberId);
                 },
-                trailing: StyleRegistry.registry()
-                    .styleWithContext(context)
-                    .frontEndStyle()
-                    .textStyle()
-                    .text(
+                trailing: text(
                         context,
                         timestampRoom != null
                             ? formatHHMM(timestampRoom)
@@ -210,11 +194,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
                 ),
                 title: nameWidget);
           }
-          return StyleRegistry.registry()
-              .styleWithContext(context)
-              .frontEndStyle()
-              .progressIndicatorStyle()
-              .progressIndicator(context);
+          return progressIndicator(context);
         });
   }
 
