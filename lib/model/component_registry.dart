@@ -16,8 +16,11 @@
 
 import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
+import 'package:eliud_core/tools/component/component_spec.dart';
 
 import '../extensions/chat_dashboard_component.dart';
+import '../editors/chat_dashboard_component_editor.dart';
+import 'chat_dashboard_component_selector.dart';
 import 'package:eliud_pkg_chat/model/internal_component.dart';
 
 
@@ -31,6 +34,9 @@ class ComponentRegistry {
     Registry.registry()!.register(componentName: "eliud_pkg_chat_internalWidgets", componentConstructor: ListComponentFactory());
     Registry.registry()!.addDropDownSupporter("chatDashboards", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "chatDashboards", componentConstructor: ChatDashboardComponentConstructorDefault());
+    Registry.registry()!.addComponentSpec('eliud_pkg_chat', [
+      ComponentSpec('chatDashboards', ChatDashboardComponentConstructorDefault(), ChatDashboardComponentSelector(), ChatDashboardComponentEditorConstructor(), ), 
+    ]);
 
   }
 }

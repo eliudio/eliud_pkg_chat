@@ -63,8 +63,8 @@ class ChatMemberInfoDropdownButtonWidgetState extends State<ChatMemberInfoDropdo
 
 List<Widget> widgets(ChatMemberInfoModel value) {
 var widgets = <Widget>[];
-widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.documentID!)) : Container());
-widgets.add(value.authorId != null ? Center(child: StyleRegistry.registry().styleWithContext(context).adminListStyle().listItem(context, value.authorId!)) : Container());
+widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container());
+widgets.add(value.authorId != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.authorId!)) : Container());
 return widgets;
 }
 
