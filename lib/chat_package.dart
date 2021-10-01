@@ -16,6 +16,8 @@ abstract class ChatPackage extends PackageWithSubscription {
       'No unread Chats';
   bool? state_CONDITION_MEMBER_HAS_UNREAD_CHAT = null;
 
+  ChatPackage() : super('eliud_pkg_chat');
+
   @override
   Future<bool?> isConditionOk(
       String pluginCondition,
