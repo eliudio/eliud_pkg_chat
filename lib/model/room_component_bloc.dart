@@ -24,42 +24,30 @@ import 'package:flutter/services.dart';
 
 class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
   final RoomRepository? roomRepository;
+  StreamSubscription? _roomSubscription;
+
+  Stream<RoomComponentState> _mapLoadRoomComponentUpdateToState(String documentId) async* {
+    _roomSubscription?.cancel();
+    _roomSubscription = roomRepository!.listenTo(documentId, (value) {
+      if (value != null) add(RoomComponentUpdated(value: value!));
+    });
+  }
 
   RoomComponentBloc({ this.roomRepository }): super(RoomComponentUninitialized());
+
   @override
   Stream<RoomComponentState> mapEventToState(RoomComponentEvent event) async* {
     final currentState = state;
     if (event is FetchRoomComponent) {
-      try {
-        if (currentState is RoomComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await roomRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield RoomComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield RoomComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield RoomComponentError(
-                  message: "Room with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield RoomComponentError(message: "Unknown error whilst retrieving Room");
-      }
+      yield* _mapLoadRoomComponentUpdateToState(event.id!);
+    } else if (event is RoomComponentUpdated) {
+      yield RoomComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _roomSubscription?.cancel();
     return super.close();
   }
 

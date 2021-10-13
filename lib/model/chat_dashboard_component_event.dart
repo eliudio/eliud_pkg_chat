@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 
 abstract class ChatDashboardComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchChatDashboardComponent extends ChatDashboardComponentEvent {
 
   FetchChatDashboardComponent({ this.id });
 }
+
+class ChatDashboardComponentUpdated extends ChatDashboardComponentEvent {
+  final ChatDashboardModel value;
+
+  ChatDashboardComponentUpdated({ required this.value });
+}
+
 

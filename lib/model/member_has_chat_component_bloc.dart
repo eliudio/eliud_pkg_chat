@@ -24,42 +24,30 @@ import 'package:flutter/services.dart';
 
 class MemberHasChatComponentBloc extends Bloc<MemberHasChatComponentEvent, MemberHasChatComponentState> {
   final MemberHasChatRepository? memberHasChatRepository;
+  StreamSubscription? _memberHasChatSubscription;
+
+  Stream<MemberHasChatComponentState> _mapLoadMemberHasChatComponentUpdateToState(String documentId) async* {
+    _memberHasChatSubscription?.cancel();
+    _memberHasChatSubscription = memberHasChatRepository!.listenTo(documentId, (value) {
+      if (value != null) add(MemberHasChatComponentUpdated(value: value!));
+    });
+  }
 
   MemberHasChatComponentBloc({ this.memberHasChatRepository }): super(MemberHasChatComponentUninitialized());
+
   @override
   Stream<MemberHasChatComponentState> mapEventToState(MemberHasChatComponentEvent event) async* {
     final currentState = state;
     if (event is FetchMemberHasChatComponent) {
-      try {
-        if (currentState is MemberHasChatComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await memberHasChatRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield MemberHasChatComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield MemberHasChatComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield MemberHasChatComponentError(
-                  message: "MemberHasChat with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield MemberHasChatComponentError(message: "Unknown error whilst retrieving MemberHasChat");
-      }
+      yield* _mapLoadMemberHasChatComponentUpdateToState(event.id!);
+    } else if (event is MemberHasChatComponentUpdated) {
+      yield MemberHasChatComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _memberHasChatSubscription?.cancel();
     return super.close();
   }
 

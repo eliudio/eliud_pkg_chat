@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_chat/model/room_model.dart';
 
 abstract class RoomComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchRoomComponent extends RoomComponentEvent {
 
   FetchRoomComponent({ this.id });
 }
+
+class RoomComponentUpdated extends RoomComponentEvent {
+  final RoomModel value;
+
+  RoomComponentUpdated({ required this.value });
+}
+
 

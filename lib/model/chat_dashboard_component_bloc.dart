@@ -24,42 +24,30 @@ import 'package:flutter/services.dart';
 
 class ChatDashboardComponentBloc extends Bloc<ChatDashboardComponentEvent, ChatDashboardComponentState> {
   final ChatDashboardRepository? chatDashboardRepository;
+  StreamSubscription? _chatDashboardSubscription;
+
+  Stream<ChatDashboardComponentState> _mapLoadChatDashboardComponentUpdateToState(String documentId) async* {
+    _chatDashboardSubscription?.cancel();
+    _chatDashboardSubscription = chatDashboardRepository!.listenTo(documentId, (value) {
+      if (value != null) add(ChatDashboardComponentUpdated(value: value!));
+    });
+  }
 
   ChatDashboardComponentBloc({ this.chatDashboardRepository }): super(ChatDashboardComponentUninitialized());
+
   @override
   Stream<ChatDashboardComponentState> mapEventToState(ChatDashboardComponentEvent event) async* {
     final currentState = state;
     if (event is FetchChatDashboardComponent) {
-      try {
-        if (currentState is ChatDashboardComponentUninitialized) {
-          bool permissionDenied = false;
-          final model = await chatDashboardRepository!.get(event.id, onError: (error) {
-            // Unfortunatly the below is currently the only way we know how to identify if a document is read protected
-            if ((error is PlatformException) &&  (error.message!.startsWith("PERMISSION_DENIED"))) {
-              permissionDenied = true;
-            }
-          });
-          if (permissionDenied) {
-            yield ChatDashboardComponentPermissionDenied();
-          } else {
-            if (model != null) {
-              yield ChatDashboardComponentLoaded(value: model);
-            } else {
-              String? id = event.id;
-              yield ChatDashboardComponentError(
-                  message: "ChatDashboard with id = '$id' not found");
-            }
-          }
-          return;
-        }
-      } catch (_) {
-        yield ChatDashboardComponentError(message: "Unknown error whilst retrieving ChatDashboard");
-      }
+      yield* _mapLoadChatDashboardComponentUpdateToState(event.id!);
+    } else if (event is ChatDashboardComponentUpdated) {
+      yield ChatDashboardComponentLoaded(value: event.value);
     }
   }
 
   @override
   Future<void> close() {
+    _chatDashboardSubscription?.cancel();
     return super.close();
   }
 

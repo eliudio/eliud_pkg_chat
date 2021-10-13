@@ -14,6 +14,7 @@
 */
 
 import 'package:equatable/equatable.dart';
+import 'package:eliud_pkg_chat/model/member_has_chat_model.dart';
 
 abstract class MemberHasChatComponentEvent extends Equatable {
   @override
@@ -25,4 +26,11 @@ class FetchMemberHasChatComponent extends MemberHasChatComponentEvent {
 
   FetchMemberHasChatComponent({ this.id });
 }
+
+class MemberHasChatComponentUpdated extends MemberHasChatComponentEvent {
+  final MemberHasChatModel value;
+
+  MemberHasChatComponentUpdated({ required this.value });
+}
+
 
