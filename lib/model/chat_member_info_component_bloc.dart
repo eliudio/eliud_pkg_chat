@@ -29,7 +29,7 @@ class ChatMemberInfoComponentBloc extends Bloc<ChatMemberInfoComponentEvent, Cha
   Stream<ChatMemberInfoComponentState> _mapLoadChatMemberInfoComponentUpdateToState(String documentId) async* {
     _chatMemberInfoSubscription?.cancel();
     _chatMemberInfoSubscription = chatMemberInfoRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ChatMemberInfoComponentUpdated(value: value!));
+      if (value != null) add(ChatMemberInfoComponentUpdated(value: value));
     });
   }
 

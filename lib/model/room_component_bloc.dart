@@ -29,7 +29,7 @@ class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
   Stream<RoomComponentState> _mapLoadRoomComponentUpdateToState(String documentId) async* {
     _roomSubscription?.cancel();
     _roomSubscription = roomRepository!.listenTo(documentId, (value) {
-      if (value != null) add(RoomComponentUpdated(value: value!));
+      if (value != null) add(RoomComponentUpdated(value: value));
     });
   }
 

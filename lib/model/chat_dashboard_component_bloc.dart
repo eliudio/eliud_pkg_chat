@@ -29,7 +29,7 @@ class ChatDashboardComponentBloc extends Bloc<ChatDashboardComponentEvent, ChatD
   Stream<ChatDashboardComponentState> _mapLoadChatDashboardComponentUpdateToState(String documentId) async* {
     _chatDashboardSubscription?.cancel();
     _chatDashboardSubscription = chatDashboardRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ChatDashboardComponentUpdated(value: value!));
+      if (value != null) add(ChatDashboardComponentUpdated(value: value));
     });
   }
 

@@ -11,9 +11,9 @@ import 'model/repository_singleton.dart';
 import 'dart:async';
 
 abstract class ChatPackage extends PackageWithSubscription {
-  static final String CONDITION_MEMBER_HAS_UNREAD_CHAT = 'Unread Chats';
-  static final String CONDITION_MEMBER_DOES_NOT_HAVE_UNREAD_CHAT =
-      'No unread Chats';
+  static final String CONDITION_MEMBER_HAS_UNREAD_CHAT = 'There are some unread messages';
+  static final String CONDITION_MEMBER_ALL_HAVE_BEEN_READ =
+      'All messages have been read';
   bool? state_CONDITION_MEMBER_HAS_UNREAD_CHAT = null;
 
   ChatPackage() : super('eliud_pkg_chat');
@@ -30,7 +30,7 @@ abstract class ChatPackage extends PackageWithSubscription {
       if (state_CONDITION_MEMBER_HAS_UNREAD_CHAT == null) return false;
       return state_CONDITION_MEMBER_HAS_UNREAD_CHAT;
     }
-    if (pluginCondition == CONDITION_MEMBER_DOES_NOT_HAVE_UNREAD_CHAT) {
+    if (pluginCondition == CONDITION_MEMBER_ALL_HAVE_BEEN_READ) {
       if (state_CONDITION_MEMBER_HAS_UNREAD_CHAT == null) return true;
       return !state_CONDITION_MEMBER_HAS_UNREAD_CHAT!;
     }
@@ -41,7 +41,7 @@ abstract class ChatPackage extends PackageWithSubscription {
   List<String> retrieveAllPackageConditions() {
     return [
       CONDITION_MEMBER_HAS_UNREAD_CHAT,
-      CONDITION_MEMBER_DOES_NOT_HAVE_UNREAD_CHAT
+      CONDITION_MEMBER_ALL_HAVE_BEEN_READ
     ];
   }
 
@@ -75,9 +75,9 @@ abstract class ChatPackage extends PackageWithSubscription {
     _setState(false);
   }
 
-  void _setState(bool newState, {MemberModel? currentMember}) {
-    if (newState != state_CONDITION_MEMBER_HAS_UNREAD_CHAT) {
-      state_CONDITION_MEMBER_HAS_UNREAD_CHAT = newState;
+  void _setState(bool hasUnreadChat, {MemberModel? currentMember}) {
+    if (hasUnreadChat != state_CONDITION_MEMBER_HAS_UNREAD_CHAT) {
+      state_CONDITION_MEMBER_HAS_UNREAD_CHAT = hasUnreadChat;
       accessBloc!.add(MemberUpdated(currentMember));
     }
   }

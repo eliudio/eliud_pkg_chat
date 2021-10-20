@@ -29,7 +29,7 @@ class MemberHasChatComponentBloc extends Bloc<MemberHasChatComponentEvent, Membe
   Stream<MemberHasChatComponentState> _mapLoadMemberHasChatComponentUpdateToState(String documentId) async* {
     _memberHasChatSubscription?.cancel();
     _memberHasChatSubscription = memberHasChatRepository!.listenTo(documentId, (value) {
-      if (value != null) add(MemberHasChatComponentUpdated(value: value!));
+      if (value != null) add(MemberHasChatComponentUpdated(value: value));
     });
   }
 

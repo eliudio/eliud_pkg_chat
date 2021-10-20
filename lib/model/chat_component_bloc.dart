@@ -29,7 +29,7 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
   Stream<ChatComponentState> _mapLoadChatComponentUpdateToState(String documentId) async* {
     _chatSubscription?.cancel();
     _chatSubscription = chatRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ChatComponentUpdated(value: value!));
+      if (value != null) add(ChatComponentUpdated(value: value));
     });
   }
 
