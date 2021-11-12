@@ -13,8 +13,9 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_state.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/state/access_state.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
 import 'package:eliud_core/tools/screen_size.dart';
@@ -71,11 +72,11 @@ class ChatMediumForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatMediumFormBloc >(
-            create: (context) => ChatMediumFormBloc(AccessBloc.appId(context),
+            create: (context) => ChatMediumFormBloc(AccessBloc.currentAppId(context),
                                        
                                                 )..add(InitialiseChatMediumFormEvent(value: value)),
   
@@ -83,7 +84,7 @@ class ChatMediumForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<ChatMediumFormBloc >(
-            create: (context) => ChatMediumFormBloc(AccessBloc.appId(context),
+            create: (context) => ChatMediumFormBloc(AccessBloc.currentAppId(context),
                                        
                                                 )..add(InitialiseChatMediumFormNoLoadEvent(value: value)),
   
@@ -93,7 +94,7 @@ class ChatMediumForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update ChatMedium' : 'Add ChatMedium'),
         body: BlocProvider<ChatMediumFormBloc >(
-            create: (context) => ChatMediumFormBloc(AccessBloc.appId(context),
+            create: (context) => ChatMediumFormBloc(AccessBloc.currentAppId(context),
                                        
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseChatMediumFormEvent(value: value) : InitialiseNewChatMediumFormEvent())),
   
@@ -133,7 +134,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.app(context);
+    var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ChatMediumFormBloc, ChatMediumFormState>(builder: (context, state) {
@@ -244,7 +245,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
   }
 
   bool _readOnly(AccessState accessState, ChatMediumFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner());
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(AccessBloc.currentAppId(context)));
   }
   
 

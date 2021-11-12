@@ -1,20 +1,20 @@
-import 'package:eliud_core/core/access/bloc/access_event.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
-import 'package:eliud_core/package/package_with_subscription.dart';
 import 'package:eliud_core/model/access_model.dart';
 import 'model/abstract_repository_singleton.dart';
 import 'model/component_registry.dart';
+import 'model/member_has_chat_model.dart';
 import 'model/repository_singleton.dart';
 
 import 'dart:async';
 
-abstract class ChatPackage extends PackageWithSubscription {
+abstract class ChatPackage extends Package {
   static final String CONDITION_MEMBER_HAS_UNREAD_CHAT = 'There are some unread messages';
   static final String CONDITION_MEMBER_ALL_HAVE_BEEN_READ =
       'All messages have been read';
   bool? state_CONDITION_MEMBER_HAS_UNREAD_CHAT = null;
+  late StreamSubscription<MemberHasChatModel?> subscription;
 
   ChatPackage() : super('eliud_pkg_chat');
 
@@ -69,16 +69,10 @@ abstract class ChatPackage extends PackageWithSubscription {
     }
   }
 
-  @override
-  void unsubscribe() {
-    super.unsubscribe();
-    _setState(false);
-  }
-
   void _setState(bool hasUnreadChat, {MemberModel? currentMember}) {
     if (hasUnreadChat != state_CONDITION_MEMBER_HAS_UNREAD_CHAT) {
       state_CONDITION_MEMBER_HAS_UNREAD_CHAT = hasUnreadChat;
-      accessBloc!.add(MemberUpdated(currentMember));
+      //accessBloc!.add(Package...(currentMember));
     }
   }
 

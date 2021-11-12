@@ -15,7 +15,7 @@
 
 
 import 'package:eliud_core/tools/component/component_constructor.dart';
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -201,7 +201,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<ChatListBloc>(
           create: (context) => ChatListBloc(
-            chatRepository: chatRepository(appId: AccessBloc.appId(context))!,
+            chatRepository: chatRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadChatList()),
         )
       ],
@@ -214,7 +214,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<ChatDashboardListBloc>(
           create: (context) => ChatDashboardListBloc(
-            chatDashboardRepository: chatDashboardRepository(appId: AccessBloc.appId(context))!,
+            chatDashboardRepository: chatDashboardRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadChatDashboardList()),
         )
       ],
@@ -227,7 +227,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<ChatMemberInfoListBloc>(
           create: (context) => ChatMemberInfoListBloc(
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: AccessBloc.appId(context))!,
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadChatMemberInfoList()),
         )
       ],
@@ -240,7 +240,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<MemberHasChatListBloc>(
           create: (context) => MemberHasChatListBloc(
-            memberHasChatRepository: memberHasChatRepository(appId: AccessBloc.appId(context))!,
+            memberHasChatRepository: memberHasChatRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadMemberHasChatList()),
         )
       ],
@@ -253,7 +253,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<RoomListBloc>(
           create: (context) => RoomListBloc(
-            roomRepository: roomRepository(appId: AccessBloc.appId(context))!,
+            roomRepository: roomRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadRoomList()),
         )
       ],
@@ -291,7 +291,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<ChatListBloc>(
           create: (context) => ChatListBloc(
-            chatRepository: chatRepository(appId: AccessBloc.appId(context))!,
+            chatRepository: chatRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadChatList()),
         )
       ],
@@ -304,7 +304,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<ChatDashboardListBloc>(
           create: (context) => ChatDashboardListBloc(
-            chatDashboardRepository: chatDashboardRepository(appId: AccessBloc.appId(context))!,
+            chatDashboardRepository: chatDashboardRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadChatDashboardList()),
         )
       ],
@@ -317,7 +317,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<ChatMemberInfoListBloc>(
           create: (context) => ChatMemberInfoListBloc(
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: AccessBloc.appId(context))!,
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadChatMemberInfoList()),
         )
       ],
@@ -330,7 +330,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<MemberHasChatListBloc>(
           create: (context) => MemberHasChatListBloc(
-            memberHasChatRepository: memberHasChatRepository(appId: AccessBloc.appId(context))!,
+            memberHasChatRepository: memberHasChatRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadMemberHasChatList()),
         )
       ],
@@ -343,7 +343,7 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<RoomListBloc>(
           create: (context) => RoomListBloc(
-            roomRepository: roomRepository(appId: AccessBloc.appId(context))!,
+            roomRepository: roomRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadRoomList()),
         )
       ],

@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
@@ -38,7 +38,7 @@ class RoomComponentSelector extends ComponentSelector {
     return BlocProvider<RoomListBloc>(
           create: (context) => RoomListBloc(
             roomRepository:
-                roomRepository(appId: AccessBloc.appId(context))!,
+                roomRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadRoomList()),
       child: SelectRoomWidget(
           height: height,

@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/core/access/bloc/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
@@ -38,7 +38,7 @@ class ChatDashboardComponentSelector extends ComponentSelector {
     return BlocProvider<ChatDashboardListBloc>(
           create: (context) => ChatDashboardListBloc(
             chatDashboardRepository:
-                chatDashboardRepository(appId: AccessBloc.appId(context))!,
+                chatDashboardRepository(appId: AccessBloc.currentAppId(context))!,
           )..add(LoadChatDashboardList()),
       child: SelectChatDashboardWidget(
           height: height,
