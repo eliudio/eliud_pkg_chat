@@ -107,7 +107,7 @@ class ChatMemberInfoListWidgetState extends State<ChatMemberInfoListWidget> {
                       context, label: 'Add',
                       onPressed: () {
                         Navigator.of(context).push(
-                                  pageRouteBuilder(accessState.currentApp, page: BlocProvider.value(
+                                  pageRouteBuilder(accessState.currentApp(context), page: BlocProvider.value(
                                       value: BlocProvider.of<ChatMemberInfoListBloc>(context),
                                       child: ChatMemberInfoForm(
                                           value: null,

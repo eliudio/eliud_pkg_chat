@@ -35,9 +35,9 @@ class ChatComponentPermissionDenied extends ChatComponentState {
 }
 
 class ChatComponentLoaded extends ChatComponentState {
-  final ChatModel? value;
+  final ChatModel value;
 
-  const ChatComponentLoaded({ this.value });
+  const ChatComponentLoaded({ required this.value });
 
   ChatComponentLoaded copyWith({ ChatModel? copyThis }) {
     return ChatComponentLoaded(value: copyThis ?? this.value);

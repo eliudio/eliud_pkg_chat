@@ -13,9 +13,6 @@
 
 */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_chat/model/chat_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_component_event.dart';
@@ -23,18 +20,26 @@ import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/chat_repository.dart';
 import 'package:eliud_pkg_chat/model/chat_component_state.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+
 abstract class AbstractChatComponent extends StatelessWidget {
   static String componentName = "chats";
-  final String? chatID;
+  final String theAppId;
+  final String chatId;
 
-  AbstractChatComponent({Key? key, this.chatID}): super(key: key);
+  AbstractChatComponent({Key? key, required this.theAppId, required this.chatId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatComponentBloc> (
           create: (context) => ChatComponentBloc(
-            chatRepository: getChatRepository(context))
-        ..add(FetchChatComponent(id: chatID)),
+            chatRepository: chatRepository(appId: theAppId)!)
+        ..add(FetchChatComponent(id: chatId)),
       child: _chatBlockBuilder(context),
     );
   }
@@ -43,7 +48,7 @@ abstract class AbstractChatComponent extends StatelessWidget {
     return BlocBuilder<ChatComponentBloc, ChatComponentState>(builder: (context, state) {
       if (state is ChatComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No Chat defined');
+          return AlertWidget(title: "Error", content: 'No Chat defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -54,7 +59,7 @@ abstract class AbstractChatComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is ChatComponentError) {
-        return alertWidget(title: 'Error', content: state.message);
+        return AlertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
@@ -63,8 +68,6 @@ abstract class AbstractChatComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, ChatModel? value);
-  Widget alertWidget({ title: String, content: String});
-  ChatRepository getChatRepository(BuildContext context);
+  Widget yourWidget(BuildContext context, ChatModel value);
 }
 

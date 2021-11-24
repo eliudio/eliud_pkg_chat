@@ -13,9 +13,6 @@
 
 */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_chat/model/chat_member_info_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_component_event.dart';
@@ -23,18 +20,26 @@ import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_repository.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_component_state.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+
 abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
   static String componentName = "chatMemberInfos";
-  final String? chatMemberInfoID;
+  final String theAppId;
+  final String chatMemberInfoId;
 
-  AbstractChatMemberInfoComponent({Key? key, this.chatMemberInfoID}): super(key: key);
+  AbstractChatMemberInfoComponent({Key? key, required this.theAppId, required this.chatMemberInfoId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatMemberInfoComponentBloc> (
           create: (context) => ChatMemberInfoComponentBloc(
-            chatMemberInfoRepository: getChatMemberInfoRepository(context))
-        ..add(FetchChatMemberInfoComponent(id: chatMemberInfoID)),
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: theAppId)!)
+        ..add(FetchChatMemberInfoComponent(id: chatMemberInfoId)),
       child: _chatMemberInfoBlockBuilder(context),
     );
   }
@@ -43,7 +48,7 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
     return BlocBuilder<ChatMemberInfoComponentBloc, ChatMemberInfoComponentState>(builder: (context, state) {
       if (state is ChatMemberInfoComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No ChatMemberInfo defined');
+          return AlertWidget(title: "Error", content: 'No ChatMemberInfo defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -54,7 +59,7 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is ChatMemberInfoComponentError) {
-        return alertWidget(title: 'Error', content: state.message);
+        return AlertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
@@ -63,8 +68,6 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, ChatMemberInfoModel? value);
-  Widget alertWidget({ title: String, content: String});
-  ChatMemberInfoRepository getChatMemberInfoRepository(BuildContext context);
+  Widget yourWidget(BuildContext context, ChatMemberInfoModel value);
 }
 

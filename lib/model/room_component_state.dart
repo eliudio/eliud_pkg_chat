@@ -35,9 +35,9 @@ class RoomComponentPermissionDenied extends RoomComponentState {
 }
 
 class RoomComponentLoaded extends RoomComponentState {
-  final RoomModel? value;
+  final RoomModel value;
 
-  const RoomComponentLoaded({ this.value });
+  const RoomComponentLoaded({ required this.value });
 
   RoomComponentLoaded copyWith({ RoomModel? copyThis }) {
     return RoomComponentLoaded(value: copyThis ?? this.value);

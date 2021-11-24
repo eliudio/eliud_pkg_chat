@@ -35,9 +35,9 @@ class MemberHasChatComponentPermissionDenied extends MemberHasChatComponentState
 }
 
 class MemberHasChatComponentLoaded extends MemberHasChatComponentState {
-  final MemberHasChatModel? value;
+  final MemberHasChatModel value;
 
-  const MemberHasChatComponentLoaded({ this.value });
+  const MemberHasChatComponentLoaded({ required this.value });
 
   MemberHasChatComponentLoaded copyWith({ MemberHasChatModel? copyThis }) {
     return MemberHasChatComponentLoaded(value: copyThis ?? this.value);

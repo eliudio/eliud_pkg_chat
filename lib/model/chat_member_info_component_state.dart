@@ -35,9 +35,9 @@ class ChatMemberInfoComponentPermissionDenied extends ChatMemberInfoComponentSta
 }
 
 class ChatMemberInfoComponentLoaded extends ChatMemberInfoComponentState {
-  final ChatMemberInfoModel? value;
+  final ChatMemberInfoModel value;
 
-  const ChatMemberInfoComponentLoaded({ this.value });
+  const ChatMemberInfoComponentLoaded({ required this.value });
 
   ChatMemberInfoComponentLoaded copyWith({ ChatMemberInfoModel? copyThis }) {
     return ChatMemberInfoComponentLoaded(value: copyThis ?? this.value);

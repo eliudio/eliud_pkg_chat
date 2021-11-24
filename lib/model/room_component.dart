@@ -13,9 +13,6 @@
 
 */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_chat/model/room_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_component_event.dart';
@@ -23,18 +20,26 @@ import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/model/room_repository.dart';
 import 'package:eliud_pkg_chat/model/room_component_state.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+
 abstract class AbstractRoomComponent extends StatelessWidget {
   static String componentName = "rooms";
-  final String? roomID;
+  final String theAppId;
+  final String roomId;
 
-  AbstractRoomComponent({Key? key, this.roomID}): super(key: key);
+  AbstractRoomComponent({Key? key, required this.theAppId, required this.roomId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<RoomComponentBloc> (
           create: (context) => RoomComponentBloc(
-            roomRepository: getRoomRepository(context))
-        ..add(FetchRoomComponent(id: roomID)),
+            roomRepository: roomRepository(appId: theAppId)!)
+        ..add(FetchRoomComponent(id: roomId)),
       child: _roomBlockBuilder(context),
     );
   }
@@ -43,7 +48,7 @@ abstract class AbstractRoomComponent extends StatelessWidget {
     return BlocBuilder<RoomComponentBloc, RoomComponentState>(builder: (context, state) {
       if (state is RoomComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No Room defined');
+          return AlertWidget(title: "Error", content: 'No Room defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -54,7 +59,7 @@ abstract class AbstractRoomComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is RoomComponentError) {
-        return alertWidget(title: 'Error', content: state.message);
+        return AlertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
@@ -63,8 +68,6 @@ abstract class AbstractRoomComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, RoomModel? value);
-  Widget alertWidget({ title: String, content: String});
-  RoomRepository getRoomRepository(BuildContext context);
+  Widget yourWidget(BuildContext context, RoomModel value);
 }
 

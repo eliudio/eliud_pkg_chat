@@ -74,6 +74,7 @@ class ChatForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatFormBloc >(
             create: (context) => ChatFormBloc(AccessBloc.currentAppId(context),
@@ -146,6 +147,7 @@ class _MyChatFormState extends State<MyChatForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ChatFormBloc, ChatFormState>(builder: (context, state) {
       if (state is ChatFormUninitialized) return Center(

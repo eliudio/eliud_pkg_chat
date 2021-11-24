@@ -74,6 +74,7 @@ class MemberHasChatForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<MemberHasChatFormBloc >(
             create: (context) => MemberHasChatFormBloc(AccessBloc.currentAppId(context),
@@ -144,6 +145,7 @@ class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<MemberHasChatFormBloc, MemberHasChatFormState>(builder: (context, state) {
       if (state is MemberHasChatFormUninitialized) return Center(

@@ -35,9 +35,9 @@ class ChatDashboardComponentPermissionDenied extends ChatDashboardComponentState
 }
 
 class ChatDashboardComponentLoaded extends ChatDashboardComponentState {
-  final ChatDashboardModel? value;
+  final ChatDashboardModel value;
 
-  const ChatDashboardComponentLoaded({ this.value });
+  const ChatDashboardComponentLoaded({ required this.value });
 
   ChatDashboardComponentLoaded copyWith({ ChatDashboardModel? copyThis }) {
     return ChatDashboardComponentLoaded(value: copyThis ?? this.value);

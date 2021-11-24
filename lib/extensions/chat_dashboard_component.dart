@@ -18,8 +18,8 @@ import 'dashboard/dashboard_widget.dart';
 
 class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
   @override
-  Widget createNew({Key? key, required String id, Map<String, dynamic>? parameters}) {
-    return ChatDashboard(key: key, id: id);
+  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters}) {
+    return ChatDashboard(key: key, appId: appId, id: id);
   }
 
   @override
@@ -29,23 +29,13 @@ class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
 class ChatDashboard extends AbstractChatDashboardComponent {
   static double HEADER_HEIGHT =  155;
 
-  ChatDashboard({Key? key, required String id}) : super(key: key, chatDashboardID: id);
-
-  @override
-  Widget alertWidget({title = String, content = String}) {
-    return AlertWidget(title: title, content: content);
-  }
-
-  @override
-  ChatDashboardRepository getChatDashboardRepository(BuildContext context) {
-    return chatDashboardRepository(appId: AccessBloc.currentAppId(context))!;
-  }
+  ChatDashboard({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, chatDashboardId: id);
 
   @override
   Widget yourWidget(BuildContext context, ChatDashboardModel? value) {
     var accessState = AccessBloc.getState(context);
     if (accessState is AccessDetermined) {
-      var appId = accessState.currentAppId();
+      var appId = accessState.currentAppId(context);
       if (accessState.getMember() != null) {
         var memberId = accessState.getMember()!.documentID!;
 

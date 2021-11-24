@@ -74,6 +74,7 @@ class ChatMediumForm extends StatelessWidget {
     var accessState = AccessBloc.getState(context);
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text("No app available");
+    var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatMediumFormBloc >(
             create: (context) => ChatMediumFormBloc(AccessBloc.currentAppId(context),
@@ -136,6 +137,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
   Widget build(BuildContext context) {
     var app = AccessBloc.currentApp(context);
     if (app == null) return Text('No app available');
+    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ChatMediumFormBloc, ChatMediumFormState>(builder: (context, state) {
       if (state is ChatMediumFormUninitialized) return Center(
@@ -173,7 +175,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(id: "memberMediums", value: _memberMedium, trigger: _onMemberMediumSelected, optional: true),
+                DropdownButtonComponentFactory().createNew(appId: appId, id: "memberMediums", value: _memberMedium, trigger: _onMemberMediumSelected, optional: true),
           );
 
 

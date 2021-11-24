@@ -13,9 +13,6 @@
 
 */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
 
 import 'package:eliud_pkg_chat/model/chat_dashboard_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_component_event.dart';
@@ -23,18 +20,26 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_repository.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_component_state.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eliud_core/style/style_registry.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core/core/widgets/alert_widget.dart';
+import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+
 abstract class AbstractChatDashboardComponent extends StatelessWidget {
   static String componentName = "chatDashboards";
-  final String? chatDashboardID;
+  final String theAppId;
+  final String chatDashboardId;
 
-  AbstractChatDashboardComponent({Key? key, this.chatDashboardID}): super(key: key);
+  AbstractChatDashboardComponent({Key? key, required this.theAppId, required this.chatDashboardId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatDashboardComponentBloc> (
           create: (context) => ChatDashboardComponentBloc(
-            chatDashboardRepository: getChatDashboardRepository(context))
-        ..add(FetchChatDashboardComponent(id: chatDashboardID)),
+            chatDashboardRepository: chatDashboardRepository(appId: theAppId)!)
+        ..add(FetchChatDashboardComponent(id: chatDashboardId)),
       child: _chatDashboardBlockBuilder(context),
     );
   }
@@ -43,7 +48,7 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
     return BlocBuilder<ChatDashboardComponentBloc, ChatDashboardComponentState>(builder: (context, state) {
       if (state is ChatDashboardComponentLoaded) {
         if (state.value == null) {
-          return alertWidget(title: 'Error', content: 'No ChatDashboard defined');
+          return AlertWidget(title: "Error", content: 'No ChatDashboard defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -54,7 +59,7 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is ChatDashboardComponentError) {
-        return alertWidget(title: 'Error', content: state.message);
+        return AlertWidget(title: 'Error', content: state.message);
       } else {
         return Center(
           child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
@@ -63,8 +68,6 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
     });
   }
 
-  Widget yourWidget(BuildContext context, ChatDashboardModel? value);
-  Widget alertWidget({ title: String, content: String});
-  ChatDashboardRepository getChatDashboardRepository(BuildContext context);
+  Widget yourWidget(BuildContext context, ChatDashboardModel value);
 }
 
