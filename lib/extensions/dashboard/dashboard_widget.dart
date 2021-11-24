@@ -77,7 +77,7 @@ class DashboardWidgetState extends State<DashboardWidget>
                       child: Image.asset("assets/images/cry-1636046_640.png",
                           package: "eliud_pkg_chat"))),
               onTap: () {
-                openFlexibleDialog(context,
+                openFlexibleDialog(context, appId + '/chat',
                         title: 'Chat with one of your followers',
                         child: MembersWidget(
                           appId: appId,

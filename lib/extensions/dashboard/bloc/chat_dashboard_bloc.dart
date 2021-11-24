@@ -27,7 +27,7 @@ class ChatDashboardBloc extends Bloc<ChatDashboardEvent, ChatDashboardState> {
   }
 
   static void openRoom(BuildContext context, RoomModel value, String currentMemberId) {
-    openFlexibleDialog(context,
+    openFlexibleDialog(context, value.appId! + '/room',
         title: value.members!.length == 2 ? 'Chat' : 'Chatroom',
         child: ChatPage(
           roomId: value.documentID!,

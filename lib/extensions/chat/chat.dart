@@ -1,4 +1,5 @@
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -404,7 +405,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         size: 30.0,
       ),
       onPressed: () {
-        openFlexibleDialog(context,
+        openFlexibleDialog(context, AccessBloc.currentAppId(context) + '/addtochat',
                 title: 'Add one of your followers to the chat',
                 child: MembersWidget(
                   appId: widget.room.appId!,
