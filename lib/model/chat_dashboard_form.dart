@@ -77,7 +77,7 @@ class ChatDashboardForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatDashboardFormBloc >(
-            create: (context) => ChatDashboardFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatDashboardFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseChatDashboardFormEvent(value: value)),
@@ -86,7 +86,7 @@ class ChatDashboardForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<ChatDashboardFormBloc >(
-            create: (context) => ChatDashboardFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatDashboardFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseChatDashboardFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class ChatDashboardForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update ChatDashboard' : 'Add ChatDashboard'),
         body: BlocProvider<ChatDashboardFormBloc >(
-            create: (context) => ChatDashboardFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatDashboardFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseChatDashboardFormEvent(value: value) : InitialiseNewChatDashboardFormEvent())),

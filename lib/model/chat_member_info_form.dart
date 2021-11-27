@@ -77,7 +77,7 @@ class ChatMemberInfoForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatMemberInfoFormBloc >(
-            create: (context) => ChatMemberInfoFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatMemberInfoFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseChatMemberInfoFormEvent(value: value)),
@@ -86,7 +86,7 @@ class ChatMemberInfoForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<ChatMemberInfoFormBloc >(
-            create: (context) => ChatMemberInfoFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatMemberInfoFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseChatMemberInfoFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class ChatMemberInfoForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update ChatMemberInfo' : 'Add ChatMemberInfo'),
         body: BlocProvider<ChatMemberInfoFormBloc >(
-            create: (context) => ChatMemberInfoFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatMemberInfoFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseChatMemberInfoFormEvent(value: value) : InitialiseNewChatMemberInfoFormEvent())),

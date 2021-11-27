@@ -77,7 +77,7 @@ class ChatMediumForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatMediumFormBloc >(
-            create: (context) => ChatMediumFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatMediumFormBloc(appId,
                                        
                                                 )..add(InitialiseChatMediumFormEvent(value: value)),
   
@@ -85,7 +85,7 @@ class ChatMediumForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<ChatMediumFormBloc >(
-            create: (context) => ChatMediumFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatMediumFormBloc(appId,
                                        
                                                 )..add(InitialiseChatMediumFormNoLoadEvent(value: value)),
   
@@ -95,7 +95,7 @@ class ChatMediumForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update ChatMedium' : 'Add ChatMedium'),
         body: BlocProvider<ChatMediumFormBloc >(
-            create: (context) => ChatMediumFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatMediumFormBloc(appId,
                                        
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseChatMediumFormEvent(value: value) : InitialiseNewChatMediumFormEvent())),
   

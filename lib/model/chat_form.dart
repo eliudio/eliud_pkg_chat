@@ -77,7 +77,7 @@ class ChatForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseChatFormEvent(value: value)),
@@ -86,7 +86,7 @@ class ChatForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseChatFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class ChatForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Chat' : 'Add Chat'),
         body: BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => ChatFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseChatFormEvent(value: value) : InitialiseNewChatFormEvent())),

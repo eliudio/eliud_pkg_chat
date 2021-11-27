@@ -35,10 +35,11 @@ class MemberHasChatComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<MemberHasChatListBloc>(
           create: (context) => MemberHasChatListBloc(
             memberHasChatRepository:
-                memberHasChatRepository(appId: AccessBloc.currentAppId(context))!,
+                memberHasChatRepository(appId: appId)!,
           )..add(LoadMemberHasChatList()),
       child: SelectMemberHasChatWidget(
           height: height,

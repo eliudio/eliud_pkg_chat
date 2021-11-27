@@ -35,10 +35,11 @@ class ChatDashboardComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<ChatDashboardListBloc>(
           create: (context) => ChatDashboardListBloc(
             chatDashboardRepository:
-                chatDashboardRepository(appId: AccessBloc.currentAppId(context))!,
+                chatDashboardRepository(appId: appId)!,
           )..add(LoadChatDashboardList()),
       child: SelectChatDashboardWidget(
           height: height,

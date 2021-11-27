@@ -77,7 +77,7 @@ class RoomForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<RoomFormBloc >(
-            create: (context) => RoomFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => RoomFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseRoomFormEvent(value: value)),
@@ -86,7 +86,7 @@ class RoomForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<RoomFormBloc >(
-            create: (context) => RoomFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => RoomFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseRoomFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class RoomForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update Room' : 'Add Room'),
         body: BlocProvider<RoomFormBloc >(
-            create: (context) => RoomFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => RoomFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseRoomFormEvent(value: value) : InitialiseNewRoomFormEvent())),

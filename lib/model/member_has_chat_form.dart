@@ -77,7 +77,7 @@ class MemberHasChatForm extends StatelessWidget {
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<MemberHasChatFormBloc >(
-            create: (context) => MemberHasChatFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => MemberHasChatFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseMemberHasChatFormEvent(value: value)),
@@ -86,7 +86,7 @@ class MemberHasChatForm extends StatelessWidget {
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<MemberHasChatFormBloc >(
-            create: (context) => MemberHasChatFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => MemberHasChatFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add(InitialiseMemberHasChatFormNoLoadEvent(value: value)),
@@ -97,7 +97,7 @@ class MemberHasChatForm extends StatelessWidget {
       return Scaffold(
         appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update MemberHasChat' : 'Add MemberHasChat'),
         body: BlocProvider<MemberHasChatFormBloc >(
-            create: (context) => MemberHasChatFormBloc(AccessBloc.currentAppId(context),
+            create: (context) => MemberHasChatFormBloc(appId,
                                        formAction: formAction,
 
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseMemberHasChatFormEvent(value: value) : InitialiseNewMemberHasChatFormEvent())),

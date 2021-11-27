@@ -35,10 +35,11 @@ class RoomComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, double height,
       SelectComponent selected, editorConstructor) {
+    var appId = AccessBloc.currentAppId(context);
     return BlocProvider<RoomListBloc>(
           create: (context) => RoomListBloc(
             roomRepository:
-                roomRepository(appId: AccessBloc.currentAppId(context))!,
+                roomRepository(appId: appId)!,
           )..add(LoadRoomList()),
       child: SelectRoomWidget(
           height: height,
