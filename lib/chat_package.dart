@@ -1,3 +1,4 @@
+import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
@@ -19,13 +20,7 @@ abstract class ChatPackage extends Package {
   ChatPackage() : super('eliud_pkg_chat');
 
   @override
-  Future<bool?> isConditionOk(
-      String pluginCondition,
-      AppModel app,
-      MemberModel? member,
-      bool isOwner,
-      bool? isBlocked,
-      PrivilegeLevel? privilegeLevel) async {
+  Future<bool?> isConditionOk(AccessBloc accessBloc, String pluginCondition, AppModel app, MemberModel? member, bool isOwner, bool? isBlocked, PrivilegeLevel? privilegeLevel) async {
     if (pluginCondition == CONDITION_MEMBER_HAS_UNREAD_CHAT) {
       if (state_CONDITION_MEMBER_HAS_UNREAD_CHAT == null) return false;
       return state_CONDITION_MEMBER_HAS_UNREAD_CHAT;
