@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/blocs/access/access_event.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
@@ -11,25 +12,71 @@ import 'model/repository_singleton.dart';
 import 'dart:async';
 
 abstract class ChatPackage extends Package {
-  static final String CONDITION_MEMBER_HAS_UNREAD_CHAT = 'There are some unread messages';
-  static final String CONDITION_MEMBER_ALL_HAVE_BEEN_READ =
+  static const String CONDITION_MEMBER_HAS_UNREAD_CHAT =
+      'There are some unread messages';
+  static const String CONDITION_MEMBER_ALL_HAVE_BEEN_READ =
       'All messages have been read';
-  bool? state_CONDITION_MEMBER_HAS_UNREAD_CHAT = null;
-  late StreamSubscription<MemberHasChatModel?> subscription;
+  Map<String, bool?> state_CONDITION_MEMBER_HAS_UNREAD_CHAT = {};
+  Map<String, StreamSubscription<MemberHasChatModel?>> subscription = {};
 
   ChatPackage() : super('eliud_pkg_chat');
 
   @override
-  Future<bool?> isConditionOk(AccessBloc accessBloc, String pluginCondition, AppModel app, MemberModel? member, bool isOwner, bool? isBlocked, PrivilegeLevel? privilegeLevel) async {
-    if (pluginCondition == CONDITION_MEMBER_HAS_UNREAD_CHAT) {
-      if (state_CONDITION_MEMBER_HAS_UNREAD_CHAT == null) return false;
-      return state_CONDITION_MEMBER_HAS_UNREAD_CHAT;
+  Future<List<PackageConditionDetails>>? getAndSubscribe(
+      AccessBloc accessBloc,
+      AppModel app,
+      MemberModel? member,
+      bool isOwner,
+      bool? isBlocked,
+      PrivilegeLevel? privilegeLevel) {
+    String appId = app.documentID!;
+    subscription[appId]?.cancel();
+    if (member != null) {
+      final c = Completer<List<PackageConditionDetails>>();
+      subscription[appId] = memberHasChatRepository(
+        appId: appId,
+      )!
+          .listenTo(member.documentID!, (value) {
+        var hasUnread = false;
+        if (value != null) {
+          hasUnread = value.hasUnread!;
+        }
+        if (!c.isCompleted) {
+          // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
+          c.complete([
+            PackageConditionDetails(
+                packageName: packageName,
+                conditionName: CONDITION_MEMBER_HAS_UNREAD_CHAT,
+                value: hasUnread),
+            PackageConditionDetails(
+                packageName: packageName,
+                conditionName: CONDITION_MEMBER_ALL_HAVE_BEEN_READ,
+                value: !hasUnread),
+          ]);
+        } else {
+          // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
+          if (hasUnread != state_CONDITION_MEMBER_HAS_UNREAD_CHAT[appId]) {
+            state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID!] = hasUnread;
+            accessBloc.add(UpdatePackageConditionEvent(
+                app, this, CONDITION_MEMBER_HAS_UNREAD_CHAT, hasUnread));
+            accessBloc.add(UpdatePackageConditionEvent(
+                app, this, CONDITION_MEMBER_ALL_HAVE_BEEN_READ, !hasUnread));
+          }
+        }
+      });
+      return c.future;
+    } else {
+      return Future.value([
+        PackageConditionDetails(
+            packageName: packageName,
+            conditionName: CONDITION_MEMBER_HAS_UNREAD_CHAT,
+            value: false),
+        PackageConditionDetails(
+            packageName: packageName,
+            conditionName: CONDITION_MEMBER_ALL_HAVE_BEEN_READ,
+            value: false),
+      ]);
     }
-    if (pluginCondition == CONDITION_MEMBER_ALL_HAVE_BEEN_READ) {
-      if (state_CONDITION_MEMBER_HAS_UNREAD_CHAT == null) return true;
-      return !state_CONDITION_MEMBER_HAS_UNREAD_CHAT!;
-    }
-    return null;
   }
 
   @override
@@ -48,29 +95,6 @@ abstract class ChatPackage extends Package {
   }
 
   @override
-  void resubscribe(AppModel app, MemberModel? currentMember) {
-    String? appId = app.documentID;
-    if (currentMember != null) {
-      subscription = memberHasChatRepository(
-        appId: appId,
-      )!
-          .listenTo(currentMember.documentID!, (value) {
-        if (value != null) {
-          _setState(value.hasUnread!, currentMember: currentMember);
-        }
-      });
-    } else {
-      _setState(false);
-    }
-  }
-
-  void _setState(bool hasUnreadChat, {MemberModel? currentMember}) {
-    if (hasUnreadChat != state_CONDITION_MEMBER_HAS_UNREAD_CHAT) {
-      state_CONDITION_MEMBER_HAS_UNREAD_CHAT = hasUnreadChat;
-      //accessBloc!.add(Package...(currentMember));
-    }
-  }
-
-  @override
-  List<MemberCollectionInfo> getMemberCollectionInfo() => AbstractRepositorySingleton.collections;
+  List<MemberCollectionInfo> getMemberCollectionInfo() =>
+      AbstractRepositorySingleton.collections;
 }
