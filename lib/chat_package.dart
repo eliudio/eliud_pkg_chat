@@ -66,6 +66,7 @@ abstract class ChatPackage extends Package {
       });
       return c.future;
     } else {
+      state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID!] = false;
       return Future.value([
         PackageConditionDetails(
             packageName: packageName,
