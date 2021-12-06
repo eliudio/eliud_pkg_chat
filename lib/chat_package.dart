@@ -42,6 +42,7 @@ abstract class ChatPackage extends Package {
           hasUnread = value.hasUnread!;
         }
         if (!c.isCompleted) {
+          state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID!] = hasUnread;
           // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
           c.complete([
             PackageConditionDetails(
