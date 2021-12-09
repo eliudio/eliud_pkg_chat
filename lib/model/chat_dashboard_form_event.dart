@@ -96,7 +96,7 @@ class ChangedChatDashboardDescription extends ChatDashboardFormEvent {
 }
 
 class ChangedChatDashboardConditions extends ChatDashboardFormEvent {
-  final ConditionsSimpleModel? value;
+  final StorageConditionsModel? value;
 
   ChangedChatDashboardConditions({this.value});
 

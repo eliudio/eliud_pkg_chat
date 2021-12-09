@@ -57,10 +57,8 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-chats", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chats"));
     PageModel page = PageModel(
-        conditions: ConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
-          packageCondition: null,
-          conditionOverride: null,
+        conditions: StorageConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_chats_page",
@@ -81,10 +79,8 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-chatDashboards", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chatDashboards"));
     PageModel page = PageModel(
-        conditions: ConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
-          packageCondition: null,
-          conditionOverride: null,
+        conditions: StorageConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_chatdashboards_page",
@@ -105,10 +101,8 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-chatMemberInfos", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chatMemberInfos"));
     PageModel page = PageModel(
-        conditions: ConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
-          packageCondition: null,
-          conditionOverride: null,
+        conditions: StorageConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_chatmemberinfos_page",
@@ -129,10 +123,8 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-memberHasChats", componentName: "eliud_pkg_chat_internalWidgets", componentId: "memberHasChats"));
     PageModel page = PageModel(
-        conditions: ConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
-          packageCondition: null,
-          conditionOverride: null,
+        conditions: StorageConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_memberhaschats_page",
@@ -153,10 +145,8 @@ class AdminApp extends AdminAppInstallerBase {
     components.add(BodyComponentModel(
       documentID: "internalWidget-rooms", componentName: "eliud_pkg_chat_internalWidgets", componentId: "rooms"));
     PageModel page = PageModel(
-        conditions: ConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.OwnerPrivilegeRequired,
-          packageCondition: null,
-          conditionOverride: null,
+        conditions: StorageConditionsModel(
+          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_rooms_page",

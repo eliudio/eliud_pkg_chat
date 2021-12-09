@@ -41,13 +41,13 @@ class ChatDashboardModel {
   // This is the identifier of the app to which this belongs
   String? appId;
   String? description;
-  ConditionsSimpleModel? conditions;
+  StorageConditionsModel? conditions;
 
   ChatDashboardModel({this.documentID, this.appId, this.description, this.conditions, })  {
     assert(documentID != null);
   }
 
-  ChatDashboardModel copyWith({String? documentID, String? appId, String? description, ConditionsSimpleModel? conditions, }) {
+  ChatDashboardModel copyWith({String? documentID, String? appId, String? description, StorageConditionsModel? conditions, }) {
     return ChatDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
   }
 
@@ -85,7 +85,7 @@ class ChatDashboardModel {
           appId: entity.appId, 
           description: entity.description, 
           conditions: 
-            ConditionsSimpleModel.fromEntity(entity.conditions), 
+            StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 
@@ -98,7 +98,7 @@ class ChatDashboardModel {
           appId: entity.appId, 
           description: entity.description, 
           conditions: 
-            await ConditionsSimpleModel.fromEntityPlus(entity.conditions, appId: appId), 
+            await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
     );
   }
 
