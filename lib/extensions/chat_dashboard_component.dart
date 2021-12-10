@@ -35,7 +35,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
   Widget yourWidget(BuildContext context, ChatDashboardModel? value) {
     var accessState = AccessBloc.getState(context);
     if (accessState is AccessDetermined) {
-      var appId = accessState.currentAppId(context);
+      var appId = accessState.currentApp.documentID!;
       if (accessState.getMember() != null) {
         var memberId = accessState.getMember()!.documentID!;
 
