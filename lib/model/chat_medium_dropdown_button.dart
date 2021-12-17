@@ -64,7 +64,6 @@ class ChatMediumDropdownButtonWidgetState extends State<ChatMediumDropdownButton
 List<Widget> widgets(ChatMediumModel value) {
 var widgets = <Widget>[];
 widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container());
-widgets.add();
 return widgets;
 }
 

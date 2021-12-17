@@ -155,7 +155,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
               BlocProvider.of<RoomListBloc>(context)
                   .add(DeleteRoomList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "Room " + value.,
+                message: "Room " + value.documentID,
                 onUndo: () => BlocProvider.of<RoomListBloc>(context)
                     .add(AddRoomList(value: value)),
               ));
@@ -168,7 +168,7 @@ class RoomListWidgetState extends State<RoomListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "Room " + value.,
+                        message: "Room " + value.documentID,
                             onUndo: () => BlocProvider.of<RoomListBloc>(context)
                                 .add(AddRoomList(value: value)),
                           ),

@@ -155,7 +155,7 @@ class MemberHasChatListWidgetState extends State<MemberHasChatListWidget> {
               BlocProvider.of<MemberHasChatListBloc>(context)
                   .add(DeleteMemberHasChatList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "MemberHasChat " + value.,
+                message: "MemberHasChat " + value.documentID,
                 onUndo: () => BlocProvider.of<MemberHasChatListBloc>(context)
                     .add(AddMemberHasChatList(value: value)),
               ));
@@ -168,7 +168,7 @@ class MemberHasChatListWidgetState extends State<MemberHasChatListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "MemberHasChat " + value.,
+                        message: "MemberHasChat " + value.documentID,
                             onUndo: () => BlocProvider.of<MemberHasChatListBloc>(context)
                                 .add(AddMemberHasChatList(value: value)),
                           ),
