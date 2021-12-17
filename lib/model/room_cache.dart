@@ -123,7 +123,12 @@ class RoomCache implements RoomRepository {
 
   @override
   StreamSubscription<RoomModel?> listenTo(String documentId, RoomChanged changed) {
-    return reference.listenTo(documentId, changed);
+    return reference.listenTo(documentId, ((value) {
+      if (value != null) {
+        fullCache[value.documentID] = value;
+      }
+      changed(value);
+    }));
   }
 
   static Future<RoomModel> refreshRelations(RoomModel model) async {

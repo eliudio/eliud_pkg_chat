@@ -155,7 +155,7 @@ class ChatDashboardListWidgetState extends State<ChatDashboardListWidget> {
               BlocProvider.of<ChatDashboardListBloc>(context)
                   .add(DeleteChatDashboardList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "ChatDashboard " + value.documentID,
+                message: "ChatDashboard " + value.,
                 onUndo: () => BlocProvider.of<ChatDashboardListBloc>(context)
                     .add(AddChatDashboardList(value: value)),
               ));
@@ -168,7 +168,7 @@ class ChatDashboardListWidgetState extends State<ChatDashboardListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "ChatDashboard " + value.documentID,
+                        message: "ChatDashboard " + value.,
                             onUndo: () => BlocProvider.of<ChatDashboardListBloc>(context)
                                 .add(AddChatDashboardList(value: value)),
                           ),

@@ -123,7 +123,12 @@ class ChatMemberInfoCache implements ChatMemberInfoRepository {
 
   @override
   StreamSubscription<ChatMemberInfoModel?> listenTo(String documentId, ChatMemberInfoChanged changed) {
-    return reference.listenTo(documentId, changed);
+    return reference.listenTo(documentId, ((value) {
+      if (value != null) {
+        fullCache[value.documentID] = value;
+      }
+      changed(value);
+    }));
   }
 
   static Future<ChatMemberInfoModel> refreshRelations(ChatMemberInfoModel model) async {

@@ -155,7 +155,7 @@ class ChatMediumListWidgetState extends State<ChatMediumListWidget> {
               BlocProvider.of<ChatMediumListBloc>(context)
                   .add(DeleteChatMediumList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "ChatMedium " + value.documentID,
+                message: "ChatMedium " + value.,
                 onUndo: () => BlocProvider.of<ChatMediumListBloc>(context)
                     .add(AddChatMediumList(value: value)),
               ));
@@ -168,7 +168,7 @@ class ChatMediumListWidgetState extends State<ChatMediumListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "ChatMedium " + value.documentID,
+                        message: "ChatMedium " + value.,
                             onUndo: () => BlocProvider.of<ChatMediumListBloc>(context)
                                 .add(AddChatMediumList(value: value)),
                           ),
@@ -214,6 +214,7 @@ class ChatMediumListItem extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().textStyle().text(context, value.documentID!)) : Container(),
+        subtitle: ,
       ),
     );
   }

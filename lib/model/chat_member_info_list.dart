@@ -155,7 +155,7 @@ class ChatMemberInfoListWidgetState extends State<ChatMemberInfoListWidget> {
               BlocProvider.of<ChatMemberInfoListBloc>(context)
                   .add(DeleteChatMemberInfoList(value: value));
               Scaffold.of(context).showSnackBar(DeleteSnackBar(
-                message: "ChatMemberInfo " + value.documentID,
+                message: "ChatMemberInfo " + value.,
                 onUndo: () => BlocProvider.of<ChatMemberInfoListBloc>(context)
                     .add(AddChatMemberInfoList(value: value)),
               ));
@@ -168,7 +168,7 @@ class ChatMemberInfoListWidgetState extends State<ChatMemberInfoListWidget> {
                       if (removedItem != null) {
                         Scaffold.of(context).showSnackBar(
                           DeleteSnackBar(
-                        message: "ChatMemberInfo " + value.documentID,
+                        message: "ChatMemberInfo " + value.,
                             onUndo: () => BlocProvider.of<ChatMemberInfoListBloc>(context)
                                 .add(AddChatMemberInfoList(value: value)),
                           ),
