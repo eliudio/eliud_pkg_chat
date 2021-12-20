@@ -304,7 +304,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     shrinkWrap: true,
                     children: reorderedWidgets);
                 if (!dontGoToBottom) {
-                  _gotoBottom();
+                  //_gotoBottom();
                 }
                 dontGoToBottom = false;
                 return ListView(

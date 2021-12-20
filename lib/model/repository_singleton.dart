@@ -45,24 +45,24 @@ class RepositorySingleton extends AbstractRepositorySingleton {
 
     ChatRepository? chatRepository(String? appId, String? roomId) {
       var key = appId == null || roomId == null ? null : appId + '-' + roomId;
-      if ((key != null) && (_chatRepository[key] == null)) _chatRepository[key] = ChatCache(ChatFirestore(roomRepository(appId)!.getSubCollection(roomId!, 'chat'), appId!));
+      if ((key != null) && (_chatRepository[key] == null)) _chatRepository[key] = ChatCache(ChatFirestore(() => roomRepository(appId)!.getSubCollection(roomId!, 'chat'), appId!));
       return _chatRepository[key];
     }
     ChatDashboardRepository? chatDashboardRepository(String? appId) {
-      if ((appId != null) && (_chatDashboardRepository[appId] == null)) _chatDashboardRepository[appId] = ChatDashboardCache(ChatDashboardFirestore(appRepository()!.getSubCollection(appId, 'chatdashboard'), appId));
+      if ((appId != null) && (_chatDashboardRepository[appId] == null)) _chatDashboardRepository[appId] = ChatDashboardCache(ChatDashboardFirestore(() => appRepository()!.getSubCollection(appId, 'chatdashboard'), appId));
       return _chatDashboardRepository[appId];
     }
     ChatMemberInfoRepository? chatMemberInfoRepository(String? appId, String? roomId) {
       var key = appId == null || roomId == null ? null : appId + '-' + roomId;
-      if ((key != null) && (_chatMemberInfoRepository[key] == null)) _chatMemberInfoRepository[key] = ChatMemberInfoCache(ChatMemberInfoFirestore(roomRepository(appId)!.getSubCollection(roomId!, 'chatmemberinfo'), appId!));
+      if ((key != null) && (_chatMemberInfoRepository[key] == null)) _chatMemberInfoRepository[key] = ChatMemberInfoCache(ChatMemberInfoFirestore(() => roomRepository(appId)!.getSubCollection(roomId!, 'chatmemberinfo'), appId!));
       return _chatMemberInfoRepository[key];
     }
     MemberHasChatRepository? memberHasChatRepository(String? appId) {
-      if ((appId != null) && (_memberHasChatRepository[appId] == null)) _memberHasChatRepository[appId] = MemberHasChatCache(MemberHasChatFirestore(appRepository()!.getSubCollection(appId, 'memberhaschat'), appId));
+      if ((appId != null) && (_memberHasChatRepository[appId] == null)) _memberHasChatRepository[appId] = MemberHasChatCache(MemberHasChatFirestore(() => appRepository()!.getSubCollection(appId, 'memberhaschat'), appId));
       return _memberHasChatRepository[appId];
     }
     RoomRepository? roomRepository(String? appId) {
-      if ((appId != null) && (_roomRepository[appId] == null)) _roomRepository[appId] = RoomCache(RoomFirestore(appRepository()!.getSubCollection(appId, 'room'), appId));
+      if ((appId != null) && (_roomRepository[appId] == null)) _roomRepository[appId] = RoomCache(RoomFirestore(() => appRepository()!.getSubCollection(appId, 'room'), appId));
       return _roomRepository[appId];
     }
 
