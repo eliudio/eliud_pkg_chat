@@ -1,7 +1,6 @@
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:chat_bubbles/date_chips/date_chip.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -11,14 +10,12 @@ import 'package:eliud_core/style/frontend/has_style.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/random.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/bloc/all_chats_state.dart';
-import 'package:eliud_pkg_chat/model/chat_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/chat_list_event.dart' as ChatListEvent;
-import 'package:eliud_pkg_chat/model/chat_list_state.dart';
-import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
-import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/tools/indicate_read.dart';
+import 'chat_list_bloc/chat_list_bloc.dart';
+import 'chat_list_bloc/chat_list_event.dart';
+import 'chat_list_bloc/chat_list_state.dart';
+import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
+import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
@@ -26,21 +23,16 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/room_list_event.dart';
-import 'package:eliud_pkg_chat/model/room_list_state.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:split_view/split_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-import 'bloc/all_chats_bloc.dart';
-import 'bloc/all_chats_event.dart';
+import 'all_chats_bloc/all_chats_bloc.dart';
+import 'all_chats_bloc/all_chats_event.dart';
+import 'all_chats_bloc/all_chats_state.dart';
 import 'members_widget.dart';
 
 class AllChatsWidget extends StatefulWidget {
@@ -58,7 +50,6 @@ class AllChatsWidget extends StatefulWidget {
 }
 
 class AllChatsWidgetState extends State<AllChatsWidget> {
-  RoomModel? theRoom;
   SplitViewController? _splitViewController;
 
   @override
@@ -91,8 +82,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                     selectedMember: (String memberId) async {
                       var room = await RoomHelper.getRoomForMember(
                           widget.appId, widget.memberId, memberId);
-                      BlocProvider.of<AllChatsBloc>(context)
-                          .add(SelectChat(selected: room));
+                      _selectRoom(context, room);
                     },
                     currentMemberId: widget.memberId,
                   ),
@@ -143,9 +133,9 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                             }))
                 ]),
                 if (currentChat != null)
-                  room(
-                      currentChat,
-                      orientation == Orientation.landscape
+                  ChatWidget(
+                      memberId: widget.memberId,
+                      screenHeight: orientation == Orientation.landscape
                           ? screenHeight
                           : (screenHeight * (1 - weight)))
                 else
@@ -208,51 +198,25 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
 
     return ListTile(
         onTap: () async {
-          BlocProvider.of<AllChatsBloc>(context)
-              .add(SelectChat(selected: room.roomModel));
+          _selectRoom(context, room.roomModel);
         },
         trailing: text(
             context, timestampRoom != null ? formatHHMM(timestampRoom) : 'now'),
-        leading: Container(
+        leading: SizedBox(
           height: 100,
           width: 100,
           child: staggeredPhotos,
         ),
         title: nameWidget);
   }
-
-  Widget room(RoomModel room, double screenHeight) {
-    var eliudQueryChatList = EliudQuery().withCondition(
-        EliudQueryCondition('readAccess', arrayContains: widget.memberId));
-    return BlocProvider<ChatListBloc>(
-        create: (context) => ChatListBloc(
-              paged: true,
-              orderBy: 'timestamp',
-              descending: true,
-              detailed: true,
-              eliudQuery: eliudQueryChatList,
-              chatLimit: 100,
-              chatRepository:
-                  chatRepository(appId: room.appId, roomId: room.documentID!)!,
-            )..add(ChatListEvent.LoadChatList()),
-        child: ChatWidget(
-          room: room,
-          memberId: widget.memberId,
-          screenHeight: screenHeight,
-//            height: widget.height,
-        ));
-  }
 }
 
 class ChatWidget extends StatefulWidget {
-  final RoomModel room;
   final String memberId;
   final double screenHeight;
-//  final double height;
 
   const ChatWidget({
     Key? key,
-    required this.room,
     required this.memberId,
     required this.screenHeight,
   }) : super(key: key);
@@ -266,7 +230,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   final ScrollController controller1 = ScrollController();
   bool dontGoToBottom = false;
   final List<MemberMediumModel> media = [];
-  double? progressValue = null;
+  double? progressValue;
 
   @override
   void initState() {
@@ -285,8 +249,9 @@ class _ChatWidgetState extends State<ChatWidget> {
 
     return BlocBuilder<ChatListBloc, ChatListState>(builder: (context, state) {
       if (state is ChatListLoaded) {
+        var room = state.room;
         List<Widget> widgets = [];
-        int len = state.values!.length;
+        int len = state.values.length;
         DateTime? oldDate;
         String saying;
         var itsMe = true;
@@ -296,8 +261,8 @@ class _ChatWidgetState extends State<ChatWidget> {
           DateTime? newDate;
           var hasRead = false; // did the other member read the message yet?
           List<MemberMediumModel> itemMedia = [];
-          if (state.values![len - i - 1] != null) {
-            ChatModel value = state.values![len - i - 1]!;
+          if (state.values[len - i - 1] != null) {
+            ChatModel value = state.values[len - i - 1]!;
             if ((value.chatMedia != null) && (value.chatMedia!.isNotEmpty)) {
               for (var medium in value.chatMedia!) {
                 if (medium.memberMedium != null) {
@@ -395,19 +360,20 @@ class _ChatWidgetState extends State<ChatWidget> {
         }
 
         if (lastRead != null) {
-          IndicateRead.setRead(widget.room.appId!, widget.room.documentID!,
-              widget.memberId, lastRead, widget.room.members!);
+          IndicateRead.setRead(room.appId!, room.documentID!, widget.memberId,
+              lastRead, room.members!);
         }
         List<Widget> reorderedWidgets = [];
-        reorderedWidgets.add(_buttonNextPage(state.mightHaveMore!));
+        reorderedWidgets.add(_buttonNextPage(state.mightHaveMore!, room));
         reorderedWidgets.add(divider(context));
         reorderedWidgets.addAll(widgets);
         if (!dontGoToBottom) {
           _gotoBottom();
         }
         dontGoToBottom = false;
-        return ListView(padding: const EdgeInsets.all(0), shrinkWrap: true,
-//              physics: ScrollPhysics(),
+        return ListView(
+            padding: const EdgeInsets.all(0),
+            shrinkWrap: true,
             children: [
               SizedBox(
                   height: widget.screenHeight - footerHeight(),
@@ -415,21 +381,21 @@ class _ChatWidgetState extends State<ChatWidget> {
                       controller: controller1,
                       shrinkWrap: true,
                       children: reorderedWidgets)),
-              footer(),
+              footer(room),
             ]);
       } else {
-        return progressIndicator(context);
+        return Container();
       }
     });
   }
 
-  Widget _speakField() {
+  Widget _speakField(RoomModel room) {
     return textField(
       context,
       readOnly: false,
       textAlign: TextAlign.left,
       textInputAction: TextInputAction.send,
-      onSubmitted: (value) => _submit(value),
+      onSubmitted: (value) => _submit(room, value),
       controller: _commentController,
       keyboardType: TextInputType.text,
       hintText: 'Say something...',
@@ -468,29 +434,31 @@ class _ChatWidgetState extends State<ChatWidget> {
     }
   }
 
-  Widget footer() {
+  Widget footer(RoomModel room) {
     return ListView(
         shrinkWrap: true,
         physics: const ScrollPhysics(),
         children: [
           divider(context),
-          _speakRow(),
+          _speakRow(room),
           _mediaRow(context),
         ]);
   }
 
   double SPEAK_ROW_HEIGHT = 100;
-  Widget _speakRow() {
+  Widget _speakRow(RoomModel room) {
     return SizedBox(
         height: 50,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          SizedBox(height: 50, child: buttonAddMember()),
+          SizedBox(height: 50, child: buttonAddMember(room)),
           Flexible(
             child: Container(
-                alignment: Alignment.center, height: 30, child: _speakField()),
+                alignment: Alignment.center,
+                height: 30,
+                child: _speakField(room)),
           ),
           const SizedBox(width: 8),
-          _mediaButtons(context),
+          _mediaButtons(context, room),
           const SizedBox(width: 8),
           SizedBox(
               height: 50,
@@ -498,13 +466,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                 context,
                 label: 'Ok',
                 onPressed: () {
-                  _submit(_commentController.text);
+                  _submit(room, _commentController.text);
                 },
               )),
         ]));
   }
 
-  Widget buttonAddMember() {
+  Widget buttonAddMember(RoomModel room) {
     return iconButton(
       context,
       icon: const Icon(
@@ -516,21 +484,20 @@ class _ChatWidgetState extends State<ChatWidget> {
             context, AccessBloc.currentAppId(context) + '/addtochat',
             title: 'Add one of your followers to the chat',
             child: MembersWidget(
-              appId: widget.room.appId!,
+              appId: room.appId!,
               selectedMember: (String newMemberId) async {
-                List<String> newMembers = widget.room.members!;
+                List<String> newMembers = room.members!;
                 if (!newMembers.contains(newMemberId)) {
                   newMembers.add(newMemberId);
-                  if (widget.room.members!.length == 3) {
+                  if (room.members!.length == 3) {
                     // was 2, so we need to create a new room with multiple members
                     Navigator.of(context).pop();
                     var newRoom = await RoomHelper.getRoomForMembers(
-                        widget.room.appId!, widget.memberId, newMembers);
-                    BlocProvider.of<AllChatsBloc>(context)
-                        .add(SelectChat(selected: newRoom));
+                        room.appId!, widget.memberId, newMembers);
+                    _selectRoom(context, newRoom);
                   } else {
                     BlocProvider.of<AllChatsBloc>(context).add(UpdateAllChats(
-                        value: widget.room.copyWith(members: newMembers)));
+                        value: room.copyWith(members: newMembers)));
                   }
                 }
               },
@@ -544,7 +511,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     );
   }
 
-  void _submit(String? value) {
+  void _submit(RoomModel room, String? value) {
     if ((value != null) && (value.isNotEmpty) || media.isNotEmpty) {
       progressValue = null;
       var mappedMedia = media
@@ -554,13 +521,13 @@ class _ChatWidgetState extends State<ChatWidget> {
               ))
           .toList();
 
-      BlocProvider.of<ChatListBloc>(context).add(ChatListEvent.AddChatList(
+      BlocProvider.of<ChatListBloc>(context).add(AddChatList(
           value: ChatModel(
         documentID: newRandomKey(),
-        appId: widget.room.appId!,
-        roomId: widget.room.documentID,
+        appId: room.appId!,
+        roomId: room.documentID,
         authorId: widget.memberId,
-        readAccess: widget.room.members,
+        readAccess: room.members,
         chatMedia: mappedMedia,
         saying: value,
       )));
@@ -571,7 +538,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   void _gotoBottom() {
-/*
     if (SchedulerBinding.instance != null) {
       SchedulerBinding.instance!.addPostFrameCallback((_) {
         if (controller1.hasClients) {
@@ -579,7 +545,6 @@ class _ChatWidgetState extends State<ChatWidget> {
         }
       });
     }
-*/
   }
 
   void _uploading(double? progress) {
@@ -588,9 +553,9 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
   }
 
-  PopupMenuButton _mediaButtons(BuildContext context) {
+  PopupMenuButton _mediaButtons(BuildContext context, RoomModel room) {
     return MediaButtons.mediaButtons(
-        context, widget.room.appId!, widget.memberId, widget.room.members,
+        context, room.appId!, widget.memberId, room.members,
         tooltip: 'Add video or photo',
         photoFeedbackFunction: (photo) {
           setState(() {
@@ -612,15 +577,15 @@ class _ChatWidgetState extends State<ChatWidget> {
         videoFeedbackProgress: _uploading);
   }
 
-  void _onClick() {
+  void _onClick(RoomModel room) {
     dontGoToBottom = true;
-    BlocProvider.of<ChatListBloc>(context).add(ChatListEvent.NewPage());
+    BlocProvider.of<ChatListBloc>(context).add(NewChatPage(room));
   }
 
-  Widget _buttonNextPage(bool mightHaveMore) {
+  Widget _buttonNextPage(bool mightHaveMore, RoomModel room) {
     if (mightHaveMore) {
       return MyButton(
-        onClickFunction: _onClick,
+        onClickFunction: () => _onClick(room),
       );
     } else {
       return Center(
@@ -654,4 +619,9 @@ class _MyButtonState extends State<MyButton> {
       },
     ));
   }
+}
+
+void _selectRoom(BuildContext context, RoomModel room) {
+  BlocProvider.of<AllChatsBloc>(context).add(SelectChat(selected: room));
+  BlocProvider.of<ChatListBloc>(context).add(LoadChatList(room));
 }
