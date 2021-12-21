@@ -3,8 +3,6 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
     as ChatMemberInfoListEvent;
-import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_bloc.dart';
-import 'package:eliud_pkg_chat/extensions/dashboard/bloc/chat_dashboard_event.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';

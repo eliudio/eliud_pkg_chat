@@ -12,8 +12,6 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_component.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_repository.dart';
 
-import 'dashboard/bloc/chat_dashboard_bloc.dart';
-import 'dashboard/bloc/chat_dashboard_event.dart';
 import 'dashboard/dashboard_widget.dart';
 
 class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
@@ -27,7 +25,7 @@ class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
 }
 
 class ChatDashboard extends AbstractChatDashboardComponent {
-  static double HEADER_HEIGHT =  155;
+  static double HEADER_HEIGHT = 155;
 
   ChatDashboard({Key? key, required String appId, required String id}) : super(key: key, theAppId: appId, chatDashboardId: id);
 
@@ -39,9 +37,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
       if (accessState.getMember() != null) {
         var memberId = accessState.getMember()!.documentID!;
 
-        return SizedBox(height: MediaQuery.of(context).size.height -ChatDashboard.HEADER_HEIGHT, child: BlocProvider<ChatDashboardBloc>(
-            create: (context) => ChatDashboardBloc(appId)..add(OpenMemberRoomsWidgetEvent()),
-            child: DashboardWidget(appId: appId, memberId: memberId)));
+        return DashboardWidget(appId: appId, memberId: memberId);
       } else {
         return const Text('Member not available');
       }

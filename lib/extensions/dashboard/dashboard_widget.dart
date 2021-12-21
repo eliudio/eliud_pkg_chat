@@ -1,9 +1,12 @@
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/widgets/members_widget.dart';
 import 'package:eliud_pkg_chat/extensions/dashboard/widgets/room_widget.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
+import 'package:eliud_pkg_chat/model/room_list_event.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +15,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../chat_dashboard_component.dart';
-import 'bloc/chat_dashboard_bloc.dart';
-import 'bloc/chat_dashboard_state.dart';
 
 class DashboardWidget extends StatefulWidget {
   final String appId;
@@ -39,31 +40,32 @@ class DashboardWidgetState extends State<DashboardWidget>
   DashboardWidgetState(this.appId, this.memberId);
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      SizedBox(
+    var eliudQuery = EliudQuery()
+        .withCondition(EliudQueryCondition('appId', isEqualTo: widget.appId))
+        .withCondition(
+        EliudQueryCondition('members', arrayContains: widget.memberId));
+    return /*Stack(children: <Widget>[
+      */SizedBox(
           height:
               MediaQuery.of(context).size.height - ChatDashboard.HEADER_HEIGHT,
           width: double.infinity,
-          child: BlocBuilder<ChatDashboardBloc, ChatDashboardState>(
+          child: /*BlocBuilder<ChatDashboardBloc, ChatDashboardState>(
               builder: (context, state) {
-            return RoomsWidget(appId: appId, memberId: memberId);
-          })),
-      Align(
+                return */BlocProvider(
+                    create: (_) => RoomListBloc(
+                        orderBy: 'timestamp',
+                        descending: true,
+                        eliudQuery: eliudQuery,
+                        roomRepository: roomRepository(appId: widget.appId)!)
+                      ..add(LoadRoomList()),
+                    child: RoomListWidget(appId: widget.appId, memberId: widget.memberId)));
+    /*}))*/;
+/*      Align(
           alignment: Alignment.bottomRight,
           child: GestureDetector(
               child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
                     boxShadow: [
@@ -78,23 +80,25 @@ class DashboardWidgetState extends State<DashboardWidget>
                           package: "eliud_pkg_chat"))),
               onTap: () {
                 openFlexibleDialog(context, appId + '/chat',
-                        title: 'Chat with one of your followers',
-                        child: MembersWidget(
-                          appId: appId,
-                          selectedMember: (String memberId) async {
-                            var room = await RoomHelper.getRoomForMember(
-                                appId, widget.memberId, memberId);
-                            ChatDashboardBloc.openRoom(
+                    title: 'Chat with one of your followers',
+                    child: MembersWidget(
+                      appId: appId,
+                      selectedMember: (String memberId) async {
+                        var room = await RoomHelper.getRoomForMember(
+                            appId, widget.memberId, memberId);
+*//*
+                            ChatPage.openRoom(
                                 context, room, widget.memberId);
-                          },
-                          currentMemberId: memberId,
-                        ),
-                        buttons: [
+*//*
+                      },
+                      currentMemberId: memberId,
+                    ),
+                    buttons: [
                       dialogButton(context,
-                              label: 'Close',
-                              onPressed: () => Navigator.of(context).pop()),
+                          label: 'Close',
+                          onPressed: () => Navigator.of(context).pop()),
                     ]);
               })),
-    ]);
+    ]);*/
   }
 }
