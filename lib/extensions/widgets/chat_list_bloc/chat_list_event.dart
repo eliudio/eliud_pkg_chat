@@ -1,3 +1,4 @@
+import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
@@ -8,17 +9,10 @@ abstract class ChatListEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadChatList extends ChatListEvent {
-  final RoomModel room;
+class SelectChatList extends ChatListEvent {
+  final EnhancedRoomModel room;
 
-  LoadChatList(this.room);
-}
-
-class LoadChatListWithID extends ChatListEvent {
-  final String appId;
-  final String roomId;
-
-  LoadChatListWithID(this.appId, this.roomId);
+  SelectChatList(this.room);
 }
 
 class NewChatPage extends ChatListEvent {
@@ -38,9 +32,10 @@ class AddChatList extends ChatListEvent {
   @override
   String toString() => 'AddChatList{ value: $value }';
 }
+
 class ChatListUpdated extends ChatListEvent {
-  final RoomModel room;
-  final List<ChatModel?> value;
+  final EnhancedRoomModel room;
+  final List<ChatModel> value;
   final bool? mightHaveMore;
 
   const ChatListUpdated({ required this.room, required this.value, this.mightHaveMore });
@@ -52,3 +47,15 @@ class ChatListUpdated extends ChatListEvent {
   String toString() => 'ChatListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
+
+class UpdateEnhancedRoomModel extends ChatListEvent {
+  final EnhancedRoomModel model;
+  UpdateEnhancedRoomModel(this.model);
+}
+
+class MarkAsRead extends ChatListEvent {
+  final EnhancedRoomModel enhancedRoomModel;
+  final ChatModel chat;
+
+  MarkAsRead(this.enhancedRoomModel, this.chat);
+}

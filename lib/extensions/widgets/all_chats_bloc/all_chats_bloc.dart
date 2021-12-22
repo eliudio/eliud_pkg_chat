@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/chat_list_bloc/chat_list_bloc.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/chat_list_bloc/chat_list_event.dart';
 import 'all_chats_event.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
@@ -15,16 +17,21 @@ import 'all_chats_state.dart';
 class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   final RoomRepository _roomRepository;
   StreamSubscription? _roomsListSubscription;
+  Map<String, StreamSubscription> chatMemberInfoSubscriptions = {};
   final EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
   final bool? descending;
   final int roomLimit;
+  final String appId;
   final String thisMemberId;
+  final ChatListBloc chatListBloc;
 
   AllChatsBloc(
       {required this.thisMemberId,
+      required this.appId,
+      required this.chatListBloc,
       this.paged,
       this.orderBy,
       this.descending,
@@ -35,35 +42,18 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         _roomRepository = roomRepository,
         super(AllChatsLoading());
 
-  Future<List<ChatMemberInfoModel?>>? getLastReadForThisMember(
-      String appId, String roomId, String memberId) async {
-    return await chatMemberInfoRepository(appId: appId, roomId: roomId)!
-        .valuesList(
-            eliudQuery: EliudQuery().withCondition(
-                EliudQueryCondition('readAccess', arrayContains: memberId)));
-  }
-
   Stream<AllChatsState> _mapLoadAllChatsWithDetailsToState() async* {
     int amountNow = (state is AllChatsLoaded)
-        ? (state as AllChatsLoaded).values!.length
+        ? (state as AllChatsLoaded).enhancedRoomModels.length
         : 0;
     _roomsListSubscription?.cancel();
     _roomsListSubscription = _roomRepository.listenWithDetails((list) async {
       var enhancedList = await Future.wait(list.map((value) async {
         var otherMemberRoomInfo =
-            await getOtherMembersRoomInfo(value!.appId!, value.members!);
+            await getOtherMembersRoomInfo(appId, value!.members!);
 
-        var memberLastRead;
-        var chatMemberInfoModels = await getLastReadForThisMember(value.appId!, value.documentID!, thisMemberId);
-        var memberValue = chatMemberInfoModels!.firstWhere((element) => element!.authorId == thisMemberId, orElse: () => null);
-        if ((memberValue != null) &&
-            (memberValue.timestamp != null)) {
-          try {
-            memberLastRead = memberValue.timestamp!;
-          } catch (_) {}
-        }
-
-        return EnhancedRoomModel(value, memberLastRead, otherMemberRoomInfo);
+        listToChatMemberInfoRepository(appId, value.documentID!);
+        return EnhancedRoomModel(value, null, otherMemberRoomInfo, null);
       }).toList());
       add(AllChatsUpdated(
           value: enhancedList, mightHaveMore: amountNow != list.length));
@@ -72,6 +62,19 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         descending: descending,
         eliudQuery: eliudQuery,
         limit: ((paged != null) && paged!) ? pages * roomLimit : null);
+  }
+
+  void listToChatMemberInfoRepository(String appId, String roomId) async {
+    var key = appId + "-" + roomId;;
+    chatMemberInfoSubscriptions[key]?.cancel();
+    chatMemberInfoSubscriptions[key] = chatMemberInfoRepository(appId: appId, roomId: roomId)!.listenWithDetails((chatMemberInfos) async {
+      for (var chatMemberInfo in chatMemberInfos) {
+        if (chatMemberInfo!.timestamp != null) {
+          add(NewLastReadEvent(appId, roomId, chatMemberInfo.authorId!, chatMemberInfo.timestamp!));
+        }
+      }
+    },eliudQuery: EliudQuery().withCondition(
+        EliudQueryCondition('readAccess', arrayContains: thisMemberId)));
   }
 
   Stream<AllChatsState> _mapAddAllChatsToState(AddAllChats event) async* {
@@ -92,7 +95,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   Stream<AllChatsState> _mapAllChatsUpdatedToState(
       AllChatsUpdated event, RoomModel? currentRoom) async* {
     yield AllChatsLoaded(
-        values: event.value,
+        enhancedRoomModels: event.value,
         mightHaveMore: event.mightHaveMore,
         currentRoom: currentRoom);
   }
@@ -120,12 +123,40 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
       yield* _mapAllChatsUpdatedToState(event, currentRoom);
     } else if (event is SelectChat) {
       if (theState is AllChatsLoaded) {
+        for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
+          if (selectedEnhancedRoom.roomModel.documentID == event.selected.documentID) {
+            chatListBloc.add(SelectChatList(selectedEnhancedRoom));
+          }
+        }
         yield AllChatsLoaded(
-            values: theState.values,
+            enhancedRoomModels: theState.enhancedRoomModels,
             mightHaveMore: theState.mightHaveMore,
             currentRoom: event.selected);
       } else {
         throw Exception("Unexpected state");
+      }
+    } else if (event is NewLastReadEvent) {
+      if (theState is AllChatsLoaded) {
+        List<EnhancedRoomModel> newEnhancedRoomModels = [];
+        for (var enhancedRoomModel in theState.enhancedRoomModels) {
+          if (enhancedRoomModel.roomModel.documentID == event.roomId) {
+            var newEnhancedModel;
+            if (event.memberId == thisMemberId) {
+              newEnhancedModel =  enhancedRoomModel.copyWith(
+                  timeStampThisMemberRead: event.lastRead
+              );
+            } else {
+              newEnhancedModel =  enhancedRoomModel.copyWith(
+                  otherMemberLastRead: event.lastRead
+              );
+            }
+            newEnhancedRoomModels.add(newEnhancedModel);
+            chatListBloc.add(UpdateEnhancedRoomModel(newEnhancedModel));
+          } else {
+            newEnhancedRoomModels.add(enhancedRoomModel);
+          }
+        }
+        yield AllChatsLoaded(mightHaveMore: theState.mightHaveMore, currentRoom: theState.currentRoom, enhancedRoomModels: newEnhancedRoomModels);
       }
     }
   }
@@ -133,6 +164,10 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   @override
   Future<void> close() {
     _roomsListSubscription?.cancel();
+    for (var chatMemberInfoSubscription in chatMemberInfoSubscriptions.values) {
+      chatMemberInfoSubscription.cancel();
+    }
+
     return super.close();
   }
 

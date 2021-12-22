@@ -73,3 +73,14 @@ class SelectChat extends AllChatsEvent {
   @override
   String toString() => 'SelectChat{ selected: $selected }';
 }
+
+class NewLastReadEvent extends AllChatsEvent {
+  final String appId;
+  final String roomId;
+  final String memberId;
+  final DateTime lastRead;
+
+  NewLastReadEvent(this.appId, this.roomId, this.memberId, this.lastRead);
+
+}
+
