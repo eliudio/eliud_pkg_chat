@@ -105,7 +105,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         final currentChat = state.currentRoom;
         return OrientationBuilder(builder: (context, orientation) {
           var weight = _splitViewController!.weights[0]!;
-//          var screenHeight = widget.height;
+          var screenHeight = widget.height;
           return SplitView(
               gripColor: Colors.red,
               controller: _splitViewController,
