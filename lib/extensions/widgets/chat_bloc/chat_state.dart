@@ -6,14 +6,14 @@ import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-abstract class ChatListState extends Equatable {
-  const ChatListState();
+abstract class ChatState extends Equatable {
+  const ChatState();
 
   @override
   List<Object?> get props => [];
 }
 
-class ChatListLoading extends ChatListState {}
+class ChatLoading extends ChatState {}
 /*
 
 class EnhancedChatModel {
@@ -34,30 +34,30 @@ class EnhancedChatModel {
 }
 */
 
-class ChatListLoaded extends ChatListState {
+class ChatLoaded extends ChatState {
   final EnhancedRoomModel room;
   final List<ChatModel> values;
   final bool? mightHaveMore;
 
-  const ChatListLoaded({required this.room, this.mightHaveMore, this.values = const []});
+  const ChatLoaded({required this.room, this.mightHaveMore, this.values = const []});
 
   @override
   List<Object?> get props => [ values, mightHaveMore, room ];
 
   @override
-  String toString() => 'ChatListLoaded { values: $values }';
+  String toString() => 'ChatLoaded { values: $values }';
 
   @override
   bool operator == (Object other) =>
       identical(this, other) ||
-          other is ChatListLoaded &&
+          other is ChatLoaded &&
               room == other.room &&
               mightHaveMore == other.mightHaveMore &&
               const ListEquality().equals(values, other.values);
 
-  ChatListLoaded withNewEnhancedRoomModel(EnhancedRoomModel newRoom) {
-    return ChatListLoaded(room: newRoom, mightHaveMore: mightHaveMore, values: values);
+  ChatLoaded withNewEnhancedRoomModel(EnhancedRoomModel newRoom) {
+    return ChatLoaded(room: newRoom, mightHaveMore: mightHaveMore, values: values);
   }
 }
 
-class ChatNotLoaded extends ChatListState {}
+class ChatNotLoaded extends ChatState {}

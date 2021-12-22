@@ -13,7 +13,7 @@ import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_component.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 
-import 'widgets/chat_list_bloc/chat_list_bloc.dart';
+import 'widgets/chat_bloc/chat_bloc.dart';
 
 class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
   @override
@@ -52,7 +52,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
         var height = MediaQuery.of(context).size.height -
             kToolbarHeight -
             kBottomNavigationBarHeight;
-        var chatListBloc = ChatListBloc(
+        var chatListBloc = ChatBloc(
           thisMemberId: memberId,
           paged: true,
           orderBy: 'timestamp',
@@ -76,7 +76,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
             child: MultiBlocProvider(
                 providers: [
                   BlocProvider<AllChatsBloc>(create: (context) => allChatsBloc),
-                  BlocProvider<ChatListBloc>(create: (context) => chatListBloc)
+                  BlocProvider<ChatBloc>(create: (context) => chatListBloc)
                 ],
                 child: AllChatsWidget(
                   appId: appId,

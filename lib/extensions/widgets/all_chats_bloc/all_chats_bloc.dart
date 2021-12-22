@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/chat_list_bloc/chat_list_bloc.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/chat_list_bloc/chat_list_event.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_bloc.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_event.dart';
 import 'all_chats_event.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
@@ -24,7 +24,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   final int roomLimit;
   final String appId;
   final String thisMemberId;
-  final ChatListBloc chatListBloc;
+  final ChatBloc chatListBloc;
 
   AllChatsBloc(
       {required this.thisMemberId,
@@ -130,7 +130,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
           if (selectedEnhancedRoom.roomModel.documentID ==
               event.selected.documentID) {
-            chatListBloc.add(SelectChatList(selectedEnhancedRoom));
+            chatListBloc.add(SelectChatEvent(selectedEnhancedRoom));
           }
         }
         yield AllChatsLoaded(

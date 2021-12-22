@@ -6,11 +6,11 @@ import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
-import 'chat_list_event.dart';
-import 'chat_list_state.dart';
+import 'chat_event.dart';
+import 'chat_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
-class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
+class ChatBloc extends Bloc<ChatEvent, ChatState> {
   StreamSubscription? _chatsListSubscription;
   final EliudQuery? eliudQuery;
   int pages = 1;
@@ -21,7 +21,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final int chatLimit;
   final String thisMemberId;
 
-  ChatListBloc(
+  ChatBloc(
       {required this.thisMemberId,
       this.paged,
       this.orderBy,
@@ -29,18 +29,18 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       this.detailed,
       this.eliudQuery,
       this.chatLimit = 5})
-      : super(ChatListLoading());
+      : super(ChatLoading());
 
-  Stream<ChatListState> _mapLoadChatListWithDetailsToState(
+  Stream<ChatState> _mapLoadChatWithDetailsToState(
       EnhancedRoomModel room) async* {
     var appId = room.roomModel.appId!;
     var roomId = room.roomModel.documentID!;
     int amountNow =
-        (state is ChatListLoaded) ? (state as ChatListLoaded).values.length : 0;
+        (state is ChatLoaded) ? (state as ChatLoaded).values.length : 0;
     _chatsListSubscription?.cancel();
     _chatsListSubscription = chatRepository(appId: appId, roomId: roomId)!
         .listenWithDetails((list) async {
-      add(ChatListUpdated(
+      add(ChatUpdated(
           value: list.map((value) => value!).toList(),
           mightHaveMore: amountNow != list.length,
           room: room));
@@ -51,8 +51,8 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
             limit: ((paged != null) && paged!) ? pages * chatLimit : null);
   }
 
-  Future<void> _mapAddChatListToState(
-      EnhancedRoomModel room, AddChatList event) async {
+  Future<void> _mapAddChatToState(
+      EnhancedRoomModel room, AddChat event) async {
     var value = event.value;
     if (value != null) {
       var newValue = await chatRepository(
@@ -62,21 +62,21 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     }
   }
 
-  Stream<ChatListState> _mapChatListUpdatedToState(
-      ChatListUpdated event) async* {
-    yield ChatListLoaded(
+  Stream<ChatState> _mapChatUpdatedToState(
+      ChatUpdated event) async* {
+    yield ChatLoaded(
         room: event.room,
         values: event.value,
         mightHaveMore: event.mightHaveMore);
   }
 
   @override
-  Stream<ChatListState> mapEventToState(ChatListEvent event) async* {
-    if (event is SelectChatList) {
-      yield* _mapLoadChatListWithDetailsToState(event.room);
+  Stream<ChatState> mapEventToState(ChatEvent event) async* {
+    if (event is SelectChatEvent) {
+      yield* _mapLoadChatWithDetailsToState(event.room);
     } else if (event is UpdateEnhancedRoomModel) {
       var theState = state;
-      if (theState is ChatListLoaded) {
+      if (theState is ChatLoaded) {
         if ((theState.room.roomModel.documentID ==
                 event.model.roomModel.documentID) &&
             (theState.room.roomModel.appId == event.model.roomModel.appId)) {
@@ -85,18 +85,18 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       }
     } else if (event is NewChatPage) {
       var theState = state;
-      if (theState is ChatListLoaded) {
+      if (theState is ChatLoaded) {
         pages = pages +
             1; // it doesn't matter so much if we increase pages beyond the end
-        yield* _mapLoadChatListWithDetailsToState(theState.room);
+        yield* _mapLoadChatWithDetailsToState(theState.room);
       }
-    } else if (event is AddChatList) {
+    } else if (event is AddChat) {
       var theState = state;
-      if (theState is ChatListLoaded) {
-        _mapAddChatListToState(theState.room, event);
+      if (theState is ChatLoaded) {
+        _mapAddChatToState(theState.room, event);
       }
-    } else if (event is ChatListUpdated) {
-      yield* _mapChatListUpdatedToState(event);
+    } else if (event is ChatUpdated) {
+      yield* _mapChatUpdatedToState(event);
     } else if (event is MarkAsRead) {
       var room = event.enhancedRoomModel;
       var item = event.chat;

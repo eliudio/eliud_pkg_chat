@@ -3,57 +3,57 @@ import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 
-abstract class ChatListEvent extends Equatable {
-  const ChatListEvent();
+abstract class ChatEvent extends Equatable {
+  const ChatEvent();
   @override
   List<Object?> get props => [];
 }
 
-class SelectChatList extends ChatListEvent {
+class SelectChatEvent extends ChatEvent {
   final EnhancedRoomModel room;
 
-  SelectChatList(this.room);
+  SelectChatEvent(this.room);
 }
 
-class NewChatPage extends ChatListEvent {
+class NewChatPage extends ChatEvent {
   final RoomModel room;
 
   NewChatPage(this.room);
 }
 
-class AddChatList extends ChatListEvent {
+class AddChat extends ChatEvent {
   final ChatModel? value;
 
-  const AddChatList({ this.value });
+  const AddChat({ this.value });
 
   @override
   List<Object?> get props => [ value ];
 
   @override
-  String toString() => 'AddChatList{ value: $value }';
+  String toString() => 'AddChat{ value: $value }';
 }
 
-class ChatListUpdated extends ChatListEvent {
+class ChatUpdated extends ChatEvent {
   final EnhancedRoomModel room;
   final List<ChatModel> value;
   final bool? mightHaveMore;
 
-  const ChatListUpdated({ required this.room, required this.value, this.mightHaveMore });
+  const ChatUpdated({ required this.room, required this.value, this.mightHaveMore });
 
   @override
   List<Object?> get props => [ value, mightHaveMore, room ];
 
   @override
-  String toString() => 'ChatListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() => 'ChatUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 
-class UpdateEnhancedRoomModel extends ChatListEvent {
+class UpdateEnhancedRoomModel extends ChatEvent {
   final EnhancedRoomModel model;
   UpdateEnhancedRoomModel(this.model);
 }
 
-class MarkAsRead extends ChatListEvent {
+class MarkAsRead extends ChatEvent {
   final EnhancedRoomModel enhancedRoomModel;
   final ChatModel chat;
 

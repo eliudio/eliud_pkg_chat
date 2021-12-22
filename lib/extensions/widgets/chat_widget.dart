@@ -9,9 +9,9 @@ import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'all_chats_widget.dart';
-import 'chat_list_bloc/chat_list_bloc.dart';
-import 'chat_list_bloc/chat_list_event.dart';
-import 'chat_list_bloc/chat_list_state.dart';
+import 'chat_bloc/chat_bloc.dart';
+import 'chat_bloc/chat_event.dart';
+import 'chat_bloc/chat_state.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_medium/platform/medium_platform.dart';
@@ -59,12 +59,11 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatListBloc, ChatListState>(builder: (context, state) {
-      if (state is ChatListLoaded) {
+    return BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
+      if (state is ChatLoaded) {
         var room = state.room;
         List<Widget> widgets = [];
         int len = state.values.length;
-        String saying;
         String? timeString;
         for (int i = 0; i < len; i++) {
           List<MemberMediumModel> itemMedia = [];
@@ -92,9 +91,11 @@ class _ChatWidgetState extends State<ChatWidget> {
                 (state.room.otherMemberLastRead != null) &&
                 (state.room.otherMemberLastRead!.compareTo(timestamp) >= 0);
           } else {
-            for (var other in room.otherMembersRoomInfo) {
-              if (other.memberId == value.authorId) {
-                from = other.name;
+            if (room.otherMembersRoomInfo.length > 1) {
+              for (var other in room.otherMembersRoomInfo) {
+                if (other.memberId == value.authorId) {
+                  from = other.name;
+                }
               }
             }
 
@@ -105,10 +106,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 
           var saying = value.saying ?? '.';
           widgets.add(GestureDetector(
-            onTap: () => BlocProvider.of<ChatListBloc>(context)
+            onTap: () => BlocProvider.of<ChatBloc>(context)
                 .add((MarkAsRead(room, value))),
             child: BubbleSpecialOne(
-                text: from == null ? saying : from + "\n " + saying,
+                text: from == null ? saying : from + "\n" + saying,
                 isSender: itsMe,
                 sent: itsMe,
                 seen: hasRead,
@@ -317,7 +318,7 @@ class _ChatWidgetState extends State<ChatWidget> {
               ))
           .toList();
 
-      BlocProvider.of<ChatListBloc>(context).add(AddChatList(
+      BlocProvider.of<ChatBloc>(context).add(AddChat(
           value: ChatModel(
         documentID: newRandomKey(),
         appId: room.appId!,
@@ -342,7 +343,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     if (mightHaveMore) {
       return MyButton(
         onClickFunction: () =>
-            BlocProvider.of<ChatListBloc>(context).add(NewChatPage(room)),
+            BlocProvider.of<ChatBloc>(context).add(NewChatPage(room)),
       );
     } else {
       return Center(
