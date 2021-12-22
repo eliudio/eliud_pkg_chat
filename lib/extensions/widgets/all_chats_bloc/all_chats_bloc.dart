@@ -5,9 +5,7 @@ import 'package:eliud_pkg_chat/extensions/widgets/chat_list_bloc/chat_list_bloc.
 import 'package:eliud_pkg_chat/extensions/widgets/chat_list_bloc/chat_list_event.dart';
 import 'all_chats_event.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_chat/model/room_repository.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
@@ -65,16 +63,22 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   }
 
   void listToChatMemberInfoRepository(String appId, String roomId) async {
-    var key = appId + "-" + roomId;;
+    var key = appId + "-" + roomId;
+    ;
     chatMemberInfoSubscriptions[key]?.cancel();
-    chatMemberInfoSubscriptions[key] = chatMemberInfoRepository(appId: appId, roomId: roomId)!.listenWithDetails((chatMemberInfos) async {
+    chatMemberInfoSubscriptions[key] =
+        chatMemberInfoRepository(appId: appId, roomId: roomId)!
+            .listenWithDetails((chatMemberInfos) async {
       for (var chatMemberInfo in chatMemberInfos) {
         if (chatMemberInfo!.timestamp != null) {
-          add(NewLastReadEvent(appId, roomId, chatMemberInfo.authorId!, chatMemberInfo.timestamp!));
+          add(NewLastReadEvent(appId, roomId, chatMemberInfo.authorId!,
+              chatMemberInfo.timestamp!));
         }
       }
-    },eliudQuery: EliudQuery().withCondition(
-        EliudQueryCondition('readAccess', arrayContains: thisMemberId)));
+    },
+                eliudQuery: EliudQuery().withCondition(EliudQueryCondition(
+                    'readAccess',
+                    arrayContains: thisMemberId)));
   }
 
   Stream<AllChatsState> _mapAddAllChatsToState(AddAllChats event) async* {
@@ -124,7 +128,8 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
     } else if (event is SelectChat) {
       if (theState is AllChatsLoaded) {
         for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
-          if (selectedEnhancedRoom.roomModel.documentID == event.selected.documentID) {
+          if (selectedEnhancedRoom.roomModel.documentID ==
+              event.selected.documentID) {
             chatListBloc.add(SelectChatList(selectedEnhancedRoom));
           }
         }
@@ -142,13 +147,11 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
           if (enhancedRoomModel.roomModel.documentID == event.roomId) {
             var newEnhancedModel;
             if (event.memberId == thisMemberId) {
-              newEnhancedModel =  enhancedRoomModel.copyWith(
-                  timeStampThisMemberRead: event.lastRead
-              );
+              newEnhancedModel = enhancedRoomModel.copyWith(
+                  timeStampThisMemberRead: event.lastRead);
             } else {
-              newEnhancedModel =  enhancedRoomModel.copyWith(
-                  otherMemberLastRead: event.lastRead
-              );
+              newEnhancedModel = enhancedRoomModel.copyWith(
+                  otherMemberLastRead: event.lastRead);
             }
             newEnhancedRoomModels.add(newEnhancedModel);
             chatListBloc.add(UpdateEnhancedRoomModel(newEnhancedModel));
@@ -156,7 +159,10 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
             newEnhancedRoomModels.add(enhancedRoomModel);
           }
         }
-        yield AllChatsLoaded(mightHaveMore: theState.mightHaveMore, currentRoom: theState.currentRoom, enhancedRoomModels: newEnhancedRoomModels);
+        yield AllChatsLoaded(
+            mightHaveMore: theState.mightHaveMore,
+            currentRoom: theState.currentRoom,
+            enhancedRoomModels: newEnhancedRoomModels);
       }
     }
   }
@@ -180,6 +186,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
             await memberPublicInfoRepository(appId: appId)!.get(memberId);
         if (member != null) {
           var otherMemberRoomInfo = OtherMemberRoomInfo(
+              memberId: member.documentID!,
               name: member.name != null ? member.name! : 'No name',
               avatar: member.photoURL);
           otherMembersRoomInfo.add(otherMemberRoomInfo);

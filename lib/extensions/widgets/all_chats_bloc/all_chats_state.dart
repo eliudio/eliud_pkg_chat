@@ -19,7 +19,7 @@ class EnhancedRoomModel {
   final DateTime? otherMemberLastRead;
 
   EnhancedRoomModel(this.roomModel, this.timeStampThisMemberRead, this.otherMembersRoomInfo, this.otherMemberLastRead) :
-    hasUnread = (timeStampThisMemberRead == null) ||
+    hasUnread = (timeStampThisMemberRead != null) &&
         (roomModel.timestamp!.compareTo(timeStampThisMemberRead) > 0);
 
   @override
@@ -70,9 +70,10 @@ class AllChatsLoaded extends AllChatsState {
 class AllChatsNotLoaded extends AllChatsState {}
 
 class OtherMemberRoomInfo {
+  final String memberId;
   final String name;
   final String? avatar;
 
-  OtherMemberRoomInfo({required this.name, required this.avatar});
+  OtherMemberRoomInfo({required this.memberId, required this.name, required this.avatar});
 }
 
