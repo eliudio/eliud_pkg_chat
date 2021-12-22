@@ -38,11 +38,13 @@ import 'members_widget.dart';
 class AllChatsWidget extends StatefulWidget {
   final String memberId;
   final String appId;
+  final double height;
 
   const AllChatsWidget({
     Key? key,
     required this.appId,
     required this.memberId,
+    required this.height,
   }) : super(key: key);
 
   @override
@@ -70,9 +72,6 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         height: HEADER_HEIGHT,
         child: Column(children: [
           Row(children: [
-            const Spacer(),
-            button(context,
-                label: 'Close', onPressed: () => Navigator.of(context).pop()),
             const Spacer(),
             button(context, label: 'Chat', onPressed: () {
               openFlexibleDialog(context, widget.appId + '/chat',
@@ -106,7 +105,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         final currentChat = state.currentRoom;
         return OrientationBuilder(builder: (context, orientation) {
           var weight = _splitViewController!.weights[0]!;
-          var screenHeight = MediaQuery.of(context).size.height;
+//          var screenHeight = widget.height;
           return SplitView(
               gripColor: Colors.red,
               controller: _splitViewController,
@@ -375,13 +374,14 @@ class _ChatWidgetState extends State<ChatWidget> {
             padding: const EdgeInsets.all(0),
             shrinkWrap: true,
             children: [
-              SizedBox(
+              footer(room),
+/*              SizedBox(
                   height: widget.screenHeight - footerHeight(),
-                  child: ListView(
+                  child: */ListView(
+                      reverse: true,
                       controller: controller1,
                       shrinkWrap: true,
-                      children: reorderedWidgets)),
-              footer(room),
+                      children: reorderedWidgets)/*)*/,
             ]);
       } else {
         return Container();
@@ -406,7 +406,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     if ((media.isNotEmpty) || (progressValue != null)) {
       return MEDIA_ROW_HEIGHT + SPEAK_ROW_HEIGHT;
     } else {
-      return SPEAK_ROW_HEIGHT;
+      return SPEAK_ROW_HEIGHT + 10;
     }
   }
 
@@ -445,12 +445,12 @@ class _ChatWidgetState extends State<ChatWidget> {
         ]);
   }
 
-  double SPEAK_ROW_HEIGHT = 100;
+  double SPEAK_ROW_HEIGHT = 50;
   Widget _speakRow(RoomModel room) {
     return SizedBox(
-        height: 50,
+        height: SPEAK_ROW_HEIGHT,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          SizedBox(height: 50, child: buttonAddMember(room)),
+          buttonAddMember(room),
           Flexible(
             child: Container(
                 alignment: Alignment.center,
@@ -458,17 +458,35 @@ class _ChatWidgetState extends State<ChatWidget> {
                 child: _speakField(room)),
           ),
           const SizedBox(width: 8),
-          _mediaButtons(context, room),
+          MediaButtons.mediaButtons(
+              context, room.appId!, widget.memberId, room.members,
+              tooltip: 'Add video or photo',
+              photoFeedbackFunction: (photo) {
+                setState(() {
+                  progressValue = null;
+                  if (photo != null) {
+                    media.add(photo);
+                  }
+                });
+              },
+              photoFeedbackProgress: _uploading,
+              videoFeedbackFunction: (video) {
+                setState(() {
+                  progressValue = null;
+                  if (video != null) {
+                    media.add(video);
+                  }
+                });
+              },
+              videoFeedbackProgress: _uploading),
           const SizedBox(width: 8),
-          SizedBox(
-              height: 50,
-              child: button(
-                context,
-                label: 'Ok',
-                onPressed: () {
-                  _submit(room, _commentController.text);
-                },
-              )),
+          button(
+            context,
+            label: 'Ok',
+            onPressed: () {
+              _submit(room, _commentController.text);
+            },
+          ),
         ]));
   }
 
@@ -551,30 +569,6 @@ class _ChatWidgetState extends State<ChatWidget> {
     setState(() {
       progressValue = progress;
     });
-  }
-
-  PopupMenuButton _mediaButtons(BuildContext context, RoomModel room) {
-    return MediaButtons.mediaButtons(
-        context, room.appId!, widget.memberId, room.members,
-        tooltip: 'Add video or photo',
-        photoFeedbackFunction: (photo) {
-          setState(() {
-            progressValue = null;
-            if (photo != null) {
-              media.add(photo);
-            }
-          });
-        },
-        photoFeedbackProgress: _uploading,
-        videoFeedbackFunction: (video) {
-          setState(() {
-            progressValue = null;
-            if (video != null) {
-              media.add(video);
-            }
-          });
-        },
-        videoFeedbackProgress: _uploading);
   }
 
   void _onClick(RoomModel room) {

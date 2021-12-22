@@ -22,10 +22,7 @@ class IndicateRead {
               roomId: roomId,
               readAccess: readAccess,
             );
-/*
-            TODO: why is this causing refresh
             await _chatMemberInfoRepository.add(_chatMemberInfoModel);
-*/
           }
         } catch (_) {
           // issue with timestamp: ignore

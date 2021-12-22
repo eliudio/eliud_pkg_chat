@@ -14,6 +14,13 @@ class LoadChatList extends ChatListEvent {
   LoadChatList(this.room);
 }
 
+class LoadChatListWithID extends ChatListEvent {
+  final String appId;
+  final String roomId;
+
+  LoadChatListWithID(this.appId, this.roomId);
+}
+
 class NewChatPage extends ChatListEvent {
   final RoomModel room;
 

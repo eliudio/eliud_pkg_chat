@@ -48,6 +48,14 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     if (event is LoadChatList) {
       yield* _mapLoadChatListWithDetailsToState(event.room);
     }
+    if (event is LoadChatListWithID) {
+      var room = await roomRepository(appId: event.appId)!.get(event.roomId);
+      if (room != null) {
+        yield* _mapLoadChatListWithDetailsToState(room);
+      } else {
+        throw Exception("Room with id " + event.roomId + " does not exist for app " + event.appId);
+      }
+    }
     if (event is NewChatPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadChatListWithDetailsToState(event.room);

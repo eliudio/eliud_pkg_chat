@@ -49,28 +49,32 @@ class ChatDashboard extends AbstractChatDashboardComponent {
                 EliudQueryCondition('members', arrayContains: memberId));
         var eliudQueryChatList = EliudQuery().withCondition(
             EliudQueryCondition('readAccess', arrayContains: memberId));
+        var height = MediaQuery.of(context).size.height - kToolbarHeight - kBottomNavigationBarHeight;
         return SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: height,
             width: double.infinity,
-            child: MultiBlocProvider(providers: [
-              BlocProvider<AllChatsBloc>(
-                  create: (context) => AllChatsBloc(
-                      thisMemberId: memberId,
-                      orderBy: 'timestamp',
-                      descending: true,
-                      eliudQuery: eliudQuery,
-                      roomRepository: roomRepository(appId: appId)!)
-                    ..add(LoadAllChats())),
-              BlocProvider<ChatListBloc>(
-                  create: (context) => ChatListBloc(
-                        paged: true,
-                        orderBy: 'timestamp',
-                        descending: true,
-                        detailed: true,
-                        eliudQuery: eliudQueryChatList,
-                        chatLimit: 100,
-                      ))
-            ], child: AllChatsWidget(appId: appId, memberId: memberId)));
+            child: MultiBlocProvider(
+                providers: [
+                  BlocProvider<AllChatsBloc>(
+                      create: (context) => AllChatsBloc(
+                          thisMemberId: memberId,
+                          orderBy: 'timestamp',
+                          descending: true,
+                          eliudQuery: eliudQuery,
+                          roomRepository: roomRepository(appId: appId)!)
+                        ..add(LoadAllChats())),
+                  BlocProvider<ChatListBloc>(
+                      create: (context) => ChatListBloc(
+                            paged: true,
+                            orderBy: 'timestamp',
+                            descending: true,
+                            detailed: true,
+                            eliudQuery: eliudQueryChatList,
+                            chatLimit: 100,
+                          ))
+                ],
+                child: AllChatsWidget(
+                    appId: appId, memberId: memberId, height: height)));
       } else {
         return const Text('Member not available');
       }
