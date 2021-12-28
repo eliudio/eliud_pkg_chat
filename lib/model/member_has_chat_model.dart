@@ -77,7 +77,7 @@ class MemberHasChatModel {
     );
   }
 
-  static MemberHasChatModel? fromEntity(String documentID, MemberHasChatEntity? entity) {
+  static Future<MemberHasChatModel?> fromEntity(String documentID, MemberHasChatEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return MemberHasChatModel(

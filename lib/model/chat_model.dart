@@ -99,7 +99,7 @@ class ChatModel {
     );
   }
 
-  static ChatModel? fromEntity(String documentID, ChatEntity? entity) {
+  static Future<ChatModel?> fromEntity(String documentID, ChatEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return ChatModel(
@@ -111,13 +111,12 @@ class ChatModel {
           saying: entity.saying, 
           readAccess: entity.readAccess, 
           chatMedia: 
-            entity.chatMedia == null ? null :
-            entity.chatMedia
+            entity.chatMedia == null ? null : List<ChatMediumModel>.from(await Future.wait(entity. chatMedia
             !.map((item) {
-              counter++; 
-              return ChatMediumModel.fromEntity(counter.toString(), item)!;
+            counter++;
+              return ChatMediumModel.fromEntity(counter.toString(), item);
             })
-            .toList(), 
+            .toList())), 
     );
   }
 

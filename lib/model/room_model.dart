@@ -91,7 +91,7 @@ class RoomModel {
     );
   }
 
-  static RoomModel? fromEntity(String documentID, RoomEntity? entity) {
+  static Future<RoomModel?> fromEntity(String documentID, RoomEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return RoomModel(

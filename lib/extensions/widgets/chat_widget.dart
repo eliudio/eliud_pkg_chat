@@ -1,5 +1,6 @@
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -29,10 +30,12 @@ import 'all_chats_bloc/all_chats_event.dart';
 import 'members_widget.dart';
 
 class ChatWidget extends StatefulWidget {
+  final AppModel app;
   final String memberId;
 
   const ChatWidget({
     Key? key,
+    required this.app,
     required this.memberId,
   }) : super(key: key);
 
@@ -116,19 +119,19 @@ class _ChatWidgetState extends State<ChatWidget> {
                 color: Colors.white,
                 time: timeString,
                 textStyle: StyleRegistry.registry()
-                    .styleWithContext(context)
+                    .styleWithApp(widget.app)
                     .frontEndStyle()
                     .textStyleStyle()
-                    .styleText(context)!,
+                    .styleText(widget.app, context)!,
                 timeTextStyle: StyleRegistry.registry()
-                    .styleWithContext(context)
+                    .styleWithApp(widget.app)
                     .frontEndStyle()
                     .textStyleStyle()
-                    .styleSmallText(context)!),
+                    .styleSmallText(widget.app, context)!),
           ));
 
           if (itemMedia.isNotEmpty) {
-            var mediaWidget = MediaHelper.staggeredMemberMediumModel(
+            var mediaWidget = MediaHelper.staggeredMemberMediumModel(widget.app,
                 context, itemMedia,
                 reverse: itsMe,
                 shrinkWrap: true,
@@ -138,9 +141,9 @@ class _ChatWidgetState extends State<ChatWidget> {
               if (medium.mediumType == MediumType.Photo) {
                 var photos = itemMedia;
                 AbstractMediumPlatform.platform!
-                    .showPhotos(context, photos, index);
+                    .showPhotos(context, widget.app, photos, index);
               } else {
-                AbstractMediumPlatform.platform!.showVideo(context, medium);
+                AbstractMediumPlatform.platform!.showVideo(context, widget.app, medium);
               }
             });
             widgets.add(
@@ -151,7 +154,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   color: Colors.white, //const Color(0xFF1B97F3),
                   timeWidget: Text(
                     timeString,
-                    style: styleSmallText(context),
+                    style: styleSmallText(widget.app, context),
                   ),
                   widget: mediaWidget),
             );
@@ -161,14 +164,14 @@ class _ChatWidgetState extends State<ChatWidget> {
         List<Widget> reorderedWidgets = [];
         reorderedWidgets
             .add(_buttonNextPage(state.mightHaveMore!, room.roomModel));
-        reorderedWidgets.add(divider(context));
+        reorderedWidgets.add(divider(widget.app, context));
         reorderedWidgets.addAll(widgets);
         return ListView(
             padding: const EdgeInsets.all(0),
             shrinkWrap: true,
             children: [
               header(room.roomModel),
-              divider(context),
+              divider(widget.app, context),
               ListView(
                   reverse: true,
                   controller: controller1,
@@ -184,7 +187,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   double MEDIA_ROW_HEIGHT = 100;
   Widget _mediaRow(BuildContext context) {
     if ((media.isNotEmpty) || (progressValue != null)) {
-      return MediaHelper.staggeredMemberMediumModel(context, media,
+      return MediaHelper.staggeredMemberMediumModel(widget.app, context, media,
           height: MEDIA_ROW_HEIGHT,
           progressLabel: 'Uploading...',
           progressExtra: progressValue, deleteAction: (index) {
@@ -195,9 +198,9 @@ class _ChatWidgetState extends State<ChatWidget> {
         var medium = media[index];
         if (medium.mediumType == MediumType.Photo) {
           var photos = media;
-          AbstractMediumPlatform.platform!.showPhotos(context, photos, index);
+          AbstractMediumPlatform.platform!.showPhotos(context, widget.app, photos, index);
         } else {
-          AbstractMediumPlatform.platform!.showVideo(context, medium);
+          AbstractMediumPlatform.platform!.showVideo(context, widget.app, medium);
         }
       });
     } else {
@@ -215,18 +218,18 @@ class _ChatWidgetState extends State<ChatWidget> {
               height: SPEAK_ROW_HEIGHT,
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                iconButton(
+                iconButton(widget.app,
                   context,
                   icon: const Icon(
                     Icons.people,
                     size: 30.0,
                   ),
                   onPressed: () {
-                    openFlexibleDialog(context,
-                        AccessBloc.currentAppId(context) + '/addtochat',
+                    openFlexibleDialog(widget.app, context,
+                        widget.app.documentID! + '/addtochat',
                         title: 'Add one of your followers to the chat',
                         child: MembersWidget(
-                          appId: room.appId!,
+                          app: widget.app,
                           selectedMember: (String newMemberId) async {
                             List<String> newMembers = room.members!;
                             if (!newMembers.contains(newMemberId)) {
@@ -236,7 +239,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 //                                Navigator.of(context).pop();
                                 var newRoom =
                                     await RoomHelper.getRoomForMembers(
-                                        room.appId!,
+                                        widget.app,
                                         widget.memberId,
                                         newMembers);
                                 selectRoom(context, newRoom);
@@ -251,7 +254,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           currentMemberId: widget.memberId,
                         ),
                         buttons: [
-                          dialogButton(context,
+                          dialogButton(widget.app, context,
                               label: 'Close',
                               onPressed: () => Navigator.of(context).pop()),
                         ]);
@@ -261,7 +264,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   child: Container(
                       alignment: Alignment.center,
                       height: 30,
-                      child: textField(
+                      child: textField(widget.app,
                         context,
                         readOnly: false,
                         textAlign: TextAlign.left,
@@ -274,7 +277,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 ),
                 const SizedBox(width: 8),
                 MediaButtons.mediaButtons(
-                    context, room.appId!, widget.memberId, room.members,
+                    context, widget.app, widget.memberId, room.members,
                     tooltip: 'Add video or photo',
                     photoFeedbackFunction: (photo) {
                       setState(() {
@@ -295,7 +298,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     },
                     videoFeedbackProgress: _uploading),
                 const SizedBox(width: 8),
-                button(
+                button(widget.app,
                   context,
                   label: 'Ok',
                   onPressed: () {
@@ -304,7 +307,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 ),
               ])),
           _mediaRow(context),
-          divider(context),
+          divider(widget.app, context),
         ]);
   }
 
@@ -342,13 +345,14 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget _buttonNextPage(bool mightHaveMore, RoomModel room) {
     if (mightHaveMore) {
       return MyButton(
+        app: widget.app,
         onClickFunction: () =>
             BlocProvider.of<ChatBloc>(context).add(NewChatPage(room)),
       );
     } else {
       return Center(
-          child: h5(
-        context,
+          child: h5(widget.app,
+            context,
         "That's all folks",
       ));
     }
@@ -356,9 +360,10 @@ class _ChatWidgetState extends State<ChatWidget> {
 }
 
 class MyButton extends StatefulWidget {
+  final AppModel app;
   final VoidCallback? onClickFunction;
 
-  const MyButton({Key? key, this.onClickFunction}) : super(key: key);
+  const MyButton({Key? key, required this.app, this.onClickFunction}) : super(key: key);
 
   @override
   _MyButtonState createState() => _MyButtonState();
@@ -368,8 +373,8 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: button(
-      context,
+        child: button(widget.app,
+          context,
       label: 'More...',
       onPressed: () {
         widget.onClickFunction!();

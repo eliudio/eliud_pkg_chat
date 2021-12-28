@@ -1,27 +1,14 @@
+// ignore: unused_import
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
-import 'package:chat_bubbles/date_chips/date_chip.dart';
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/sty'
     'le/frontend/has_progress_indicator.dart';
-import 'package:eliud_core/style/frontend/has_style.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/frontend/has_text_form_field.dart';
-import 'package:eliud_core/tools/random.dart';
-import 'chat_bloc/chat_bloc.dart';
-import 'chat_bloc/chat_event.dart';
-import 'chat_bloc/chat_state.dart';
-import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
-import 'package:eliud_pkg_chat/model/chat_model.dart';
-import 'package:eliud_pkg_medium/platform/medium_platform.dart';
-import 'package:eliud_pkg_medium/tools/media_buttons.dart';
-import 'package:eliud_pkg_medium/tools/media_helper.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +24,11 @@ import 'members_widget.dart';
 
 class AllChatsWidget extends StatefulWidget {
   final String memberId;
-  final String appId;
+  final AppModel app;
 
   const AllChatsWidget({
     Key? key,
-    required this.appId,
+    required this.app,
     required this.memberId,
   }) : super(key: key);
 
@@ -71,27 +58,27 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         child: Column(children: [
           Row(children: [
             const Spacer(),
-            button(context, label: 'Member', onPressed: () {
-              openFlexibleDialog(context, widget.appId + '/chat',
+            button(widget.app, context, label: 'Member', onPressed: () {
+              openFlexibleDialog(widget.app, context, widget.app.documentID! + '/chat',
                   title: 'Chat with one of your followers',
                   child: MembersWidget(
-                    appId: widget.appId,
+                    app: widget.app,
                     selectedMember: (String memberId) async {
                       var room = await RoomHelper.getRoomForMember(
-                          widget.appId, widget.memberId, memberId);
+                          widget.app, widget.memberId, memberId);
                       selectRoom(context, room);
                     },
                     currentMemberId: widget.memberId,
                   ),
                   buttons: [
-                    dialogButton(context,
+                    dialogButton(widget.app, context,
                         label: 'Close',
                         onPressed: () => Navigator.of(context).pop()),
                   ]);
             }),
             const Spacer(),
           ]),
-          divider(context),
+          divider(widget.app, context),
         ]));
   }
 
@@ -114,7 +101,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                   header(),
                   if (chats != null)
                     ListView.separated(
-                        separatorBuilder: (context, index) => divider(context),
+                        separatorBuilder: (context, index) => divider(widget.app, context),
                         shrinkWrap: true,
                         physics: const ScrollPhysics(),
                         itemCount: chats.length,
@@ -124,7 +111,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                         })
                 ]),
                 if (currentChat != null)
-                  ChatWidget(
+                  ChatWidget(app: widget.app,
                     memberId: widget.memberId,
                   )
                 else
@@ -135,7 +122,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                   : SplitViewMode.Vertical);
         });
       } else {
-        return progressIndicator(context);
+        return progressIndicator(widget.app, context);
       }
     });
   }
@@ -148,12 +135,12 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
     var names = nameList.join(", ");
 
     var nameWidget = room.hasUnread
-        ? highLight1(
-            context,
+        ? highLight1(widget.app,
+      context,
             names,
           )
-        : text(
-            context,
+        : text(widget.app,
+      context,
             names,
           );
     Widget staggeredPhotos = StaggeredGridView.extentBuilder(
@@ -185,7 +172,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         onTap: () async {
           selectRoom(context, room.roomModel);
         },
-        trailing: text(
+        trailing: text(widget.app,
             context, timestampRoom != null ? formatHHMM(timestampRoom) : 'now'),
         leading: SizedBox(
           height: 100,

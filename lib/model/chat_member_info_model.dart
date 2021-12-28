@@ -90,7 +90,7 @@ class ChatMemberInfoModel {
     );
   }
 
-  static ChatMemberInfoModel? fromEntity(String documentID, ChatMemberInfoEntity? entity) {
+  static Future<ChatMemberInfoModel?> fromEntity(String documentID, ChatMemberInfoEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return ChatMemberInfoModel(

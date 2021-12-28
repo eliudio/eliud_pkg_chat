@@ -1,3 +1,4 @@
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
@@ -34,12 +35,12 @@ typedef SelectedMember = Function(String memberId);
 // Also, we should allow the initiator of a chat to delete the chat
 // Also, we should allow the initiator of a chat to delete the chat
 class MembersWidget extends StatefulWidget {
-  final String appId;
+  final AppModel app;
   final String currentMemberId;
   final SelectedMember selectedMember;
 
   const MembersWidget({
-    required this.appId,
+    required this.app,
     required this.currentMemberId,
     required this.selectedMember,
     Key? key,
@@ -47,14 +48,13 @@ class MembersWidget extends StatefulWidget {
 
   @override
   MembersWidgetState createState() =>
-      MembersWidgetState(appId, currentMemberId);
+      MembersWidgetState(currentMemberId);
 }
 
 class MembersWidgetState extends State<MembersWidget> {
-  final String appId;
   final String currentMemberId;
 
-  MembersWidgetState(this.appId, this.currentMemberId);
+  MembersWidgetState(this.currentMemberId);
 
   static EliudQuery? getQuery(String memberId) {
     return EliudQuery(theConditions: [
@@ -62,11 +62,11 @@ class MembersWidgetState extends State<MembersWidget> {
     ]);
   }
 
-  Widget widgetProvider(String appId, FollowingModel value) {
+  Widget widgetProvider(AppModel app, FollowingModel value) {
     return FollowingDashboardItem(
         selectedMember: widget.selectedMember,
         currentMemberId: currentMemberId,
-        appId: appId,
+        app: app,
         value: value);
   }
 
@@ -76,11 +76,11 @@ class MembersWidgetState extends State<MembersWidget> {
         create: (context) => FollowingListBloc(
               eliudQuery: getQuery(widget.currentMemberId),
               detailed: true,
-              followingRepository: followingRepository(appId: widget.appId)!,
+              followingRepository: followingRepository(appId: widget.app.documentID!)!,
             )..add(LoadFollowingList()),
-        child: FollowingListWidget(
+        child: FollowingListWidget(app: widget.app,
             readOnly: true,
-            widgetProvider: (value) => widgetProvider(appId, value!),
+            widgetProvider: (value) => widgetProvider(widget.app, value!),
             listBackground: BackgroundModel(documentID: "`transparent")));
   }
 }
@@ -89,14 +89,14 @@ class FollowingDashboardItem extends StatelessWidget {
   final SelectedMember selectedMember;
   final String currentMemberId;
   final FollowingModel? value;
-  final String? appId;
+  final AppModel app;
 
   const FollowingDashboardItem({
     Key? key,
     required this.selectedMember,
     required this.currentMemberId,
     required this.value,
-    this.appId,
+    required this.app,
   }) : super(key: key);
 
   @override
@@ -125,7 +125,7 @@ class FollowingDashboardItem extends StatelessWidget {
           width: 100,
           child: photo,
         ),
-        title: text(
+        title: text(app,
                   context,
                   name,
                 ));

@@ -64,7 +64,7 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
 ;
   }
 
-  ChatMemberInfoModel? _populateDoc(DocumentSnapshot value) {
+  Future<ChatMemberInfoModel?> _populateDoc(DocumentSnapshot value) async {
     return ChatMemberInfoModel.fromEntity(value.id, ChatMemberInfoEntity.fromMap(value.data()));
   }
 
@@ -88,16 +88,13 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
 
   StreamSubscription<List<ChatMemberInfoModel?>> listen(ChatMemberInfoModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<ChatMemberInfoModel?>> stream;
-      stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((data) {
-//    The above line should eventually become the below line
-//    See https://github.com/felangel/bloc/issues/2073.
-//    stream = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((data) {
-      Iterable<ChatMemberInfoModel?> chatMemberInfos  = data.docs.map((doc) {
-        ChatMemberInfoModel? value = _populateDoc(doc);
-        return value;
-      }).toList();
-      return chatMemberInfos as List<ChatMemberInfoModel?>;
+    stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
+//  see comment listen(...) above
+//  stream = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
+        .asyncMap((data) async {
+      return await Future.wait(data.docs.map((doc) =>  _populateDoc(doc)).toList());
     });
+
     return stream.listen((listOfChatMemberInfoModels) {
       trigger(listOfChatMemberInfoModels);
     });
@@ -131,11 +128,12 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
 
   Stream<List<ChatMemberInfoModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     DocumentSnapshot? lastDoc;
-    Stream<List<ChatMemberInfoModel?>> _values = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
+    Stream<List<ChatMemberInfoModel?>> _values = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+      return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
-      }).toList();});
+      }).toList());
+    });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
     return _values;
   }
@@ -156,10 +154,10 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
     DocumentSnapshot? lastDoc;
     List<ChatMemberInfoModel?> _values = await getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
-      return list.map((doc) { 
+      return Future.wait(list.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
-      }).toList();
+      }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
     return _values;

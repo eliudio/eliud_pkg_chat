@@ -17,6 +17,7 @@
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'dart:async';
 
@@ -32,11 +33,11 @@ import '../model/chat_medium_repository.dart';
 
 typedef ChatMediumListChanged(List<ChatMediumModel> values);
 
-chatMediumsList(context, value, trigger) => EmbeddedComponentFactory.chatMediumsList(context, value, trigger);
+chatMediumsList(app, context, value, trigger) => EmbeddedComponentFactory.chatMediumsList(app, context, value, trigger);
 
 class EmbeddedComponentFactory {
 
-static Widget chatMediumsList(BuildContext context, List<ChatMediumModel> values, ChatMediumListChanged trigger) {
+static Widget chatMediumsList(BuildContext context, AppModel app, List<ChatMediumModel> values, ChatMediumListChanged trigger) {
   ChatMediumInMemoryRepository inMemoryRepository = ChatMediumInMemoryRepository(trigger, values,);
   return MultiBlocProvider(
     providers: [
@@ -46,7 +47,7 @@ static Widget chatMediumsList(BuildContext context, List<ChatMediumModel> values
           )..add(LoadChatMediumList()),
         )
         ],
-    child: ChatMediumListWidget(isEmbedded: true),
+    child: ChatMediumListWidget(app: app, isEmbedded: true),
   );
 }
 

@@ -26,19 +26,20 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 
 abstract class AbstractMemberHasChatComponent extends StatelessWidget {
   static String componentName = "memberHasChats";
-  final String theAppId;
+  final AppModel app;
   final String memberHasChatId;
 
-  AbstractMemberHasChatComponent({Key? key, required this.theAppId, required this.memberHasChatId}): super(key: key);
+  AbstractMemberHasChatComponent({Key? key, required this.app, required this.memberHasChatId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MemberHasChatComponentBloc> (
           create: (context) => MemberHasChatComponentBloc(
-            memberHasChatRepository: memberHasChatRepository(appId: theAppId)!)
+            memberHasChatRepository: memberHasChatRepository(appId: app.documentID!)!)
         ..add(FetchMemberHasChatComponent(id: memberHasChatId)),
       child: _memberHasChatBlockBuilder(context),
     );
@@ -48,7 +49,7 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
     return BlocBuilder<MemberHasChatComponentBloc, MemberHasChatComponentState>(builder: (context, state) {
       if (state is MemberHasChatComponentLoaded) {
         if (state.value == null) {
-          return AlertWidget(title: "Error", content: 'No MemberHasChat defined');
+          return AlertWidget(app: app, title: "Error", content: 'No MemberHasChat defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -59,10 +60,10 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is MemberHasChatComponentError) {
-        return AlertWidget(title: 'Error', content: state.message);
+        return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
+          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
         );
       }
     });

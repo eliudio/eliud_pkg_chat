@@ -108,12 +108,12 @@ import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 class ListComponentFactory implements ComponentConstructor {
-  Widget? createNew({Key? key, required String appId,  required String id, Map<String, dynamic>? parameters}) {
-    return ListComponent(appId: appId, componentId: id);
+  Widget? createNew({Key? key, required AppModel app,  required String id, Map<String, dynamic>? parameters}) {
+    return ListComponent(app: app, componentId: id);
   }
 
   @override
-  dynamic getModel({required String appId, required String id}) {
+  dynamic getModel({required AppModel app, required String id}) {
     return null;
   }
 }
@@ -123,7 +123,7 @@ typedef DropdownButtonChanged(String? value);
 
 class DropdownButtonComponentFactory implements ComponentDropDown {
   @override
-  dynamic getModel({required String appId, required String id}) {
+  dynamic getModel({required AppModel app, required String id}) {
     return null;
   }
 
@@ -138,22 +138,22 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
     return false;
   }
 
-  Widget createNew({Key? key, required String appId, required String id, Map<String, dynamic>? parameters, String? value, DropdownButtonChanged? trigger, bool? optional}) {
+  Widget createNew({Key? key, required AppModel app, required String id, Map<String, dynamic>? parameters, String? value, DropdownButtonChanged? trigger, bool? optional}) {
 
     if (id == "chats")
-      return DropdownButtonComponent(appId: appId, componentId: id, value: value, trigger: trigger, optional: optional);
+      return DropdownButtonComponent(app: app, componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "chatDashboards")
-      return DropdownButtonComponent(appId: appId, componentId: id, value: value, trigger: trigger, optional: optional);
+      return DropdownButtonComponent(app: app, componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "chatMemberInfos")
-      return DropdownButtonComponent(appId: appId, componentId: id, value: value, trigger: trigger, optional: optional);
+      return DropdownButtonComponent(app: app, componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "memberHasChats")
-      return DropdownButtonComponent(appId: appId, componentId: id, value: value, trigger: trigger, optional: optional);
+      return DropdownButtonComponent(app: app, componentId: id, value: value, trigger: trigger, optional: optional);
 
     if (id == "rooms")
-      return DropdownButtonComponent(appId: appId, componentId: id, value: value, trigger: trigger, optional: optional);
+      return DropdownButtonComponent(app: app, componentId: id, value: value, trigger: trigger, optional: optional);
 
     return Text("Id $id not found");
   }
@@ -161,7 +161,7 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
 
 
 class ListComponent extends StatelessWidget with HasFab {
-  final String appId;
+  final AppModel app;
   final String? componentId;
   Widget? widget;
 
@@ -174,7 +174,7 @@ class ListComponent extends StatelessWidget with HasFab {
     return null;
   }
 
-  ListComponent({required this.appId, this.componentId}) {
+  ListComponent({required this.app, this.componentId}) {
     initWidget();
   }
 
@@ -190,11 +190,11 @@ class ListComponent extends StatelessWidget with HasFab {
   }
 
   void initWidget() {
-    if (componentId == 'chats') widget = ChatListWidget();
-    if (componentId == 'chatDashboards') widget = ChatDashboardListWidget();
-    if (componentId == 'chatMemberInfos') widget = ChatMemberInfoListWidget();
-    if (componentId == 'memberHasChats') widget = MemberHasChatListWidget();
-    if (componentId == 'rooms') widget = RoomListWidget();
+    if (componentId == 'chats') widget = ChatListWidget(app: app);
+    if (componentId == 'chatDashboards') widget = ChatDashboardListWidget(app: app);
+    if (componentId == 'chatMemberInfos') widget = ChatMemberInfoListWidget(app: app);
+    if (componentId == 'memberHasChats') widget = MemberHasChatListWidget(app: app);
+    if (componentId == 'rooms') widget = RoomListWidget(app: app);
   }
 
   Widget _chatBuild(BuildContext context) {
@@ -202,7 +202,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<ChatListBloc>(
           create: (context) => ChatListBloc(
-            chatRepository: chatRepository(appId: appId)!,
+            chatRepository: chatRepository(appId: app.documentID!)!,
           )..add(LoadChatList()),
         )
       ],
@@ -215,7 +215,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<ChatDashboardListBloc>(
           create: (context) => ChatDashboardListBloc(
-            chatDashboardRepository: chatDashboardRepository(appId: appId)!,
+            chatDashboardRepository: chatDashboardRepository(appId: app.documentID!)!,
           )..add(LoadChatDashboardList()),
         )
       ],
@@ -228,7 +228,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<ChatMemberInfoListBloc>(
           create: (context) => ChatMemberInfoListBloc(
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: appId)!,
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID!)!,
           )..add(LoadChatMemberInfoList()),
         )
       ],
@@ -241,7 +241,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<MemberHasChatListBloc>(
           create: (context) => MemberHasChatListBloc(
-            memberHasChatRepository: memberHasChatRepository(appId: appId)!,
+            memberHasChatRepository: memberHasChatRepository(appId: app.documentID!)!,
           )..add(LoadMemberHasChatList()),
         )
       ],
@@ -254,7 +254,7 @@ class ListComponent extends StatelessWidget with HasFab {
       providers: [
         BlocProvider<RoomListBloc>(
           create: (context) => RoomListBloc(
-            roomRepository: roomRepository(appId: appId)!,
+            roomRepository: roomRepository(appId: app.documentID!)!,
           )..add(LoadRoomList()),
         )
       ],
@@ -268,13 +268,13 @@ class ListComponent extends StatelessWidget with HasFab {
 typedef Changed(String? value);
 
 class DropdownButtonComponent extends StatelessWidget {
-  final String appId;
+  final AppModel app;
   final String? componentId;
   final String? value;
   final Changed? trigger;
   final bool? optional;
 
-  DropdownButtonComponent({required this.appId, this.componentId, this.value, this.trigger, this.optional});
+  DropdownButtonComponent({required this.app, this.componentId, this.value, this.trigger, this.optional});
 
   @override
   Widget build(BuildContext context) {
@@ -293,11 +293,11 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<ChatListBloc>(
           create: (context) => ChatListBloc(
-            chatRepository: chatRepository(appId: appId)!,
+            chatRepository: chatRepository(appId: app.documentID!)!,
           )..add(LoadChatList()),
         )
       ],
-      child: ChatDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+      child: ChatDropdownButtonWidget(app: app, value: value, trigger: trigger, optional: optional),
     );
   }
 
@@ -306,11 +306,11 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<ChatDashboardListBloc>(
           create: (context) => ChatDashboardListBloc(
-            chatDashboardRepository: chatDashboardRepository(appId: appId)!,
+            chatDashboardRepository: chatDashboardRepository(appId: app.documentID!)!,
           )..add(LoadChatDashboardList()),
         )
       ],
-      child: ChatDashboardDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+      child: ChatDashboardDropdownButtonWidget(app: app, value: value, trigger: trigger, optional: optional),
     );
   }
 
@@ -319,11 +319,11 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<ChatMemberInfoListBloc>(
           create: (context) => ChatMemberInfoListBloc(
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: appId)!,
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID!)!,
           )..add(LoadChatMemberInfoList()),
         )
       ],
-      child: ChatMemberInfoDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+      child: ChatMemberInfoDropdownButtonWidget(app: app, value: value, trigger: trigger, optional: optional),
     );
   }
 
@@ -332,11 +332,11 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<MemberHasChatListBloc>(
           create: (context) => MemberHasChatListBloc(
-            memberHasChatRepository: memberHasChatRepository(appId: appId)!,
+            memberHasChatRepository: memberHasChatRepository(appId: app.documentID!)!,
           )..add(LoadMemberHasChatList()),
         )
       ],
-      child: MemberHasChatDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+      child: MemberHasChatDropdownButtonWidget(app: app, value: value, trigger: trigger, optional: optional),
     );
   }
 
@@ -345,11 +345,11 @@ class DropdownButtonComponent extends StatelessWidget {
       providers: [
         BlocProvider<RoomListBloc>(
           create: (context) => RoomListBloc(
-            roomRepository: roomRepository(appId: appId)!,
+            roomRepository: roomRepository(appId: app.documentID!)!,
           )..add(LoadRoomList()),
         )
       ],
-      child: RoomDropdownButtonWidget(value: value, trigger: trigger, optional: optional),
+      child: RoomDropdownButtonWidget(app: app, value: value, trigger: trigger, optional: optional),
     );
   }
 

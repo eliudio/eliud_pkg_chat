@@ -77,7 +77,7 @@ class ChatDashboardModel {
     );
   }
 
-  static ChatDashboardModel? fromEntity(String documentID, ChatDashboardEntity? entity) {
+  static Future<ChatDashboardModel?> fromEntity(String documentID, ChatDashboardEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return ChatDashboardModel(
@@ -85,7 +85,7 @@ class ChatDashboardModel {
           appId: entity.appId, 
           description: entity.description, 
           conditions: 
-            StorageConditionsModel.fromEntity(entity.conditions), 
+            await StorageConditionsModel.fromEntity(entity.conditions), 
     );
   }
 

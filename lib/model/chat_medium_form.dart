@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
@@ -63,17 +64,16 @@ import 'package:eliud_pkg_chat/model/chat_medium_form_state.dart';
 
 
 class ChatMediumForm extends StatelessWidget {
+  final AppModel app;
   FormAction formAction;
   ChatMediumModel? value;
   ActionModel? submitAction;
 
-  ChatMediumForm({Key? key, required this.formAction, required this.value, this.submitAction}) : super(key: key);
+  ChatMediumForm({Key? key, required this.app, required this.formAction, required this.value, this.submitAction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var app = AccessBloc.currentApp(context);
-    if (app == null) return Text("No app available");
     var appId = app.documentID!;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatMediumFormBloc >(
@@ -81,7 +81,7 @@ class ChatMediumForm extends StatelessWidget {
                                        
                                                 )..add(InitialiseChatMediumFormEvent(value: value)),
   
-        child: MyChatMediumForm(submitAction: submitAction, formAction: formAction),
+        child: MyChatMediumForm(app:app, submitAction: submitAction, formAction: formAction),
           );
     } if (formAction == FormAction.ShowPreloadedData) {
       return BlocProvider<ChatMediumFormBloc >(
@@ -89,17 +89,17 @@ class ChatMediumForm extends StatelessWidget {
                                        
                                                 )..add(InitialiseChatMediumFormNoLoadEvent(value: value)),
   
-        child: MyChatMediumForm(submitAction: submitAction, formAction: formAction),
+        child: MyChatMediumForm(app:app, submitAction: submitAction, formAction: formAction),
           );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithContext(context).adminFormStyle().appBarWithString(context, title: formAction == FormAction.UpdateAction ? 'Update ChatMedium' : 'Add ChatMedium'),
+        appBar: StyleRegistry.registry().styleWithApp(app).adminFormStyle().appBarWithString(app, context, title: formAction == FormAction.UpdateAction ? 'Update ChatMedium' : 'Add ChatMedium'),
         body: BlocProvider<ChatMediumFormBloc >(
             create: (context) => ChatMediumFormBloc(appId,
                                        
                                                 )..add((formAction == FormAction.UpdateAction ? InitialiseChatMediumFormEvent(value: value) : InitialiseNewChatMediumFormEvent())),
   
-        child: MyChatMediumForm(submitAction: submitAction, formAction: formAction),
+        child: MyChatMediumForm(app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
@@ -107,10 +107,11 @@ class ChatMediumForm extends StatelessWidget {
 
 
 class MyChatMediumForm extends StatefulWidget {
+  final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyChatMediumForm({this.formAction, this.submitAction});
+  MyChatMediumForm({required this.app, this.formAction, this.submitAction});
 
   _MyChatMediumFormState createState() => _MyChatMediumFormState(this.formAction);
 }
@@ -135,13 +136,10 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
 
   @override
   Widget build(BuildContext context) {
-    var app = AccessBloc.currentApp(context);
-    if (app == null) return Text('No app available');
-    var appId = app.documentID!;
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ChatMediumFormBloc, ChatMediumFormState>(builder: (context, state) {
       if (state is ChatMediumFormUninitialized) return Center(
-        child: StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context),
+        child: StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context),
       );
 
       if (state is ChatMediumFormLoaded) {
@@ -159,32 +157,32 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'General')
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
                 ));
 
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
 
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithContext(context).adminFormStyle().groupTitle(context, 'Image')
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'Image')
                 ));
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(appId: appId, id: "memberMediums", value: _memberMedium, trigger: _onMemberMediumSelected, optional: true),
+                DropdownButtonComponentFactory().createNew(app: widget.app, id: "memberMediums", value: _memberMedium, trigger: _onMemberMediumSelected, optional: true),
           );
 
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().divider(context));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
 
         if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
-          children.add(StyleRegistry.registry().styleWithContext(context).adminFormStyle().button(context, label: 'Submit',
+          children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is ChatMediumFormError) {
                       return null;
@@ -211,7 +209,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
                   },
                 ));
 
-        return StyleRegistry.registry().styleWithContext(context).adminFormStyle().container(context, Form(
+        return StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().container(widget.app, context, Form(
             child: ListView(
               padding: const EdgeInsets.all(8),
               physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? NeverScrollableScrollPhysics() : null,
@@ -221,7 +219,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
           ), formAction!
         );
       } else {
-        return StyleRegistry.registry().styleWithContext(context).adminListStyle().progressIndicator(context);
+        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
       }
     });
   }
@@ -247,7 +245,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
   }
 
   bool _readOnly(AccessState accessState, ChatMediumFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(AccessBloc.currentAppId(context)));
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID!));
   }
   
 

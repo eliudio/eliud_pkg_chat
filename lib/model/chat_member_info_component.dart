@@ -26,19 +26,20 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 
 abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
   static String componentName = "chatMemberInfos";
-  final String theAppId;
+  final AppModel app;
   final String chatMemberInfoId;
 
-  AbstractChatMemberInfoComponent({Key? key, required this.theAppId, required this.chatMemberInfoId}): super(key: key);
+  AbstractChatMemberInfoComponent({Key? key, required this.app, required this.chatMemberInfoId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatMemberInfoComponentBloc> (
           create: (context) => ChatMemberInfoComponentBloc(
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: theAppId)!)
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID!)!)
         ..add(FetchChatMemberInfoComponent(id: chatMemberInfoId)),
       child: _chatMemberInfoBlockBuilder(context),
     );
@@ -48,7 +49,7 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
     return BlocBuilder<ChatMemberInfoComponentBloc, ChatMemberInfoComponentState>(builder: (context, state) {
       if (state is ChatMemberInfoComponentLoaded) {
         if (state.value == null) {
-          return AlertWidget(title: "Error", content: 'No ChatMemberInfo defined');
+          return AlertWidget(app: app, title: "Error", content: 'No ChatMemberInfo defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -59,10 +60,10 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is ChatMemberInfoComponentError) {
-        return AlertWidget(title: 'Error', content: state.message);
+        return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
+          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
         );
       }
     });

@@ -69,7 +69,7 @@ class ChatMediumModel {
     );
   }
 
-  static ChatMediumModel? fromEntity(String documentID, ChatMediumEntity? entity) {
+  static Future<ChatMediumModel?> fromEntity(String documentID, ChatMediumEntity? entity) async {
     if (entity == null) return null;
     var counter = 0;
     return ChatMediumModel(

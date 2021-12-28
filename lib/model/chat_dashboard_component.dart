@@ -26,19 +26,20 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_core/model/app_model.dart';
 
 abstract class AbstractChatDashboardComponent extends StatelessWidget {
   static String componentName = "chatDashboards";
-  final String theAppId;
+  final AppModel app;
   final String chatDashboardId;
 
-  AbstractChatDashboardComponent({Key? key, required this.theAppId, required this.chatDashboardId}): super(key: key);
+  AbstractChatDashboardComponent({Key? key, required this.app, required this.chatDashboardId}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatDashboardComponentBloc> (
           create: (context) => ChatDashboardComponentBloc(
-            chatDashboardRepository: chatDashboardRepository(appId: theAppId)!)
+            chatDashboardRepository: chatDashboardRepository(appId: app.documentID!)!)
         ..add(FetchChatDashboardComponent(id: chatDashboardId)),
       child: _chatDashboardBlockBuilder(context),
     );
@@ -48,7 +49,7 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
     return BlocBuilder<ChatDashboardComponentBloc, ChatDashboardComponentState>(builder: (context, state) {
       if (state is ChatDashboardComponentLoaded) {
         if (state.value == null) {
-          return AlertWidget(title: "Error", content: 'No ChatDashboard defined');
+          return AlertWidget(app: app, title: "Error", content: 'No ChatDashboard defined');
         } else {
           return yourWidget(context, state.value);
         }
@@ -59,10 +60,10 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
           size: 30.0,
         );
       } else if (state is ChatDashboardComponentError) {
-        return AlertWidget(title: 'Error', content: state.message);
+        return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithContext(context).frontEndStyle().progressIndicatorStyle().progressIndicator(context),
+          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
         );
       }
     });

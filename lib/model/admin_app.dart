@@ -187,7 +187,7 @@ class AdminApp extends AdminAppInstallerBase {
 
 class AdminMenu extends AdminAppMenuInstallerBase {
 
-  Future<MenuDefModel> menu(String appId) async {
+  Future<MenuDefModel> menu(AppModel app) async {
     var menuItems = <MenuItemModel>[];
 
     menuItems.add(
@@ -196,7 +196,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "Chats",
         description: "Chats",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_chat_chats_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_chat_chats_page"))
     );
 
 
@@ -206,7 +206,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "ChatDashboards",
         description: "ChatDashboards",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_chat_chatdashboards_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_chat_chatdashboards_page"))
     );
 
 
@@ -216,7 +216,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "ChatMemberInfos",
         description: "ChatMemberInfos",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_chat_chatmemberinfos_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_chat_chatmemberinfos_page"))
     );
 
 
@@ -226,7 +226,7 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "MemberHasChats",
         description: "MemberHasChats",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_chat_memberhaschats_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_chat_memberhaschats_page"))
     );
 
 
@@ -236,18 +236,18 @@ class AdminMenu extends AdminAppMenuInstallerBase {
         text: "Rooms",
         description: "Rooms",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(appId, pageID: "eliud_pkg_chat_rooms_page"))
+        action: GotoPage(app, pageID: "eliud_pkg_chat_rooms_page"))
     );
 
 
     MenuDefModel menu = MenuDefModel(
       admin: true,
       documentID: "eliud_pkg_chat_admin_menu",
-      appId: appId,
+      appId: app.documentID,
       name: "eliud_pkg_chat",
       menuItems: menuItems
     );
-    await menuDefRepository(appId: appId)!.add(menu);
+    await menuDefRepository(appId: app.documentID!)!.add(menu);
     return menu;
   }
 }
