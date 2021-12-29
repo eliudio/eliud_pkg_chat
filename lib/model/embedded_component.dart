@@ -37,7 +37,7 @@ chatMediumsList(app, context, value, trigger) => EmbeddedComponentFactory.chatMe
 
 class EmbeddedComponentFactory {
 
-static Widget chatMediumsList(BuildContext context, AppModel app, List<ChatMediumModel> values, ChatMediumListChanged trigger) {
+static Widget chatMediumsList(AppModel app, BuildContext context, List<ChatMediumModel> values, ChatMediumListChanged trigger) {
   ChatMediumInMemoryRepository inMemoryRepository = ChatMediumInMemoryRepository(trigger, values,);
   return MultiBlocProvider(
     providers: [
