@@ -131,8 +131,8 @@ class _ChatWidgetState extends State<ChatWidget> {
           ));
 
           if (itemMedia.isNotEmpty) {
-            var mediaWidget = MediaHelper.staggeredMemberMediumModel(widget.app,
-                context, itemMedia,
+            var mediaWidget = MediaHelper.staggeredMemberMediumModel(
+                widget.app, context, itemMedia,
                 reverse: itsMe,
                 shrinkWrap: true,
                 height: 150,
@@ -143,7 +143,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                 AbstractMediumPlatform.platform!
                     .showPhotos(context, widget.app, photos, index);
               } else {
-                AbstractMediumPlatform.platform!.showVideo(context, widget.app, medium);
+                AbstractMediumPlatform.platform!
+                    .showVideo(context, widget.app, medium);
               }
             });
             widgets.add(
@@ -198,9 +199,11 @@ class _ChatWidgetState extends State<ChatWidget> {
         var medium = media[index];
         if (medium.mediumType == MediumType.Photo) {
           var photos = media;
-          AbstractMediumPlatform.platform!.showPhotos(context, widget.app, photos, index);
+          AbstractMediumPlatform.platform!
+              .showPhotos(context, widget.app, photos, index);
         } else {
-          AbstractMediumPlatform.platform!.showVideo(context, widget.app, medium);
+          AbstractMediumPlatform.platform!
+              .showVideo(context, widget.app, medium);
         }
       });
     } else {
@@ -218,7 +221,8 @@ class _ChatWidgetState extends State<ChatWidget> {
               height: SPEAK_ROW_HEIGHT,
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                iconButton(widget.app,
+                iconButton(
+                  widget.app,
                   context,
                   icon: const Icon(
                     Icons.people,
@@ -264,7 +268,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                   child: Container(
                       alignment: Alignment.center,
                       height: 30,
-                      child: textField(widget.app,
+                      child: textField(
+                        widget.app,
                         context,
                         readOnly: false,
                         textAlign: TextAlign.left,
@@ -276,8 +281,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                       )),
                 ),
                 const SizedBox(width: 8),
-                MediaButtons.mediaButtons(
-                    context, widget.app, widget.memberId, room.members,
+                MediaButtons.mediaButtons(context, widget.app, widget.memberId,
+                    MemberMediumAccessibleByGroup.SpecificMembers,
+                    accessibleByMembers: room.members,
                     tooltip: 'Add video or photo',
                     photoFeedbackFunction: (photo) {
                       setState(() {
@@ -298,7 +304,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                     },
                     videoFeedbackProgress: _uploading),
                 const SizedBox(width: 8),
-                button(widget.app,
+                button(
+                  widget.app,
                   context,
                   label: 'Ok',
                   onPressed: () {
@@ -327,9 +334,11 @@ class _ChatWidgetState extends State<ChatWidget> {
         appId: room.appId!,
         roomId: room.documentID,
         authorId: widget.memberId,
-        readAccess: room.members,
+        accessibleByGroup: ChatAccessibleByGroup.SpecificMembers,
+        accessibleByMembers: room.members,
         chatMedia: mappedMedia,
         saying: value,
+        readAccess: [widget.memberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
       )));
       _commentController.clear();
       media.clear();
@@ -351,8 +360,9 @@ class _ChatWidgetState extends State<ChatWidget> {
       );
     } else {
       return Center(
-          child: h5(widget.app,
-            context,
+          child: h5(
+        widget.app,
+        context,
         "That's all folks",
       ));
     }
@@ -363,7 +373,8 @@ class MyButton extends StatefulWidget {
   final AppModel app;
   final VoidCallback? onClickFunction;
 
-  const MyButton({Key? key, required this.app, this.onClickFunction}) : super(key: key);
+  const MyButton({Key? key, required this.app, this.onClickFunction})
+      : super(key: key);
 
   @override
   _MyButtonState createState() => _MyButtonState();
@@ -373,8 +384,9 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: button(widget.app,
-          context,
+        child: button(
+      widget.app,
+      context,
       label: 'More...',
       onPressed: () {
         widget.onClickFunction!();

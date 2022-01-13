@@ -119,6 +119,30 @@ class ChangedChatMemberInfoTimestamp extends ChatMemberInfoFormEvent {
   String toString() => 'ChangedChatMemberInfoTimestamp{ value: $value }';
 }
 
+class ChangedChatMemberInfoAccessibleByGroup extends ChatMemberInfoFormEvent {
+  final ChatMemberInfoAccessibleByGroup? value;
+
+  ChangedChatMemberInfoAccessibleByGroup({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatMemberInfoAccessibleByGroup{ value: $value }';
+}
+
+class ChangedChatMemberInfoAccessibleByMembers extends ChatMemberInfoFormEvent {
+  final String? value;
+
+  ChangedChatMemberInfoAccessibleByMembers({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatMemberInfoAccessibleByMembers{ value: $value }';
+}
+
 class ChangedChatMemberInfoReadAccess extends ChatMemberInfoFormEvent {
   final String? value;
 

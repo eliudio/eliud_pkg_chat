@@ -116,7 +116,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           documentID: RoomHelper.getChatMemberInfoId(thisMemberId, roomId),
           authorId: thisMemberId,
           roomId: roomId,
-          readAccess: room.roomModel.members, /*timestamp: item.timestamp*/
+          accessibleByGroup: ChatMemberInfoAccessibleByGroup.SpecificMembers,
+          accessibleByMembers: room.roomModel.members,
+          readAccess: [thisMemberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
         ));
       } catch (_) {
         // issue with timestamp: ignore

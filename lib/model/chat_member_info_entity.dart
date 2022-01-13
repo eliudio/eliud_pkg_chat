@@ -27,20 +27,23 @@ class ChatMemberInfoEntity {
   final String? appId;
   final String? roomId;
   final Object? timestamp;
+  final int? accessibleByGroup;
+  final List<String>? accessibleByMembers;
   final List<String>? readAccess;
 
-  ChatMemberInfoEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.readAccess, });
+  ChatMemberInfoEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, });
 
   ChatMemberInfoEntity copyWith({Object? timestamp, }) {
-    return ChatMemberInfoEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, readAccess: readAccess, );
+    return ChatMemberInfoEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, );
   }
-  List<Object?> get props => [authorId, appId, roomId, timestamp, readAccess, ];
+  List<Object?> get props => [authorId, appId, roomId, timestamp, accessibleByGroup, accessibleByMembers, readAccess, ];
 
   @override
   String toString() {
+    String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
 
-    return 'ChatMemberInfoEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, readAccess: String[] { $readAccessCsv }}';
+    return 'ChatMemberInfoEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
   static ChatMemberInfoEntity? fromMap(Object? o) {
@@ -52,6 +55,8 @@ class ChatMemberInfoEntity {
       appId: map['appId'], 
       roomId: map['roomId'], 
       timestamp: map['timestamp'] == null ? null : (map['timestamp']  as Timestamp).millisecondsSinceEpoch,
+      accessibleByGroup: map['accessibleByGroup'], 
+      accessibleByMembers: map['accessibleByMembers'] == null ? null : List.from(map['accessibleByMembers']), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
     );
   }
@@ -65,6 +70,10 @@ class ChatMemberInfoEntity {
     if (roomId != null) theDocument["roomId"] = roomId;
       else theDocument["roomId"] = null;
     theDocument["timestamp"] = timestamp;
+    if (accessibleByGroup != null) theDocument["accessibleByGroup"] = accessibleByGroup;
+      else theDocument["accessibleByGroup"] = null;
+    if (accessibleByMembers != null) theDocument["accessibleByMembers"] = accessibleByMembers!.toList();
+      else theDocument["accessibleByMembers"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
     return theDocument;

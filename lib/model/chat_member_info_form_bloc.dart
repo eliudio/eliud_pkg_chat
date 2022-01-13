@@ -57,6 +57,7 @@ class ChatMemberInfoFormBloc extends Bloc<ChatMemberInfoFormEvent, ChatMemberInf
                                  authorId: "",
                                  appId: "",
                                  roomId: "",
+                                 accessibleByMembers: [],
                                  readAccess: [],
 
         ));
@@ -108,6 +109,12 @@ class ChatMemberInfoFormBloc extends Bloc<ChatMemberInfoFormEvent, ChatMemberInf
       }
       if (event is ChangedChatMemberInfoTimestamp) {
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
+        yield SubmittableChatMemberInfoForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedChatMemberInfoAccessibleByGroup) {
+        newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
         yield SubmittableChatMemberInfoForm(value: newValue);
 
         return;

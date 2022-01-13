@@ -28,22 +28,25 @@ class ChatEntity {
   final String? roomId;
   final Object? timestamp;
   final String? saying;
+  final int? accessibleByGroup;
+  final List<String>? accessibleByMembers;
   final List<String>? readAccess;
   final List<ChatMediumEntity>? chatMedia;
 
-  ChatEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.readAccess, this.chatMedia, });
+  ChatEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, });
 
   ChatEntity copyWith({Object? timestamp, }) {
-    return ChatEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, saying: saying, readAccess: readAccess, chatMedia: chatMedia, );
+    return ChatEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, saying: saying, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, chatMedia: chatMedia, );
   }
-  List<Object?> get props => [authorId, appId, roomId, timestamp, saying, readAccess, chatMedia, ];
+  List<Object?> get props => [authorId, appId, roomId, timestamp, saying, accessibleByGroup, accessibleByMembers, readAccess, chatMedia, ];
 
   @override
   String toString() {
+    String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
     String chatMediaCsv = (chatMedia == null) ? '' : chatMedia!.join(', ');
 
-    return 'ChatEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
+    return 'ChatEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
   static ChatEntity? fromMap(Object? o) {
@@ -65,6 +68,8 @@ class ChatEntity {
       roomId: map['roomId'], 
       timestamp: map['timestamp'] == null ? null : (map['timestamp']  as Timestamp).millisecondsSinceEpoch,
       saying: map['saying'], 
+      accessibleByGroup: map['accessibleByGroup'], 
+      accessibleByMembers: map['accessibleByMembers'] == null ? null : List.from(map['accessibleByMembers']), 
       readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
       chatMedia: chatMediaList, 
     );
@@ -85,6 +90,10 @@ class ChatEntity {
     theDocument["timestamp"] = timestamp;
     if (saying != null) theDocument["saying"] = saying;
       else theDocument["saying"] = null;
+    if (accessibleByGroup != null) theDocument["accessibleByGroup"] = accessibleByGroup;
+      else theDocument["accessibleByGroup"] = null;
+    if (accessibleByMembers != null) theDocument["accessibleByMembers"] = accessibleByMembers!.toList();
+      else theDocument["accessibleByMembers"] = null;
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
     if (chatMedia != null) theDocument["chatMedia"] = chatMediaListMap;

@@ -128,6 +128,7 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
   final TextEditingController _authorIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _roomIdController = TextEditingController();
+  int? _accessibleByGroupSelectedRadioTile;
 
 
   _MyChatMemberInfoFormState(this.formAction);
@@ -140,6 +141,7 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
     _authorIdController.addListener(_onAuthorIdChanged);
     _appIdController.addListener(_onAppIdChanged);
     _roomIdController.addListener(_onRoomIdChanged);
+    _accessibleByGroupSelectedRadioTile = 0;
   }
 
   @override
@@ -167,6 +169,10 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
           _roomIdController.text = state.value!.roomId.toString();
         else
           _roomIdController.text = "";
+        if (state.value!.accessibleByGroup != null)
+          _accessibleByGroupSelectedRadioTile = state.value!.accessibleByGroup!.index;
+        else
+          _accessibleByGroupSelectedRadioTile = 0;
       }
       if (state is ChatMemberInfoFormInitialized) {
         List<Widget> children = [];
@@ -184,6 +190,23 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
         children.add(
 
                   StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Chat ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _roomIdController, keyboardType: TextInputType.text, validator: (_) => state is RoomIdChatMemberInfoFormError ? state.message : null, hintText: null)
+          );
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Public', 'Public', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Followers', 'Followers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Me', 'Me', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'SpecificMembers', 'SpecificMembers', !accessState.memberIsOwner(widget.app.documentID!) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
           );
 
 
@@ -227,6 +250,8 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
                               appId: state.value!.appId, 
                               roomId: state.value!.roomId, 
                               timestamp: state.value!.timestamp, 
+                              accessibleByGroup: state.value!.accessibleByGroup, 
+                              accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
                         )));
                       } else {
@@ -237,6 +262,8 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
                               appId: state.value!.appId, 
                               roomId: state.value!.roomId, 
                               timestamp: state.value!.timestamp, 
+                              accessibleByGroup: state.value!.accessibleByGroup, 
+                              accessibleByMembers: state.value!.accessibleByMembers, 
                               readAccess: state.value!.readAccess, 
                           )));
                       }
@@ -281,6 +308,20 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
 
   void _onRoomIdChanged() {
     _myFormBloc.add(ChangedChatMemberInfoRoomId(value: _roomIdController.text));
+  }
+
+
+  void setSelectionAccessibleByGroup(int? val) {
+    setState(() {
+      _accessibleByGroupSelectedRadioTile = val;
+    });
+    _myFormBloc.add(ChangedChatMemberInfoAccessibleByGroup(value: toChatMemberInfoAccessibleByGroup(val)));
+  }
+
+
+  void _onAccessibleByMembersChanged(value) {
+    _myFormBloc.add(ChangedChatMemberInfoAccessibleByMembers(value: value));
+    setState(() {});
   }
 
 

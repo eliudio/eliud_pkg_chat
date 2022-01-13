@@ -143,6 +143,38 @@ class TimestampChatMemberInfoFormError extends ChatMemberInfoFormError {
 }
 
 
+class AccessibleByGroupChatMemberInfoFormError extends ChatMemberInfoFormError { 
+  const AccessibleByGroupChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByGroupChatMemberInfoFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AccessibleByMembersChatMemberInfoFormError extends ChatMemberInfoFormError { 
+  const AccessibleByMembersChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByMembersChatMemberInfoFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ReadAccessChatMemberInfoFormError extends ChatMemberInfoFormError { 
   const ReadAccessChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
 

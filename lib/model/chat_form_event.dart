@@ -131,6 +131,30 @@ class ChangedChatSaying extends ChatFormEvent {
   String toString() => 'ChangedChatSaying{ value: $value }';
 }
 
+class ChangedChatAccessibleByGroup extends ChatFormEvent {
+  final ChatAccessibleByGroup? value;
+
+  ChangedChatAccessibleByGroup({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatAccessibleByGroup{ value: $value }';
+}
+
+class ChangedChatAccessibleByMembers extends ChatFormEvent {
+  final String? value;
+
+  ChangedChatAccessibleByMembers({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatAccessibleByMembers{ value: $value }';
+}
+
 class ChangedChatReadAccess extends ChatFormEvent {
   final String? value;
 

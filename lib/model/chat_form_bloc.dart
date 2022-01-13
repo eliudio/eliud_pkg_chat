@@ -58,6 +58,7 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
                                  appId: "",
                                  roomId: "",
                                  saying: "",
+                                 accessibleByMembers: [],
                                  readAccess: [],
                                  chatMedia: [],
 
@@ -116,6 +117,12 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
       }
       if (event is ChangedChatSaying) {
         newValue = currentState.value!.copyWith(saying: event.value);
+        yield SubmittableChatForm(value: newValue);
+
+        return;
+      }
+      if (event is ChangedChatAccessibleByGroup) {
+        newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
         yield SubmittableChatForm(value: newValue);
 
         return;

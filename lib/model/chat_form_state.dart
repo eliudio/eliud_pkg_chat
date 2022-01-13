@@ -159,6 +159,38 @@ class SayingChatFormError extends ChatFormError {
 }
 
 
+class AccessibleByGroupChatFormError extends ChatFormError { 
+  const AccessibleByGroupChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByGroupChatFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
+class AccessibleByMembersChatFormError extends ChatFormError { 
+  const AccessibleByMembersChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''AccessibleByMembersChatFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ReadAccessChatFormError extends ChatFormError { 
   const ReadAccessChatFormError({ String? message, ChatModel? value }): super(message: message, value: value);
 
