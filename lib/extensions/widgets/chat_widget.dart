@@ -9,6 +9,7 @@ import 'package:eliud_core/style/frontend/has_style.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/random.dart';
+import 'package:tuple/tuple.dart';
 import 'all_chats_widget.dart';
 import 'chat_bloc/chat_bloc.dart';
 import 'chat_bloc/chat_event.dart';
@@ -281,9 +282,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                       )),
                 ),
                 const SizedBox(width: 8),
-                MediaButtons.mediaButtons(context, widget.app, widget.memberId,
+                MediaButtons.mediaButtons(context, widget.app, widget.memberId, () => Tuple2(
                     MemberMediumAccessibleByGroup.SpecificMembers,
-                    accessibleByMembers: room.members,
+                    room.members,),
                     tooltip: 'Add video or photo',
                     photoFeedbackFunction: (photo) {
                       setState(() {
