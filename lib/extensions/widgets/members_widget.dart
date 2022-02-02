@@ -81,7 +81,7 @@ class MembersWidgetState extends State<MembersWidget> {
         child: FollowingListWidget(app: widget.app,
             readOnly: true,
             widgetProvider: (value) => widgetProvider(widget.app, value!),
-            listBackground: BackgroundModel(documentID: "`transparent")));
+            listBackground: BackgroundModel()));
   }
 }
 
