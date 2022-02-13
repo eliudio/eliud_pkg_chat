@@ -1,9 +1,11 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/access_event.dart';
+import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/package/package.dart';
 import 'package:eliud_core/model/access_model.dart';
+import 'package:eliud_pkg_chat/wizards/chat_page_wizard.dart';
 import 'model/abstract_repository_singleton.dart';
 import 'model/component_registry.dart';
 import 'model/member_has_chat_model.dart';
@@ -92,6 +94,9 @@ abstract class ChatPackage extends Package {
   @override
   void init() {
     ComponentRegistry().init();
+
+    // wizards
+    NewAppWizardRegistry.registry().register(ChatPageWizard());
 
     AbstractRepositorySingleton.singleton = RepositorySingleton();
   }
