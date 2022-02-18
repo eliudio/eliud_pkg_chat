@@ -59,12 +59,18 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
     DrawerProvider rightDrawerProvider,
   ) {
     if (parameters is ActionSpecificationParametersBase) {
-      var chatDialogSpecifications = parameters.actionSpecifications;
-      if (chatDialogSpecifications.shouldCreatePageDialogOrWorkflow()) {
+      var chatPageSpecifications = parameters.actionSpecifications;
+      if (chatPageSpecifications.shouldCreatePageDialogOrWorkflow()) {
         List<NewAppTask> tasks = [];
+        var memberId = member.documentID!;
         tasks.add(() async {
-          await ChatDialogBuilder(
-            app,
+          await ChatPageBuilder(FEED_PAGE_ID,
+              app,
+              memberId,
+              homeMenuProvider(),
+              appBarProvider(),
+              leftDrawerProvider(),
+              rightDrawerProvider()
           ).create();
         });
         return tasks;
