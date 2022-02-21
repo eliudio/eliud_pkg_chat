@@ -92,5 +92,5 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
   String? getPageID(String pageType) => null;
   
   @override
-  ActionModel? getAction(AppModel app, String actionType) => null;
+  ActionModel? getAction(AppModel app, String actionType, ) => null;
 }
