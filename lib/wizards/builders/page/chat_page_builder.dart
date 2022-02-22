@@ -1,4 +1,5 @@
 import 'package:eliud_core/core/wizards/builders/page_builder.dart';
+import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
 import 'package:eliud_core/model/body_component_model.dart';
@@ -16,9 +17,12 @@ class ChatPageBuilder extends PageBuilder {
       HomeMenuModel theHomeMenu,
       AppBarModel theAppBar,
       DrawerModel leftDrawer,
-      DrawerModel rightDrawer)
+      DrawerModel rightDrawer,
+      PageProvider pageProvider,
+      ActionProvider actionProvider,
+      )
       : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-      rightDrawer);
+      rightDrawer, pageProvider, actionProvider);
 
 
   // Security is setup to indicate if a page or dialog is accessible

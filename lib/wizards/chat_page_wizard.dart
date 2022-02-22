@@ -57,6 +57,8 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
     AppBarProvider appBarProvider,
     DrawerProvider leftDrawerProvider,
     DrawerProvider rightDrawerProvider,
+    PageProvider pageProvider,
+    ActionProvider actionProvider,
   ) {
     if (parameters is ActionSpecificationParametersBase) {
       var chatPageSpecifications = parameters.actionSpecifications;
@@ -70,7 +72,9 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
               homeMenuProvider(),
               appBarProvider(),
               leftDrawerProvider(),
-              rightDrawerProvider()
+              rightDrawerProvider(),
+              pageProvider,
+              actionProvider
           ).create();
         });
         return tasks;
@@ -89,8 +93,8 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
       adjustMe;
 
   @override
-  String? getPageID(String pageType) => null;
+  String? getPageID(NewAppWizardParameters parameters, String pageType) => null;
   
   @override
-  ActionModel? getAction(AppModel app, String actionType, ) => null;
+  ActionModel? getAction(NewAppWizardParameters parameters, AppModel app, String actionType, ) => null;
 }
