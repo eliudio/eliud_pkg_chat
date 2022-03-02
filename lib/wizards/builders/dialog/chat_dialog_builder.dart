@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/wizards/builders/dialog_builder.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
-import 'package:eliud_core/model/body_component_model.dart';
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_chat/chat_package.dart';
@@ -10,7 +10,7 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 
 class ChatDialogBuilder extends DialogBuilder {
-  ChatDialogBuilder(AppModel app, ) : super(app, 'NA');
+  ChatDialogBuilder(String uniqueId, AppModel app, ) : super(uniqueId, app, 'NA');
 
   // Security is setup to indicate if a page or dialog is accessible
   // For this reason we need 2 dialogs, one for unread and one for read chats
@@ -23,8 +23,8 @@ class ChatDialogBuilder extends DialogBuilder {
           privilegeLevelRequired: PrivilegeLevelRequired.NoPrivilegeRequired,
           packageCondition: ChatPackage.CONDITION_MEMBER_HAS_UNREAD_CHAT));
 
-  static OpenDialog readAction(AppModel app) => OpenDialog(app,
-      dialogID: IDENTIFIER_READ,
+  static OpenDialog readAction(String uniqueId, AppModel app) => OpenDialog(app,
+      dialogID: constructDocumentId(uniqueId: uniqueId, documentId: IDENTIFIER_READ),
       conditions: DisplayConditionsModel(
           privilegeLevelRequired: PrivilegeLevelRequired.NoPrivilegeRequired,
           packageCondition: ChatPackage.CONDITION_MEMBER_ALL_HAVE_BEEN_READ));
@@ -45,7 +45,7 @@ class ChatDialogBuilder extends DialogBuilder {
         componentId: CHAT_ID));
 
     return DialogModel(
-        documentID: identifier,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: identifier),
         appId: app.documentID!,
         title: "Chat",
         includeHeading: false,

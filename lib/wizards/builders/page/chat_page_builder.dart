@@ -2,7 +2,7 @@ import 'package:eliud_core/core/wizards/builders/page_builder.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
-import 'package:eliud_core/model/body_component_model.dart';
+import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_chat/chat_package.dart';
@@ -11,36 +11,38 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 
 class ChatPageBuilder extends PageBuilder {
-  ChatPageBuilder(String pageId,
-      AppModel app,
-      String memberId,
-      HomeMenuModel theHomeMenu,
-      AppBarModel theAppBar,
-      DrawerModel leftDrawer,
-      DrawerModel rightDrawer,
-      PageProvider pageProvider,
-      ActionProvider actionProvider,
-      )
-      : super(pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-      rightDrawer, pageProvider, actionProvider);
-
+  ChatPageBuilder(
+    String uniqueId,
+    String pageId,
+    AppModel app,
+    String memberId,
+    HomeMenuModel theHomeMenu,
+    AppBarModel theAppBar,
+    DrawerModel leftDrawer,
+    DrawerModel rightDrawer,
+    PageProvider pageProvider,
+    ActionProvider actionProvider,
+  ) : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
+            rightDrawer, pageProvider, actionProvider);
 
   // Security is setup to indicate if a page or dialog is accessible
   // For this reason we need 2 dialogs, one for unread and one for read chats
-  static String IDENTIFIER_READ = "chat_page_read";
-  static String IDENTIFIER_UNREAD = "chat_page_unread";
+  static String identifierRead = "chat_page_read";
+  static String identifierUnread = "chat_page_unread";
 
-  static GotoPage unReadAction(AppModel app) => GotoPage(app, pageID: IDENTIFIER_UNREAD,
+  static GotoPage unReadAction(AppModel app, String uniqueId) => GotoPage(app,
+      pageID: constructDocumentId(uniqueId: uniqueId, documentId: identifierUnread),
       conditions: DisplayConditionsModel(
           privilegeLevelRequired: PrivilegeLevelRequired.NoPrivilegeRequired,
           packageCondition: ChatPackage.CONDITION_MEMBER_HAS_UNREAD_CHAT));
 
-  static GotoPage readAction(AppModel app) => GotoPage(app, pageID: IDENTIFIER_READ,
+  static GotoPage readAction(AppModel app, String uniqueId) => GotoPage(app,
+      pageID: constructDocumentId(uniqueId: uniqueId, documentId: identifierRead),
       conditions: DisplayConditionsModel(
           privilegeLevelRequired: PrivilegeLevelRequired.NoPrivilegeRequired,
           packageCondition: ChatPackage.CONDITION_MEMBER_ALL_HAVE_BEEN_READ));
 
-  static String CHAT_ID = "chat";
+  static String chatId = "chat";
 
   Future<PageModel> _setupPage(String identifier) async {
     return await corerepo.AbstractRepositorySingleton.singleton
@@ -53,10 +55,10 @@ class ChatPageBuilder extends PageBuilder {
     components.add(BodyComponentModel(
         documentID: "1",
         componentName: AbstractChatDashboardComponent.componentName,
-        componentId: CHAT_ID));
+        componentId: constructDocumentId(uniqueId: uniqueId, documentId: chatId)));
 
     return PageModel(
-        documentID: identifier,
+        documentID: constructDocumentId(uniqueId: uniqueId, documentId: identifier),
         appId: app.documentID!,
         title: "Chat",
         drawer: leftDrawer,
@@ -73,7 +75,7 @@ class ChatPageBuilder extends PageBuilder {
 
   ChatDashboardModel _chatModel() {
     return ChatDashboardModel(
-      documentID: CHAT_ID,
+      documentID: constructDocumentId(uniqueId: uniqueId, documentId: chatId),
       appId: app.documentID!,
       description: "Chat",
       conditions: StorageConditionsModel(
@@ -90,7 +92,7 @@ class ChatPageBuilder extends PageBuilder {
 
   Future<void> create() async {
     await _setupChat();
-    await _setupPage(IDENTIFIER_READ);
-    await _setupPage(IDENTIFIER_UNREAD);
+    await _setupPage(identifierUnread);
+    await _setupPage(identifierUnread);
   }
 }

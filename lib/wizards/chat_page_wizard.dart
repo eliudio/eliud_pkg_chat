@@ -1,21 +1,20 @@
 import 'package:eliud_core/core/wizards/registry/new_app_wizard_info_with_action_specification.dart';
 import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/model/display_conditions_model.dart';
 import 'package:eliud_core/model/icon_model.dart';
 import 'package:eliud_core/model/member_model.dart';
 import 'package:eliud_core/model/menu_item_model.dart';
+import 'package:eliud_core/model/public_medium_model.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:flutter/material.dart';
 
-import 'builders/dialog/chat_dialog_builder.dart';
 import 'builders/page/chat_page_builder.dart';
 
 class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
   static String FEED_PAGE_ID = 'feed';
 
-  ChatPageWizard() : super('chat', 'Chat', 'Generate Chat Page');
+  ChatPageWizard() : super('chat', 'Chat', 'Generate a default Chat Page');
 
   @override
   NewAppWizardParameters newAppWizardParameters() =>
@@ -29,7 +28,7 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
       );
 
   @override
-  List<MenuItemModel> getThoseMenuItems(AppModel app) => [
+  List<MenuItemModel> getThoseMenuItems(String uniqueId, AppModel app) => [
         MenuItemModel(
             documentID: newRandomKey(),
             text: 'Chat',
@@ -37,7 +36,7 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
             icon: IconModel(
                 codePoint: Icons.chat_bubble_rounded.codePoint,
                 fontFamily: Icons.notifications.fontFamily),
-            action: ChatPageBuilder.unReadAction(app)),
+            action: ChatPageBuilder.unReadAction(app, uniqueId)),
         MenuItemModel(
             documentID: newRandomKey(),
             text: 'Chat',
@@ -45,11 +44,12 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
             icon: IconModel(
                 codePoint: Icons.chat_bubble_outline_rounded.codePoint,
                 fontFamily: Icons.notifications.fontFamily),
-            action: ChatPageBuilder.readAction(app)),
+            action: ChatPageBuilder.readAction(app, uniqueId)),
       ];
 
   @override
   List<NewAppTask>? getCreateTasks(
+    String uniqueId,
     AppModel app,
     NewAppWizardParameters parameters,
     MemberModel member,
@@ -66,16 +66,18 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
         List<NewAppTask> tasks = [];
         var memberId = member.documentID!;
         tasks.add(() async {
-          await ChatPageBuilder(FEED_PAGE_ID,
-              app,
-              memberId,
-              homeMenuProvider(),
-              appBarProvider(),
-              leftDrawerProvider(),
-              rightDrawerProvider(),
-              pageProvider,
-              actionProvider
-          ).create();
+          await ChatPageBuilder(
+                  uniqueId,
+                  FEED_PAGE_ID,
+                  app,
+                  memberId,
+                  homeMenuProvider(),
+                  appBarProvider(),
+                  leftDrawerProvider(),
+                  rightDrawerProvider(),
+                  pageProvider,
+                  actionProvider)
+              .create();
         });
         return tasks;
       }
@@ -87,14 +89,26 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
 
   @override
   AppModel updateApp(
+    String uniqueId,
     NewAppWizardParameters parameters,
     AppModel adjustMe,
   ) =>
       adjustMe;
 
   @override
-  String? getPageID(NewAppWizardParameters parameters, String pageType) => null;
-  
+  String? getPageID(String uniqueId, NewAppWizardParameters parameters,
+          String pageType) =>
+      null;
+
   @override
-  ActionModel? getAction(NewAppWizardParameters parameters, AppModel app, String actionType, ) => null;
+  ActionModel? getAction(
+    String uniqueId,
+    NewAppWizardParameters parameters,
+    AppModel app,
+    String actionType,
+  ) =>
+      null;
+
+  @override
+  PublicMediumModel? getPublicMediumModel(String uniqueId, NewAppWizardParameters parameters, String pageType) => null;
 }
