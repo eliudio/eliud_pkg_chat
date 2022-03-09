@@ -92,7 +92,7 @@ class ChatPageBuilder extends PageBuilder {
 
   Future<void> create() async {
     await _setupChat();
-    await _setupPage(identifierUnread);
+    await _setupPage(identifierRead);
     await _setupPage(identifierUnread);
   }
 }
