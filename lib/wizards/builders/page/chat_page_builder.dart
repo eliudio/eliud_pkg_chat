@@ -21,9 +21,8 @@ class ChatPageBuilder extends PageBuilder {
     DrawerModel leftDrawer,
     DrawerModel rightDrawer,
     PageProvider pageProvider,
-    ActionProvider actionProvider,
   ) : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer, pageProvider, actionProvider);
+            rightDrawer, pageProvider, );
 
   // Security is setup to indicate if a page or dialog is accessible
   // For this reason we need 2 dialogs, one for unread and one for read chats

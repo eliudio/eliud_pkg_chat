@@ -58,7 +58,6 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
     DrawerProvider leftDrawerProvider,
     DrawerProvider rightDrawerProvider,
     PageProvider pageProvider,
-    ActionProvider actionProvider,
   ) {
     if (parameters is ActionSpecificationParametersBase) {
       var chatPageSpecifications = parameters.actionSpecifications;
@@ -76,7 +75,7 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
                   leftDrawerProvider(),
                   rightDrawerProvider(),
                   pageProvider,
-                  actionProvider)
+                  )
               .create();
         });
         return tasks;
