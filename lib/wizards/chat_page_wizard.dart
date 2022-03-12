@@ -17,6 +17,9 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
   ChatPageWizard() : super('chat', 'Chat', 'Generate a default Chat Page');
 
   @override
+  String getPackageName() => "eliud_pkg_chat";
+
+  @override
   NewAppWizardParameters newAppWizardParameters() =>
       ActionSpecificationParametersBase(
         requiresAccessToLocalFileSystem: false,
