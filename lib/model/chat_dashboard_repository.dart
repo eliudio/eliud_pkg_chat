@@ -32,11 +32,12 @@ import 'package:eliud_pkg_chat/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef ChatDashboardModelTrigger(List<ChatDashboardModel?> list);
 typedef ChatDashboardChanged(ChatDashboardModel? value);
 
-abstract class ChatDashboardRepository {
+abstract class ChatDashboardRepository extends RepositoryBase<ChatDashboardModel> {
   Future<ChatDashboardModel> add(ChatDashboardModel value);
   Future<void> delete(ChatDashboardModel value);
   Future<ChatDashboardModel?> get(String? id, { Function(Exception)? onError });

@@ -32,11 +32,12 @@ import 'package:eliud_pkg_chat/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef RoomModelTrigger(List<RoomModel?> list);
 typedef RoomChanged(RoomModel? value);
 
-abstract class RoomRepository {
+abstract class RoomRepository extends RepositoryBase<RoomModel> {
   Future<RoomModel> add(RoomModel value);
   Future<void> delete(RoomModel value);
   Future<RoomModel?> get(String? id, { Function(Exception)? onError });

@@ -32,11 +32,12 @@ import 'package:eliud_pkg_chat/model/entity_export.dart';
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
+import 'package:eliud_core/tools/repository_base.dart';
 
 typedef MemberHasChatModelTrigger(List<MemberHasChatModel?> list);
 typedef MemberHasChatChanged(MemberHasChatModel? value);
 
-abstract class MemberHasChatRepository {
+abstract class MemberHasChatRepository extends RepositoryBase<MemberHasChatModel> {
   Future<MemberHasChatModel> add(MemberHasChatModel value);
   Future<void> delete(MemberHasChatModel value);
   Future<MemberHasChatModel?> get(String? id, { Function(Exception)? onError });
