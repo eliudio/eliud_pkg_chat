@@ -13,6 +13,7 @@
 
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 
@@ -36,6 +37,13 @@ class ChatListLoaded extends ChatListState {
 
   @override
   String toString() => 'ChatListLoaded { values: $values }';
+
+  @override
+  bool operator ==(Object other) => 
+          other is ChatListLoaded &&
+              runtimeType == other.runtimeType &&
+              ListEquality().equals(values, other.values) &&
+              mightHaveMore == other.mightHaveMore;
 }
 
 class ChatNotLoaded extends ChatListState {}

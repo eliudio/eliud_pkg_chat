@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 
@@ -73,5 +74,17 @@ class ChatMemberInfoListUpdated extends ChatMemberInfoListEvent {
 
   @override
   String toString() => 'ChatMemberInfoListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+}
+
+class ChatMemberInfoChangeQuery extends ChatMemberInfoListEvent {
+  final EliudQuery newQuery;
+
+  const ChatMemberInfoChangeQuery({ required this.newQuery });
+
+  @override
+  List<Object?> get props => [ newQuery ];
+
+  @override
+  String toString() => 'ChatMemberInfoChangeQuery{ value: $newQuery }';
 }
 

@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 
@@ -73,5 +74,17 @@ class ChatDashboardListUpdated extends ChatDashboardListEvent {
 
   @override
   String toString() => 'ChatDashboardListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+}
+
+class ChatDashboardChangeQuery extends ChatDashboardListEvent {
+  final EliudQuery newQuery;
+
+  const ChatDashboardChangeQuery({ required this.newQuery });
+
+  @override
+  List<Object?> get props => [ newQuery ];
+
+  @override
+  String toString() => 'ChatDashboardChangeQuery{ value: $newQuery }';
 }
 

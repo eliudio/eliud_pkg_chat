@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
   final RoomRepository _roomRepository;
   StreamSubscription? _roomsListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadRoomListWithDetailsToState();
+    } else if (event is RoomChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadRoomListToState();
+      } else {
+        yield* _mapLoadRoomListWithDetailsToState();
+      }
     } else if (event is AddRoomList) {
       yield* _mapAddRoomListToState(event);
     } else if (event is UpdateRoomList) {

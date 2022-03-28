@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> {
   final ChatMediumRepository _chatMediumRepository;
   StreamSubscription? _chatMediumsListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadChatMediumListWithDetailsToState();
+    } else if (event is ChatMediumChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadChatMediumListToState();
+      } else {
+        yield* _mapLoadChatMediumListWithDetailsToState();
+      }
     } else if (event is AddChatMediumList) {
       yield* _mapAddChatMediumListToState(event);
     } else if (event is UpdateChatMediumList) {

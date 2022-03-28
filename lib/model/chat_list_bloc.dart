@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final ChatRepository _chatRepository;
   StreamSubscription? _chatsListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadChatListWithDetailsToState();
+    } else if (event is ChatChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadChatListToState();
+      } else {
+        yield* _mapLoadChatListWithDetailsToState();
+      }
     } else if (event is AddChatList) {
       yield* _mapAddChatListToState(event);
     } else if (event is UpdateChatList) {

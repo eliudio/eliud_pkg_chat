@@ -13,6 +13,7 @@
 
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_model.dart';
 
@@ -36,6 +37,13 @@ class MemberHasChatListLoaded extends MemberHasChatListState {
 
   @override
   String toString() => 'MemberHasChatListLoaded { values: $values }';
+
+  @override
+  bool operator ==(Object other) => 
+          other is MemberHasChatListLoaded &&
+              runtimeType == other.runtimeType &&
+              ListEquality().equals(values, other.values) &&
+              mightHaveMore == other.mightHaveMore;
 }
 
 class MemberHasChatNotLoaded extends MemberHasChatListState {}

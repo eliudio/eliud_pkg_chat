@@ -27,7 +27,7 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 class MemberHasChatListBloc extends Bloc<MemberHasChatListEvent, MemberHasChatListState> {
   final MemberHasChatRepository _memberHasChatRepository;
   StreamSubscription? _memberHasChatsListSubscription;
-  final EliudQuery? eliudQuery;
+  EliudQuery? eliudQuery;
   int pages = 1;
   final bool? paged;
   final String? orderBy;
@@ -99,6 +99,13 @@ class MemberHasChatListBloc extends Bloc<MemberHasChatListEvent, MemberHasChatLi
     if (event is NewPage) {
       pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       yield* _mapLoadMemberHasChatListWithDetailsToState();
+    } else if (event is MemberHasChatChangeQuery) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        yield* _mapLoadMemberHasChatListToState();
+      } else {
+        yield* _mapLoadMemberHasChatListWithDetailsToState();
+      }
     } else if (event is AddMemberHasChatList) {
       yield* _mapAddMemberHasChatListToState(event);
     } else if (event is UpdateMemberHasChatList) {

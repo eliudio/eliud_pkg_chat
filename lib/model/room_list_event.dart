@@ -13,6 +13,7 @@
 
 */
 
+import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 
@@ -73,5 +74,17 @@ class RoomListUpdated extends RoomListEvent {
 
   @override
   String toString() => 'RoomListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+}
+
+class RoomChangeQuery extends RoomListEvent {
+  final EliudQuery newQuery;
+
+  const RoomChangeQuery({ required this.newQuery });
+
+  @override
+  List<Object?> get props => [ newQuery ];
+
+  @override
+  String toString() => 'RoomChangeQuery{ value: $newQuery }';
 }
 
