@@ -173,7 +173,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
 
         children.add(
 
-                DropdownButtonComponentFactory().createNew(app: widget.app, id: "memberMediums", value: _memberMedium, trigger: _onMemberMediumSelected, optional: true),
+                DropdownButtonComponentFactory().createNew(app: widget.app, id: "memberMediums", value: _memberMedium, trigger: (value, privilegeLevel) => _onMemberMediumSelected(value), optional: true),
           );
 
 
