@@ -1,5 +1,6 @@
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
@@ -141,11 +142,9 @@ class _ChatWidgetState extends State<ChatWidget> {
               var medium = itemMedia[index];
               if (medium.mediumType == MediumType.Photo) {
                 var photos = itemMedia;
-                AbstractMediumPlatform.platform!
-                    .showPhotos(context, widget.app, photos, index);
+                Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, index);
               } else {
-                AbstractMediumPlatform.platform!
-                    .showVideo(context, widget.app, medium);
+                Registry.registry()!.getMediumApi().showVideo(context, widget.app, medium);
               }
             });
             widgets.add(
@@ -200,11 +199,9 @@ class _ChatWidgetState extends State<ChatWidget> {
         var medium = media[index];
         if (medium.mediumType == MediumType.Photo) {
           var photos = media;
-          AbstractMediumPlatform.platform!
-              .showPhotos(context, widget.app, photos, index);
+          Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, index);
         } else {
-          AbstractMediumPlatform.platform!
-              .showVideo(context, widget.app, medium);
+          Registry.registry()!.getMediumApi().showVideo(context, widget.app, medium);
         }
       });
     } else {
