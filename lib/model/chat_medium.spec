@@ -1,6 +1,7 @@
 {
   "id": "ChatMedium",
   "packageName": "eliud_pkg_chat",
+  "packageFriendlyName": "chat",
   "generate": {
     "generateComponent": false,
     "generateRepository": true,

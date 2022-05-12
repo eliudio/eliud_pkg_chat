@@ -1,6 +1,7 @@
 {
   "id": "ChatMemberInfo",
   "packageName": "eliud_pkg_chat",
+  "packageFriendlyName": "chat",
   "isAppModel": true,
   "generate": {
     "generateComponent": true,

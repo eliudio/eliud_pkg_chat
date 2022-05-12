@@ -40,6 +40,7 @@ class ChatDashboardComponentEditorConstructor
         ChatDashboardModel(
           appId: app.documentID,
           documentID: newRandomKey(),
+          description: 'Chat',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
                   PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
@@ -96,6 +97,7 @@ class ChatDashboardBloc
   ChatDashboardModel newInstance(StorageConditionsModel conditions) {
     return ChatDashboardModel(
         appId: appId,
+        description: 'Chat',
         documentID: newRandomKey(),
         conditions: conditions);
   }

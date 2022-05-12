@@ -34,7 +34,7 @@ class ComponentRegistry {
     Registry.registry()!.register(componentName: "eliud_pkg_chat_internalWidgets", componentConstructor: ListComponentFactory());
     Registry.registry()!.addDropDownSupporter("chatDashboards", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "chatDashboards", componentConstructor: ChatDashboardComponentConstructorDefault());
-    Registry.registry()!.addComponentSpec('eliud_pkg_chat', [
+    Registry.registry()!.addComponentSpec('eliud_pkg_chat', 'chat', [
       ComponentSpec('chatDashboards', ChatDashboardComponentConstructorDefault(), ChatDashboardComponentSelector(), ChatDashboardComponentEditorConstructor(), ), 
     ]);
 
