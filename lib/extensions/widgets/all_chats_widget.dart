@@ -6,6 +6,7 @@ import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/sty'
     'le/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_split.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
@@ -13,7 +14,6 @@ import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:split_view/split_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'all_chats_bloc/all_chats_bloc.dart';
@@ -37,20 +37,6 @@ class AllChatsWidget extends StatefulWidget {
 }
 
 class AllChatsWidgetState extends State<AllChatsWidget> {
-  SplitViewController? _splitViewController;
-
-  @override
-  void initState() {
-    _splitViewController = SplitViewController(weights: [
-      0.3,
-      0.7
-    ], limits: [
-      WeightLimit(min: 0.2, max: 0.8),
-      WeightLimit(min: 0.2, max: 0.8)
-    ]);
-    super.initState();
-  }
-
   double HEADER_HEIGHT = 60;
   Widget header() {
     return SizedBox(
@@ -90,13 +76,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         final currentChat = state.currentRoom;
         return OrientationBuilder(builder: (context, orientation) {
           //var weight = _splitViewController!.weights[0]!;
-          return SplitView(
-              gripColor: Colors.red,
-              controller: _splitViewController,
-              onWeightChanged: (newWeight) {
-                setState(() {});
-              },
-              children: [
+          return splitView(widget.app, context,
                 ListView(children: [
                   header(),
                   if (chats != null)
@@ -109,17 +89,14 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                           final value = chats[index];
                           return roomListEntry(value);
                         })
-                ]),
-                if (currentChat != null)
+                ]),(currentChat != null)?
                   ChatWidget(app: widget.app,
                     memberId: widget.memberId,
-                  )
-                else
-                  Container()
-              ],
-              viewMode: orientation == Orientation.landscape
-                  ? SplitViewMode.Horizontal
-                  : SplitViewMode.Vertical);
+                  ):
+                  Container(),
+            0.3, 0.2, 0.8
+          );
+
         });
       } else {
         return progressIndicator(widget.app, context);
