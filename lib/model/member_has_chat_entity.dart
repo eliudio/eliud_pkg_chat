@@ -27,7 +27,7 @@ class MemberHasChatEntity {
   final String? appId;
   final bool? hasUnread;
 
-  MemberHasChatEntity({this.memberId, this.appId, this.hasUnread, });
+  MemberHasChatEntity({required this.memberId, required this.appId, this.hasUnread, });
 
 
   List<Object?> get props => [memberId, appId, hasUnread, ];

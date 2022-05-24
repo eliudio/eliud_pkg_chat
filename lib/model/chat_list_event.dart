@@ -77,7 +77,7 @@ class ChatListUpdated extends ChatListEvent {
 }
 
 class ChatChangeQuery extends ChatListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const ChatChangeQuery({ required this.newQuery });
 

@@ -77,7 +77,7 @@ class RoomListUpdated extends RoomListEvent {
 }
 
 class RoomChangeQuery extends RoomListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const RoomChangeQuery({ required this.newQuery });
 

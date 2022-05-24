@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -50,14 +51,14 @@ ChatMemberInfoAccessibleByGroup toChatMemberInfoAccessibleByGroup(int? index) {
 }
 
 
-class ChatMemberInfoModel {
-  String? documentID;
+class ChatMemberInfoModel implements ModelBase, WithAppId {
+  String documentID;
 
   // The person who this info is about
-  String? authorId;
+  String authorId;
 
   // This is the identifier of the app to which this chat belongs
-  String? appId;
+  String appId;
   String? roomId;
 
   // Last Read entry in Chat in this room for this member
@@ -68,7 +69,7 @@ class ChatMemberInfoModel {
   List<String>? accessibleByMembers;
   List<String>? readAccess;
 
-  ChatMemberInfoModel({this.documentID, this.authorId, this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, })  {
+  ChatMemberInfoModel({required this.documentID, required this.authorId, required this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, })  {
     assert(documentID != null);
   }
 
@@ -118,8 +119,8 @@ class ChatMemberInfoModel {
     var counter = 0;
     return ChatMemberInfoModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
-          appId: entity.appId, 
+          authorId: entity.authorId ?? '', 
+          appId: entity.appId ?? '', 
           roomId: entity.roomId, 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           accessibleByGroup: toChatMemberInfoAccessibleByGroup(entity.accessibleByGroup), 
@@ -134,8 +135,8 @@ class ChatMemberInfoModel {
     var counter = 0;
     return ChatMemberInfoModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
-          appId: entity.appId, 
+          authorId: entity.authorId ?? '', 
+          appId: entity.appId ?? '', 
           roomId: entity.roomId, 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           accessibleByGroup: toChatMemberInfoAccessibleByGroup(entity.accessibleByGroup), 

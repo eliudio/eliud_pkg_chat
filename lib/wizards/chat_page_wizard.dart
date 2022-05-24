@@ -65,7 +65,7 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
       var chatPageSpecifications = parameters.actionSpecifications;
       if (chatPageSpecifications.shouldCreatePageDialogOrWorkflow()) {
         List<NewAppTask> tasks = [];
-        var memberId = member.documentID!;
+        var memberId = member.documentID;
         tasks.add(() async {
           await ChatPageBuilder(
                   uniqueId,

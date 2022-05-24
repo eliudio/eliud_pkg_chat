@@ -45,7 +45,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
           Row(children: [
             const Spacer(),
             button(widget.app, context, label: 'Member', onPressed: () {
-              openFlexibleDialog(widget.app, context, widget.app.documentID! + '/chat',
+              openFlexibleDialog(widget.app, context, widget.app.documentID + '/chat',
                   title: 'Chat with one of your followers',
                   child: MembersWidget(
                     app: widget.app,
@@ -120,30 +120,29 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
       context,
             names,
           );
-    Widget staggeredPhotos = StaggeredGridView.extentBuilder(
-      scrollDirection: Axis.horizontal,
-      primary: true,
-      maxCrossAxisExtent: 150,
-      itemCount: room.otherMembersRoomInfo.length,
-      itemBuilder: (context, i) {
-        var avatar = room.otherMembersRoomInfo[i].avatar;
-        if (avatar != null) {
-          return FadeInImage.memoryNetwork(
-            height: 50,
-            placeholder: kTransparentImage,
-            image: avatar,
-          );
-        } else {
-          return const Center(child: Text('No photo'));
-        }
-      },
-      shrinkWrap: true,
-      physics: const ScrollPhysics(),
-      mainAxisSpacing: 5.0,
-      crossAxisSpacing: 5.0,
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-      staggeredTileBuilder: (_) => const StaggeredTile.fit(100),
-    );
+
+    List<Widget> widgets = [];
+    for (int i = 0; i < room.otherMembersRoomInfo.length; i++) {
+      var avatar = room.otherMembersRoomInfo[i].avatar;
+      if (avatar != null) {
+        widgets.add(FadeInImage.memoryNetwork(
+          height: 50,
+          placeholder: kTransparentImage,
+          image: avatar,
+        ));
+      } else {
+        widgets.add(Center(child: Text('No photo')));
+      }
+    }
+
+    var staggeredPhotos = GridView.extent(
+        maxCrossAxisExtent: 200,
+        padding: const EdgeInsets.all(0),
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
+        physics: const ScrollPhysics(), // to disable GridView's scrolling
+        shrinkWrap: true,
+        children: widgets);
 
     return ListTile(
         onTap: () async {

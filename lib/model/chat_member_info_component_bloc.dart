@@ -26,23 +26,22 @@ class ChatMemberInfoComponentBloc extends Bloc<ChatMemberInfoComponentEvent, Cha
   final ChatMemberInfoRepository? chatMemberInfoRepository;
   StreamSubscription? _chatMemberInfoSubscription;
 
-  Stream<ChatMemberInfoComponentState> _mapLoadChatMemberInfoComponentUpdateToState(String documentId) async* {
+  void _mapLoadChatMemberInfoComponentUpdateToState(String documentId) {
     _chatMemberInfoSubscription?.cancel();
     _chatMemberInfoSubscription = chatMemberInfoRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ChatMemberInfoComponentUpdated(value: value));
+      if (value != null) {
+        add(ChatMemberInfoComponentUpdated(value: value));
+      }
     });
   }
 
-  ChatMemberInfoComponentBloc({ this.chatMemberInfoRepository }): super(ChatMemberInfoComponentUninitialized());
-
-  @override
-  Stream<ChatMemberInfoComponentState> mapEventToState(ChatMemberInfoComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchChatMemberInfoComponent) {
-      yield* _mapLoadChatMemberInfoComponentUpdateToState(event.id!);
-    } else if (event is ChatMemberInfoComponentUpdated) {
-      yield ChatMemberInfoComponentLoaded(value: event.value);
-    }
+  ChatMemberInfoComponentBloc({ this.chatMemberInfoRepository }): super(ChatMemberInfoComponentUninitialized()) {
+    on <FetchChatMemberInfoComponent> ((event, emit) {
+      _mapLoadChatMemberInfoComponentUpdateToState(event.id!);
+    });
+    on <ChatMemberInfoComponentUpdated> ((event, emit) {
+      emit(ChatMemberInfoComponentLoaded(value: event.value));
+    });
   }
 
   @override

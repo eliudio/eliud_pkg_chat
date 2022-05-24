@@ -33,7 +33,7 @@ class ChatDialogBuilder extends DialogBuilder {
 
   Future<DialogModel> _setupDialog(String identifier) async {
     return await corerepo.AbstractRepositorySingleton.singleton
-        .dialogRepository(app.documentID!)!
+        .dialogRepository(app.documentID)!
         .add(_dialog(identifier));
   }
 
@@ -46,7 +46,7 @@ class ChatDialogBuilder extends DialogBuilder {
 
     return DialogModel(
         documentID: constructDocumentId(uniqueId: uniqueId, documentId: identifier),
-        appId: app.documentID!,
+        appId: app.documentID,
         title: "Chat",
         includeHeading: false,
         layout: DialogLayout.ListView,
@@ -60,7 +60,7 @@ class ChatDialogBuilder extends DialogBuilder {
   ChatDashboardModel _chatModel() {
     return ChatDashboardModel(
       documentID: CHAT_ID,
-      appId: app.documentID!,
+      appId: app.documentID,
       description: "Chat",
       conditions: StorageConditionsModel(
           privilegeLevelRequired:
@@ -70,7 +70,7 @@ class ChatDialogBuilder extends DialogBuilder {
 
   Future<ChatDashboardModel> _setupChat() async {
     return await AbstractRepositorySingleton.singleton
-        .chatDashboardRepository(app.documentID!)!
+        .chatDashboardRepository(app.documentID)!
         .add(_chatModel());
   }
 

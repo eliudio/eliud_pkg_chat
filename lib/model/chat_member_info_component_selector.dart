@@ -40,10 +40,10 @@ class ChatMemberInfoComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, AppModel app, int privilegeLevel, double height,
       SelectComponent selected, editorConstructor) {
-    var appId = app.documentID!;
+    var appId = app.documentID;
     return BlocProvider<ChatMemberInfoListBloc>(
           create: (context) => ChatMemberInfoListBloc(
-          eliudQuery: getComponentSelectorQuery(0, app.documentID!),
+          eliudQuery: getComponentSelectorQuery(0, app.documentID),
           chatMemberInfoRepository:
               chatMemberInfoRepository(appId: appId)!,
           )..add(LoadChatMemberInfoList()),
@@ -108,7 +108,7 @@ class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
         (_privilegeTabController!.indexIsChanging)) {
         _currentPrivilege = _privilegeTabController!.index;
         BlocProvider.of<ChatMemberInfoListBloc>(context).add(
-            ChatMemberInfoChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID!)));
+            ChatMemberInfoChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID)));
     }
   }
 
@@ -139,13 +139,13 @@ class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
                       ],
                   onSelected: (selectedValue) {
                     if (selectedValue == 1) {
-                      widget.selected(value.documentID!);
+                      widget.selected(value.documentID);
                     } else if (selectedValue == 2) {
                       widget.editorConstructor.updateComponent(widget.app, context, value, (_) {});
                     }
                   }),
-              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container(),
-              subtitle: value.authorId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.authorId!)) : Container(),
+              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container(),
+              subtitle: value.authorId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.authorId)) : Container(),
             );
           } else {
             return Container();

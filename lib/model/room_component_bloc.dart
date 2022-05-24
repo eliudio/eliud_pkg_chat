@@ -26,23 +26,22 @@ class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
   final RoomRepository? roomRepository;
   StreamSubscription? _roomSubscription;
 
-  Stream<RoomComponentState> _mapLoadRoomComponentUpdateToState(String documentId) async* {
+  void _mapLoadRoomComponentUpdateToState(String documentId) {
     _roomSubscription?.cancel();
     _roomSubscription = roomRepository!.listenTo(documentId, (value) {
-      if (value != null) add(RoomComponentUpdated(value: value));
+      if (value != null) {
+        add(RoomComponentUpdated(value: value));
+      }
     });
   }
 
-  RoomComponentBloc({ this.roomRepository }): super(RoomComponentUninitialized());
-
-  @override
-  Stream<RoomComponentState> mapEventToState(RoomComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchRoomComponent) {
-      yield* _mapLoadRoomComponentUpdateToState(event.id!);
-    } else if (event is RoomComponentUpdated) {
-      yield RoomComponentLoaded(value: event.value);
-    }
+  RoomComponentBloc({ this.roomRepository }): super(RoomComponentUninitialized()) {
+    on <FetchRoomComponent> ((event, emit) {
+      _mapLoadRoomComponentUpdateToState(event.id!);
+    });
+    on <RoomComponentUpdated> ((event, emit) {
+      emit(RoomComponentLoaded(value: event.value));
+    });
   }
 
   @override

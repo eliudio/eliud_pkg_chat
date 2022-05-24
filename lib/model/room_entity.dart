@@ -30,7 +30,7 @@ class RoomEntity {
   final List<String>? members;
   final Object? timestamp;
 
-  RoomEntity({this.ownerId, this.appId, this.description, this.isRoom, this.members, this.timestamp, });
+  RoomEntity({required this.ownerId, required this.appId, this.description, this.isRoom, this.members, this.timestamp, });
 
   RoomEntity copyWith({Object? timestamp, }) {
     return RoomEntity(ownerId: ownerId, appId: appId, description: description, isRoom: isRoom, members: members, timestamp : timestamp, );

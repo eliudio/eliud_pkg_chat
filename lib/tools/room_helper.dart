@@ -32,17 +32,17 @@ class RoomHelper {
   }
 
   static Future<RoomModel> _storeRoom(AppModel app, String roomId, String ownerId, List<String> members, String descr) async {
-    var roomModel = await roomRepository(appId: app.documentID!)!.get(roomId, onError: (_) {});
+    var roomModel = await roomRepository(appId: app.documentID)!.get(roomId, onError: (_) {});
     if (roomModel == null) {
       roomModel = RoomModel(
         documentID: roomId,
         ownerId: ownerId,
-        appId: app.documentID!,
+        appId: app.documentID,
         description: descr,
         isRoom: false,
         members: members,
       );
-      await roomRepository(appId: app.documentID!)!.add(roomModel);
+      await roomRepository(appId: app.documentID)!.add(roomModel);
     }
     return roomModel;
   }

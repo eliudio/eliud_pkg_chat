@@ -31,20 +31,20 @@ abstract class ChatPackage extends Package {
       bool isOwner,
       bool? isBlocked,
       PrivilegeLevel? privilegeLevel) {
-    String appId = app.documentID!;
+    String appId = app.documentID;
     subscription[appId]?.cancel();
     if (member != null) {
       final c = Completer<List<PackageConditionDetails>>();
       subscription[appId] = memberHasChatRepository(
         appId: appId,
       )!
-          .listenTo(member.documentID!, (value) {
+          .listenTo(member.documentID, (value) {
         var hasUnread = false;
         if (value != null) {
           hasUnread = value.hasUnread!;
         }
         if (!c.isCompleted) {
-          state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID!] = hasUnread;
+          state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID] = hasUnread;
           // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
           c.complete([
             PackageConditionDetails(
@@ -59,7 +59,7 @@ abstract class ChatPackage extends Package {
         } else {
           // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
           if (hasUnread != state_CONDITION_MEMBER_HAS_UNREAD_CHAT[appId]) {
-            state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID!] = hasUnread;
+            state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID] = hasUnread;
             accessBloc.add(UpdatePackageConditionEvent(
                 app, this, CONDITION_MEMBER_HAS_UNREAD_CHAT, hasUnread));
             accessBloc.add(UpdatePackageConditionEvent(
@@ -69,7 +69,7 @@ abstract class ChatPackage extends Package {
       });
       return c.future;
     } else {
-      state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID!] = false;
+      state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID] = false;
       return Future.value([
         PackageConditionDetails(
             packageName: packageName,

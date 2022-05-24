@@ -40,7 +40,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         _roomRepository = roomRepository,
         super(AllChatsLoading());
 
-  Stream<AllChatsState> _mapLoadAllChatsWithDetailsToState() async* {
+  void _mapLoadAllChatsWithDetailsToState() async {
     int amountNow = (state is AllChatsLoaded)
         ? (state as AllChatsLoaded).enhancedRoomModels.length
         : 0;
@@ -50,7 +50,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         var otherMemberRoomInfo =
             await getOtherMembersRoomInfo(appId, value!.members!);
 
-        listToChatMemberInfoRepository(appId, value.documentID!);
+        listToChatMemberInfoRepository(appId, value.documentID);
         return EnhancedRoomModel(value, null, otherMemberRoomInfo, null);
       }).toList());
       add(AllChatsUpdated(
@@ -71,7 +71,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
             .listenWithDetails((chatMemberInfos) async {
       for (var chatMemberInfo in chatMemberInfos) {
         if (chatMemberInfo!.timestamp != null) {
-          add(NewLastReadEvent(appId, roomId, chatMemberInfo.authorId!,
+          add(NewLastReadEvent(appId, roomId, chatMemberInfo.authorId,
               chatMemberInfo.timestamp!));
         }
       }
@@ -81,24 +81,24 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
                     arrayContains: thisMemberId)));
   }
 
-  Stream<AllChatsState> _mapAddAllChatsToState(AddAllChats event) async* {
+  Future<void> _mapAddAllChatsToState(AddAllChats event) async {
     var value = event.value;
-    if (value != null) _roomRepository.add(value);
+    if (value != null) await _roomRepository.add(value);
   }
 
-  Stream<AllChatsState> _mapUpdateAllChatsToState(UpdateAllChats event) async* {
+  Future<void> _mapUpdateAllChatsToState(UpdateAllChats event) async {
     var value = event.value;
-    if (value != null) _roomRepository.update(value);
+    if (value != null) await _roomRepository.update(value);
   }
 
-  Stream<AllChatsState> _mapDeleteAllChatsToState(DeleteAllChats event) async* {
+  Future<void> _mapDeleteAllChatsToState(DeleteAllChats event) async {
     var value = event.value;
-    if (value != null) _roomRepository.delete(value);
+    if (value != null) await _roomRepository.delete(value);
   }
 
-  Stream<AllChatsState> _mapAllChatsUpdatedToState(
-      AllChatsUpdated event, RoomModel? currentRoom) async* {
-    yield AllChatsLoaded(
+  AllChatsState _mapAllChatsUpdatedToState(
+      AllChatsUpdated event, RoomModel? currentRoom) {
+    return AllChatsLoaded(
         enhancedRoomModels: event.value,
         mightHaveMore: event.mightHaveMore,
         currentRoom: currentRoom);
@@ -107,25 +107,35 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   @override
   Stream<AllChatsState> mapEventToState(AllChatsEvent event) async* {
     var theState = state;
-    if (event is LoadAllChats) {
-      yield* _mapLoadAllChatsWithDetailsToState();
-    }
-    if (event is NewPage) {
+    on<LoadAllChats>((event, emit) {
+      _mapLoadAllChatsWithDetailsToState();
+    });
+
+    on<NewPage>((event, emit) {
       pages = pages +
           1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadAllChatsWithDetailsToState();
-    } else if (event is AddAllChats) {
-      yield* _mapAddAllChatsToState(event);
-    } else if (event is UpdateAllChats) {
-      yield* _mapUpdateAllChatsToState(event);
-    } else if (event is DeleteAllChats) {
-      yield* _mapDeleteAllChatsToState(event);
-    } else if (event is AllChatsUpdated) {
+      _mapLoadAllChatsWithDetailsToState();
+    });
+
+    on<AddAllChats>((event, emit) {
+      _mapAddAllChatsToState(event);
+    });
+
+    on<UpdateAllChats>((event, emit) async {
+      await _mapUpdateAllChatsToState(event);
+    });
+
+    on<DeleteAllChats>((event, emit) async {
+      await _mapDeleteAllChatsToState(event);
+    });
+
+    on<AllChatsUpdated>((event, emit) async {
       var currentRoom = (theState is AllChatsLoaded)
           ? theState.currentRoom
           : ((event.value.isNotEmpty) ? event.value[0].roomModel : null);
-      yield* _mapAllChatsUpdatedToState(event, currentRoom);
-    } else if (event is SelectChat) {
+      emit(_mapAllChatsUpdatedToState(event, currentRoom));
+    });
+    on<SelectChat>((event, emit) async {
       if (theState is AllChatsLoaded) {
         for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
           if (selectedEnhancedRoom.roomModel.documentID ==
@@ -133,14 +143,16 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
             chatListBloc.add(SelectChatEvent(selectedEnhancedRoom));
           }
         }
-        yield AllChatsLoaded(
+        emit(AllChatsLoaded(
             enhancedRoomModels: theState.enhancedRoomModels,
             mightHaveMore: theState.mightHaveMore,
-            currentRoom: event.selected);
+            currentRoom: event.selected));
       } else {
         throw Exception("Unexpected state");
       }
-    } else if (event is NewLastReadEvent) {
+    });
+
+    on<NewLastReadEvent>((event, emit) async {
       if (theState is AllChatsLoaded) {
         List<EnhancedRoomModel> newEnhancedRoomModels = [];
         for (var enhancedRoomModel in theState.enhancedRoomModels) {
@@ -159,12 +171,12 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
             newEnhancedRoomModels.add(enhancedRoomModel);
           }
         }
-        yield AllChatsLoaded(
+        emit(AllChatsLoaded(
             mightHaveMore: theState.mightHaveMore,
             currentRoom: theState.currentRoom,
-            enhancedRoomModels: newEnhancedRoomModels);
+            enhancedRoomModels: newEnhancedRoomModels));
       }
-    }
+    });
   }
 
   @override
@@ -186,7 +198,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
             await memberPublicInfoRepository(appId: appId)!.get(memberId);
         if (member != null) {
           var otherMemberRoomInfo = OtherMemberRoomInfo(
-              memberId: member.documentID!,
+              memberId: member.documentID,
               name: member.name != null ? member.name! : 'No name',
               avatar: member.photoURL);
           otherMembersRoomInfo.add(otherMemberRoomInfo);

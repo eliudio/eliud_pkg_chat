@@ -51,7 +51,7 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
   Stream<ChatFormState> mapEventToState(ChatFormEvent event) async* {
     final currentState = state;
     if (currentState is ChatFormUninitialized) {
-      if (event is InitialiseNewChatFormEvent) {
+      on <InitialiseNewChatFormEvent> ((event, emit) {
         ChatFormLoaded loaded = ChatFormLoaded(value: ChatModel(
                                                documentID: "",
                                  authorId: "",
@@ -63,76 +63,64 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
                                  chatMedia: [],
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseChatFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         ChatFormLoaded loaded = ChatFormLoaded(value: await chatRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseChatFormNoLoadEvent) {
         ChatFormLoaded loaded = ChatFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is ChatFormInitialized) {
       ChatModel? newValue = null;
-      if (event is ChangedChatDocumentID) {
+      on <ChangedChatDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableChatForm(value: newValue);
+          emit(SubmittableChatForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedChatAuthorId) {
+      });
+      on <ChangedChatAuthorId> ((event, emit) async {
         newValue = currentState.value!.copyWith(authorId: event.value);
-        yield SubmittableChatForm(value: newValue);
+        emit(SubmittableChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatAppId) {
+      });
+      on <ChangedChatAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableChatForm(value: newValue);
+        emit(SubmittableChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatRoomId) {
+      });
+      on <ChangedChatRoomId> ((event, emit) async {
         newValue = currentState.value!.copyWith(roomId: event.value);
-        yield SubmittableChatForm(value: newValue);
+        emit(SubmittableChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatTimestamp) {
+      });
+      on <ChangedChatTimestamp> ((event, emit) async {
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
-        yield SubmittableChatForm(value: newValue);
+        emit(SubmittableChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatSaying) {
+      });
+      on <ChangedChatSaying> ((event, emit) async {
         newValue = currentState.value!.copyWith(saying: event.value);
-        yield SubmittableChatForm(value: newValue);
+        emit(SubmittableChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatAccessibleByGroup) {
+      });
+      on <ChangedChatAccessibleByGroup> ((event, emit) async {
         newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
-        yield SubmittableChatForm(value: newValue);
+        emit(SubmittableChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatChatMedia) {
+      });
+      on <ChangedChatChatMedia> ((event, emit) async {
         newValue = currentState.value!.copyWith(chatMedia: event.value);
-        yield SubmittableChatForm(value: newValue);
+        emit(SubmittableChatForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

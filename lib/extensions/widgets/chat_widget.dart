@@ -228,7 +228,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   ),
                   onPressed: () {
                     openFlexibleDialog(widget.app, context,
-                        widget.app.documentID! + '/addtochat',
+                        widget.app.documentID + '/addtochat',
                         title: 'Add one of your followers to the chat',
                         child: MembersWidget(
                           app: widget.app,
@@ -329,7 +329,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       BlocProvider.of<ChatBloc>(context).add(AddChat(
           value: ChatModel(
         documentID: newRandomKey(),
-        appId: room.appId!,
+        appId: room.appId,
         roomId: room.documentID,
         authorId: widget.memberId,
         accessibleByGroup: ChatAccessibleByGroup.SpecificMembers,

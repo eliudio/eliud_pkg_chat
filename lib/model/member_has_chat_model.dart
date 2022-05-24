@@ -15,6 +15,7 @@
 
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -35,15 +36,15 @@ import 'package:eliud_core/tools/random.dart';
 
 
 
-class MemberHasChatModel {
-  String? documentID;
-  String? memberId;
+class MemberHasChatModel implements ModelBase, WithAppId {
+  String documentID;
+  String memberId;
 
   // This is the identifier of the app to which this chat belongs
-  String? appId;
+  String appId;
   bool? hasUnread;
 
-  MemberHasChatModel({this.documentID, this.memberId, this.appId, this.hasUnread, })  {
+  MemberHasChatModel({required this.documentID, required this.memberId, required this.appId, this.hasUnread, })  {
     assert(documentID != null);
   }
 
@@ -82,8 +83,8 @@ class MemberHasChatModel {
     var counter = 0;
     return MemberHasChatModel(
           documentID: documentID, 
-          memberId: entity.memberId, 
-          appId: entity.appId, 
+          memberId: entity.memberId ?? '', 
+          appId: entity.appId ?? '', 
           hasUnread: entity.hasUnread, 
     );
   }
@@ -94,8 +95,8 @@ class MemberHasChatModel {
     var counter = 0;
     return MemberHasChatModel(
           documentID: documentID, 
-          memberId: entity.memberId, 
-          appId: entity.appId, 
+          memberId: entity.memberId ?? '', 
+          appId: entity.appId ?? '', 
           hasUnread: entity.hasUnread, 
     );
   }

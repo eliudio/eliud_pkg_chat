@@ -44,7 +44,7 @@ class ChatPageBuilder extends PageBuilder {
 
   Future<PageModel> _setupPage(String identifier) async {
     return await corerepo.AbstractRepositorySingleton.singleton
-        .pageRepository(app.documentID!)!
+        .pageRepository(app.documentID)!
         .add(_page(identifier));
   }
 
@@ -57,7 +57,7 @@ class ChatPageBuilder extends PageBuilder {
 
     return PageModel(
         documentID: constructDocumentId(uniqueId: uniqueId, documentId: identifier),
-        appId: app.documentID!,
+        appId: app.documentID,
         title: "Chat",
         drawer: leftDrawer,
         endDrawer: rightDrawer,
@@ -74,7 +74,7 @@ class ChatPageBuilder extends PageBuilder {
   ChatDashboardModel _chatModel() {
     return ChatDashboardModel(
       documentID: constructDocumentId(uniqueId: uniqueId, documentId: chatId),
-      appId: app.documentID!,
+      appId: app.documentID,
       description: "Chat",
       conditions: StorageConditionsModel(
           privilegeLevelRequired:
@@ -84,7 +84,7 @@ class ChatPageBuilder extends PageBuilder {
 
   Future<ChatDashboardModel> _setupChat() async {
     return await AbstractRepositorySingleton.singleton
-        .chatDashboardRepository(app.documentID!)!
+        .chatDashboardRepository(app.documentID)!
         .add(_chatModel());
   }
 

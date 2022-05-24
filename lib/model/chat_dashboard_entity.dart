@@ -27,7 +27,7 @@ class ChatDashboardEntity {
   final String? description;
   final StorageConditionsEntity? conditions;
 
-  ChatDashboardEntity({this.appId, this.description, this.conditions, });
+  ChatDashboardEntity({required this.appId, this.description, this.conditions, });
 
 
   List<Object?> get props => [appId, description, conditions, ];

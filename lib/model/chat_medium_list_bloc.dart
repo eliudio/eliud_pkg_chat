@@ -38,9 +38,47 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
   ChatMediumListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMediumRepository chatMediumRepository, this.chatMediumLimit = 5})
       : assert(chatMediumRepository != null),
         _chatMediumRepository = chatMediumRepository,
-        super(ChatMediumListLoading());
+        super(ChatMediumListLoading()) {
+    on <LoadChatMediumList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatMediumListToState();
+      } else {
+        _mapLoadChatMediumListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadChatMediumListWithDetailsToState();
+    });
+    
+    on <ChatMediumChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatMediumListToState();
+      } else {
+        _mapLoadChatMediumListWithDetailsToState();
+      }
+    });
+      
+    on <AddChatMediumList> ((event, emit) async {
+      await _mapAddChatMediumListToState(event);
+    });
+    
+    on <UpdateChatMediumList> ((event, emit) async {
+      await _mapUpdateChatMediumListToState(event);
+    });
+    
+    on <DeleteChatMediumList> ((event, emit) async {
+      await _mapDeleteChatMediumListToState(event);
+    });
+    
+    on <ChatMediumListUpdated> ((event, emit) {
+      emit(_mapChatMediumListUpdatedToState(event));
+    });
+  }
 
-  Stream<ChatMediumListState> _mapLoadChatMediumListToState() async* {
+  Future<void> _mapLoadChatMediumListToState() async {
     int amountNow =  (state is ChatMediumListLoaded) ? (state as ChatMediumListLoaded).values!.length : 0;
     _chatMediumsListSubscription?.cancel();
     _chatMediumsListSubscription = _chatMediumRepository.listen(
@@ -52,7 +90,7 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
     );
   }
 
-  Stream<ChatMediumListState> _mapLoadChatMediumListWithDetailsToState() async* {
+  Future<void> _mapLoadChatMediumListWithDetailsToState() async {
     int amountNow =  (state is ChatMediumListLoaded) ? (state as ChatMediumListLoaded).values!.length : 0;
     _chatMediumsListSubscription?.cancel();
     _chatMediumsListSubscription = _chatMediumRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
     );
   }
 
-  Stream<ChatMediumListState> _mapAddChatMediumListToState(AddChatMediumList event) async* {
+  Future<void> _mapAddChatMediumListToState(AddChatMediumList event) async {
     var value = event.value;
-    if (value != null) 
-      _chatMediumRepository.add(value);
-  }
-
-  Stream<ChatMediumListState> _mapUpdateChatMediumListToState(UpdateChatMediumList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatMediumRepository.update(value);
-  }
-
-  Stream<ChatMediumListState> _mapDeleteChatMediumListToState(DeleteChatMediumList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatMediumRepository.delete(value);
-  }
-
-  Stream<ChatMediumListState> _mapChatMediumListUpdatedToState(
-      ChatMediumListUpdated event) async* {
-    yield ChatMediumListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<ChatMediumListState> mapEventToState(ChatMediumListEvent event) async* {
-    if (event is LoadChatMediumList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatMediumListToState();
-      } else {
-        yield* _mapLoadChatMediumListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadChatMediumListWithDetailsToState();
-    } else if (event is ChatMediumChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatMediumListToState();
-      } else {
-        yield* _mapLoadChatMediumListWithDetailsToState();
-      }
-    } else if (event is AddChatMediumList) {
-      yield* _mapAddChatMediumListToState(event);
-    } else if (event is UpdateChatMediumList) {
-      yield* _mapUpdateChatMediumListToState(event);
-    } else if (event is DeleteChatMediumList) {
-      yield* _mapDeleteChatMediumListToState(event);
-    } else if (event is ChatMediumListUpdated) {
-      yield* _mapChatMediumListUpdatedToState(event);
+    if (value != null) {
+      await _chatMediumRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateChatMediumListToState(UpdateChatMediumList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatMediumRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteChatMediumListToState(DeleteChatMediumList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatMediumRepository.delete(value);
+    }
+  }
+
+  ChatMediumListLoaded _mapChatMediumListUpdatedToState(
+      ChatMediumListUpdated event) => ChatMediumListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

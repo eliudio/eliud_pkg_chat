@@ -31,7 +31,7 @@ class ChatMemberInfoEntity {
   final List<String>? accessibleByMembers;
   final List<String>? readAccess;
 
-  ChatMemberInfoEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, });
+  ChatMemberInfoEntity({required this.authorId, required this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, });
 
   ChatMemberInfoEntity copyWith({Object? timestamp, }) {
     return ChatMemberInfoEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, );

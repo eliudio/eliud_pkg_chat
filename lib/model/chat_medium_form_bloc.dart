@@ -50,40 +50,30 @@ class ChatMediumFormBloc extends Bloc<ChatMediumFormEvent, ChatMediumFormState> 
   Stream<ChatMediumFormState> mapEventToState(ChatMediumFormEvent event) async* {
     final currentState = state;
     if (currentState is ChatMediumFormUninitialized) {
-      if (event is InitialiseNewChatMediumFormEvent) {
+      on <InitialiseNewChatMediumFormEvent> ((event, emit) {
         ChatMediumFormLoaded loaded = ChatMediumFormLoaded(value: ChatMediumModel(
                                                documentID: "IDENTIFIER", 
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseChatMediumFormEvent) {
         ChatMediumFormLoaded loaded = ChatMediumFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseChatMediumFormNoLoadEvent) {
         ChatMediumFormLoaded loaded = ChatMediumFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is ChatMediumFormInitialized) {
       ChatMediumModel? newValue = null;
-      if (event is ChangedChatMediumMemberMedium) {
+      on <ChangedChatMediumMemberMedium> ((event, emit) async {
         if (event.value != null)
           newValue = currentState.value!.copyWith(memberMedium: await memberMediumRepository(appId: appId)!.get(event.value));
-        else
-          newValue = new ChatMediumModel(
-                                 documentID: currentState.value!.documentID,
-                                 memberMedium: null,
-          );
-        yield SubmittableChatMediumForm(value: newValue);
+        emit(SubmittableChatMediumForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

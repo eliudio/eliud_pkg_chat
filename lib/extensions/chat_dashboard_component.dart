@@ -28,7 +28,7 @@ class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
 
   @override
   Future<dynamic> getModel({required AppModel app, required String id}) async =>
-      await chatDashboardRepository(appId: app.documentID!)!.get(id);
+      await chatDashboardRepository(appId: app.documentID)!.get(id);
 }
 
 class ChatDashboard extends AbstractChatDashboardComponent {
@@ -41,9 +41,9 @@ class ChatDashboard extends AbstractChatDashboardComponent {
   Widget yourWidget(BuildContext context, ChatDashboardModel? value) {
     var accessState = AccessBloc.getState(context);
     if (accessState is AccessDetermined) {
-      var appId = app.documentID!;
+      var appId = app.documentID;
       if (accessState.getMember() != null) {
-        var memberId = accessState.getMember()!.documentID!;
+        var memberId = accessState.getMember()!.documentID;
         var eliudQuery = EliudQuery()
             .withCondition(EliudQueryCondition('appId', isEqualTo: appId))
             .withCondition(

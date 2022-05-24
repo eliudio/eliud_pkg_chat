@@ -38,9 +38,47 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   ChatListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatRepository chatRepository, this.chatLimit = 5})
       : assert(chatRepository != null),
         _chatRepository = chatRepository,
-        super(ChatListLoading());
+        super(ChatListLoading()) {
+    on <LoadChatList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatListToState();
+      } else {
+        _mapLoadChatListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadChatListWithDetailsToState();
+    });
+    
+    on <ChatChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatListToState();
+      } else {
+        _mapLoadChatListWithDetailsToState();
+      }
+    });
+      
+    on <AddChatList> ((event, emit) async {
+      await _mapAddChatListToState(event);
+    });
+    
+    on <UpdateChatList> ((event, emit) async {
+      await _mapUpdateChatListToState(event);
+    });
+    
+    on <DeleteChatList> ((event, emit) async {
+      await _mapDeleteChatListToState(event);
+    });
+    
+    on <ChatListUpdated> ((event, emit) {
+      emit(_mapChatListUpdatedToState(event));
+    });
+  }
 
-  Stream<ChatListState> _mapLoadChatListToState() async* {
+  Future<void> _mapLoadChatListToState() async {
     int amountNow =  (state is ChatListLoaded) ? (state as ChatListLoaded).values!.length : 0;
     _chatsListSubscription?.cancel();
     _chatsListSubscription = _chatRepository.listen(
@@ -52,7 +90,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     );
   }
 
-  Stream<ChatListState> _mapLoadChatListWithDetailsToState() async* {
+  Future<void> _mapLoadChatListWithDetailsToState() async {
     int amountNow =  (state is ChatListLoaded) ? (state as ChatListLoaded).values!.length : 0;
     _chatsListSubscription?.cancel();
     _chatsListSubscription = _chatRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     );
   }
 
-  Stream<ChatListState> _mapAddChatListToState(AddChatList event) async* {
+  Future<void> _mapAddChatListToState(AddChatList event) async {
     var value = event.value;
-    if (value != null) 
-      _chatRepository.add(value);
-  }
-
-  Stream<ChatListState> _mapUpdateChatListToState(UpdateChatList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatRepository.update(value);
-  }
-
-  Stream<ChatListState> _mapDeleteChatListToState(DeleteChatList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatRepository.delete(value);
-  }
-
-  Stream<ChatListState> _mapChatListUpdatedToState(
-      ChatListUpdated event) async* {
-    yield ChatListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<ChatListState> mapEventToState(ChatListEvent event) async* {
-    if (event is LoadChatList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatListToState();
-      } else {
-        yield* _mapLoadChatListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadChatListWithDetailsToState();
-    } else if (event is ChatChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatListToState();
-      } else {
-        yield* _mapLoadChatListWithDetailsToState();
-      }
-    } else if (event is AddChatList) {
-      yield* _mapAddChatListToState(event);
-    } else if (event is UpdateChatList) {
-      yield* _mapUpdateChatListToState(event);
-    } else if (event is DeleteChatList) {
-      yield* _mapDeleteChatListToState(event);
-    } else if (event is ChatListUpdated) {
-      yield* _mapChatListUpdatedToState(event);
+    if (value != null) {
+      await _chatRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateChatListToState(UpdateChatList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteChatListToState(DeleteChatList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatRepository.delete(value);
+    }
+  }
+
+  ChatListLoaded _mapChatListUpdatedToState(
+      ChatListUpdated event) => ChatListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

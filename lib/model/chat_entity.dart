@@ -33,7 +33,7 @@ class ChatEntity {
   final List<String>? readAccess;
   final List<ChatMediumEntity>? chatMedia;
 
-  ChatEntity({this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, });
+  ChatEntity({required this.authorId, required this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, });
 
   ChatEntity copyWith({Object? timestamp, }) {
     return ChatEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, saying: saying, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, chatMedia: chatMedia, );

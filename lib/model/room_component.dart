@@ -39,7 +39,7 @@ abstract class AbstractRoomComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<RoomComponentBloc> (
           create: (context) => RoomComponentBloc(
-            roomRepository: roomRepository(appId: app.documentID!)!)
+            roomRepository: roomRepository(appId: app.documentID)!)
         ..add(FetchRoomComponent(id: roomId)),
       child: _roomBlockBuilder(context),
     );

@@ -77,7 +77,7 @@ class ChatDashboardListUpdated extends ChatDashboardListEvent {
 }
 
 class ChatDashboardChangeQuery extends ChatDashboardListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const ChatDashboardChangeQuery({ required this.newQuery });
 

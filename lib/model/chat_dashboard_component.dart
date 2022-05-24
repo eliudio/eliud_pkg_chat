@@ -39,7 +39,7 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ChatDashboardComponentBloc> (
           create: (context) => ChatDashboardComponentBloc(
-            chatDashboardRepository: chatDashboardRepository(appId: app.documentID!)!)
+            chatDashboardRepository: chatDashboardRepository(appId: app.documentID)!)
         ..add(FetchChatDashboardComponent(id: chatDashboardId)),
       child: _chatDashboardBlockBuilder(context),
     );

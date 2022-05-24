@@ -51,7 +51,7 @@ class ChatMemberInfoFormBloc extends Bloc<ChatMemberInfoFormEvent, ChatMemberInf
   Stream<ChatMemberInfoFormState> mapEventToState(ChatMemberInfoFormEvent event) async* {
     final currentState = state;
     if (currentState is ChatMemberInfoFormUninitialized) {
-      if (event is InitialiseNewChatMemberInfoFormEvent) {
+      on <InitialiseNewChatMemberInfoFormEvent> ((event, emit) {
         ChatMemberInfoFormLoaded loaded = ChatMemberInfoFormLoaded(value: ChatMemberInfoModel(
                                                documentID: "",
                                  authorId: "",
@@ -61,64 +61,54 @@ class ChatMemberInfoFormBloc extends Bloc<ChatMemberInfoFormEvent, ChatMemberInf
                                  readAccess: [],
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseChatMemberInfoFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         ChatMemberInfoFormLoaded loaded = ChatMemberInfoFormLoaded(value: await chatMemberInfoRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseChatMemberInfoFormNoLoadEvent) {
         ChatMemberInfoFormLoaded loaded = ChatMemberInfoFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is ChatMemberInfoFormInitialized) {
       ChatMemberInfoModel? newValue = null;
-      if (event is ChangedChatMemberInfoDocumentID) {
+      on <ChangedChatMemberInfoDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableChatMemberInfoForm(value: newValue);
+          emit(SubmittableChatMemberInfoForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedChatMemberInfoAuthorId) {
+      });
+      on <ChangedChatMemberInfoAuthorId> ((event, emit) async {
         newValue = currentState.value!.copyWith(authorId: event.value);
-        yield SubmittableChatMemberInfoForm(value: newValue);
+        emit(SubmittableChatMemberInfoForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatMemberInfoAppId) {
+      });
+      on <ChangedChatMemberInfoAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableChatMemberInfoForm(value: newValue);
+        emit(SubmittableChatMemberInfoForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatMemberInfoRoomId) {
+      });
+      on <ChangedChatMemberInfoRoomId> ((event, emit) async {
         newValue = currentState.value!.copyWith(roomId: event.value);
-        yield SubmittableChatMemberInfoForm(value: newValue);
+        emit(SubmittableChatMemberInfoForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatMemberInfoTimestamp) {
+      });
+      on <ChangedChatMemberInfoTimestamp> ((event, emit) async {
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
-        yield SubmittableChatMemberInfoForm(value: newValue);
+        emit(SubmittableChatMemberInfoForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatMemberInfoAccessibleByGroup) {
+      });
+      on <ChangedChatMemberInfoAccessibleByGroup> ((event, emit) async {
         newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
-        yield SubmittableChatMemberInfoForm(value: newValue);
+        emit(SubmittableChatMemberInfoForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

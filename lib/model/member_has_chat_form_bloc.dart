@@ -51,59 +51,51 @@ class MemberHasChatFormBloc extends Bloc<MemberHasChatFormEvent, MemberHasChatFo
   Stream<MemberHasChatFormState> mapEventToState(MemberHasChatFormEvent event) async* {
     final currentState = state;
     if (currentState is MemberHasChatFormUninitialized) {
-      if (event is InitialiseNewMemberHasChatFormEvent) {
+      on <InitialiseNewMemberHasChatFormEvent> ((event, emit) {
         MemberHasChatFormLoaded loaded = MemberHasChatFormLoaded(value: MemberHasChatModel(
                                                documentID: "",
                                  memberId: "",
                                  appId: "",
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseMemberHasChatFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         MemberHasChatFormLoaded loaded = MemberHasChatFormLoaded(value: await memberHasChatRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseMemberHasChatFormNoLoadEvent) {
         MemberHasChatFormLoaded loaded = MemberHasChatFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is MemberHasChatFormInitialized) {
       MemberHasChatModel? newValue = null;
-      if (event is ChangedMemberHasChatDocumentID) {
+      on <ChangedMemberHasChatDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableMemberHasChatForm(value: newValue);
+          emit(SubmittableMemberHasChatForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedMemberHasChatMemberId) {
+      });
+      on <ChangedMemberHasChatMemberId> ((event, emit) async {
         newValue = currentState.value!.copyWith(memberId: event.value);
-        yield SubmittableMemberHasChatForm(value: newValue);
+        emit(SubmittableMemberHasChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberHasChatAppId) {
+      });
+      on <ChangedMemberHasChatAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableMemberHasChatForm(value: newValue);
+        emit(SubmittableMemberHasChatForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedMemberHasChatHasUnread) {
+      });
+      on <ChangedMemberHasChatHasUnread> ((event, emit) async {
         newValue = currentState.value!.copyWith(hasUnread: event.value);
-        yield SubmittableMemberHasChatForm(value: newValue);
+        emit(SubmittableMemberHasChatForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

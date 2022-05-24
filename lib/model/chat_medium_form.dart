@@ -74,7 +74,7 @@ class ChatMediumForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    var appId = app.documentID!;
+    var appId = app.documentID;
     if (formAction == FormAction.ShowData) {
       return BlocProvider<ChatMediumFormBloc >(
             create: (context) => ChatMediumFormBloc(appId,
@@ -245,7 +245,7 @@ class _MyChatMediumFormState extends State<MyChatMediumForm> {
   }
 
   bool _readOnly(AccessState accessState, ChatMediumFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID!));
+    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
   }
   
 

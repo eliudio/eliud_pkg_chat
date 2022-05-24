@@ -38,9 +38,47 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
   ChatMemberInfoListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMemberInfoRepository chatMemberInfoRepository, this.chatMemberInfoLimit = 5})
       : assert(chatMemberInfoRepository != null),
         _chatMemberInfoRepository = chatMemberInfoRepository,
-        super(ChatMemberInfoListLoading());
+        super(ChatMemberInfoListLoading()) {
+    on <LoadChatMemberInfoList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatMemberInfoListToState();
+      } else {
+        _mapLoadChatMemberInfoListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadChatMemberInfoListWithDetailsToState();
+    });
+    
+    on <ChatMemberInfoChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatMemberInfoListToState();
+      } else {
+        _mapLoadChatMemberInfoListWithDetailsToState();
+      }
+    });
+      
+    on <AddChatMemberInfoList> ((event, emit) async {
+      await _mapAddChatMemberInfoListToState(event);
+    });
+    
+    on <UpdateChatMemberInfoList> ((event, emit) async {
+      await _mapUpdateChatMemberInfoListToState(event);
+    });
+    
+    on <DeleteChatMemberInfoList> ((event, emit) async {
+      await _mapDeleteChatMemberInfoListToState(event);
+    });
+    
+    on <ChatMemberInfoListUpdated> ((event, emit) {
+      emit(_mapChatMemberInfoListUpdatedToState(event));
+    });
+  }
 
-  Stream<ChatMemberInfoListState> _mapLoadChatMemberInfoListToState() async* {
+  Future<void> _mapLoadChatMemberInfoListToState() async {
     int amountNow =  (state is ChatMemberInfoListLoaded) ? (state as ChatMemberInfoListLoaded).values!.length : 0;
     _chatMemberInfosListSubscription?.cancel();
     _chatMemberInfosListSubscription = _chatMemberInfoRepository.listen(
@@ -52,7 +90,7 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
     );
   }
 
-  Stream<ChatMemberInfoListState> _mapLoadChatMemberInfoListWithDetailsToState() async* {
+  Future<void> _mapLoadChatMemberInfoListWithDetailsToState() async {
     int amountNow =  (state is ChatMemberInfoListLoaded) ? (state as ChatMemberInfoListLoaded).values!.length : 0;
     _chatMemberInfosListSubscription?.cancel();
     _chatMemberInfosListSubscription = _chatMemberInfoRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
     );
   }
 
-  Stream<ChatMemberInfoListState> _mapAddChatMemberInfoListToState(AddChatMemberInfoList event) async* {
+  Future<void> _mapAddChatMemberInfoListToState(AddChatMemberInfoList event) async {
     var value = event.value;
-    if (value != null) 
-      _chatMemberInfoRepository.add(value);
-  }
-
-  Stream<ChatMemberInfoListState> _mapUpdateChatMemberInfoListToState(UpdateChatMemberInfoList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatMemberInfoRepository.update(value);
-  }
-
-  Stream<ChatMemberInfoListState> _mapDeleteChatMemberInfoListToState(DeleteChatMemberInfoList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatMemberInfoRepository.delete(value);
-  }
-
-  Stream<ChatMemberInfoListState> _mapChatMemberInfoListUpdatedToState(
-      ChatMemberInfoListUpdated event) async* {
-    yield ChatMemberInfoListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<ChatMemberInfoListState> mapEventToState(ChatMemberInfoListEvent event) async* {
-    if (event is LoadChatMemberInfoList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatMemberInfoListToState();
-      } else {
-        yield* _mapLoadChatMemberInfoListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadChatMemberInfoListWithDetailsToState();
-    } else if (event is ChatMemberInfoChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatMemberInfoListToState();
-      } else {
-        yield* _mapLoadChatMemberInfoListWithDetailsToState();
-      }
-    } else if (event is AddChatMemberInfoList) {
-      yield* _mapAddChatMemberInfoListToState(event);
-    } else if (event is UpdateChatMemberInfoList) {
-      yield* _mapUpdateChatMemberInfoListToState(event);
-    } else if (event is DeleteChatMemberInfoList) {
-      yield* _mapDeleteChatMemberInfoListToState(event);
-    } else if (event is ChatMemberInfoListUpdated) {
-      yield* _mapChatMemberInfoListUpdatedToState(event);
+    if (value != null) {
+      await _chatMemberInfoRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateChatMemberInfoListToState(UpdateChatMemberInfoList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatMemberInfoRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteChatMemberInfoListToState(DeleteChatMemberInfoList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatMemberInfoRepository.delete(value);
+    }
+  }
+
+  ChatMemberInfoListLoaded _mapChatMemberInfoListUpdatedToState(
+      ChatMemberInfoListUpdated event) => ChatMemberInfoListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

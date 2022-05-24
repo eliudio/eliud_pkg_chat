@@ -26,23 +26,22 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
   final ChatRepository? chatRepository;
   StreamSubscription? _chatSubscription;
 
-  Stream<ChatComponentState> _mapLoadChatComponentUpdateToState(String documentId) async* {
+  void _mapLoadChatComponentUpdateToState(String documentId) {
     _chatSubscription?.cancel();
     _chatSubscription = chatRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ChatComponentUpdated(value: value));
+      if (value != null) {
+        add(ChatComponentUpdated(value: value));
+      }
     });
   }
 
-  ChatComponentBloc({ this.chatRepository }): super(ChatComponentUninitialized());
-
-  @override
-  Stream<ChatComponentState> mapEventToState(ChatComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchChatComponent) {
-      yield* _mapLoadChatComponentUpdateToState(event.id!);
-    } else if (event is ChatComponentUpdated) {
-      yield ChatComponentLoaded(value: event.value);
-    }
+  ChatComponentBloc({ this.chatRepository }): super(ChatComponentUninitialized()) {
+    on <FetchChatComponent> ((event, emit) {
+      _mapLoadChatComponentUpdateToState(event.id!);
+    });
+    on <ChatComponentUpdated> ((event, emit) {
+      emit(ChatComponentLoaded(value: event.value));
+    });
   }
 
   @override

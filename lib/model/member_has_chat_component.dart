@@ -39,7 +39,7 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<MemberHasChatComponentBloc> (
           create: (context) => MemberHasChatComponentBloc(
-            memberHasChatRepository: memberHasChatRepository(appId: app.documentID!)!)
+            memberHasChatRepository: memberHasChatRepository(appId: app.documentID)!)
         ..add(FetchMemberHasChatComponent(id: memberHasChatId)),
       child: _memberHasChatBlockBuilder(context),
     );

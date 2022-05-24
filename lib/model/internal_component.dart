@@ -206,9 +206,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => ChatListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            chatRepository: chatRepository(appId: app.documentID!)!,
+            chatRepository: chatRepository(appId: app.documentID)!,
           )..add(LoadChatList()),
         )
       ],
@@ -223,9 +223,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => ChatDashboardListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            chatDashboardRepository: chatDashboardRepository(appId: app.documentID!)!,
+            chatDashboardRepository: chatDashboardRepository(appId: app.documentID)!,
           )..add(LoadChatDashboardList()),
         )
       ],
@@ -240,9 +240,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => ChatMemberInfoListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID!)!,
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID)!,
           )..add(LoadChatMemberInfoList()),
         )
       ],
@@ -257,9 +257,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => MemberHasChatListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            memberHasChatRepository: memberHasChatRepository(appId: app.documentID!)!,
+            memberHasChatRepository: memberHasChatRepository(appId: app.documentID)!,
           )..add(LoadMemberHasChatList()),
         )
       ],
@@ -274,9 +274,9 @@ class ListComponent extends StatelessWidget with HasFab {
           create: (context) => RoomListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            roomRepository: roomRepository(appId: app.documentID!)!,
+            roomRepository: roomRepository(appId: app.documentID)!,
           )..add(LoadRoomList()),
         )
       ],
@@ -318,9 +318,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => ChatListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            chatRepository: chatRepository(appId: app.documentID!)!,
+            chatRepository: chatRepository(appId: app.documentID)!,
           )..add(LoadChatList()),
         )
       ],
@@ -335,9 +335,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => ChatDashboardListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            chatDashboardRepository: chatDashboardRepository(appId: app.documentID!)!,
+            chatDashboardRepository: chatDashboardRepository(appId: app.documentID)!,
           )..add(LoadChatDashboardList()),
         )
       ],
@@ -352,9 +352,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => ChatMemberInfoListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID!)!,
+            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID)!,
           )..add(LoadChatMemberInfoList()),
         )
       ],
@@ -369,9 +369,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => MemberHasChatListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            memberHasChatRepository: memberHasChatRepository(appId: app.documentID!)!,
+            memberHasChatRepository: memberHasChatRepository(appId: app.documentID)!,
           )..add(LoadMemberHasChatList()),
         )
       ],
@@ -386,9 +386,9 @@ class DropdownButtonComponent extends StatelessWidget {
           create: (context) => RoomListBloc(
             eliudQuery: EliudQuery(theConditions: [
               EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: privilegeLevel ?? 0),
-              EliudQueryCondition('appId', isEqualTo: app.documentID!),]
+              EliudQueryCondition('appId', isEqualTo: app.documentID),]
             ),
-            roomRepository: roomRepository(appId: app.documentID!)!,
+            roomRepository: roomRepository(appId: app.documentID)!,
           )..add(LoadRoomList()),
         )
       ],

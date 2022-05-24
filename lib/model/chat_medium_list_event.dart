@@ -77,7 +77,7 @@ class ChatMediumListUpdated extends ChatMediumListEvent {
 }
 
 class ChatMediumChangeQuery extends ChatMediumListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const ChatMediumChangeQuery({ required this.newQuery });
 

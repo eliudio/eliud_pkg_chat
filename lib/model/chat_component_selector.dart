@@ -40,10 +40,10 @@ class ChatComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, AppModel app, int privilegeLevel, double height,
       SelectComponent selected, editorConstructor) {
-    var appId = app.documentID!;
+    var appId = app.documentID;
     return BlocProvider<ChatListBloc>(
           create: (context) => ChatListBloc(
-          eliudQuery: getComponentSelectorQuery(0, app.documentID!),
+          eliudQuery: getComponentSelectorQuery(0, app.documentID),
           chatRepository:
               chatRepository(appId: appId)!,
           )..add(LoadChatList()),
@@ -108,7 +108,7 @@ class _SelectChatWidgetState extends State<SelectChatWidget> with TickerProvider
         (_privilegeTabController!.indexIsChanging)) {
         _currentPrivilege = _privilegeTabController!.index;
         BlocProvider.of<ChatListBloc>(context).add(
-            ChatChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID!)));
+            ChatChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID)));
     }
   }
 
@@ -139,12 +139,12 @@ class _SelectChatWidgetState extends State<SelectChatWidget> with TickerProvider
                       ],
                   onSelected: (selectedValue) {
                     if (selectedValue == 1) {
-                      widget.selected(value.documentID!);
+                      widget.selected(value.documentID);
                     } else if (selectedValue == 2) {
                       widget.editorConstructor.updateComponent(widget.app, context, value, (_) {});
                     }
                   }),
-              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container(),
+              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container(),
               subtitle: value.saying != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.saying!)) : Container(),
             );
           } else {

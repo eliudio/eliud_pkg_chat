@@ -76,7 +76,7 @@ class ChatDropdownButtonWidgetState extends State<ChatDropdownButtonWidget> {
 List<Widget> widgets(ChatModel value) {
 var app = widget.app;
 var widgets = <Widget>[];
-widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container());
+widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container());
 widgets.add(value.saying != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.saying!)) : Container());
 return widgets;
 }
@@ -207,7 +207,7 @@ return widgets;
     BlocProvider.of<ChatListBloc>(context).add(ChatChangeQuery(
        newQuery: EliudQuery(theConditions: [
          EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: value ?? 0),
-         EliudQueryCondition('appId', isEqualTo: widget.app.documentID!),]
+         EliudQueryCondition('appId', isEqualTo: widget.app.documentID),]
        ),
      ));
      widget.trigger!(null, value);

@@ -38,9 +38,47 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
   RoomListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required RoomRepository roomRepository, this.roomLimit = 5})
       : assert(roomRepository != null),
         _roomRepository = roomRepository,
-        super(RoomListLoading());
+        super(RoomListLoading()) {
+    on <LoadRoomList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadRoomListToState();
+      } else {
+        _mapLoadRoomListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadRoomListWithDetailsToState();
+    });
+    
+    on <RoomChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadRoomListToState();
+      } else {
+        _mapLoadRoomListWithDetailsToState();
+      }
+    });
+      
+    on <AddRoomList> ((event, emit) async {
+      await _mapAddRoomListToState(event);
+    });
+    
+    on <UpdateRoomList> ((event, emit) async {
+      await _mapUpdateRoomListToState(event);
+    });
+    
+    on <DeleteRoomList> ((event, emit) async {
+      await _mapDeleteRoomListToState(event);
+    });
+    
+    on <RoomListUpdated> ((event, emit) {
+      emit(_mapRoomListUpdatedToState(event));
+    });
+  }
 
-  Stream<RoomListState> _mapLoadRoomListToState() async* {
+  Future<void> _mapLoadRoomListToState() async {
     int amountNow =  (state is RoomListLoaded) ? (state as RoomListLoaded).values!.length : 0;
     _roomsListSubscription?.cancel();
     _roomsListSubscription = _roomRepository.listen(
@@ -52,7 +90,7 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
     );
   }
 
-  Stream<RoomListState> _mapLoadRoomListWithDetailsToState() async* {
+  Future<void> _mapLoadRoomListWithDetailsToState() async {
     int amountNow =  (state is RoomListLoaded) ? (state as RoomListLoaded).values!.length : 0;
     _roomsListSubscription?.cancel();
     _roomsListSubscription = _roomRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
     );
   }
 
-  Stream<RoomListState> _mapAddRoomListToState(AddRoomList event) async* {
+  Future<void> _mapAddRoomListToState(AddRoomList event) async {
     var value = event.value;
-    if (value != null) 
-      _roomRepository.add(value);
-  }
-
-  Stream<RoomListState> _mapUpdateRoomListToState(UpdateRoomList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _roomRepository.update(value);
-  }
-
-  Stream<RoomListState> _mapDeleteRoomListToState(DeleteRoomList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _roomRepository.delete(value);
-  }
-
-  Stream<RoomListState> _mapRoomListUpdatedToState(
-      RoomListUpdated event) async* {
-    yield RoomListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<RoomListState> mapEventToState(RoomListEvent event) async* {
-    if (event is LoadRoomList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadRoomListToState();
-      } else {
-        yield* _mapLoadRoomListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadRoomListWithDetailsToState();
-    } else if (event is RoomChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadRoomListToState();
-      } else {
-        yield* _mapLoadRoomListWithDetailsToState();
-      }
-    } else if (event is AddRoomList) {
-      yield* _mapAddRoomListToState(event);
-    } else if (event is UpdateRoomList) {
-      yield* _mapUpdateRoomListToState(event);
-    } else if (event is DeleteRoomList) {
-      yield* _mapDeleteRoomListToState(event);
-    } else if (event is RoomListUpdated) {
-      yield* _mapRoomListUpdatedToState(event);
+    if (value != null) {
+      await _roomRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateRoomListToState(UpdateRoomList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _roomRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteRoomListToState(DeleteRoomList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _roomRepository.delete(value);
+    }
+  }
+
+  RoomListLoaded _mapRoomListUpdatedToState(
+      RoomListUpdated event) => RoomListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

@@ -52,11 +52,11 @@ class ChatDashboardComponentEditorConstructor
   void updateComponentWithID(AppModel app, BuildContext context, String id,
       EditorFeedback feedback) async {
     var chatDashboard =
-        await chatDashboardRepository(appId: app.documentID!)!.get(id);
+        await chatDashboardRepository(appId: app.documentID)!.get(id);
     if (chatDashboard != null) {
       _openIt(app, context, false, chatDashboard, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID! + '/_error',
+      openErrorDialog(app, context, app.documentID + '/_error',
           title: 'Error',
           errorMessage: 'Cannot find chat dashboard with id $id');
     }
@@ -67,7 +67,7 @@ class ChatDashboardComponentEditorConstructor
     openComplexDialog(
       app,
       context,
-      app.documentID! + '/chatdashboard',
+      app.documentID + '/chatdashboard',
       title: create
           ? 'Create Chat Dashboard'
           : 'Update Chat Dashboard',
@@ -75,7 +75,7 @@ class ChatDashboardComponentEditorConstructor
       widthFraction: .9,
       child: BlocProvider<ChatDashboardBloc>(
           create: (context) => ChatDashboardBloc(
-                app.documentID!,
+                app.documentID,
                 /*create,
             */
                 feedback,
@@ -158,7 +158,7 @@ class _ChatDashboardComponentEditorState
                         getListTile(context, widget.app,
                             leading: Icon(Icons.vpn_key),
                             title: text(widget.app, context,
-                                chatDashboardState.model.documentID!)),
+                                chatDashboardState.model.documentID)),
                         getListTile(context, widget.app,
                             leading: Icon(Icons.description),
                             title: dialogField(

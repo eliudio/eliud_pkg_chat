@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -36,20 +37,20 @@ import 'package:eliud_core/tools/random.dart';
 
 
 
-class RoomModel {
-  String? documentID;
+class RoomModel implements ModelBase, WithAppId {
+  String documentID;
 
   // The person creating the room
-  String? ownerId;
+  String ownerId;
 
   // This is the identifier of the app to which this feed belongs
-  String? appId;
+  String appId;
   String? description;
   bool? isRoom;
   List<String>? members;
   DateTime? timestamp;
 
-  RoomModel({this.documentID, this.ownerId, this.appId, this.description, this.isRoom, this.members, this.timestamp, })  {
+  RoomModel({required this.documentID, required this.ownerId, required this.appId, this.description, this.isRoom, this.members, this.timestamp, })  {
     assert(documentID != null);
   }
 
@@ -96,8 +97,8 @@ class RoomModel {
     var counter = 0;
     return RoomModel(
           documentID: documentID, 
-          ownerId: entity.ownerId, 
-          appId: entity.appId, 
+          ownerId: entity.ownerId ?? '', 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           isRoom: entity.isRoom, 
           members: entity.members, 
@@ -111,8 +112,8 @@ class RoomModel {
     var counter = 0;
     return RoomModel(
           documentID: documentID, 
-          ownerId: entity.ownerId, 
-          appId: entity.appId, 
+          ownerId: entity.ownerId ?? '', 
+          appId: entity.appId ?? '', 
           description: entity.description, 
           isRoom: entity.isRoom, 
           members: entity.members, 

@@ -21,20 +21,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final int chatLimit;
   final String thisMemberId;
 
-  ChatBloc(
-      {required this.thisMemberId,
-      this.paged,
-      this.orderBy,
-      this.descending,
-      this.detailed,
-      this.eliudQuery,
-      this.chatLimit = 5})
-      : super(ChatLoading());
-
-  Stream<ChatState> _mapLoadChatWithDetailsToState(
-      EnhancedRoomModel room) async* {
-    var appId = room.roomModel.appId!;
-    var roomId = room.roomModel.documentID!;
+  void _mapLoadChatWithDetailsToState(EnhancedRoomModel room) {
+    var appId = room.roomModel.appId;
+    var roomId = room.roomModel.documentID;
     int amountNow =
         (state is ChatLoaded) ? (state as ChatLoaded).values.length : 0;
     _chatsListSubscription?.cancel();
@@ -51,8 +40,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             limit: ((paged != null) && paged!) ? pages * chatLimit : null);
   }
 
-  Future<void> _mapAddChatToState(
-      EnhancedRoomModel room, AddChat event) async {
+  Future<void> _mapAddChatToState(EnhancedRoomModel room, AddChat event) async {
     var value = event.value;
     if (value != null) {
       var newValue = await chatRepository(
@@ -62,63 +50,82 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  Stream<ChatState> _mapChatUpdatedToState(
-      ChatUpdated event) async* {
-    yield ChatLoaded(
+  ChatState _mapChatUpdatedToState(ChatUpdated event) {
+    return ChatLoaded(
         room: event.room,
         values: event.value,
         mightHaveMore: event.mightHaveMore);
   }
 
-  @override
-  Stream<ChatState> mapEventToState(ChatEvent event) async* {
-    if (event is SelectChatEvent) {
-      yield* _mapLoadChatWithDetailsToState(event.room);
-    } else if (event is UpdateEnhancedRoomModel) {
+  ChatBloc(
+      {required this.thisMemberId,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      this.chatLimit = 5})
+      : super(ChatLoading()) {
+    on<SelectChatEvent>((event, emit) {
+      _mapLoadChatWithDetailsToState(event.room);
+    });
+
+    on<UpdateEnhancedRoomModel>((event, emit) {
       var theState = state;
       if (theState is ChatLoaded) {
         if ((theState.room.roomModel.documentID ==
                 event.model.roomModel.documentID) &&
             (theState.room.roomModel.appId == event.model.roomModel.appId)) {
-          yield theState.withNewEnhancedRoomModel(event.model);
+          emit(theState.withNewEnhancedRoomModel(event.model));
         }
       }
-    } else if (event is NewChatPage) {
+    });
+
+    on<NewChatPage>((event, emit) {
       var theState = state;
       if (theState is ChatLoaded) {
         pages = pages +
             1; // it doesn't matter so much if we increase pages beyond the end
-        yield* _mapLoadChatWithDetailsToState(theState.room);
+        _mapLoadChatWithDetailsToState(theState.room);
       }
-    } else if (event is AddChat) {
+    });
+
+    on<AddChat>((event, emit) {
       var theState = state;
       if (theState is ChatLoaded) {
         _mapAddChatToState(theState.room, event);
       }
-    } else if (event is ChatUpdated) {
-      yield* _mapChatUpdatedToState(event);
-    } else if (event is MarkAsRead) {
+    });
+
+    on<ChatUpdated>((event, emit) {
+      emit(_mapChatUpdatedToState(event));
+    });
+
+    on<MarkAsRead>((event, emit) {
       var room = event.enhancedRoomModel;
       var item = event.chat;
       markAsRead(room, item);
-    }
+    });
   }
 
   Future<void> markAsRead(EnhancedRoomModel room, ChatModel item) async {
-    var roomId = room.roomModel.documentID!;
+    var roomId = room.roomModel.documentID;
     if ((room.timeStampThisMemberRead == null) ||
         (item.timestamp != null) &&
             (item.timestamp!.compareTo(room.timeStampThisMemberRead!) > 0)) {
       try {
         await chatMemberInfoRepository(
-                appId: room.roomModel.appId!, roomId: roomId)!
+                appId: room.roomModel.appId, roomId: roomId)!
             .add(ChatMemberInfoModel(
+          appId: room.roomModel.appId,
           documentID: RoomHelper.getChatMemberInfoId(thisMemberId, roomId),
           authorId: thisMemberId,
           roomId: roomId,
           accessibleByGroup: ChatMemberInfoAccessibleByGroup.SpecificMembers,
           accessibleByMembers: room.roomModel.members,
-          readAccess: [thisMemberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+          readAccess: [
+            thisMemberId
+          ], // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
         ));
       } catch (_) {
         // issue with timestamp: ignore

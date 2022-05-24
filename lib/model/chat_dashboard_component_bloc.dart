@@ -26,23 +26,22 @@ class ChatDashboardComponentBloc extends Bloc<ChatDashboardComponentEvent, ChatD
   final ChatDashboardRepository? chatDashboardRepository;
   StreamSubscription? _chatDashboardSubscription;
 
-  Stream<ChatDashboardComponentState> _mapLoadChatDashboardComponentUpdateToState(String documentId) async* {
+  void _mapLoadChatDashboardComponentUpdateToState(String documentId) {
     _chatDashboardSubscription?.cancel();
     _chatDashboardSubscription = chatDashboardRepository!.listenTo(documentId, (value) {
-      if (value != null) add(ChatDashboardComponentUpdated(value: value));
+      if (value != null) {
+        add(ChatDashboardComponentUpdated(value: value));
+      }
     });
   }
 
-  ChatDashboardComponentBloc({ this.chatDashboardRepository }): super(ChatDashboardComponentUninitialized());
-
-  @override
-  Stream<ChatDashboardComponentState> mapEventToState(ChatDashboardComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchChatDashboardComponent) {
-      yield* _mapLoadChatDashboardComponentUpdateToState(event.id!);
-    } else if (event is ChatDashboardComponentUpdated) {
-      yield ChatDashboardComponentLoaded(value: event.value);
-    }
+  ChatDashboardComponentBloc({ this.chatDashboardRepository }): super(ChatDashboardComponentUninitialized()) {
+    on <FetchChatDashboardComponent> ((event, emit) {
+      _mapLoadChatDashboardComponentUpdateToState(event.id!);
+    });
+    on <ChatDashboardComponentUpdated> ((event, emit) {
+      emit(ChatDashboardComponentLoaded(value: event.value));
+    });
   }
 
   @override

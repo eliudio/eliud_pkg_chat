@@ -24,6 +24,7 @@
   "fields": [
     {
       "fieldName": "documentID",
+      "required": true,
       "displayName": "Document ID",
       "fieldType": "String",
       "iconName": "vpn_key",
@@ -31,6 +32,7 @@
     },
     {
       "fieldName": "ownerId",
+      "required": true,
       "remark": "The person creating the room",
       "displayName": "Owner ID",
       "fieldType": "String",
@@ -38,6 +40,7 @@
     },
     {
       "fieldName": "appId",
+      "required": true,
       "displayName": "App Identifier",
       "remark": "This is the identifier of the app to which this feed belongs",
       "fieldType": "String",
@@ -78,7 +81,7 @@
     }
  ],
   "listFields": {
-    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container()",
+    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container()",
     "subTitle": "value.description != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.description!)) : Container()"
   },
   "depends": ["eliud_core"]

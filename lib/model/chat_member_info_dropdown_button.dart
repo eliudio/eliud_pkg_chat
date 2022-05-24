@@ -76,8 +76,8 @@ class ChatMemberInfoDropdownButtonWidgetState extends State<ChatMemberInfoDropdo
 List<Widget> widgets(ChatMemberInfoModel value) {
 var app = widget.app;
 var widgets = <Widget>[];
-widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container());
-widgets.add(value.authorId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.authorId!)) : Container());
+widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container());
+widgets.add(value.authorId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.authorId)) : Container());
 return widgets;
 }
 
@@ -207,7 +207,7 @@ return widgets;
     BlocProvider.of<ChatMemberInfoListBloc>(context).add(ChatMemberInfoChangeQuery(
        newQuery: EliudQuery(theConditions: [
          EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: value ?? 0),
-         EliudQueryCondition('appId', isEqualTo: widget.app.documentID!),]
+         EliudQueryCondition('appId', isEqualTo: widget.app.documentID),]
        ),
      ));
      widget.trigger!(null, value);

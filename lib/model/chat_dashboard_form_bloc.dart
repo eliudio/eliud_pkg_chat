@@ -51,59 +51,51 @@ class ChatDashboardFormBloc extends Bloc<ChatDashboardFormEvent, ChatDashboardFo
   Stream<ChatDashboardFormState> mapEventToState(ChatDashboardFormEvent event) async* {
     final currentState = state;
     if (currentState is ChatDashboardFormUninitialized) {
-      if (event is InitialiseNewChatDashboardFormEvent) {
+      on <InitialiseNewChatDashboardFormEvent> ((event, emit) {
         ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: ChatDashboardModel(
                                                documentID: "",
                                  appId: "",
                                  description: "",
 
         ));
-        yield loaded;
-        return;
-
-      }
+        emit(loaded);
+      });
 
 
       if (event is InitialiseChatDashboardFormEvent) {
         // Need to re-retrieve the document from the repository so that I get all associated types
         ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: await chatDashboardRepository(appId: appId)!.get(event.value!.documentID));
-        yield loaded;
-        return;
+        emit(loaded);
       } else if (event is InitialiseChatDashboardFormNoLoadEvent) {
         ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: event.value);
-        yield loaded;
-        return;
+        emit(loaded);
       }
     } else if (currentState is ChatDashboardFormInitialized) {
       ChatDashboardModel? newValue = null;
-      if (event is ChangedChatDashboardDocumentID) {
+      on <ChangedChatDashboardDocumentID> ((event, emit) async {
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
-          yield* _isDocumentIDValid(event.value, newValue).asStream();
+          emit(await _isDocumentIDValid(event.value, newValue!));
         } else {
-          yield SubmittableChatDashboardForm(value: newValue);
+          emit(SubmittableChatDashboardForm(value: newValue));
         }
 
-        return;
-      }
-      if (event is ChangedChatDashboardAppId) {
+      });
+      on <ChangedChatDashboardAppId> ((event, emit) async {
         newValue = currentState.value!.copyWith(appId: event.value);
-        yield SubmittableChatDashboardForm(value: newValue);
+        emit(SubmittableChatDashboardForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatDashboardDescription) {
+      });
+      on <ChangedChatDashboardDescription> ((event, emit) async {
         newValue = currentState.value!.copyWith(description: event.value);
-        yield SubmittableChatDashboardForm(value: newValue);
+        emit(SubmittableChatDashboardForm(value: newValue));
 
-        return;
-      }
-      if (event is ChangedChatDashboardConditions) {
+      });
+      on <ChangedChatDashboardConditions> ((event, emit) async {
         newValue = currentState.value!.copyWith(conditions: event.value);
-        yield SubmittableChatDashboardForm(value: newValue);
+        emit(SubmittableChatDashboardForm(value: newValue));
 
-        return;
-      }
+      });
     }
   }
 

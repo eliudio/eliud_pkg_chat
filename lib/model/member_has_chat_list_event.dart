@@ -77,7 +77,7 @@ class MemberHasChatListUpdated extends MemberHasChatListEvent {
 }
 
 class MemberHasChatChangeQuery extends MemberHasChatListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const MemberHasChatChangeQuery({ required this.newQuery });
 

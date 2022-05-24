@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -50,14 +51,14 @@ ChatAccessibleByGroup toChatAccessibleByGroup(int? index) {
 }
 
 
-class ChatModel {
-  String? documentID;
+class ChatModel implements ModelBase, WithAppId {
+  String documentID;
 
   // The person initiating the conversation, or the owner of the group
-  String? authorId;
+  String authorId;
 
   // This is the identifier of the app to which this chat belongs
-  String? appId;
+  String appId;
 
   // This is the identifier of the room to which this chat belongs
   String? roomId;
@@ -70,7 +71,7 @@ class ChatModel {
   List<String>? readAccess;
   List<ChatMediumModel>? chatMedia;
 
-  ChatModel({this.documentID, this.authorId, this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, })  {
+  ChatModel({required this.documentID, required this.authorId, required this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, })  {
     assert(documentID != null);
   }
 
@@ -127,8 +128,8 @@ class ChatModel {
     var counter = 0;
     return ChatModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
-          appId: entity.appId, 
+          authorId: entity.authorId ?? '', 
+          appId: entity.appId ?? '', 
           roomId: entity.roomId, 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           saying: entity.saying, 
@@ -151,8 +152,8 @@ class ChatModel {
     var counter = 0;
     return ChatModel(
           documentID: documentID, 
-          authorId: entity.authorId, 
-          appId: entity.appId, 
+          authorId: entity.authorId ?? '', 
+          appId: entity.appId ?? '', 
           roomId: entity.roomId, 
           timestamp: entity.timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((entity.timestamp as int)), 
           saying: entity.saying, 

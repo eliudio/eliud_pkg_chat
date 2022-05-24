@@ -76,7 +76,7 @@ class MembersWidgetState extends State<MembersWidget> {
         create: (context) => FollowingListBloc(
               eliudQuery: getQuery(widget.currentMemberId),
               detailed: true,
-              followingRepository: followingRepository(appId: widget.app.documentID!)!,
+              followingRepository: followingRepository(appId: widget.app.documentID)!,
             )..add(LoadFollowingList()),
         child: FollowingListWidget(app: widget.app,
             readOnly: true,
@@ -117,7 +117,7 @@ class FollowingDashboardItem extends StatelessWidget {
     return ListTile(
         onTap: () async {
           Navigator.of(context).pop();
-          selectedMember(value!.follower!.documentID!);
+          selectedMember(value!.follower!.documentID);
         },
         leading: const Icon(Icons.chat_bubble_outline),
         trailing: Container(

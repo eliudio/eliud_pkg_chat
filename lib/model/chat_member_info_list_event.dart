@@ -77,7 +77,7 @@ class ChatMemberInfoListUpdated extends ChatMemberInfoListEvent {
 }
 
 class ChatMemberInfoChangeQuery extends ChatMemberInfoListEvent {
-  final EliudQuery newQuery;
+  final EliudQuery? newQuery;
 
   const ChatMemberInfoChangeQuery({ required this.newQuery });
 

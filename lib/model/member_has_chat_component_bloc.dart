@@ -26,23 +26,22 @@ class MemberHasChatComponentBloc extends Bloc<MemberHasChatComponentEvent, Membe
   final MemberHasChatRepository? memberHasChatRepository;
   StreamSubscription? _memberHasChatSubscription;
 
-  Stream<MemberHasChatComponentState> _mapLoadMemberHasChatComponentUpdateToState(String documentId) async* {
+  void _mapLoadMemberHasChatComponentUpdateToState(String documentId) {
     _memberHasChatSubscription?.cancel();
     _memberHasChatSubscription = memberHasChatRepository!.listenTo(documentId, (value) {
-      if (value != null) add(MemberHasChatComponentUpdated(value: value));
+      if (value != null) {
+        add(MemberHasChatComponentUpdated(value: value));
+      }
     });
   }
 
-  MemberHasChatComponentBloc({ this.memberHasChatRepository }): super(MemberHasChatComponentUninitialized());
-
-  @override
-  Stream<MemberHasChatComponentState> mapEventToState(MemberHasChatComponentEvent event) async* {
-    final currentState = state;
-    if (event is FetchMemberHasChatComponent) {
-      yield* _mapLoadMemberHasChatComponentUpdateToState(event.id!);
-    } else if (event is MemberHasChatComponentUpdated) {
-      yield MemberHasChatComponentLoaded(value: event.value);
-    }
+  MemberHasChatComponentBloc({ this.memberHasChatRepository }): super(MemberHasChatComponentUninitialized()) {
+    on <FetchMemberHasChatComponent> ((event, emit) {
+      _mapLoadMemberHasChatComponentUpdateToState(event.id!);
+    });
+    on <MemberHasChatComponentUpdated> ((event, emit) {
+      emit(MemberHasChatComponentLoaded(value: event.value));
+    });
   }
 
   @override

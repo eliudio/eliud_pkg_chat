@@ -40,10 +40,10 @@ class MemberHasChatComponentSelector extends ComponentSelector {
   @override
   Widget createSelectWidget(BuildContext context, AppModel app, int privilegeLevel, double height,
       SelectComponent selected, editorConstructor) {
-    var appId = app.documentID!;
+    var appId = app.documentID;
     return BlocProvider<MemberHasChatListBloc>(
           create: (context) => MemberHasChatListBloc(
-          eliudQuery: getComponentSelectorQuery(0, app.documentID!),
+          eliudQuery: getComponentSelectorQuery(0, app.documentID),
           memberHasChatRepository:
               memberHasChatRepository(appId: appId)!,
           )..add(LoadMemberHasChatList()),
@@ -108,7 +108,7 @@ class _SelectMemberHasChatWidgetState extends State<SelectMemberHasChatWidget> w
         (_privilegeTabController!.indexIsChanging)) {
         _currentPrivilege = _privilegeTabController!.index;
         BlocProvider.of<MemberHasChatListBloc>(context).add(
-            MemberHasChatChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID!)));
+            MemberHasChatChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID)));
     }
   }
 
@@ -139,13 +139,13 @@ class _SelectMemberHasChatWidgetState extends State<SelectMemberHasChatWidget> w
                       ],
                   onSelected: (selectedValue) {
                     if (selectedValue == 1) {
-                      widget.selected(value.documentID!);
+                      widget.selected(value.documentID);
                     } else if (selectedValue == 2) {
                       widget.editorConstructor.updateComponent(widget.app, context, value, (_) {});
                     }
                   }),
-              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container(),
-              subtitle: value.memberId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.memberId!)) : Container(),
+              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container(),
+              subtitle: value.memberId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.memberId)) : Container(),
             );
           } else {
             return Container();

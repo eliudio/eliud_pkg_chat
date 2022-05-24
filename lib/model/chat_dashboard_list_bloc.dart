@@ -38,9 +38,47 @@ class ChatDashboardListBloc extends Bloc<ChatDashboardListEvent, ChatDashboardLi
   ChatDashboardListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatDashboardRepository chatDashboardRepository, this.chatDashboardLimit = 5})
       : assert(chatDashboardRepository != null),
         _chatDashboardRepository = chatDashboardRepository,
-        super(ChatDashboardListLoading());
+        super(ChatDashboardListLoading()) {
+    on <LoadChatDashboardList> ((event, emit) {
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatDashboardListToState();
+      } else {
+        _mapLoadChatDashboardListWithDetailsToState();
+      }
+    });
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+      _mapLoadChatDashboardListWithDetailsToState();
+    });
+    
+    on <ChatDashboardChangeQuery> ((event, emit) {
+      eliudQuery = event.newQuery;
+      if ((detailed == null) || (!detailed!)) {
+        _mapLoadChatDashboardListToState();
+      } else {
+        _mapLoadChatDashboardListWithDetailsToState();
+      }
+    });
+      
+    on <AddChatDashboardList> ((event, emit) async {
+      await _mapAddChatDashboardListToState(event);
+    });
+    
+    on <UpdateChatDashboardList> ((event, emit) async {
+      await _mapUpdateChatDashboardListToState(event);
+    });
+    
+    on <DeleteChatDashboardList> ((event, emit) async {
+      await _mapDeleteChatDashboardListToState(event);
+    });
+    
+    on <ChatDashboardListUpdated> ((event, emit) {
+      emit(_mapChatDashboardListUpdatedToState(event));
+    });
+  }
 
-  Stream<ChatDashboardListState> _mapLoadChatDashboardListToState() async* {
+  Future<void> _mapLoadChatDashboardListToState() async {
     int amountNow =  (state is ChatDashboardListLoaded) ? (state as ChatDashboardListLoaded).values!.length : 0;
     _chatDashboardsListSubscription?.cancel();
     _chatDashboardsListSubscription = _chatDashboardRepository.listen(
@@ -52,7 +90,7 @@ class ChatDashboardListBloc extends Bloc<ChatDashboardListEvent, ChatDashboardLi
     );
   }
 
-  Stream<ChatDashboardListState> _mapLoadChatDashboardListWithDetailsToState() async* {
+  Future<void> _mapLoadChatDashboardListWithDetailsToState() async {
     int amountNow =  (state is ChatDashboardListLoaded) ? (state as ChatDashboardListLoaded).values!.length : 0;
     _chatDashboardsListSubscription?.cancel();
     _chatDashboardsListSubscription = _chatDashboardRepository.listenWithDetails(
@@ -64,58 +102,29 @@ class ChatDashboardListBloc extends Bloc<ChatDashboardListEvent, ChatDashboardLi
     );
   }
 
-  Stream<ChatDashboardListState> _mapAddChatDashboardListToState(AddChatDashboardList event) async* {
+  Future<void> _mapAddChatDashboardListToState(AddChatDashboardList event) async {
     var value = event.value;
-    if (value != null) 
-      _chatDashboardRepository.add(value);
-  }
-
-  Stream<ChatDashboardListState> _mapUpdateChatDashboardListToState(UpdateChatDashboardList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatDashboardRepository.update(value);
-  }
-
-  Stream<ChatDashboardListState> _mapDeleteChatDashboardListToState(DeleteChatDashboardList event) async* {
-    var value = event.value;
-    if (value != null) 
-      _chatDashboardRepository.delete(value);
-  }
-
-  Stream<ChatDashboardListState> _mapChatDashboardListUpdatedToState(
-      ChatDashboardListUpdated event) async* {
-    yield ChatDashboardListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
-  }
-
-  @override
-  Stream<ChatDashboardListState> mapEventToState(ChatDashboardListEvent event) async* {
-    if (event is LoadChatDashboardList) {
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatDashboardListToState();
-      } else {
-        yield* _mapLoadChatDashboardListWithDetailsToState();
-      }
-    }
-    if (event is NewPage) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
-      yield* _mapLoadChatDashboardListWithDetailsToState();
-    } else if (event is ChatDashboardChangeQuery) {
-      eliudQuery = event.newQuery;
-      if ((detailed == null) || (!detailed!)) {
-        yield* _mapLoadChatDashboardListToState();
-      } else {
-        yield* _mapLoadChatDashboardListWithDetailsToState();
-      }
-    } else if (event is AddChatDashboardList) {
-      yield* _mapAddChatDashboardListToState(event);
-    } else if (event is UpdateChatDashboardList) {
-      yield* _mapUpdateChatDashboardListToState(event);
-    } else if (event is DeleteChatDashboardList) {
-      yield* _mapDeleteChatDashboardListToState(event);
-    } else if (event is ChatDashboardListUpdated) {
-      yield* _mapChatDashboardListUpdatedToState(event);
+    if (value != null) {
+      await _chatDashboardRepository.add(value);
     }
   }
+
+  Future<void> _mapUpdateChatDashboardListToState(UpdateChatDashboardList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatDashboardRepository.update(value);
+    }
+  }
+
+  Future<void> _mapDeleteChatDashboardListToState(DeleteChatDashboardList event) async {
+    var value = event.value;
+    if (value != null) {
+      await _chatDashboardRepository.delete(value);
+    }
+  }
+
+  ChatDashboardListLoaded _mapChatDashboardListUpdatedToState(
+      ChatDashboardListUpdated event) => ChatDashboardListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {

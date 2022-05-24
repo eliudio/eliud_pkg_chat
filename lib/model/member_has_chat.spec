@@ -24,6 +24,7 @@
   "fields": [
     {
       "fieldName": "documentID",
+      "required": true,
       "displayName": "Document ID",
       "fieldType": "String",
       "iconName": "vpn_key",
@@ -31,12 +32,14 @@
     },
     {
       "fieldName": "memberId",
+      "required": true,
       "displayName": "Member ID",
       "fieldType": "String",
       "group": "member"
     },
     {
       "fieldName": "appId",
+      "required": true,
       "displayName": "App Identifier",
       "remark": "This is the identifier of the app to which this chat belongs",
       "fieldType": "String",
@@ -56,8 +59,8 @@
     }
  ],
   "listFields": {
-    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID!)) : Container()",
-    "subTitle": "value.memberId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.memberId!)) : Container()"
+    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container()",
+    "subTitle": "value.memberId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.memberId)) : Container()"
   },
   "depends": ["eliud_core"]
 }
