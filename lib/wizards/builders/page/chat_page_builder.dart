@@ -59,6 +59,7 @@ class ChatPageBuilder extends PageBuilder {
         documentID: constructDocumentId(uniqueId: uniqueId, documentId: identifier),
         appId: app.documentID,
         title: "Chat",
+        description: "Chat",
         drawer: leftDrawer,
         endDrawer: rightDrawer,
         homeMenu: theHomeMenu,

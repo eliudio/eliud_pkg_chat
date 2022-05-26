@@ -48,6 +48,7 @@ class ChatDialogBuilder extends DialogBuilder {
         documentID: constructDocumentId(uniqueId: uniqueId, documentId: identifier),
         appId: app.documentID,
         title: "Chat",
+        description: "Chat",
         includeHeading: false,
         layout: DialogLayout.ListView,
         conditions: StorageConditionsModel(
