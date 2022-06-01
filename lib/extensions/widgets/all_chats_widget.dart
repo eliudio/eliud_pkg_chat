@@ -4,11 +4,9 @@ import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
-import 'package:eliud_core/sty'
-    'le/frontend/has_progress_indicator.dart';
+import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_split.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
