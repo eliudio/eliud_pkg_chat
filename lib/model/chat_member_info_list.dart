@@ -156,7 +156,7 @@ class ChatMemberInfoListWidgetState extends State<ChatMemberInfoListWidget> {
             onDismissed: (direction) {
               BlocProvider.of<ChatMemberInfoListBloc>(context)
                   .add(DeleteChatMemberInfoList(value: value));
-              Scaffold.of(context).showSnackBar(DeleteSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(DeleteSnackBar(
                 message: "ChatMemberInfo " + value.documentID,
                 onUndo: () => BlocProvider.of<ChatMemberInfoListBloc>(context)
                     .add(AddChatMemberInfoList(value: value)),
@@ -168,7 +168,7 @@ class ChatMemberInfoListWidgetState extends State<ChatMemberInfoListWidget> {
                               value: BlocProvider.of<ChatMemberInfoListBloc>(context),
                               child: getForm(value, FormAction.UpdateAction))));
                       if (removedItem != null) {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           DeleteSnackBar(
                         message: "ChatMemberInfo " + value.documentID,
                             onUndo: () => BlocProvider.of<ChatMemberInfoListBloc>(context)
