@@ -26,20 +26,6 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   final String thisMemberId;
   final ChatBloc chatListBloc;
 
-  AllChatsBloc(
-      {required this.thisMemberId,
-      required this.appId,
-      required this.chatListBloc,
-      this.paged,
-      this.orderBy,
-      this.descending,
-      this.eliudQuery,
-      required RoomRepository roomRepository,
-      this.roomLimit = 5})
-      : assert(roomRepository != null),
-        _roomRepository = roomRepository,
-        super(AllChatsLoading());
-
   void _mapLoadAllChatsWithDetailsToState() async {
     int amountNow = (state is AllChatsLoaded)
         ? (state as AllChatsLoaded).enhancedRoomModels.length
@@ -104,9 +90,19 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         currentRoom: currentRoom);
   }
 
-  @override
-  Stream<AllChatsState> mapEventToState(AllChatsEvent event) async* {
-    var theState = state;
+  AllChatsBloc(
+      {required this.thisMemberId,
+        required this.appId,
+        required this.chatListBloc,
+        this.paged,
+        this.orderBy,
+        this.descending,
+        this.eliudQuery,
+        required RoomRepository roomRepository,
+        this.roomLimit = 5})
+      : assert(roomRepository != null),
+        _roomRepository = roomRepository,
+        super(AllChatsLoading()) {
     on<LoadAllChats>((event, emit) {
       _mapLoadAllChatsWithDetailsToState();
     });
@@ -130,12 +126,14 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
     });
 
     on<AllChatsUpdated>((event, emit) async {
+      var theState = state;
       var currentRoom = (theState is AllChatsLoaded)
           ? theState.currentRoom
           : ((event.value.isNotEmpty) ? event.value[0].roomModel : null);
       emit(_mapAllChatsUpdatedToState(event, currentRoom));
     });
     on<SelectChat>((event, emit) async {
+      var theState = state;
       if (theState is AllChatsLoaded) {
         for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
           if (selectedEnhancedRoom.roomModel.documentID ==
@@ -153,6 +151,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
     });
 
     on<NewLastReadEvent>((event, emit) async {
+      var theState = state;
       if (theState is AllChatsLoaded) {
         List<EnhancedRoomModel> newEnhancedRoomModels = [];
         for (var enhancedRoomModel in theState.enhancedRoomModels) {

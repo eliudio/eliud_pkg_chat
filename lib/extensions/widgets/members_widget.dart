@@ -1,16 +1,5 @@
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/firestore/firestore_tools.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart'
-    as ChatMemberInfoListEvent;
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
-import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
-import 'package:eliud_pkg_chat/model/room_list_event.dart';
-import 'package:eliud_pkg_chat/model/room_list_state.dart';
-import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:eliud_pkg_follow/model/following_list.dart';
 import 'package:eliud_pkg_follow/model/following_list_event.dart';
 import 'package:eliud_pkg_follow/model/following_model.dart';
@@ -48,13 +37,11 @@ class MembersWidget extends StatefulWidget {
 
   @override
   MembersWidgetState createState() =>
-      MembersWidgetState(currentMemberId);
+      MembersWidgetState();
 }
 
 class MembersWidgetState extends State<MembersWidget> {
-  final String currentMemberId;
-
-  MembersWidgetState(this.currentMemberId);
+  MembersWidgetState();
 
   static EliudQuery? getQuery(String memberId) {
     return EliudQuery(theConditions: [
@@ -65,7 +52,7 @@ class MembersWidgetState extends State<MembersWidget> {
   Widget widgetProvider(AppModel app, FollowingModel value) {
     return FollowingDashboardItem(
         selectedMember: widget.selectedMember,
-        currentMemberId: currentMemberId,
+        currentMemberId: widget.currentMemberId,
         app: app,
         value: value);
   }
