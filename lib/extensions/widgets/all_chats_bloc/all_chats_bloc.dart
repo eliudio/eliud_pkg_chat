@@ -3,6 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_bloc.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_event.dart';
+import '../../../tools/chat_helper.dart';
+import '../../../tools/room_helper.dart';
 import 'all_chats_event.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
@@ -34,7 +36,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
     _roomsListSubscription = _roomRepository.listenWithDetails((list) async {
       var enhancedList = await Future.wait(list.map((value) async {
         var otherMemberRoomInfo =
-            await getOtherMembersRoomInfo(appId, value!.members!);
+            await RoomHelper.getOtherMembersRoomInfo(thisMemberId, appId, value!.members!);
 
         listToChatMemberInfoRepository(appId, value.documentID);
         return EnhancedRoomModel(value, null, otherMemberRoomInfo, null);
@@ -138,7 +140,8 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
           if (selectedEnhancedRoom.roomModel.documentID ==
               event.selected.documentID) {
-            chatListBloc.add(SelectChatEvent(selectedEnhancedRoom));
+//            chatListBloc.add(SelectChatEvent(selectedEnhancedRoom)); <<<< RECOVER THIS LINE
+            chatListBloc.add(OpenChatWithMembersEvent(event.selected.members!));
           }
         }
         emit(AllChatsLoaded(
@@ -188,22 +191,4 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
     return super.close();
   }
 
-  Future<List<OtherMemberRoomInfo>> getOtherMembersRoomInfo(
-      String appId, List<String> memberIds) async {
-    List<OtherMemberRoomInfo> otherMembersRoomInfo = [];
-    for (var memberId in memberIds) {
-      if (memberId != thisMemberId) {
-        var member =
-            await memberPublicInfoRepository(appId: appId)!.get(memberId);
-        if (member != null) {
-          var otherMemberRoomInfo = OtherMemberRoomInfo(
-              memberId: member.documentID,
-              name: member.name != null ? member.name! : 'No name',
-              avatar: member.photoURL);
-          otherMembersRoomInfo.add(otherMemberRoomInfo);
-        }
-      }
-    }
-    return otherMembersRoomInfo;
-  }
 }

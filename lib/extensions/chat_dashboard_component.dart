@@ -2,7 +2,11 @@ import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_widget.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_event.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/chat_widget.dart';
+import '../model/room_model.dart';
 import 'widgets/all_chats_bloc/all_chats_bloc.dart';
 import 'widgets/all_chats_bloc/all_chats_event.dart';
 import 'package:flutter/material.dart';
@@ -48,19 +52,12 @@ class ChatDashboard extends AbstractChatDashboardComponent {
             .withCondition(EliudQueryCondition('appId', isEqualTo: appId))
             .withCondition(
                 EliudQueryCondition('members', arrayContains: memberId));
-        var eliudQueryChatList = EliudQuery().withCondition(
-            EliudQueryCondition('readAccess', arrayContains: memberId));
         var height = MediaQuery.of(context).size.height -
             kToolbarHeight -
             kBottomNavigationBarHeight;
         var chatListBloc = ChatBloc(
+          appId: appId,
           thisMemberId: memberId,
-          paged: true,
-          orderBy: 'timestamp',
-          descending: true,
-          detailed: true,
-          eliudQuery: eliudQueryChatList,
-          chatLimit: 100,
         );
         var allChatsBloc = AllChatsBloc(
             chatListBloc: chatListBloc,
@@ -89,4 +86,5 @@ class ChatDashboard extends AbstractChatDashboardComponent {
       return const Text('App not loaded');
     }
   }
+
 }

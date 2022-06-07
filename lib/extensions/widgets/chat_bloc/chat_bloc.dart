@@ -6,14 +6,16 @@ import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
+import '../../../tools/chat_helper.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   StreamSubscription? _chatsListSubscription;
-  final EliudQuery? eliudQuery;
+  late EliudQuery eliudQuery;
   int pages = 1;
+  final String appId;
   final bool? paged;
   final String? orderBy;
   final bool? descending;
@@ -58,16 +60,35 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   ChatBloc(
-      {required this.thisMemberId,
-      this.paged,
-      this.orderBy,
-      this.descending,
-      this.detailed,
-      this.eliudQuery,
-      this.chatLimit = 5})
+      {required this.appId,
+        required this.thisMemberId,
+      this.paged = true,
+      this.orderBy = 'timestamp',
+      this.descending = true,
+      this.detailed = true,
+      this.chatLimit = 100})
       : super(ChatLoading()) {
+    eliudQuery = EliudQuery().withCondition(
+        EliudQueryCondition('readAccess', arrayContains: thisMemberId));
     on<SelectChatEvent>((event, emit) {
       _mapLoadChatWithDetailsToState(event.room);
+    });
+
+    on<OpenChatWithAMemberEvent>((event, emit) async {
+      var roomModel = await RoomHelper.getRoomForMember(
+          appId, thisMemberId, event.otherMember);
+      var otherMemberRoomInfo =
+      await RoomHelper.getOtherMembersRoomInfo(thisMemberId, appId, roomModel.members!);
+      var enhancedRoomModel = EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
+      _mapLoadChatWithDetailsToState(enhancedRoomModel);
+    });
+
+    on<OpenChatWithMembersEvent>((event, emit) async {
+      var roomModel = await RoomHelper.getRoomForMembers(
+          appId, thisMemberId, event.otherMembers);
+      var otherMemberRoomInfo = await RoomHelper.getOtherMembersRoomInfo(thisMemberId, appId, roomModel.members!);
+      var enhancedRoomModel = EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
+      _mapLoadChatWithDetailsToState(enhancedRoomModel);
     });
 
     on<UpdateEnhancedRoomModel>((event, emit) {

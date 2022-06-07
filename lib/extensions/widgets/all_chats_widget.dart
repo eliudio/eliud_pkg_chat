@@ -1,4 +1,3 @@
-// ignore: unused_import
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
@@ -49,7 +48,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                     app: widget.app,
                     selectedMember: (String memberId) async {
                       var room = await RoomHelper.getRoomForMember(
-                          widget.app, widget.memberId, memberId);
+                          widget.app.documentID, widget.memberId, memberId);
                       selectRoom(context, room);
                     },
                     currentMemberId: widget.memberId,

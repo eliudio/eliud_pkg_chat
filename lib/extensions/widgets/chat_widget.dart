@@ -241,7 +241,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 //                                Navigator.of(context).pop();
                                 var newRoom =
                                     await RoomHelper.getRoomForMembers(
-                                        widget.app,
+                                        widget.app.documentID,
                                         widget.memberId,
                                         newMembers);
                                 selectRoom(context, newRoom);

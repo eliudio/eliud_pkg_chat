@@ -9,6 +9,18 @@ abstract class ChatEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class OpenChatWithAMemberEvent extends ChatEvent {
+  final String otherMember;
+
+  OpenChatWithAMemberEvent(this.otherMember);
+}
+
+class OpenChatWithMembersEvent extends ChatEvent {
+  final List<String> otherMembers;
+
+  OpenChatWithMembersEvent(this.otherMembers);
+}
+
 class SelectChatEvent extends ChatEvent {
   final EnhancedRoomModel room;
 
