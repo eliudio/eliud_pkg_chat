@@ -59,6 +59,10 @@ class ChatMediumModel implements ModelBase {
           documentID == other.documentID &&
           memberMedium == other.memberMedium;
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     return 'ChatMediumModel{documentID: $documentID, memberMedium: $memberMedium}';

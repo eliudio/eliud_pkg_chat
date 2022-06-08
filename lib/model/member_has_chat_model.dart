@@ -65,6 +65,10 @@ class MemberHasChatModel implements ModelBase, WithAppId {
           appId == other.appId &&
           hasUnread == other.hasUnread;
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     return 'MemberHasChatModel{documentID: $documentID, memberId: $memberId, appId: $appId, hasUnread: $hasUnread}';

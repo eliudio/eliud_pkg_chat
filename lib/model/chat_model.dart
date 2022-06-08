@@ -98,6 +98,10 @@ class ChatModel implements ModelBase, WithAppId {
           ListEquality().equals(readAccess, other.readAccess) &&
           ListEquality().equals(chatMedia, other.chatMedia);
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');

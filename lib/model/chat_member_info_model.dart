@@ -94,6 +94,10 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
           ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
           ListEquality().equals(readAccess, other.readAccess);
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');

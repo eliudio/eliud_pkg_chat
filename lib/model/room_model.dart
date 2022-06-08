@@ -74,6 +74,10 @@ class RoomModel implements ModelBase, WithAppId {
           ListEquality().equals(members, other.members) &&
           timestamp == other.timestamp;
 
+  String toJsonString({String? appId}) {
+    return toEntity(appId: appId).toJsonString();
+  }
+
   @override
   String toString() {
     String membersCsv = (members == null) ? '' : members!.join(', ');
