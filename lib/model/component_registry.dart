@@ -17,6 +17,7 @@
 import '../model/internal_component.dart';
 import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/tools/component/component_spec.dart';
+import 'abstract_repository_singleton.dart';
 
 import '../extensions/chat_dashboard_component.dart';
 import '../editors/chat_dashboard_component_editor.dart';
@@ -35,7 +36,7 @@ class ComponentRegistry {
     Registry.registry()!.addDropDownSupporter("chatDashboards", DropdownButtonComponentFactory());
     Registry.registry()!.register(componentName: "chatDashboards", componentConstructor: ChatDashboardComponentConstructorDefault());
     Registry.registry()!.addComponentSpec('eliud_pkg_chat', 'chat', [
-      ComponentSpec('chatDashboards', ChatDashboardComponentConstructorDefault(), ChatDashboardComponentSelector(), ChatDashboardComponentEditorConstructor(), ), 
+      ComponentSpec('chatDashboards', ChatDashboardComponentConstructorDefault(), ChatDashboardComponentSelector(), ChatDashboardComponentEditorConstructor(), ({String? appId}) => chatDashboardRepository(appId: appId)! ), 
     ]);
 
   }
