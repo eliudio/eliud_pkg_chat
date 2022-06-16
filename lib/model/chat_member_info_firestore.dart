@@ -36,6 +36,30 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
+  Future<ChatMemberInfoEntity> addEntity(String documentID, ChatMemberInfoEntity value) {
+    return ChatMemberInfoCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
+  Future<ChatMemberInfoEntity> updateEntity(String documentID, ChatMemberInfoEntity value) {
+    return ChatMemberInfoCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
   Future<ChatMemberInfoModel> add(ChatMemberInfoModel value) {
     return ChatMemberInfoCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -70,6 +94,21 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
 
   Future<ChatMemberInfoModel?> _populateDocPlus(DocumentSnapshot value) async {
     return ChatMemberInfoModel.fromEntityPlus(value.id, ChatMemberInfoEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<ChatMemberInfoEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = ChatMemberInfoCollection.doc(id);
+      var doc = await collection.get();
+      return ChatMemberInfoEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving ChatMemberInfo with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<ChatMemberInfoModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

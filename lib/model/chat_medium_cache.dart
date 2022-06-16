@@ -47,6 +47,14 @@ class ChatMediumCache implements ChatMediumRepository {
     });
   }
 
+  Future<ChatMediumEntity> addEntity(String documentID, ChatMediumEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<ChatMediumEntity> updateEntity(String documentID, ChatMediumEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(ChatMediumModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

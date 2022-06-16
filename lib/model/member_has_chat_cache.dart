@@ -47,6 +47,14 @@ class MemberHasChatCache implements MemberHasChatRepository {
     });
   }
 
+  Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<MemberHasChatEntity> updateEntity(String documentID, MemberHasChatEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(MemberHasChatModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

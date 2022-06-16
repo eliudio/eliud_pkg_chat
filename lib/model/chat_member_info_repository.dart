@@ -38,6 +38,8 @@ typedef ChatMemberInfoModelTrigger(List<ChatMemberInfoModel?> list);
 typedef ChatMemberInfoChanged(ChatMemberInfoModel? value);
 
 abstract class ChatMemberInfoRepository extends RepositoryBase<ChatMemberInfoModel> {
+  Future<ChatMemberInfoEntity> addEntity(String documentID, ChatMemberInfoEntity value);
+  Future<ChatMemberInfoEntity> updateEntity(String documentID, ChatMemberInfoEntity value);
   Future<ChatMemberInfoModel> add(ChatMemberInfoModel value);
   Future<void> delete(ChatMemberInfoModel value);
   Future<ChatMemberInfoModel?> get(String? id, { Function(Exception)? onError });

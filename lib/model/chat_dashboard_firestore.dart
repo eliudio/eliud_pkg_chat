@@ -36,6 +36,14 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatDashboardFirestore implements ChatDashboardRepository {
+  Future<ChatDashboardEntity> addEntity(String documentID, ChatDashboardEntity value) {
+    return ChatDashboardCollection.doc(documentID).set(value.toDocument()).then((_) => value);
+  }
+
+  Future<ChatDashboardEntity> updateEntity(String documentID, ChatDashboardEntity value) {
+    return ChatDashboardCollection.doc(documentID).update(value.toDocument()).then((_) => value);
+  }
+
   Future<ChatDashboardModel> add(ChatDashboardModel value) {
     return ChatDashboardCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -54,6 +62,21 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
 
   Future<ChatDashboardModel?> _populateDocPlus(DocumentSnapshot value) async {
     return ChatDashboardModel.fromEntityPlus(value.id, ChatDashboardEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<ChatDashboardEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = ChatDashboardCollection.doc(id);
+      var doc = await collection.get();
+      return ChatDashboardEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving ChatDashboard with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<ChatDashboardModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

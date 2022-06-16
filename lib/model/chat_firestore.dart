@@ -36,6 +36,30 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatFirestore implements ChatRepository {
+  Future<ChatEntity> addEntity(String documentID, ChatEntity value) {
+    return ChatCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
+  Future<ChatEntity> updateEntity(String documentID, ChatEntity value) {
+    return ChatCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
   Future<ChatModel> add(ChatModel value) {
     return ChatCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -70,6 +94,21 @@ class ChatFirestore implements ChatRepository {
 
   Future<ChatModel?> _populateDocPlus(DocumentSnapshot value) async {
     return ChatModel.fromEntityPlus(value.id, ChatEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<ChatEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = ChatCollection.doc(id);
+      var doc = await collection.get();
+      return ChatEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving Chat with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<ChatModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

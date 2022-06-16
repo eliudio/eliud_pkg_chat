@@ -36,6 +36,14 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class MemberHasChatFirestore implements MemberHasChatRepository {
+  Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value) {
+    return MemberHasChatCollection.doc(documentID).set(value.toDocument()).then((_) => value);
+  }
+
+  Future<MemberHasChatEntity> updateEntity(String documentID, MemberHasChatEntity value) {
+    return MemberHasChatCollection.doc(documentID).update(value.toDocument()).then((_) => value);
+  }
+
   Future<MemberHasChatModel> add(MemberHasChatModel value) {
     return MemberHasChatCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -54,6 +62,21 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
 
   Future<MemberHasChatModel?> _populateDocPlus(DocumentSnapshot value) async {
     return MemberHasChatModel.fromEntityPlus(value.id, MemberHasChatEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<MemberHasChatEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = MemberHasChatCollection.doc(id);
+      var doc = await collection.get();
+      return MemberHasChatEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving MemberHasChat with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<MemberHasChatModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

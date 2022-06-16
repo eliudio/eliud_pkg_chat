@@ -36,6 +36,30 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class RoomFirestore implements RoomRepository {
+  Future<RoomEntity> addEntity(String documentID, RoomEntity value) {
+    return RoomCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
+  Future<RoomEntity> updateEntity(String documentID, RoomEntity value) {
+    return RoomCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+      var newValue = await getEntity(documentID);
+      if (newValue == null) {
+        return value;
+      } else {
+        return newValue;
+      }
+    })
+;
+  }
+
   Future<RoomModel> add(RoomModel value) {
     return RoomCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -70,6 +94,21 @@ class RoomFirestore implements RoomRepository {
 
   Future<RoomModel?> _populateDocPlus(DocumentSnapshot value) async {
     return RoomModel.fromEntityPlus(value.id, RoomEntity.fromMap(value.data()), appId: appId);  }
+
+  Future<RoomEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+    try {
+      var collection = RoomCollection.doc(id);
+      var doc = await collection.get();
+      return RoomEntity.fromMap(doc.data());
+    } on Exception catch(e) {
+      if (onError != null) {
+        onError(e);
+      } else {
+        print("Error whilst retrieving Room with id $id");
+        print("Exceptoin: $e");
+      }
+    };
+  }
 
   Future<RoomModel?> get(String? id, {Function(Exception)? onError}) async {
     try {

@@ -38,6 +38,8 @@ typedef RoomModelTrigger(List<RoomModel?> list);
 typedef RoomChanged(RoomModel? value);
 
 abstract class RoomRepository extends RepositoryBase<RoomModel> {
+  Future<RoomEntity> addEntity(String documentID, RoomEntity value);
+  Future<RoomEntity> updateEntity(String documentID, RoomEntity value);
   Future<RoomModel> add(RoomModel value);
   Future<void> delete(RoomModel value);
   Future<RoomModel?> get(String? id, { Function(Exception)? onError });

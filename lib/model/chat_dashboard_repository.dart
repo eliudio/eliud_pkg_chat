@@ -38,6 +38,8 @@ typedef ChatDashboardModelTrigger(List<ChatDashboardModel?> list);
 typedef ChatDashboardChanged(ChatDashboardModel? value);
 
 abstract class ChatDashboardRepository extends RepositoryBase<ChatDashboardModel> {
+  Future<ChatDashboardEntity> addEntity(String documentID, ChatDashboardEntity value);
+  Future<ChatDashboardEntity> updateEntity(String documentID, ChatDashboardEntity value);
   Future<ChatDashboardModel> add(ChatDashboardModel value);
   Future<void> delete(ChatDashboardModel value);
   Future<ChatDashboardModel?> get(String? id, { Function(Exception)? onError });

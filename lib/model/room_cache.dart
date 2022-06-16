@@ -47,6 +47,14 @@ class RoomCache implements RoomRepository {
     });
   }
 
+  Future<RoomEntity> addEntity(String documentID, RoomEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<RoomEntity> updateEntity(String documentID, RoomEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(RoomModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);

@@ -29,6 +29,7 @@ import '../model/chat_medium_list_bloc.dart';
 import '../model/chat_medium_list.dart';
 import '../model/chat_medium_list_event.dart';
 import '../model/chat_medium_model.dart';
+import '../model/chat_medium_entity.dart';
 import '../model/chat_medium_repository.dart';
 
 typedef ChatMediumListChanged(List<ChatMediumModel> values);
@@ -74,6 +75,14 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
         i++;
       }
       return -1;
+    }
+
+    Future<ChatMediumEntity> addEntity(String documentID, ChatMediumEntity value) {
+      throw Exception('Not implemented'); 
+    }
+
+    Future<ChatMediumEntity> updateEntity(String documentID, ChatMediumEntity value) {
+      throw Exception('Not implemented'); 
     }
 
     Future<ChatMediumModel> add(ChatMediumModel value) {

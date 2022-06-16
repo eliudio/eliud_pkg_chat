@@ -38,6 +38,8 @@ typedef MemberHasChatModelTrigger(List<MemberHasChatModel?> list);
 typedef MemberHasChatChanged(MemberHasChatModel? value);
 
 abstract class MemberHasChatRepository extends RepositoryBase<MemberHasChatModel> {
+  Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value);
+  Future<MemberHasChatEntity> updateEntity(String documentID, MemberHasChatEntity value);
   Future<MemberHasChatModel> add(MemberHasChatModel value);
   Future<void> delete(MemberHasChatModel value);
   Future<MemberHasChatModel?> get(String? id, { Function(Exception)? onError });

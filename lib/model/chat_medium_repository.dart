@@ -38,6 +38,8 @@ typedef ChatMediumModelTrigger(List<ChatMediumModel?> list);
 typedef ChatMediumChanged(ChatMediumModel? value);
 
 abstract class ChatMediumRepository extends RepositoryBase<ChatMediumModel> {
+  Future<ChatMediumEntity> addEntity(String documentID, ChatMediumEntity value);
+  Future<ChatMediumEntity> updateEntity(String documentID, ChatMediumEntity value);
   Future<ChatMediumModel> add(ChatMediumModel value);
   Future<void> delete(ChatMediumModel value);
   Future<ChatMediumModel?> get(String? id, { Function(Exception)? onError });

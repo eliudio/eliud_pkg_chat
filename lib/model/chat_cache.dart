@@ -47,6 +47,14 @@ class ChatCache implements ChatRepository {
     });
   }
 
+  Future<ChatEntity> addEntity(String documentID, ChatEntity value) {
+    return reference.addEntity(documentID, value);
+  }
+
+  Future<ChatEntity> updateEntity(String documentID, ChatEntity value) {
+    return reference.updateEntity(documentID, value);
+  }
+
   Future<void> delete(ChatModel value){
     fullCache.remove(value.documentID);
     reference.delete(value);
