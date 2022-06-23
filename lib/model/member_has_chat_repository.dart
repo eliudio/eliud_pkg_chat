@@ -37,7 +37,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef MemberHasChatModelTrigger(List<MemberHasChatModel?> list);
 typedef MemberHasChatChanged(MemberHasChatModel? value);
 
-abstract class MemberHasChatRepository extends RepositoryBase<MemberHasChatModel> {
+abstract class MemberHasChatRepository extends RepositoryBase<MemberHasChatModel, MemberHasChatEntity> {
   Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value);
   Future<MemberHasChatEntity> updateEntity(String documentID, MemberHasChatEntity value);
   Future<MemberHasChatModel> add(MemberHasChatModel value);

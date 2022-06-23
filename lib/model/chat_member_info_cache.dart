@@ -115,6 +115,16 @@ class ChatMemberInfoCache implements ChatMemberInfoRepository {
     });
   }
 
+  @override
+  Future<ChatMemberInfoEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    return reference.getEntity(id, onError: onError);
+  }
+
+  @override
+  ChatMemberInfoEntity? fromMap(Object? o) {
+    return reference.fromMap(o);
+  }
+
   Future<void> deleteAll() {
     return reference.deleteAll();
   }

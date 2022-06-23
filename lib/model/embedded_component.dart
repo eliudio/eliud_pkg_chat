@@ -162,6 +162,15 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     throw UnimplementedError();
   }
   
+  @override
+  Future<ChatMediumEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  ChatMediumEntity? fromMap(Object? o) {
+    throw UnimplementedError();
+  }
 
     Future<void> deleteAll() async {}
 }

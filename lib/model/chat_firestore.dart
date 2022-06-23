@@ -36,6 +36,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatFirestore implements ChatRepository {
+  @override
+  ChatEntity? fromMap(Object? o) {
+    return ChatEntity.fromMap(o);
+  }
+
   Future<ChatEntity> addEntity(String documentID, ChatEntity value) {
     return ChatCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
       var newValue = await getEntity(documentID);

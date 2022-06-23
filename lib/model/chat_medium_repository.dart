@@ -37,7 +37,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef ChatMediumModelTrigger(List<ChatMediumModel?> list);
 typedef ChatMediumChanged(ChatMediumModel? value);
 
-abstract class ChatMediumRepository extends RepositoryBase<ChatMediumModel> {
+abstract class ChatMediumRepository extends RepositoryBase<ChatMediumModel, ChatMediumEntity> {
   Future<ChatMediumEntity> addEntity(String documentID, ChatMediumEntity value);
   Future<ChatMediumEntity> updateEntity(String documentID, ChatMediumEntity value);
   Future<ChatMediumModel> add(ChatMediumModel value);

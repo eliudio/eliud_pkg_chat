@@ -115,6 +115,16 @@ class ChatCache implements ChatRepository {
     });
   }
 
+  @override
+  Future<ChatEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    return reference.getEntity(id, onError: onError);
+  }
+
+  @override
+  ChatEntity? fromMap(Object? o) {
+    return reference.fromMap(o);
+  }
+
   Future<void> deleteAll() {
     return reference.deleteAll();
   }

@@ -37,7 +37,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef RoomModelTrigger(List<RoomModel?> list);
 typedef RoomChanged(RoomModel? value);
 
-abstract class RoomRepository extends RepositoryBase<RoomModel> {
+abstract class RoomRepository extends RepositoryBase<RoomModel, RoomEntity> {
   Future<RoomEntity> addEntity(String documentID, RoomEntity value);
   Future<RoomEntity> updateEntity(String documentID, RoomEntity value);
   Future<RoomModel> add(RoomModel value);

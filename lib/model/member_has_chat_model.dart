@@ -18,6 +18,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -68,18 +69,13 @@ class MemberHasChatModel implements ModelBase, WithAppId {
           hasUnread == other.hasUnread;
 
   @override
-  Future<String> toRichJsonString({String? appId}) async {
-    var document = toEntity(appId: appId).toDocument();
-    document['documentID'] = documentID;
-    return jsonEncode(document);
-  }
-
-  @override
   String toString() {
     return 'MemberHasChatModel{documentID: $documentID, memberId: $memberId, appId: $appId, hasUnread: $hasUnread}';
   }
 
-  MemberHasChatEntity toEntity({String? appId}) {
+  MemberHasChatEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+    if (referencesCollector != null) {
+    }
     return MemberHasChatEntity(
           memberId: (memberId != null) ? memberId : null, 
           appId: (appId != null) ? appId : null, 

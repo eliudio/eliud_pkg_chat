@@ -36,6 +36,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatDashboardFirestore implements ChatDashboardRepository {
+  @override
+  ChatDashboardEntity? fromMap(Object? o) {
+    return ChatDashboardEntity.fromMap(o);
+  }
+
   Future<ChatDashboardEntity> addEntity(String documentID, ChatDashboardEntity value) {
     return ChatDashboardCollection.doc(documentID).set(value.toDocument()).then((_) => value);
   }

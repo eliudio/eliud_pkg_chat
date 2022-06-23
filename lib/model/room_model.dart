@@ -19,6 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -77,20 +78,15 @@ class RoomModel implements ModelBase, WithAppId {
           timestamp == other.timestamp;
 
   @override
-  Future<String> toRichJsonString({String? appId}) async {
-    var document = toEntity(appId: appId).toDocument();
-    document['documentID'] = documentID;
-    return jsonEncode(document);
-  }
-
-  @override
   String toString() {
     String membersCsv = (members == null) ? '' : members!.join(', ');
 
     return 'RoomModel{documentID: $documentID, ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
-  RoomEntity toEntity({String? appId}) {
+  RoomEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+    if (referencesCollector != null) {
+    }
     return RoomEntity(
           ownerId: (ownerId != null) ? ownerId : null, 
           appId: (appId != null) ? appId : null, 

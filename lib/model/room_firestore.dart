@@ -36,6 +36,11 @@ import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
 class RoomFirestore implements RoomRepository {
+  @override
+  RoomEntity? fromMap(Object? o) {
+    return RoomEntity.fromMap(o);
+  }
+
   Future<RoomEntity> addEntity(String documentID, RoomEntity value) {
     return RoomCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
       var newValue = await getEntity(documentID);

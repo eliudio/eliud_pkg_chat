@@ -115,6 +115,16 @@ class ChatDashboardCache implements ChatDashboardRepository {
     });
   }
 
+  @override
+  Future<ChatDashboardEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    return reference.getEntity(id, onError: onError);
+  }
+
+  @override
+  ChatDashboardEntity? fromMap(Object? o) {
+    return reference.fromMap(o);
+  }
+
   Future<void> deleteAll() {
     return reference.deleteAll();
   }

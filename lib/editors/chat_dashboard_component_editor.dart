@@ -22,6 +22,8 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_bloc.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_event.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_state.dart';
 
+import '../model/chat_dashboard_entity.dart';
+
 class ChatDashboardComponentEditorConstructor
     extends ComponentEditorConstructor {
   @override
@@ -88,7 +90,7 @@ class ChatDashboardComponentEditorConstructor
 }
 
 class ChatDashboardBloc
-    extends EditorBaseBloc<ChatDashboardModel> {
+    extends EditorBaseBloc<ChatDashboardModel, ChatDashboardEntity> {
 
   ChatDashboardBloc(String appId, EditorFeedback feedback)
       : super(appId, chatDashboardRepository(appId: appId)!, feedback);

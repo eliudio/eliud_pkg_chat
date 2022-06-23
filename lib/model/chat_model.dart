@@ -19,6 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -101,13 +102,6 @@ class ChatModel implements ModelBase, WithAppId {
           ListEquality().equals(chatMedia, other.chatMedia);
 
   @override
-  Future<String> toRichJsonString({String? appId}) async {
-    var document = toEntity(appId: appId).toDocument();
-    document['documentID'] = documentID;
-    return jsonEncode(document);
-  }
-
-  @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
@@ -116,7 +110,9 @@ class ChatModel implements ModelBase, WithAppId {
     return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
-  ChatEntity toEntity({String? appId}) {
+  ChatEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+    if (referencesCollector != null) {
+    }
     return ChatEntity(
           authorId: (authorId != null) ? authorId : null, 
           appId: (appId != null) ? appId : null, 
@@ -127,7 +123,7 @@ class ChatModel implements ModelBase, WithAppId {
           accessibleByMembers: (accessibleByMembers != null) ? accessibleByMembers : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           chatMedia: (chatMedia != null) ? chatMedia
-            !.map((item) => item.toEntity(appId: appId))
+            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
             .toList() : null, 
     );
   }

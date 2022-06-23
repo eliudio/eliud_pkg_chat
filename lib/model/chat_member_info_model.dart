@@ -19,6 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:eliud_core/model/app_model.dart';
 
 import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
@@ -97,13 +98,6 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
           ListEquality().equals(readAccess, other.readAccess);
 
   @override
-  Future<String> toRichJsonString({String? appId}) async {
-    var document = toEntity(appId: appId).toDocument();
-    document['documentID'] = documentID;
-    return jsonEncode(document);
-  }
-
-  @override
   String toString() {
     String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
@@ -111,7 +105,9 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
     return 'ChatMemberInfoModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
-  ChatMemberInfoEntity toEntity({String? appId}) {
+  ChatMemberInfoEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+    if (referencesCollector != null) {
+    }
     return ChatMemberInfoEntity(
           authorId: (authorId != null) ? authorId : null, 
           appId: (appId != null) ? appId : null, 

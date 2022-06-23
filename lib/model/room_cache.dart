@@ -115,6 +115,16 @@ class RoomCache implements RoomRepository {
     });
   }
 
+  @override
+  Future<RoomEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+    return reference.getEntity(id, onError: onError);
+  }
+
+  @override
+  RoomEntity? fromMap(Object? o) {
+    return reference.fromMap(o);
+  }
+
   Future<void> deleteAll() {
     return reference.deleteAll();
   }

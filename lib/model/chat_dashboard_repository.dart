@@ -37,7 +37,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 typedef ChatDashboardModelTrigger(List<ChatDashboardModel?> list);
 typedef ChatDashboardChanged(ChatDashboardModel? value);
 
-abstract class ChatDashboardRepository extends RepositoryBase<ChatDashboardModel> {
+abstract class ChatDashboardRepository extends RepositoryBase<ChatDashboardModel, ChatDashboardEntity> {
   Future<ChatDashboardEntity> addEntity(String documentID, ChatDashboardEntity value);
   Future<ChatDashboardEntity> updateEntity(String documentID, ChatDashboardEntity value);
   Future<ChatDashboardModel> add(ChatDashboardModel value);
