@@ -41,6 +41,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class RoomModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_chat';
+  static const String id = 'Room';
+
   String documentID;
 
   // The person creating the room
@@ -84,7 +87,7 @@ class RoomModel implements ModelBase, WithAppId {
     return 'RoomModel{documentID: $documentID, ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
-  RoomEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  RoomEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return RoomEntity(

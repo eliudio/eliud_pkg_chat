@@ -40,6 +40,9 @@ import 'package:eliud_core/tools/random.dart';
 
 
 class ChatMediumModel implements ModelBase {
+  static const String packageName = 'eliud_pkg_chat';
+  static const String id = 'ChatMedium';
+
   String documentID;
   MemberMediumModel? memberMedium;
 
@@ -67,9 +70,9 @@ class ChatMediumModel implements ModelBase {
     return 'ChatMediumModel{documentID: $documentID, memberMedium: $memberMedium}';
   }
 
-  ChatMediumEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  ChatMediumEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
-      if (memberMedium != null) referencesCollector.add(memberMedium!);
+      if (memberMedium != null) referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, memberMedium!));
     }
     return ChatMediumEntity(
           memberMediumId: (memberMedium != null) ? memberMedium!.documentID : null, 

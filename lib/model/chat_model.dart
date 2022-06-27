@@ -55,6 +55,9 @@ ChatAccessibleByGroup toChatAccessibleByGroup(int? index) {
 
 
 class ChatModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_chat';
+  static const String id = 'Chat';
+
   String documentID;
 
   // The person initiating the conversation, or the owner of the group
@@ -110,7 +113,7 @@ class ChatModel implements ModelBase, WithAppId {
     return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
-  ChatEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  ChatEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return ChatEntity(

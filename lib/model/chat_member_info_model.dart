@@ -55,6 +55,9 @@ ChatMemberInfoAccessibleByGroup toChatMemberInfoAccessibleByGroup(int? index) {
 
 
 class ChatMemberInfoModel implements ModelBase, WithAppId {
+  static const String packageName = 'eliud_pkg_chat';
+  static const String id = 'ChatMemberInfo';
+
   String documentID;
 
   // The person who this info is about
@@ -105,7 +108,7 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
     return 'ChatMemberInfoModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
-  ChatMemberInfoEntity toEntity({String? appId, List<ModelBase>? referencesCollector}) {
+  ChatMemberInfoEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return ChatMemberInfoEntity(
