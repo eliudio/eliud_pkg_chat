@@ -76,7 +76,7 @@ class ChatDashboardModel implements ModelBase, WithAppId {
     return 'ChatDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
   }
 
-  ChatDashboardEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  ChatDashboardEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return ChatDashboardEntity(

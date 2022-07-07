@@ -70,7 +70,7 @@ class ChatMediumModel implements ModelBase {
     return 'ChatMediumModel{documentID: $documentID, memberMedium: $memberMedium}';
   }
 
-  ChatMediumEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  ChatMediumEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
       if (memberMedium != null) referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, memberMedium!));
     }

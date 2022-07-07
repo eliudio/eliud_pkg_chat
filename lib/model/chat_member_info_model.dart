@@ -108,7 +108,7 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
     return 'ChatMemberInfoModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
-  ChatMemberInfoEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  ChatMemberInfoEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return ChatMemberInfoEntity(

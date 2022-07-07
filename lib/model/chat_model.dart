@@ -113,7 +113,7 @@ class ChatModel implements ModelBase, WithAppId {
     return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
-  ChatEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  ChatEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return ChatEntity(

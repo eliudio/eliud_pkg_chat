@@ -76,7 +76,7 @@ class MemberHasChatModel implements ModelBase, WithAppId {
     return 'MemberHasChatModel{documentID: $documentID, memberId: $memberId, appId: $appId, hasUnread: $hasUnread}';
   }
 
-  MemberHasChatEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  MemberHasChatEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return MemberHasChatEntity(

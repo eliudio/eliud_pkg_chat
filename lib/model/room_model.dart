@@ -87,7 +87,7 @@ class RoomModel implements ModelBase, WithAppId {
     return 'RoomModel{documentID: $documentID, ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
-  RoomEntity toEntity({String? appId, Set<ModelReference>? referencesCollector}) {
+  RoomEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
     if (referencesCollector != null) {
     }
     return RoomEntity(
