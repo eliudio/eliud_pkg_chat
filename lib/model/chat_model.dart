@@ -56,7 +56,7 @@ ChatAccessibleByGroup toChatAccessibleByGroup(int? index) {
 
 class ChatModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
-  static const String id = 'Chat';
+  static const String id = 'chats';
 
   String documentID;
 

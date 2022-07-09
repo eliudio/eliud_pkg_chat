@@ -41,7 +41,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class ChatMediumModel implements ModelBase {
   static const String packageName = 'eliud_pkg_chat';
-  static const String id = 'ChatMedium';
+  static const String id = 'chatMediums';
 
   String documentID;
   MemberMediumModel? memberMedium;

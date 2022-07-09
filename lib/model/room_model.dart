@@ -42,7 +42,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class RoomModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
-  static const String id = 'Room';
+  static const String id = 'rooms';
 
   String documentID;
 

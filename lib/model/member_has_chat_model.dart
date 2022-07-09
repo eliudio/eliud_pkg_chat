@@ -41,7 +41,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class MemberHasChatModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
-  static const String id = 'MemberHasChat';
+  static const String id = 'memberHasChats';
 
   String documentID;
   String memberId;

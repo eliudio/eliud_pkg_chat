@@ -38,6 +38,9 @@ class ComponentRegistry {
     Registry.registry()!.addComponentSpec('eliud_pkg_chat', 'chat', [
       ComponentSpec('chatDashboards', ChatDashboardComponentConstructorDefault(), ChatDashboardComponentSelector(), ChatDashboardComponentEditorConstructor(), ({String? appId}) => chatDashboardRepository(appId: appId)! ), 
     ]);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_chat', 'chatDashboards', ({String? appId}) => chatDashboardRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_chat', 'memberHasChats', ({String? appId}) => memberHasChatRepository(appId: appId)!);
+      Registry.registry()!.registerRetrieveRepository('eliud_pkg_chat', 'rooms', ({String? appId}) => roomRepository(appId: appId)!);
 
   }
 }

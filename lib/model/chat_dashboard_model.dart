@@ -41,7 +41,7 @@ import 'package:eliud_core/tools/random.dart';
 
 class ChatDashboardModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
-  static const String id = 'ChatDashboard';
+  static const String id = 'chatDashboards';
 
   String documentID;
 
