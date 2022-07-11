@@ -87,9 +87,12 @@ class RoomModel implements ModelBase, WithAppId {
     return 'RoomModel{documentID: $documentID, ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
-  RoomEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-    }
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    return referencesCollector;
+  }
+
+  RoomEntity toEntity({String? appId}) {
     return RoomEntity(
           ownerId: (ownerId != null) ? ownerId : null, 
           appId: (appId != null) ? appId : null, 

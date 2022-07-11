@@ -70,10 +70,16 @@ class ChatMediumModel implements ModelBase {
     return 'ChatMediumModel{documentID: $documentID, memberMedium: $memberMedium}';
   }
 
-  ChatMediumEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-      if (memberMedium != null) referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, memberMedium!));
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (memberMedium != null) {
+      referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, memberMedium!));
     }
+    if (memberMedium != null) referencesCollector.addAll(await memberMedium!.collectReferences(appId: appId));
+    return referencesCollector;
+  }
+
+  ChatMediumEntity toEntity({String? appId}) {
     return ChatMediumEntity(
           memberMediumId: (memberMedium != null) ? memberMedium!.documentID : null, 
     );

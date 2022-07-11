@@ -113,9 +113,17 @@ class ChatModel implements ModelBase, WithAppId {
     return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
-  ChatEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (chatMedia != null) {
+      for (var item in chatMedia!) {
+        referencesCollector.addAll(await item.collectReferences(appId: appId));
+      }
     }
+    return referencesCollector;
+  }
+
+  ChatEntity toEntity({String? appId}) {
     return ChatEntity(
           authorId: (authorId != null) ? authorId : null, 
           appId: (appId != null) ? appId : null, 
@@ -126,7 +134,7 @@ class ChatModel implements ModelBase, WithAppId {
           accessibleByMembers: (accessibleByMembers != null) ? accessibleByMembers : null, 
           readAccess: (readAccess != null) ? readAccess : null, 
           chatMedia: (chatMedia != null) ? chatMedia
-            !.map((item) => item.toEntity(appId: appId, referencesCollector: referencesCollector))
+            !.map((item) => item.toEntity(appId: appId))
             .toList() : null, 
     );
   }

@@ -76,13 +76,17 @@ class ChatDashboardModel implements ModelBase, WithAppId {
     return 'ChatDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
   }
 
-  ChatDashboardEntity toEntity({String? appId, List<ModelReference>? referencesCollector}) {
-    if (referencesCollector != null) {
-    }
+  Future<List<ModelReference>> collectReferences({String? appId}) async {
+    List<ModelReference> referencesCollector = [];
+    if (conditions != null) referencesCollector.addAll(await conditions!.collectReferences(appId: appId));
+    return referencesCollector;
+  }
+
+  ChatDashboardEntity toEntity({String? appId}) {
     return ChatDashboardEntity(
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
-          conditions: (conditions != null) ? conditions!.toEntity(appId: appId, referencesCollector: referencesCollector) : null, 
+          conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
     );
   }
 
