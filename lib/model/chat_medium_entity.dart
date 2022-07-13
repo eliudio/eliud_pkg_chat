@@ -28,7 +28,9 @@ class ChatMediumEntity implements EntityBase {
 
   ChatMediumEntity({this.memberMediumId, });
 
-
+  ChatMediumEntity copyWith({String? documentID, String? memberMediumId, }) {
+    return ChatMediumEntity(memberMediumId : memberMediumId ?? this.memberMediumId, );
+  }
   List<Object?> get props => [memberMediumId, ];
 
   @override
@@ -50,6 +52,12 @@ class ChatMediumEntity implements EntityBase {
     if (memberMediumId != null) theDocument["memberMediumId"] = memberMediumId;
       else theDocument["memberMediumId"] = null;
     return theDocument;
+  }
+
+  @override
+  ChatMediumEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith();
+    return newEntity;
   }
 
   static ChatMediumEntity? fromJsonString(String json) {

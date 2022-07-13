@@ -30,7 +30,9 @@ class ChatDashboardEntity implements EntityBase {
 
   ChatDashboardEntity({required this.appId, this.description, this.conditions, });
 
-
+  ChatDashboardEntity copyWith({String? documentID, String? appId, String? description, StorageConditionsEntity? conditions, }) {
+    return ChatDashboardEntity(appId : appId ?? this.appId, description : description ?? this.description, conditions : conditions ?? this.conditions, );
+  }
   List<Object?> get props => [appId, description, conditions, ];
 
   @override
@@ -67,6 +69,12 @@ class ChatDashboardEntity implements EntityBase {
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
     return theDocument;
+  }
+
+  @override
+  ChatDashboardEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static ChatDashboardEntity? fromJsonString(String json) {

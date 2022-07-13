@@ -36,8 +36,8 @@ class ChatEntity implements EntityBase {
 
   ChatEntity({required this.authorId, required this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, });
 
-  ChatEntity copyWith({Object? timestamp, }) {
-    return ChatEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, saying: saying, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, chatMedia: chatMedia, );
+  ChatEntity copyWith({String? documentID, String? authorId, String? appId, String? roomId, Object? timestamp, String? saying, int? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, List<ChatMediumEntity>? chatMedia, }) {
+    return ChatEntity(authorId : authorId ?? this.authorId, appId : appId ?? this.appId, roomId : roomId ?? this.roomId, timestamp : timestamp ?? this.timestamp, saying : saying ?? this.saying, accessibleByGroup : accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers : accessibleByMembers ?? this.accessibleByMembers, readAccess : readAccess ?? this.readAccess, chatMedia : chatMedia ?? this.chatMedia, );
   }
   List<Object?> get props => [authorId, appId, roomId, timestamp, saying, accessibleByGroup, accessibleByMembers, readAccess, chatMedia, ];
 
@@ -100,6 +100,12 @@ class ChatEntity implements EntityBase {
     if (chatMedia != null) theDocument["chatMedia"] = chatMediaListMap;
       else theDocument["chatMedia"] = null;
     return theDocument;
+  }
+
+  @override
+  ChatEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static ChatEntity? fromJsonString(String json) {

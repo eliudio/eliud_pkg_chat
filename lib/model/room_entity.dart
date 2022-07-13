@@ -33,8 +33,8 @@ class RoomEntity implements EntityBase {
 
   RoomEntity({required this.ownerId, required this.appId, this.description, this.isRoom, this.members, this.timestamp, });
 
-  RoomEntity copyWith({Object? timestamp, }) {
-    return RoomEntity(ownerId: ownerId, appId: appId, description: description, isRoom: isRoom, members: members, timestamp : timestamp, );
+  RoomEntity copyWith({String? documentID, String? ownerId, String? appId, String? description, bool? isRoom, List<String>? members, Object? timestamp, }) {
+    return RoomEntity(ownerId : ownerId ?? this.ownerId, appId : appId ?? this.appId, description : description ?? this.description, isRoom : isRoom ?? this.isRoom, members : members ?? this.members, timestamp : timestamp ?? this.timestamp, );
   }
   List<Object?> get props => [ownerId, appId, description, isRoom, members, timestamp, ];
 
@@ -73,6 +73,12 @@ class RoomEntity implements EntityBase {
       else theDocument["members"] = null;
     theDocument["timestamp"] = timestamp;
     return theDocument;
+  }
+
+  @override
+  RoomEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static RoomEntity? fromJsonString(String json) {

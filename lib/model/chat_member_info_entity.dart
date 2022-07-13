@@ -34,8 +34,8 @@ class ChatMemberInfoEntity implements EntityBase {
 
   ChatMemberInfoEntity({required this.authorId, required this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, });
 
-  ChatMemberInfoEntity copyWith({Object? timestamp, }) {
-    return ChatMemberInfoEntity(authorId: authorId, appId: appId, roomId: roomId, timestamp : timestamp, accessibleByGroup: accessibleByGroup, accessibleByMembers: accessibleByMembers, readAccess: readAccess, );
+  ChatMemberInfoEntity copyWith({String? documentID, String? authorId, String? appId, String? roomId, Object? timestamp, int? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, }) {
+    return ChatMemberInfoEntity(authorId : authorId ?? this.authorId, appId : appId ?? this.appId, roomId : roomId ?? this.roomId, timestamp : timestamp ?? this.timestamp, accessibleByGroup : accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers : accessibleByMembers ?? this.accessibleByMembers, readAccess : readAccess ?? this.readAccess, );
   }
   List<Object?> get props => [authorId, appId, roomId, timestamp, accessibleByGroup, accessibleByMembers, readAccess, ];
 
@@ -78,6 +78,12 @@ class ChatMemberInfoEntity implements EntityBase {
     if (readAccess != null) theDocument["readAccess"] = readAccess!.toList();
       else theDocument["readAccess"] = null;
     return theDocument;
+  }
+
+  @override
+  ChatMemberInfoEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static ChatMemberInfoEntity? fromJsonString(String json) {

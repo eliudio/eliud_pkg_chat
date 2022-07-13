@@ -30,7 +30,9 @@ class MemberHasChatEntity implements EntityBase {
 
   MemberHasChatEntity({required this.memberId, required this.appId, this.hasUnread, });
 
-
+  MemberHasChatEntity copyWith({String? documentID, String? memberId, String? appId, bool? hasUnread, }) {
+    return MemberHasChatEntity(memberId : memberId ?? this.memberId, appId : appId ?? this.appId, hasUnread : hasUnread ?? this.hasUnread, );
+  }
   List<Object?> get props => [memberId, appId, hasUnread, ];
 
   @override
@@ -58,6 +60,12 @@ class MemberHasChatEntity implements EntityBase {
     if (hasUnread != null) theDocument["hasUnread"] = hasUnread;
       else theDocument["hasUnread"] = null;
     return theDocument;
+  }
+
+  @override
+  MemberHasChatEntity switchAppId({required String newAppId}) {
+    var newEntity = copyWith(appId: newAppId);
+    return newEntity;
   }
 
   static MemberHasChatEntity? fromJsonString(String json) {
