@@ -46,11 +46,7 @@ class MemberHasChatFormBloc extends Bloc<MemberHasChatFormEvent, MemberHasChatFo
   final FormAction? formAction;
   final String? appId;
 
-  MemberHasChatFormBloc(this.appId, { this.formAction }): super(MemberHasChatFormUninitialized());
-  @override
-  Stream<MemberHasChatFormState> mapEventToState(MemberHasChatFormEvent event) async* {
-    final currentState = state;
-    if (currentState is MemberHasChatFormUninitialized) {
+  MemberHasChatFormBloc(this.appId, { this.formAction }): super(MemberHasChatFormUninitialized()) {
       on <InitialiseNewMemberHasChatFormEvent> ((event, emit) {
         MemberHasChatFormLoaded loaded = MemberHasChatFormLoaded(value: MemberHasChatModel(
                                                documentID: "",
@@ -62,17 +58,19 @@ class MemberHasChatFormBloc extends Bloc<MemberHasChatFormEvent, MemberHasChatFo
       });
 
 
-      if (event is InitialiseMemberHasChatFormEvent) {
+      on <InitialiseMemberHasChatFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         MemberHasChatFormLoaded loaded = MemberHasChatFormLoaded(value: await memberHasChatRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseMemberHasChatFormNoLoadEvent) {
+      });
+      on <InitialiseMemberHasChatFormNoLoadEvent> ((event, emit) async {
         MemberHasChatFormLoaded loaded = MemberHasChatFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is MemberHasChatFormInitialized) {
+      });
       MemberHasChatModel? newValue = null;
       on <ChangedMemberHasChatDocumentID> ((event, emit) async {
+      if (state is MemberHasChatFormInitialized) {
+        final currentState = state as MemberHasChatFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -80,23 +78,32 @@ class MemberHasChatFormBloc extends Bloc<MemberHasChatFormEvent, MemberHasChatFo
           emit(SubmittableMemberHasChatForm(value: newValue));
         }
 
+      }
       });
       on <ChangedMemberHasChatMemberId> ((event, emit) async {
+      if (state is MemberHasChatFormInitialized) {
+        final currentState = state as MemberHasChatFormInitialized;
         newValue = currentState.value!.copyWith(memberId: event.value);
         emit(SubmittableMemberHasChatForm(value: newValue));
 
+      }
       });
       on <ChangedMemberHasChatAppId> ((event, emit) async {
+      if (state is MemberHasChatFormInitialized) {
+        final currentState = state as MemberHasChatFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableMemberHasChatForm(value: newValue));
 
+      }
       });
       on <ChangedMemberHasChatHasUnread> ((event, emit) async {
+      if (state is MemberHasChatFormInitialized) {
+        final currentState = state as MemberHasChatFormInitialized;
         newValue = currentState.value!.copyWith(hasUnread: event.value);
         emit(SubmittableMemberHasChatForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

@@ -46,11 +46,7 @@ class ChatDashboardFormBloc extends Bloc<ChatDashboardFormEvent, ChatDashboardFo
   final FormAction? formAction;
   final String? appId;
 
-  ChatDashboardFormBloc(this.appId, { this.formAction }): super(ChatDashboardFormUninitialized());
-  @override
-  Stream<ChatDashboardFormState> mapEventToState(ChatDashboardFormEvent event) async* {
-    final currentState = state;
-    if (currentState is ChatDashboardFormUninitialized) {
+  ChatDashboardFormBloc(this.appId, { this.formAction }): super(ChatDashboardFormUninitialized()) {
       on <InitialiseNewChatDashboardFormEvent> ((event, emit) {
         ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: ChatDashboardModel(
                                                documentID: "",
@@ -62,17 +58,19 @@ class ChatDashboardFormBloc extends Bloc<ChatDashboardFormEvent, ChatDashboardFo
       });
 
 
-      if (event is InitialiseChatDashboardFormEvent) {
+      on <InitialiseChatDashboardFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: await chatDashboardRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseChatDashboardFormNoLoadEvent) {
+      });
+      on <InitialiseChatDashboardFormNoLoadEvent> ((event, emit) async {
         ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is ChatDashboardFormInitialized) {
+      });
       ChatDashboardModel? newValue = null;
       on <ChangedChatDashboardDocumentID> ((event, emit) async {
+      if (state is ChatDashboardFormInitialized) {
+        final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -80,23 +78,32 @@ class ChatDashboardFormBloc extends Bloc<ChatDashboardFormEvent, ChatDashboardFo
           emit(SubmittableChatDashboardForm(value: newValue));
         }
 
+      }
       });
       on <ChangedChatDashboardAppId> ((event, emit) async {
+      if (state is ChatDashboardFormInitialized) {
+        final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableChatDashboardForm(value: newValue));
 
+      }
       });
       on <ChangedChatDashboardDescription> ((event, emit) async {
+      if (state is ChatDashboardFormInitialized) {
+        final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableChatDashboardForm(value: newValue));
 
+      }
       });
       on <ChangedChatDashboardConditions> ((event, emit) async {
+      if (state is ChatDashboardFormInitialized) {
+        final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(conditions: event.value);
         emit(SubmittableChatDashboardForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

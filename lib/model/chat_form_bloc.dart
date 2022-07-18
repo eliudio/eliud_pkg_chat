@@ -46,11 +46,7 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  ChatFormBloc(this.appId, { this.formAction }): super(ChatFormUninitialized());
-  @override
-  Stream<ChatFormState> mapEventToState(ChatFormEvent event) async* {
-    final currentState = state;
-    if (currentState is ChatFormUninitialized) {
+  ChatFormBloc(this.appId, { this.formAction }): super(ChatFormUninitialized()) {
       on <InitialiseNewChatFormEvent> ((event, emit) {
         ChatFormLoaded loaded = ChatFormLoaded(value: ChatModel(
                                                documentID: "",
@@ -67,17 +63,19 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
       });
 
 
-      if (event is InitialiseChatFormEvent) {
+      on <InitialiseChatFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         ChatFormLoaded loaded = ChatFormLoaded(value: await chatRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseChatFormNoLoadEvent) {
+      });
+      on <InitialiseChatFormNoLoadEvent> ((event, emit) async {
         ChatFormLoaded loaded = ChatFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is ChatFormInitialized) {
+      });
       ChatModel? newValue = null;
       on <ChangedChatDocumentID> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -85,43 +83,64 @@ class ChatFormBloc extends Bloc<ChatFormEvent, ChatFormState> {
           emit(SubmittableChatForm(value: newValue));
         }
 
+      }
       });
       on <ChangedChatAuthorId> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(authorId: event.value);
         emit(SubmittableChatForm(value: newValue));
 
+      }
       });
       on <ChangedChatAppId> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableChatForm(value: newValue));
 
+      }
       });
       on <ChangedChatRoomId> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(roomId: event.value);
         emit(SubmittableChatForm(value: newValue));
 
+      }
       });
       on <ChangedChatTimestamp> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
         emit(SubmittableChatForm(value: newValue));
 
+      }
       });
       on <ChangedChatSaying> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(saying: event.value);
         emit(SubmittableChatForm(value: newValue));
 
+      }
       });
       on <ChangedChatAccessibleByGroup> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(accessibleByGroup: event.value);
         emit(SubmittableChatForm(value: newValue));
 
+      }
       });
       on <ChangedChatChatMedia> ((event, emit) async {
+      if (state is ChatFormInitialized) {
+        final currentState = state as ChatFormInitialized;
         newValue = currentState.value!.copyWith(chatMedia: event.value);
         emit(SubmittableChatForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

@@ -45,11 +45,7 @@ import 'package:eliud_pkg_chat/model/chat_medium_repository.dart';
 class ChatMediumFormBloc extends Bloc<ChatMediumFormEvent, ChatMediumFormState> {
   final String? appId;
 
-  ChatMediumFormBloc(this.appId, ): super(ChatMediumFormUninitialized());
-  @override
-  Stream<ChatMediumFormState> mapEventToState(ChatMediumFormEvent event) async* {
-    final currentState = state;
-    if (currentState is ChatMediumFormUninitialized) {
+  ChatMediumFormBloc(this.appId, ): super(ChatMediumFormUninitialized()) {
       on <InitialiseNewChatMediumFormEvent> ((event, emit) {
         ChatMediumFormLoaded loaded = ChatMediumFormLoaded(value: ChatMediumModel(
                                                documentID: "IDENTIFIER", 
@@ -59,22 +55,24 @@ class ChatMediumFormBloc extends Bloc<ChatMediumFormEvent, ChatMediumFormState> 
       });
 
 
-      if (event is InitialiseChatMediumFormEvent) {
+      on <InitialiseChatMediumFormEvent> ((event, emit) async {
         ChatMediumFormLoaded loaded = ChatMediumFormLoaded(value: event.value);
         emit(loaded);
-      } else if (event is InitialiseChatMediumFormNoLoadEvent) {
+      });
+      on <InitialiseChatMediumFormNoLoadEvent> ((event, emit) async {
         ChatMediumFormLoaded loaded = ChatMediumFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is ChatMediumFormInitialized) {
+      });
       ChatMediumModel? newValue = null;
       on <ChangedChatMediumMemberMedium> ((event, emit) async {
+      if (state is ChatMediumFormInitialized) {
+        final currentState = state as ChatMediumFormInitialized;
         if (event.value != null)
           newValue = currentState.value!.copyWith(memberMedium: await memberMediumRepository(appId: appId)!.get(event.value));
         emit(SubmittableChatMediumForm(value: newValue));
 
+      }
       });
-    }
   }
 
 

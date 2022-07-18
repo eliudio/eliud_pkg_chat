@@ -46,11 +46,7 @@ class RoomFormBloc extends Bloc<RoomFormEvent, RoomFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  RoomFormBloc(this.appId, { this.formAction }): super(RoomFormUninitialized());
-  @override
-  Stream<RoomFormState> mapEventToState(RoomFormEvent event) async* {
-    final currentState = state;
-    if (currentState is RoomFormUninitialized) {
+  RoomFormBloc(this.appId, { this.formAction }): super(RoomFormUninitialized()) {
       on <InitialiseNewRoomFormEvent> ((event, emit) {
         RoomFormLoaded loaded = RoomFormLoaded(value: RoomModel(
                                                documentID: "",
@@ -64,17 +60,19 @@ class RoomFormBloc extends Bloc<RoomFormEvent, RoomFormState> {
       });
 
 
-      if (event is InitialiseRoomFormEvent) {
+      on <InitialiseRoomFormEvent> ((event, emit) async {
         // Need to re-retrieve the document from the repository so that I get all associated types
         RoomFormLoaded loaded = RoomFormLoaded(value: await roomRepository(appId: appId)!.get(event.value!.documentID));
         emit(loaded);
-      } else if (event is InitialiseRoomFormNoLoadEvent) {
+      });
+      on <InitialiseRoomFormNoLoadEvent> ((event, emit) async {
         RoomFormLoaded loaded = RoomFormLoaded(value: event.value);
         emit(loaded);
-      }
-    } else if (currentState is RoomFormInitialized) {
+      });
       RoomModel? newValue = null;
       on <ChangedRoomDocumentID> ((event, emit) async {
+      if (state is RoomFormInitialized) {
+        final currentState = state as RoomFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
         if (formAction == FormAction.AddAction) {
           emit(await _isDocumentIDValid(event.value, newValue!));
@@ -82,33 +80,48 @@ class RoomFormBloc extends Bloc<RoomFormEvent, RoomFormState> {
           emit(SubmittableRoomForm(value: newValue));
         }
 
+      }
       });
       on <ChangedRoomOwnerId> ((event, emit) async {
+      if (state is RoomFormInitialized) {
+        final currentState = state as RoomFormInitialized;
         newValue = currentState.value!.copyWith(ownerId: event.value);
         emit(SubmittableRoomForm(value: newValue));
 
+      }
       });
       on <ChangedRoomAppId> ((event, emit) async {
+      if (state is RoomFormInitialized) {
+        final currentState = state as RoomFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableRoomForm(value: newValue));
 
+      }
       });
       on <ChangedRoomDescription> ((event, emit) async {
+      if (state is RoomFormInitialized) {
+        final currentState = state as RoomFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableRoomForm(value: newValue));
 
+      }
       });
       on <ChangedRoomIsRoom> ((event, emit) async {
+      if (state is RoomFormInitialized) {
+        final currentState = state as RoomFormInitialized;
         newValue = currentState.value!.copyWith(isRoom: event.value);
         emit(SubmittableRoomForm(value: newValue));
 
+      }
       });
       on <ChangedRoomTimestamp> ((event, emit) async {
+      if (state is RoomFormInitialized) {
+        final currentState = state as RoomFormInitialized;
         newValue = currentState.value!.copyWith(timestamp: dateTimeFromTimestampString(event.value!));
         emit(SubmittableRoomForm(value: newValue));
 
+      }
       });
-    }
   }
 
 
