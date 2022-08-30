@@ -121,8 +121,8 @@ class ChatDashboardCache implements ChatDashboardRepository {
   }
 
   @override
-  ChatDashboardEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  ChatDashboardEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

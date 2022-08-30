@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -50,7 +51,7 @@ class ChatEntity implements EntityBase {
     return 'ChatEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
-  static ChatEntity? fromMap(Object? o) {
+  static ChatEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
@@ -60,7 +61,7 @@ class ChatEntity implements EntityBase {
     if (chatMediaFromMap != null)
       chatMediaList = (map['chatMedia'] as List<dynamic>)
         .map((dynamic item) =>
-        ChatMediumEntity.fromMap(item as Map)!)
+        ChatMediumEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
         .toList();
 
     return ChatEntity(
@@ -108,9 +109,9 @@ class ChatEntity implements EntityBase {
     return newEntity;
   }
 
-  static ChatEntity? fromJsonString(String json) {
+  static ChatEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {

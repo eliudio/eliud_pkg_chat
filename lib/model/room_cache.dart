@@ -121,8 +121,8 @@ class RoomCache implements RoomRepository {
   }
 
   @override
-  RoomEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  RoomEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

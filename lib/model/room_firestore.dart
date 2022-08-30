@@ -37,8 +37,8 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class RoomFirestore implements RoomRepository {
   @override
-  RoomEntity? fromMap(Object? o) {
-    return RoomEntity.fromMap(o);
+  RoomEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return RoomEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<RoomEntity> addEntity(String documentID, RoomEntity value) {

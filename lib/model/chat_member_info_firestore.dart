@@ -37,8 +37,8 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
   @override
-  ChatMemberInfoEntity? fromMap(Object? o) {
-    return ChatMemberInfoEntity.fromMap(o);
+  ChatMemberInfoEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return ChatMemberInfoEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<ChatMemberInfoEntity> addEntity(String documentID, ChatMemberInfoEntity value) {

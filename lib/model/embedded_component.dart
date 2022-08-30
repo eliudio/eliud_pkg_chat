@@ -168,7 +168,7 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
   }
 
   @override
-  ChatMediumEntity? fromMap(Object? o) {
+  ChatMediumEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     throw UnimplementedError();
   }
 

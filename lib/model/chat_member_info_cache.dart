@@ -121,8 +121,8 @@ class ChatMemberInfoCache implements ChatMemberInfoRepository {
   }
 
   @override
-  ChatMemberInfoEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  ChatMemberInfoEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

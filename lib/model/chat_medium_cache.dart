@@ -121,8 +121,8 @@ class ChatMediumCache implements ChatMediumRepository {
   }
 
   @override
-  ChatMediumEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  ChatMediumEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

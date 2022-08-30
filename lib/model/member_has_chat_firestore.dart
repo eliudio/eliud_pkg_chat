@@ -37,8 +37,8 @@ import 'package:eliud_core/tools/common_tools.dart';
 
 class MemberHasChatFirestore implements MemberHasChatRepository {
   @override
-  MemberHasChatEntity? fromMap(Object? o) {
-    return MemberHasChatEntity.fromMap(o);
+  MemberHasChatEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return MemberHasChatEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value) {

@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -47,7 +48,7 @@ class ChatMemberInfoEntity implements EntityBase {
     return 'ChatMemberInfoEntity{authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
-  static ChatMemberInfoEntity? fromMap(Object? o) {
+  static ChatMemberInfoEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
@@ -86,9 +87,9 @@ class ChatMemberInfoEntity implements EntityBase {
     return newEntity;
   }
 
-  static ChatMemberInfoEntity? fromJsonString(String json) {
+  static ChatMemberInfoEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {

@@ -121,8 +121,8 @@ class ChatCache implements ChatRepository {
   }
 
   @override
-  ChatEntity? fromMap(Object? o) {
-    return reference.fromMap(o);
+  ChatEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+    return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
   Future<void> deleteAll() {

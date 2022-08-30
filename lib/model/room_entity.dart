@@ -15,6 +15,7 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'package:eliud_core/tools/random.dart';
 import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
@@ -45,7 +46,7 @@ class RoomEntity implements EntityBase {
     return 'RoomEntity{ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
-  static RoomEntity? fromMap(Object? o) {
+  static RoomEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
@@ -81,9 +82,9 @@ class RoomEntity implements EntityBase {
     return newEntity;
   }
 
-  static RoomEntity? fromJsonString(String json) {
+  static RoomEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
-    return fromMap(generationSpecificationMap);
+    return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
 
   String toJsonString() {
