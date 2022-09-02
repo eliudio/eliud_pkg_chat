@@ -279,7 +279,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                       )),
                 ),
                 const SizedBox(width: 8),
-                MediaButtons.mediaButtons(context, widget.app, widget.memberId, () => Tuple2(
+                MediaButtons.mediaButtons(context, widget.app, () => Tuple2(
                     MemberMediumAccessibleByGroup.SpecificMembers,
                     room.members,),
                     tooltip: 'Add video or photo',
