@@ -1,4 +1,3 @@
-import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
@@ -84,11 +83,12 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                         itemCount: chats.length,
                         itemBuilder: (context, index) {
                           final value = chats[index];
-                          return roomListEntry(value);
+                          return roomListEntry(value, value.roomModel == currentChat);
                         })
                 ]),(currentChat != null)?
                   ChatWidget(app: widget.app,
                     memberId: widget.memberId,
+                    canAddMember: widget.memberId == currentChat.ownerId,
                   ):
                   Container(),
             0.3, 0.2, 0.8
@@ -101,7 +101,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
     });
   }
 
-  Widget roomListEntry(EnhancedRoomModel room) {
+  Widget roomListEntry(EnhancedRoomModel room, bool isCurrent) {
     var timestampRoom = (room.roomModel.timestamp != null)
         ? room.roomModel.timestamp!
         : DateTime.now();
@@ -123,7 +123,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
       var avatar = room.otherMembersRoomInfo[i].avatar;
       if (avatar != null) {
         widgets.add(FadeInImage.memoryNetwork(
-          height: 50,
+          height: 10,
           placeholder: kTransparentImage,
           image: avatar,
         ));
@@ -141,15 +141,15 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         shrinkWrap: true,
         children: widgets);
 
+    var theTime = timestampRoom != null ? formatHHMM(timestampRoom) : 'now';
     return ListTile(
         onTap: () async {
           selectRoom(context, room.roomModel);
         },
-        trailing: text(widget.app,
-            context, timestampRoom != null ? formatHHMM(timestampRoom) : 'now'),
+        trailing: text(widget.app, context, theTime),
         leading: SizedBox(
-          height: 100,
-          width: 100,
+          height: 50,
+          width: 50,
           child: staggeredPhotos,
         ),
         title: nameWidget);

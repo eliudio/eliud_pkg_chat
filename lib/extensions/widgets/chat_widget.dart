@@ -34,11 +34,13 @@ import 'members_widget.dart';
 class ChatWidget extends StatefulWidget {
   final AppModel app;
   final String memberId;
+  final bool canAddMember;
 
   const ChatWidget({
     Key? key,
     required this.app,
     required this.memberId,
+    required this.canAddMember,
   }) : super(key: key);
 
   @override
@@ -219,7 +221,8 @@ class _ChatWidgetState extends State<ChatWidget> {
               height: SPEAK_ROW_HEIGHT,
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                iconButton(
+                if (!widget.canAddMember) Container(width: 20),
+                if (widget.canAddMember) iconButton(
                   widget.app,
                   context,
                   icon: const Icon(

@@ -29,10 +29,10 @@ class RoomHelper {
     }
 
     if (reviewedListOfMembers.length == 1) {
-      return getRoomForMember(appId, currentMemberId, members[0]);
+      return getRoomForMember(appId, currentMemberId, reviewedListOfMembers[0]);
     } else {
       var roomId = newRandomKey();
-      return _storeRoom(appId, roomId, currentMemberId, reviewedListOfMembers,
+      return await _storeRoom(appId, roomId, currentMemberId, members,
           'Chat amongst ${reviewedListOfMembers.join(", ")}');
     }
   }
@@ -40,7 +40,7 @@ class RoomHelper {
   static Future<RoomModel> getRoomForMember(
       String appId, String currentMemberId, String otherMemberId) async {
     var roomId = RoomHelper.getRoomKey(currentMemberId, otherMemberId);
-    return _storeRoom(appId, roomId, currentMemberId, [
+    return await _storeRoom(appId, roomId, currentMemberId, [
       currentMemberId,
       otherMemberId,
     ], 'Chat between $currentMemberId and $otherMemberId');
@@ -59,6 +59,7 @@ class RoomHelper {
       );
       await roomRepository(appId: appId)!.add(roomModel);
     }
+
     return roomModel;
   }
 
