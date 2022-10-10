@@ -131,9 +131,12 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         var theState = state;
         if (theState is AllChatsLoaded) {
           var currentRoom = theState.currentRoom;
-          for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
-            if (selectedEnhancedRoom.roomModel.documentID == currentRoom!.documentID) {
-              chatBloc.add(SelectChatEvent(selectedEnhancedRoom));
+          if (currentRoom != null) {
+            for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
+              if (selectedEnhancedRoom.roomModel.documentID ==
+                  currentRoom!.documentID) {
+                chatBloc.add(SelectChatEvent(selectedEnhancedRoom));
+              }
             }
           }
           emit(_mapAllChatsUpdatedToState(event, currentRoom));

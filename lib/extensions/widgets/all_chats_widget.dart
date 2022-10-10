@@ -17,6 +17,7 @@ import 'all_chats_bloc/all_chats_event.dart';
 import 'all_chats_bloc/all_chats_state.dart';
 import 'chat_widget.dart';
 import 'members_widget.dart';
+import 'dart:math';
 
 class AllChatsWidget extends StatefulWidget {
   final String memberId;
@@ -119,6 +120,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
             names,
           );
 
+    int amountOfAvatars = 0;
     List<Widget> widgets = [];
     for (int i = 0; i < room.otherMembersRoomInfo.length; i++) {
       var avatar = room.otherMembersRoomInfo[i].avatar;
@@ -128,19 +130,31 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
           placeholder: kTransparentImage,
           image: avatar,
         ));
+        amountOfAvatars++;
       } else {
-        widgets.add(const Center(child: Text('No photo')));
+        widgets.add(const Icon(Icons.person));
       }
     }
 
-    var staggeredPhotos = GridView.extent(
-        maxCrossAxisExtent: 200,
-        padding: const EdgeInsets.all(0),
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
-        physics: const ScrollPhysics(), // to disable GridView's scrolling
-        shrinkWrap: true,
-        children: widgets);
+    const double photoSize = 50;
+    const double spacing = 1;
+
+    Widget staggeredPhotos;
+    if (amountOfAvatars >= 1) {
+      var sqrtValue = sqrt(amountOfAvatars);
+      var maxCrossAxisExtend = (photoSize - (sqrtValue - 1)) / sqrtValue;
+      staggeredPhotos = GridView.extent(
+          maxCrossAxisExtent: maxCrossAxisExtend,
+          padding: const EdgeInsets.all(0),
+          mainAxisSpacing: spacing,
+          crossAxisSpacing: spacing,
+          physics: const ScrollPhysics(),
+          // to disable GridView's scrolling
+          shrinkWrap: true,
+          children: widgets);
+    } else {
+      staggeredPhotos = const Icon(Icons.error);
+    }
 
     var theTime = timestampRoom != null ? formatHHMM(timestampRoom) : 'now';
     return ListTile(
@@ -149,8 +163,8 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         },
         trailing: text(widget.app, context, theTime),
         leading: SizedBox(
-          height: 50,
-          width: 50,
+          height: photoSize,
+          width: photoSize,
           child: staggeredPhotos,
         ),
         title: nameWidget);
