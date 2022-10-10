@@ -49,7 +49,7 @@ class RoomHelper {
         appId: appId,
         description: descr,
         isRoom: false,
-        members: members,
+        members: uniqueMembers,
       );
       await roomRepository(appId: appId)!.add(roomModel);
     }

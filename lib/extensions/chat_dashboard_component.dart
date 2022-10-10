@@ -55,12 +55,12 @@ class ChatDashboard extends AbstractChatDashboardComponent {
         var height = MediaQuery.of(context).size.height -
             kToolbarHeight -
             kBottomNavigationBarHeight;
-        var chatListBloc = ChatBloc(
+        var chatBloc = ChatBloc(
           appId: appId,
           thisMemberId: memberId,
         );
         var allChatsBloc = AllChatsBloc(
-            chatListBloc: chatListBloc,
+            chatBloc: chatBloc,
             appId: appId,
             thisMemberId: memberId,
             orderBy: 'timestamp',
@@ -74,7 +74,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
             child: MultiBlocProvider(
                 providers: [
                   BlocProvider<AllChatsBloc>(create: (context) => allChatsBloc),
-                  BlocProvider<ChatBloc>(create: (context) => chatListBloc)
+                  BlocProvider<ChatBloc>(create: (context) => chatBloc)
                 ],
                 child: AllChatsWidget(app: app,
                   memberId: memberId,

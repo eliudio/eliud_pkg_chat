@@ -12,9 +12,6 @@ dependencies:
 
   flutter_lints: ^2.0.1
 
-  chat_bubbles:
-    path: ../../chat_bubbles
-
   eliud_core:
     path: ../eliud_core
 

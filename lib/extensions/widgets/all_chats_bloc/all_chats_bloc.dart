@@ -26,7 +26,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   final int roomLimit;
   final String appId;
   final String thisMemberId;
-  final ChatBloc chatListBloc;
+  final ChatBloc chatBloc;
 
   void _mapLoadAllChatsWithDetailsToState() async {
     int amountNow = (state is AllChatsLoaded)
@@ -86,7 +86,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
 
   AllChatsState _mapAllChatsUpdatedToState(
       AllChatsUpdated event, RoomModel? currentRoom) {
-    return AllChatsLoaded(
+    return  AllChatsLoaded(
         enhancedRoomModels: event.value,
         mightHaveMore: event.mightHaveMore,
         currentRoom: currentRoom);
@@ -95,7 +95,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
   AllChatsBloc(
       {required this.thisMemberId,
         required this.appId,
-        required this.chatListBloc,
+        required this.chatBloc,
         this.paged,
         this.orderBy,
         this.descending,
@@ -128,12 +128,22 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
     });
 
     on<AllChatsUpdated>((event, emit) async {
-      var theState = state;
-      var currentRoom = (theState is AllChatsLoaded)
-          ? theState.currentRoom
-          : ((event.value.isNotEmpty) ? event.value[0].roomModel : null);
-      emit(_mapAllChatsUpdatedToState(event, currentRoom));
+        var theState = state;
+        if (theState is AllChatsLoaded) {
+          var currentRoom = theState.currentRoom;
+          for (var selectedEnhancedRoom in theState.enhancedRoomModels) {
+            if (selectedEnhancedRoom.roomModel.documentID == currentRoom!.documentID) {
+              chatBloc.add(SelectChatEvent(selectedEnhancedRoom));
+            }
+          }
+          emit(_mapAllChatsUpdatedToState(event, currentRoom));
+
+        } else {
+          var currentRoom = null;
+          emit(_mapAllChatsUpdatedToState(event, currentRoom));
+        }
     });
+
     on<SelectChat>((event, emit) async {
       var theState = state;
       if (theState is AllChatsLoaded) {
@@ -141,7 +151,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
           if (selectedEnhancedRoom.roomModel.documentID ==
               event.selected.documentID) {
 //            chatListBloc.add(SelectChatEvent(selectedEnhancedRoom)); <<<< RECOVER THIS LINE
-            chatListBloc.add(OpenChatWithMembersEvent(event.selected.members!));
+            chatBloc.add(OpenChatWithMembersEvent(event.selected.members!));
           }
         }
         emit(AllChatsLoaded(
@@ -168,7 +178,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
                   otherMemberLastRead: event.lastRead);
             }
             newEnhancedRoomModels.add(newEnhancedModel);
-            chatListBloc.add(UpdateEnhancedRoomModel(newEnhancedModel));
+            chatBloc.add(UpdateEnhancedRoomModel(newEnhancedModel));
           } else {
             newEnhancedRoomModels.add(enhancedRoomModel);
           }

@@ -1,5 +1,3 @@
-import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/registry.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/model/member_medium_model.dart';
@@ -11,6 +9,7 @@ import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:tuple/tuple.dart';
+import '../../tools/text_bubble.dart';
 import 'all_chats_widget.dart';
 import 'chat_bloc/chat_bloc.dart';
 import 'chat_bloc/chat_event.dart';
@@ -115,7 +114,7 @@ class _ChatWidgetState extends State<ChatWidget> {
           widgets.add(GestureDetector(
             onTap: () => BlocProvider.of<ChatBloc>(context)
                 .add((MarkAsRead(room, value))),
-            child: BubbleSpecialOne(
+            child: TextBubble1(
                 text: from == null ?
                           saying :
                           from + "\n  " + saying,
@@ -152,7 +151,7 @@ class _ChatWidgetState extends State<ChatWidget> {
               }
             });
             widgets.add(
-              FlexibleBubbleSpecialOne(
+              TextBubble(
                   isSender: itsMe,
                   sent: itsMe,
                   seen: hasRead,

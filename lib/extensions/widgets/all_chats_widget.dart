@@ -41,7 +41,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
           Row(children: [
             const Spacer(),
             button(widget.app, context, label: 'Member', onPressed: () {
-              openFlexibleDialog(widget.app, context, widget.app.documentID + '/chat',
+              openFlexibleDialog(widget.app, context, '${widget.app.documentID}/chat',
                   title: 'Chat with one of your followers',
                   child: MembersWidget(
                     app: widget.app,
@@ -83,7 +83,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                         itemCount: chats.length,
                         itemBuilder: (context, index) {
                           final value = chats[index];
-                          return roomListEntry(value, value.roomModel == currentChat);
+                          return roomListEntry(value, currentChat == null ? false : value.roomModel.documentID == currentChat!.documentID);
                         })
                 ]),(currentChat != null)?
                   ChatWidget(app: widget.app,
@@ -107,6 +107,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         : DateTime.now();
     var nameList = room.otherMembersRoomInfo.map((e) => e.name).toList();
     var names = nameList.join(", ");
+    if (isCurrent) names = "*$names";
 
     var nameWidget = room.hasUnread
         ? highLight1(widget.app,
@@ -128,7 +129,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
           image: avatar,
         ));
       } else {
-        widgets.add(Center(child: Text('No photo')));
+        widgets.add(const Center(child: Text('No photo')));
       }
     }
 
