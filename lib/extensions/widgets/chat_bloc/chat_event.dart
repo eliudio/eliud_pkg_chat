@@ -16,9 +16,9 @@ class OpenChatWithAMemberEvent extends ChatEvent {
 }
 
 class OpenChatWithMembersEvent extends ChatEvent {
-  final List<String> otherMembers;
+  final List<String> members;
 
-  OpenChatWithMembersEvent(this.otherMembers);
+  OpenChatWithMembersEvent(this.members);
 }
 
 class SelectChatEvent extends ChatEvent {

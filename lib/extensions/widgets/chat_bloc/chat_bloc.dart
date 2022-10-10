@@ -75,8 +75,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
 
     on<OpenChatWithAMemberEvent>((event, emit) async {
-      var roomModel = await RoomHelper.getRoomForMember(
-          appId, thisMemberId, event.otherMember);
+      var roomModel = await RoomHelper.getRoomForMembers(
+          appId, thisMemberId, [thisMemberId, event.otherMember]);
       var otherMemberRoomInfo =
       await RoomHelper.getOtherMembersRoomInfo(thisMemberId, appId, roomModel.members!);
       var enhancedRoomModel = EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
@@ -85,7 +85,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     on<OpenChatWithMembersEvent>((event, emit) async {
       var roomModel = await RoomHelper.getRoomForMembers(
-          appId, thisMemberId, event.otherMembers);
+          appId, thisMemberId, event.members);
       var otherMemberRoomInfo = await RoomHelper.getOtherMembersRoomInfo(thisMemberId, appId, roomModel.members!);
       var enhancedRoomModel = EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
       _mapLoadChatWithDetailsToState(enhancedRoomModel);

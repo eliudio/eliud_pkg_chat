@@ -98,12 +98,12 @@ class _ChatWidgetState extends State<ChatWidget> {
                 (state.room.otherMemberLastRead != null) &&
                 (state.room.otherMemberLastRead!.compareTo(timestamp) >= 0);
           } else {
-            if (room.otherMembersRoomInfo.length > 1) {
+//            if (room.otherMembersRoomInfo.length > 1) {
               for (var other in room.otherMembersRoomInfo) {
                 if (other.memberId == value.authorId) {
                   from = other.name;
                 }
-              }
+//              }
             }
 
             hasRead = (timestamp != null) &&
@@ -116,7 +116,9 @@ class _ChatWidgetState extends State<ChatWidget> {
             onTap: () => BlocProvider.of<ChatBloc>(context)
                 .add((MarkAsRead(room, value))),
             child: BubbleSpecialOne(
-                text: from == null ? saying : from + "\n" + saying,
+                text: from == null ?
+                          saying :
+                          from + "\n  " + saying,
                 isSender: itsMe,
                 sent: itsMe,
                 seen: hasRead,
@@ -246,7 +248,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     await RoomHelper.getRoomForMembers(
                                         widget.app.documentID,
                                         widget.memberId,
-                                        newMembers);
+                                        [widget.memberId,
+                                        ...newMembers]);
                                 selectRoom(context, newRoom);
                               } else {
                                 BlocProvider.of<AllChatsBloc>(context).add(

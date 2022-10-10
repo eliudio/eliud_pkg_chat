@@ -6,11 +6,17 @@ import 'package:eliud_pkg_chat/model/room_model.dart';
 import '../extensions/widgets/all_chats_bloc/all_chats_state.dart';
 
 class RoomHelper {
-  static String getRoomKey(String currentMemberId, String otherMemberId) {
-    var roomId = (currentMemberId.compareTo(otherMemberId) < 0)
-        ? '$currentMemberId-$otherMemberId'
-        : '$otherMemberId-$currentMemberId';
-    return roomId;
+  static List<String> getUniqueList(List<String> members) {
+    Set<String> uniqueSet = {};
+    uniqueSet.addAll(members);
+    var uniqueList = uniqueSet.toList();
+    uniqueList.sort();
+    return uniqueList;
+  }
+
+  static String getRoomKey(String currentMemberId, List<String> members) {
+    var uniqueList = getUniqueList([currentMemberId, ... members]);
+    return uniqueList.join('+');
   }
 
   // todo: remove and replace with currentMemberId
@@ -20,33 +26,21 @@ class RoomHelper {
 
   static Future<RoomModel> getRoomForMembers(
       String appId, String currentMemberId, List<String> members) async {
-
-    List<String> reviewedListOfMembers = [];
-    for (var member in members) {
-      if (member != currentMemberId) {
-        reviewedListOfMembers.add(member);
-      }
-    }
-
-    if (reviewedListOfMembers.length == 1) {
-      return getRoomForMember(appId, currentMemberId, reviewedListOfMembers[0]);
-    } else {
-      var roomId = newRandomKey();
-      return await _storeRoom(appId, roomId, currentMemberId, members,
-          'Chat amongst ${reviewedListOfMembers.join(", ")}');
-    }
+    var roomId = RoomHelper.getRoomKey(currentMemberId, members);
+    return await _storeRoom(appId, roomId, currentMemberId, members, 'Chat between ${members.join(', ')}');
   }
 
-  static Future<RoomModel> getRoomForMember(
-      String appId, String currentMemberId, String otherMemberId) async {
-    var roomId = RoomHelper.getRoomKey(currentMemberId, otherMemberId);
-    return await _storeRoom(appId, roomId, currentMemberId, [
-      currentMemberId,
-      otherMemberId,
-    ], 'Chat between $currentMemberId and $otherMemberId');
+  static Future<RoomModel> getRoomWithId(String appId, String roomId) async {
+    var room = await roomRepository(appId: appId)!.get(roomId, onError: (_) {});
+    if (room == null) {
+      throw Exception('Room with id $roomId for app $appId not found');
+    } else {
+      return room;
+    }
   }
 
   static Future<RoomModel> _storeRoom(String appId, String roomId, String ownerId, List<String> members, String descr) async {
+    var uniqueMembers = getUniqueList(members);
     var roomModel = await roomRepository(appId: appId)!.get(roomId, onError: (_) {});
     if (roomModel == null) {
       roomModel = RoomModel(

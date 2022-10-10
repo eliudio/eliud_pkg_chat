@@ -73,8 +73,7 @@ class RoomFirestore implements RoomRepository {
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
   Future<void> delete(RoomModel value) {

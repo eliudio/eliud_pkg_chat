@@ -46,8 +46,8 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                   child: MembersWidget(
                     app: widget.app,
                     selectedMember: (String memberId) async {
-                      var room = await RoomHelper.getRoomForMember(
-                          widget.app.documentID, widget.memberId, memberId);
+                      var room = await RoomHelper.getRoomForMembers(
+                          widget.app.documentID, widget.memberId, [widget.memberId, memberId]);
                       selectRoom(context, room);
                     },
                     currentMemberId: widget.memberId,
