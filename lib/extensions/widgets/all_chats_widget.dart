@@ -15,6 +15,7 @@ import 'package:transparent_image/transparent_image.dart';
 import 'all_chats_bloc/all_chats_bloc.dart';
 import 'all_chats_bloc/all_chats_event.dart';
 import 'all_chats_bloc/all_chats_state.dart';
+import 'all_members_widget.dart';
 import 'chat_widget.dart';
 import 'members_widget.dart';
 import 'dart:math';
@@ -44,7 +45,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
             button(widget.app, context, label: 'Member', onPressed: () {
               openFlexibleDialog(widget.app, context, '${widget.app.documentID}/chat',
                   title: 'Chat with one of your followers',
-                  child: MembersWidget(
+                  child: AllMembersWidget(
                     app: widget.app,
                     selectedMember: (String memberId) async {
                       var room = await RoomHelper.getRoomForMembers(

@@ -11,6 +11,7 @@ import 'package:eliud_core/tools/random.dart';
 import 'package:tuple/tuple.dart';
 import '../../tools/text_bubble.dart';
 import 'all_chats_widget.dart';
+import 'all_members_widget.dart';
 import 'chat_bloc/chat_bloc.dart';
 import 'chat_bloc/chat_event.dart';
 import 'chat_bloc/chat_state.dart';
@@ -234,7 +235,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     openFlexibleDialog(widget.app, context,
                         widget.app.documentID + '/addtochat',
                         title: 'Add one of your followers to the chat',
-                        child: MembersWidget(
+                        child: AllMembersWidget(
                           app: widget.app,
                           selectedMember: (String newMemberId) async {
                             List<String> newMembers = room.members!;
