@@ -127,6 +127,22 @@ class ConditionsChatDashboardFormError extends ChatDashboardFormError {
 }
 
 
+class MembersTypeChatDashboardFormError extends ChatDashboardFormError { 
+  const MembersTypeChatDashboardFormError({ String? message, ChatDashboardModel? value }): super(message: message, value: value);
+
+  @override
+  List<Object?> get props => [ message, value ];
+
+  @override
+  String toString() {
+    return '''MembersTypeChatDashboardFormError {
+      value: $value,
+      message: $message,
+    }''';
+  }
+}
+
+
 class ChatDashboardFormLoaded extends ChatDashboardFormInitialized { 
   const ChatDashboardFormLoaded({ ChatDashboardModel? value }): super(value: value);
 

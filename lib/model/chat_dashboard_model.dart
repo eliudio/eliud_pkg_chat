@@ -37,6 +37,18 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_entity.dart';
 
 import 'package:eliud_core/tools/random.dart';
 
+enum MembersType {
+  FollowingMembers, AllMembers, Unknown
+}
+
+
+MembersType toMembersType(int? index) {
+  switch (index) {
+    case 0: return MembersType.FollowingMembers;
+    case 1: return MembersType.AllMembers;
+  }
+  return MembersType.Unknown;
+}
 
 
 class ChatDashboardModel implements ModelBase, WithAppId {
@@ -49,17 +61,18 @@ class ChatDashboardModel implements ModelBase, WithAppId {
   String appId;
   String? description;
   StorageConditionsModel? conditions;
+  MembersType? membersType;
 
-  ChatDashboardModel({required this.documentID, required this.appId, this.description, this.conditions, })  {
+  ChatDashboardModel({required this.documentID, required this.appId, this.description, this.conditions, this.membersType, })  {
     assert(documentID != null);
   }
 
-  ChatDashboardModel copyWith({String? documentID, String? appId, String? description, StorageConditionsModel? conditions, }) {
-    return ChatDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, );
+  ChatDashboardModel copyWith({String? documentID, String? appId, String? description, StorageConditionsModel? conditions, MembersType? membersType, }) {
+    return ChatDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, membersType: membersType ?? this.membersType, );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ conditions.hashCode;
+  int get hashCode => documentID.hashCode ^ appId.hashCode ^ description.hashCode ^ conditions.hashCode ^ membersType.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -69,11 +82,12 @@ class ChatDashboardModel implements ModelBase, WithAppId {
           documentID == other.documentID &&
           appId == other.appId &&
           description == other.description &&
-          conditions == other.conditions;
+          conditions == other.conditions &&
+          membersType == other.membersType;
 
   @override
   String toString() {
-    return 'ChatDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions}';
+    return 'ChatDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions, membersType: $membersType}';
   }
 
   Future<List<ModelReference>> collectReferences({String? appId}) async {
@@ -87,6 +101,7 @@ class ChatDashboardModel implements ModelBase, WithAppId {
           appId: (appId != null) ? appId : null, 
           description: (description != null) ? description : null, 
           conditions: (conditions != null) ? conditions!.toEntity(appId: appId) : null, 
+          membersType: (membersType != null) ? membersType!.index : null, 
     );
   }
 
@@ -99,6 +114,7 @@ class ChatDashboardModel implements ModelBase, WithAppId {
           description: entity.description, 
           conditions: 
             await StorageConditionsModel.fromEntity(entity.conditions), 
+          membersType: toMembersType(entity.membersType), 
     );
   }
 
@@ -112,6 +128,7 @@ class ChatDashboardModel implements ModelBase, WithAppId {
           description: entity.description, 
           conditions: 
             await StorageConditionsModel.fromEntityPlus(entity.conditions, appId: appId), 
+          membersType: toMembersType(entity.membersType), 
     );
   }
 

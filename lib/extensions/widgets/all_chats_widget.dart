@@ -15,19 +15,22 @@ import 'package:transparent_image/transparent_image.dart';
 import 'all_chats_bloc/all_chats_bloc.dart';
 import 'all_chats_bloc/all_chats_event.dart';
 import 'all_chats_bloc/all_chats_state.dart';
-import 'all_members_widget.dart';
 import 'chat_widget.dart';
 import 'members_widget.dart';
 import 'dart:math';
 
+import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
+
 class AllChatsWidget extends StatefulWidget {
   final String memberId;
   final AppModel app;
+  final MembersType? membersType;
 
   const AllChatsWidget({
     Key? key,
     required this.app,
     required this.memberId,
+    required this.membersType,
   }) : super(key: key);
 
   @override
@@ -45,7 +48,8 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
             button(widget.app, context, label: 'Member', onPressed: () {
               openFlexibleDialog(widget.app, context, '${widget.app.documentID}/chat',
                   title: 'Chat with one of your followers',
-                  child: AllMembersWidget(
+                  child: MembersWidget(
+                    membersType: widget.membersType,
                     app: widget.app,
                     selectedMember: (String memberId) async {
                       var room = await RoomHelper.getRoomForMembers(
@@ -91,6 +95,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                   ChatWidget(app: widget.app,
                     memberId: widget.memberId,
                     canAddMember: widget.memberId == currentChat.ownerId,
+                    membersType: widget.membersType,
                   ):
                   Container(),
             0.3, 0.2, 0.8

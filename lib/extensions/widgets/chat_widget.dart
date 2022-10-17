@@ -9,9 +9,9 @@ import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:tuple/tuple.dart';
+import '../../model/chat_dashboard_model.dart';
 import '../../tools/text_bubble.dart';
 import 'all_chats_widget.dart';
-import 'all_members_widget.dart';
 import 'chat_bloc/chat_bloc.dart';
 import 'chat_bloc/chat_event.dart';
 import 'chat_bloc/chat_state.dart';
@@ -35,12 +35,14 @@ class ChatWidget extends StatefulWidget {
   final AppModel app;
   final String memberId;
   final bool canAddMember;
+  final MembersType? membersType;
 
   const ChatWidget({
     Key? key,
     required this.app,
     required this.memberId,
     required this.canAddMember,
+    required this.membersType,
   }) : super(key: key);
 
   @override
@@ -235,7 +237,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                     openFlexibleDialog(widget.app, context,
                         widget.app.documentID + '/addtochat',
                         title: 'Add one of your followers to the chat',
-                        child: AllMembersWidget(
+                        child: MembersWidget(
+                          membersType: widget.membersType,
                           app: widget.app,
                           selectedMember: (String newMemberId) async {
                             List<String> newMembers = room.members!;

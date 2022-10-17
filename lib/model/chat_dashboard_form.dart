@@ -127,6 +127,7 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
   final TextEditingController _documentIDController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  int? _membersTypeSelectedRadioTile;
 
 
   _MyChatDashboardFormState(this.formAction);
@@ -138,6 +139,7 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
     _documentIDController.addListener(_onDocumentIDChanged);
     _appIdController.addListener(_onAppIdChanged);
     _descriptionController.addListener(_onDescriptionChanged);
+    _membersTypeSelectedRadioTile = 0;
   }
 
   @override
@@ -161,9 +163,33 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
           _descriptionController.text = state.value!.description.toString();
         else
           _descriptionController.text = "";
+        if (state.value!.membersType != null)
+          _membersTypeSelectedRadioTile = state.value!.membersType!.index;
+        else
+          _membersTypeSelectedRadioTile = 0;
       }
       if (state is ChatDashboardFormInitialized) {
         List<Widget> children = [];
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
+                ));
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _membersTypeSelectedRadioTile, 'FollowingMembers', 'FollowingMembers', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionMembersType(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _membersTypeSelectedRadioTile, 'AllMembers', 'AllMembers', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionMembersType(val))
+          );
+
+
+        children.add(Container(height: 20.0));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
+
+
          children.add(Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -215,6 +241,7 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               conditions: state.value!.conditions, 
+                              membersType: state.value!.membersType, 
                         )));
                       } else {
                         BlocProvider.of<ChatDashboardListBloc>(context).add(
@@ -223,6 +250,7 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
                               appId: state.value!.appId, 
                               description: state.value!.description, 
                               conditions: state.value!.conditions, 
+                              membersType: state.value!.membersType, 
                           )));
                       }
                       if (widget.submitAction != null) {
@@ -261,6 +289,14 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
 
   void _onDescriptionChanged() {
     _myFormBloc.add(ChangedChatDashboardDescription(value: _descriptionController.text));
+  }
+
+
+  void setSelectionMembersType(int? val) {
+    setState(() {
+      _membersTypeSelectedRadioTile = val;
+    });
+    _myFormBloc.add(ChangedChatDashboardMembersType(value: toMembersType(val)));
   }
 
 

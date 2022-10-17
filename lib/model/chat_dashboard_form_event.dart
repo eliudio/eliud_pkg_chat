@@ -107,3 +107,15 @@ class ChangedChatDashboardConditions extends ChatDashboardFormEvent {
   String toString() => 'ChangedChatDashboardConditions{ value: $value }';
 }
 
+class ChangedChatDashboardMembersType extends ChatDashboardFormEvent {
+  final MembersType? value;
+
+  ChangedChatDashboardMembersType({this.value});
+
+  @override
+  List<Object?> get props => [ value ];
+
+  @override
+  String toString() => 'ChangedChatDashboardMembersType{ value: $value }';
+}
+

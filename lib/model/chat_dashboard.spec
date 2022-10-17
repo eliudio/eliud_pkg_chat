@@ -48,6 +48,13 @@
       "displayName": "Conditions",
       "fieldType": "StorageConditions",
       "group": "conditions"
+    },
+    {
+      "fieldName": "membersType",
+      "displayName": "Types of members",
+      "fieldType": "enum",
+      "enumName": "MembersType",
+      "enumValues" : [ "FollowingMembers", "AllMembers" ]
     }
   ],
   "groups": [

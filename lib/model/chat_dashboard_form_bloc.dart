@@ -104,6 +104,14 @@ class ChatDashboardFormBloc extends Bloc<ChatDashboardFormEvent, ChatDashboardFo
 
       }
       });
+      on <ChangedChatDashboardMembersType> ((event, emit) async {
+      if (state is ChatDashboardFormInitialized) {
+        final currentState = state as ChatDashboardFormInitialized;
+        newValue = currentState.value!.copyWith(membersType: event.value);
+        emit(SubmittableChatDashboardForm(value: newValue));
+
+      }
+      });
   }
 
 

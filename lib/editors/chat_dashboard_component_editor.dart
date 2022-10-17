@@ -23,6 +23,7 @@ import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_event.dart';
 import 'package:eliud_core/core/editor/editor_base_bloc/editor_base_state.dart';
 
 import '../model/chat_dashboard_entity.dart';
+import 'members_type_widget.dart';
 
 class ChatDashboardComponentEditorConstructor
     extends ComponentEditorConstructor {
@@ -70,9 +71,7 @@ class ChatDashboardComponentEditorConstructor
       app,
       context,
       app.documentID + '/chatdashboard',
-      title: create
-          ? 'Create Chat Dashboard'
-          : 'Update Chat Dashboard',
+      title: create ? 'Create Chat Dashboard' : 'Update Chat Dashboard',
       includeHeading: false,
       widthFraction: .9,
       child: BlocProvider<ChatDashboardBloc>(
@@ -91,7 +90,6 @@ class ChatDashboardComponentEditorConstructor
 
 class ChatDashboardBloc
     extends EditorBaseBloc<ChatDashboardModel, ChatDashboardEntity> {
-
   ChatDashboardBloc(String appId, EditorFeedback feedback)
       : super(appId, chatDashboardRepository(appId: appId)!, feedback);
 
@@ -101,14 +99,14 @@ class ChatDashboardBloc
         appId: appId,
         description: 'Chat',
         documentID: newRandomKey(),
+        membersType: MembersType.AllMembers,
         conditions: conditions);
   }
 
   @override
   ChatDashboardModel setDefaultValues(
       ChatDashboardModel t, StorageConditionsModel conditions) {
-    return t.copyWith(
-        conditions: t.conditions ?? conditions);
+    return t.copyWith(conditions: t.conditions ?? conditions);
   }
 }
 
@@ -121,8 +119,7 @@ class ChatDashboardComponentEditor extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      _ChatDashboardComponentEditorState();
+  State<StatefulWidget> createState() => _ChatDashboardComponentEditorState();
 }
 
 class _ChatDashboardComponentEditorState
@@ -132,7 +129,8 @@ class _ChatDashboardComponentEditorState
     return BlocBuilder<AccessBloc, AccessState>(
         builder: (aContext, accessState) {
       if (accessState is AccessDetermined) {
-        return BlocBuilder<ChatDashboardBloc, EditorBaseState<ChatDashboardModel>>(
+        return BlocBuilder<ChatDashboardBloc,
+                EditorBaseState<ChatDashboardModel>>(
             builder: (ppContext, chatDashboardState) {
           if (chatDashboardState is EditorBaseInitialised<ChatDashboardModel>) {
             return ListView(
@@ -143,8 +141,8 @@ class _ChatDashboardComponentEditorState
                     app: widget.app,
                     title: 'ChatDashboard',
                     okAction: () async {
-                      await BlocProvider.of<ChatDashboardBloc>(context)
-                          .save(EditorBaseApplyChanges<ChatDashboardModel>(
+                      await BlocProvider.of<ChatDashboardBloc>(context).save(
+                          EditorBaseApplyChanges<ChatDashboardModel>(
                               model: chatDashboardState.model));
                       return true;
                     },
@@ -166,7 +164,8 @@ class _ChatDashboardComponentEditorState
                             title: dialogField(
                               widget.app,
                               context,
-                              initialValue: chatDashboardState.model.description,
+                              initialValue:
+                                  chatDashboardState.model.description,
                               valueChanged: (value) {
                                 chatDashboardState.model.description = value;
                               },
@@ -176,6 +175,23 @@ class _ChatDashboardComponentEditorState
                                 labelText: 'Description',
                               ),
                             )),
+                      ]),
+                  topicContainer(widget.app, context,
+                      title: 'Members to chat to',
+                      collapsible: true,
+                      collapsed: true,
+                      children: [
+                        MembersTypeWidget(
+                          app: widget.app,
+                          membersTypeCallback: (MembersType membersType) {
+                            setState(() {
+                              chatDashboardState.model.membersType =
+                                  membersType;
+                            });
+                          },
+                          membersType: chatDashboardState.model.membersType ??
+                              MembersType.AllMembers,
+                        ),
                       ]),
                   topicContainer(widget.app, context,
                       title: 'Condition',
@@ -199,5 +215,4 @@ class _ChatDashboardComponentEditorState
       }
     });
   }
-
 }

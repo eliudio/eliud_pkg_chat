@@ -28,17 +28,18 @@ class ChatDashboardEntity implements EntityBase {
   final String? appId;
   final String? description;
   final StorageConditionsEntity? conditions;
+  final int? membersType;
 
-  ChatDashboardEntity({required this.appId, this.description, this.conditions, });
+  ChatDashboardEntity({required this.appId, this.description, this.conditions, this.membersType, });
 
-  ChatDashboardEntity copyWith({String? documentID, String? appId, String? description, StorageConditionsEntity? conditions, }) {
-    return ChatDashboardEntity(appId : appId ?? this.appId, description : description ?? this.description, conditions : conditions ?? this.conditions, );
+  ChatDashboardEntity copyWith({String? documentID, String? appId, String? description, StorageConditionsEntity? conditions, int? membersType, }) {
+    return ChatDashboardEntity(appId : appId ?? this.appId, description : description ?? this.description, conditions : conditions ?? this.conditions, membersType : membersType ?? this.membersType, );
   }
-  List<Object?> get props => [appId, description, conditions, ];
+  List<Object?> get props => [appId, description, conditions, membersType, ];
 
   @override
   String toString() {
-    return 'ChatDashboardEntity{appId: $appId, description: $description, conditions: $conditions}';
+    return 'ChatDashboardEntity{appId: $appId, description: $description, conditions: $conditions, membersType: $membersType}';
   }
 
   static ChatDashboardEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
@@ -54,6 +55,7 @@ class ChatDashboardEntity implements EntityBase {
       appId: map['appId'], 
       description: map['description'], 
       conditions: conditionsFromMap, 
+      membersType: map['membersType'], 
     );
   }
 
@@ -69,6 +71,8 @@ class ChatDashboardEntity implements EntityBase {
       else theDocument["description"] = null;
     if (conditions != null) theDocument["conditions"] = conditionsMap;
       else theDocument["conditions"] = null;
+    if (membersType != null) theDocument["membersType"] = membersType;
+      else theDocument["membersType"] = null;
     return theDocument;
   }
 

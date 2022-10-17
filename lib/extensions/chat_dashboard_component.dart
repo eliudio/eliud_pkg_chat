@@ -6,6 +6,7 @@ import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_widget.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_event.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_widget.dart';
+import 'package:eliud_pkg_chat/extensions/widgets/members_widget.dart';
 import '../model/room_model.dart';
 import 'widgets/all_chats_bloc/all_chats_bloc.dart';
 import 'widgets/all_chats_bloc/all_chats_event.dart';
@@ -76,8 +77,10 @@ class ChatDashboard extends AbstractChatDashboardComponent {
                   BlocProvider<AllChatsBloc>(create: (context) => allChatsBloc),
                   BlocProvider<ChatBloc>(create: (context) => chatBloc)
                 ],
-                child: AllChatsWidget(app: app,
+                child: AllChatsWidget(
+                  app: app,
                   memberId: memberId,
+                  membersType: value!.membersType
                 )));
       } else {
         return const Text('Member not available');
@@ -86,5 +89,4 @@ class ChatDashboard extends AbstractChatDashboardComponent {
       return const Text('App not loaded');
     }
   }
-
 }
