@@ -11,6 +11,10 @@ import 'model/component_registry.dart';
 import 'model/member_has_chat_model.dart';
 import 'model/repository_singleton.dart';
 
+import 'package:eliud_pkg_chat/chat_package_stub.dart'
+if (dart.library.io) 'chat_mobile_package.dart'
+if (dart.library.html) 'chat_web_package.dart';
+
 import 'dart:async';
 
 abstract class ChatPackage extends Package {
@@ -104,4 +108,6 @@ abstract class ChatPackage extends Package {
   @override
   List<MemberCollectionInfo> getMemberCollectionInfo() =>
       AbstractRepositorySingleton.collections;
+
+  static ChatPackage instance() => getChatPackage();
 }
