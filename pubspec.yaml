@@ -22,7 +22,7 @@ dependencies:
   meta: ^1.8.0
   transparent_image: ^2.0.0
   tuple: ^2.0.1
-  eliud_core: ^1.0.4+16
+  eliud_core: ^1.0.5
   eliud_pkg_follow: ^1.0.1+5
   eliud_pkg_medium: ^1.0.1+5
 dev_dependencies:
