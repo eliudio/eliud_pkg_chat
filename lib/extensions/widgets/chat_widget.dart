@@ -6,11 +6,11 @@ import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/style/frontend/has_style.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
+import 'package:eliud_core/style/frontend/has_text_bubble.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
 import 'package:eliud_core/tools/random.dart';
 import 'package:tuple/tuple.dart';
 import '../../model/chat_dashboard_model.dart';
-import '../../tools/text_bubble.dart';
 import 'all_chats_widget.dart';
 import 'chat_bloc/chat_bloc.dart';
 import 'chat_bloc/chat_event.dart';
@@ -117,25 +117,15 @@ class _ChatWidgetState extends State<ChatWidget> {
           widgets.add(GestureDetector(
             onTap: () => BlocProvider.of<ChatBloc>(context)
                 .add((MarkAsRead(room, value))),
-            child: TextBubble1(
+            child: textBubble(widget.app, context,
                 text: from == null ?
                           saying :
                           from + "\n  " + saying,
                 isSender: itsMe,
                 sent: itsMe,
                 seen: hasRead,
-                color: Colors.white,
                 time: timeString,
-                textStyle: StyleRegistry.registry()
-                    .styleWithApp(widget.app)
-                    .frontEndStyle()
-                    .textStyleStyle()
-                    .styleText(widget.app, context)!,
-                timeTextStyle: StyleRegistry.registry()
-                    .styleWithApp(widget.app)
-                    .frontEndStyle()
-                    .textStyleStyle()
-                    .styleSmallText(widget.app, context)!),
+            ),
           ));
 
           if (itemMedia.isNotEmpty) {
@@ -154,11 +144,10 @@ class _ChatWidgetState extends State<ChatWidget> {
               }
             });
             widgets.add(
-              TextBubble(
+              widgetBubble(widget.app, context,
                   isSender: itsMe,
                   sent: itsMe,
                   seen: hasRead,
-                  color: Colors.white, //const Color(0xFF1B97F3),
                   timeWidget: Text(
                     timeString,
                     style: styleSmallText(widget.app, context),

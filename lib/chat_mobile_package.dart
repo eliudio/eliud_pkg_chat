@@ -8,8 +8,8 @@ ChatPackage getChatPackage() => ChatMobilePackage();
 class ChatMobilePackage extends ChatPackage {
 
   ChatMobilePackage() {
-
   }
+
   @override
   void init() {
     super.init();
