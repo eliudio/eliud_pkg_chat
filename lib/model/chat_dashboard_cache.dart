@@ -140,13 +140,13 @@ class ChatDashboardCache implements ChatDashboardRepository {
   }
 
   @override
-  StreamSubscription<ChatDashboardModel?> listenTo(String documentId, ChatDashboardChanged changed) {
+  StreamSubscription<ChatDashboardModel?> listenTo(String documentId, ChatDashboardChanged changed, {ChatDashboardErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<ChatDashboardModel> refreshRelations(ChatDashboardModel model) async {

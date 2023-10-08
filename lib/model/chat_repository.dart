@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef ChatModelTrigger(List<ChatModel?> list);
 typedef ChatChanged(ChatModel? value);
+typedef ChatErrorHandler(o, e);
 
 abstract class ChatRepository extends RepositoryBase<ChatModel, ChatEntity> {
   Future<ChatEntity> addEntity(String documentID, ChatEntity value);
@@ -52,7 +53,7 @@ abstract class ChatRepository extends RepositoryBase<ChatModel, ChatEntity> {
 
   StreamSubscription<List<ChatModel?>> listen(ChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<ChatModel?>> listenWithDetails(ChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<ChatModel?> listenTo(String documentId, ChatChanged changed);
+  StreamSubscription<ChatModel?> listenTo(String documentId, ChatChanged changed, {ChatErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef ChatDashboardModelTrigger(List<ChatDashboardModel?> list);
 typedef ChatDashboardChanged(ChatDashboardModel? value);
+typedef ChatDashboardErrorHandler(o, e);
 
 abstract class ChatDashboardRepository extends RepositoryBase<ChatDashboardModel, ChatDashboardEntity> {
   Future<ChatDashboardEntity> addEntity(String documentID, ChatDashboardEntity value);
@@ -52,7 +53,7 @@ abstract class ChatDashboardRepository extends RepositoryBase<ChatDashboardModel
 
   StreamSubscription<List<ChatDashboardModel?>> listen(ChatDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<ChatDashboardModel?>> listenWithDetails(ChatDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<ChatDashboardModel?> listenTo(String documentId, ChatDashboardChanged changed);
+  StreamSubscription<ChatDashboardModel?> listenTo(String documentId, ChatDashboardChanged changed, {ChatDashboardErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

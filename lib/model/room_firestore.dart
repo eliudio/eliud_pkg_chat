@@ -159,15 +159,21 @@ class RoomFirestore implements RoomRepository {
   }
 
   @override
-  StreamSubscription<RoomModel?> listenTo(String documentId, RoomChanged changed) {
+  StreamSubscription<RoomModel?> listenTo(String documentId, RoomChanged changed, {RoomErrorHandler? errorHandler}) {
     var stream = RoomCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
     });
-    return stream.listen((value) {
+    var theStream = stream.listen((value) {
       changed(value);
     });
+    theStream.onError((theException, theStacktrace) {
+      if (errorHandler != null) {
+        errorHandler(theException, theStacktrace);
+      }
+    });
+    return theStream;
   }
 
   Stream<List<RoomModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {

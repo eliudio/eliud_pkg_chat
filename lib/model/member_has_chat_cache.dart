@@ -140,13 +140,13 @@ class MemberHasChatCache implements MemberHasChatRepository {
   }
 
   @override
-  StreamSubscription<MemberHasChatModel?> listenTo(String documentId, MemberHasChatChanged changed) {
+  StreamSubscription<MemberHasChatModel?> listenTo(String documentId, MemberHasChatChanged changed, {MemberHasChatErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<MemberHasChatModel> refreshRelations(MemberHasChatModel model) async {

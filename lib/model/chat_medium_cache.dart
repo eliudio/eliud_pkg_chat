@@ -140,13 +140,13 @@ class ChatMediumCache implements ChatMediumRepository {
   }
 
   @override
-  StreamSubscription<ChatMediumModel?> listenTo(String documentId, ChatMediumChanged changed) {
+  StreamSubscription<ChatMediumModel?> listenTo(String documentId, ChatMediumChanged changed, {ChatMediumErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
       }
       changed(value);
-    }));
+    }), errorHandler: errorHandler);
   }
 
   static Future<ChatMediumModel> refreshRelations(ChatMediumModel model) async {

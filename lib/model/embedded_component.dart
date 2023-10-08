@@ -153,7 +153,7 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
   }
   
   @override
-  StreamSubscription<ChatMediumModel> listenTo(String documentId, ChatMediumChanged changed) {
+  StreamSubscription<ChatMediumModel> listenTo(String documentId, ChatMediumChanged changed, {ChatMediumErrorHandler? errorHandler}) {
     throw UnimplementedError();
   }
 

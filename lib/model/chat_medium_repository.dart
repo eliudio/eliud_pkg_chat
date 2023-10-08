@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef ChatMediumModelTrigger(List<ChatMediumModel?> list);
 typedef ChatMediumChanged(ChatMediumModel? value);
+typedef ChatMediumErrorHandler(o, e);
 
 abstract class ChatMediumRepository extends RepositoryBase<ChatMediumModel, ChatMediumEntity> {
   Future<ChatMediumEntity> addEntity(String documentID, ChatMediumEntity value);
@@ -52,7 +53,7 @@ abstract class ChatMediumRepository extends RepositoryBase<ChatMediumModel, Chat
 
   StreamSubscription<List<ChatMediumModel?>> listen(ChatMediumModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<ChatMediumModel?>> listenWithDetails(ChatMediumModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<ChatMediumModel?> listenTo(String documentId, ChatMediumChanged changed);
+  StreamSubscription<ChatMediumModel?> listenTo(String documentId, ChatMediumChanged changed, {ChatMediumErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

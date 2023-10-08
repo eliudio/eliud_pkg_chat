@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef RoomModelTrigger(List<RoomModel?> list);
 typedef RoomChanged(RoomModel? value);
+typedef RoomErrorHandler(o, e);
 
 abstract class RoomRepository extends RepositoryBase<RoomModel, RoomEntity> {
   Future<RoomEntity> addEntity(String documentID, RoomEntity value);
@@ -52,7 +53,7 @@ abstract class RoomRepository extends RepositoryBase<RoomModel, RoomEntity> {
 
   StreamSubscription<List<RoomModel?>> listen(RoomModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<RoomModel?>> listenWithDetails(RoomModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<RoomModel?> listenTo(String documentId, RoomChanged changed);
+  StreamSubscription<RoomModel?> listenTo(String documentId, RoomChanged changed, {RoomErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

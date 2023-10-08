@@ -36,6 +36,7 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef MemberHasChatModelTrigger(List<MemberHasChatModel?> list);
 typedef MemberHasChatChanged(MemberHasChatModel? value);
+typedef MemberHasChatErrorHandler(o, e);
 
 abstract class MemberHasChatRepository extends RepositoryBase<MemberHasChatModel, MemberHasChatEntity> {
   Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value);
@@ -52,7 +53,7 @@ abstract class MemberHasChatRepository extends RepositoryBase<MemberHasChatModel
 
   StreamSubscription<List<MemberHasChatModel?>> listen(MemberHasChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
   StreamSubscription<List<MemberHasChatModel?>> listenWithDetails(MemberHasChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
-  StreamSubscription<MemberHasChatModel?> listenTo(String documentId, MemberHasChatChanged changed);
+  StreamSubscription<MemberHasChatModel?> listenTo(String documentId, MemberHasChatChanged changed, {MemberHasChatErrorHandler? errorHandler});
   void flush();
   
   String? timeStampToString(dynamic timeStamp);

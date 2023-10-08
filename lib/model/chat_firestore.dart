@@ -159,15 +159,21 @@ class ChatFirestore implements ChatRepository {
   }
 
   @override
-  StreamSubscription<ChatModel?> listenTo(String documentId, ChatChanged changed) {
+  StreamSubscription<ChatModel?> listenTo(String documentId, ChatChanged changed, {ChatErrorHandler? errorHandler}) {
     var stream = ChatCollection.doc(documentId)
         .snapshots()
         .asyncMap((data) {
       return _populateDocPlus(data);
     });
-    return stream.listen((value) {
+    var theStream = stream.listen((value) {
       changed(value);
     });
+    theStream.onError((theException, theStacktrace) {
+      if (errorHandler != null) {
+        errorHandler(theException, theStacktrace);
+      }
+    });
+    return theStream;
   }
 
   Stream<List<ChatModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
