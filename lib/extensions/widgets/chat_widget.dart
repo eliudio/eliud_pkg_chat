@@ -36,6 +36,7 @@ class ChatWidget extends StatefulWidget {
   final String memberId;
   final bool canAddMember;
   final MembersType? membersType;
+  final List<String> blockedMembers;
 
   const ChatWidget({
     Key? key,
@@ -43,6 +44,7 @@ class ChatWidget extends StatefulWidget {
     required this.memberId,
     required this.canAddMember,
     required this.membersType,
+    required this.blockedMembers,
   }) : super(key: key);
 
   @override
@@ -114,22 +116,31 @@ class _ChatWidgetState extends State<ChatWidget> {
           }
 
           var saying = value.saying ?? '.';
-          widgets.add(GestureDetector(
-            onTap: () => BlocProvider.of<ChatBloc>(context)
-                .add((MarkAsRead(room, value))),
-            child: textBubble(widget.app, context,
-                text: from == null ?
-                          saying :
-                          from + "\n  " + saying,
-                isSender: itsMe,
-                sent: itsMe,
-                seen: hasRead,
-                time: timeString,
-            ),
-          ));
+          Widget? mediaWidget;
+          Widget? button;
+          if (!itsMe) {
+            button = dialogButton(widget.app, context,
+                label: 'Block member',
+                tooltip:
+                "Block this member to stop seeing all of it's past and future posts, comments, messages, or anything else",
+                onPressed: () {
+                  //_blockMemberWithPostModel(postModel);
+                  openAckNackDialog(
+                      widget.app, context, widget.app.documentID + '/_blockmember1',
+                      title: 'Block member?',
+                      message: 'You are sure you want to block this member?',
+                      onSelection: (choice) async {
+                        if (choice == 0) {
+                          BlocProvider.of<AllChatsBloc>(context)
+                              .add(BlockMember(memberId: value.authorId));
+                        }
+                      });
+                });
+
+          }
 
           if (itemMedia.isNotEmpty) {
-            var mediaWidget = MediaHelper.staggeredMemberMediumModel(
+            mediaWidget = MediaHelper.staggeredMemberMediumModel(
                 widget.app, context, itemMedia,
                 reverse: itsMe,
                 shrinkWrap: true,
@@ -143,18 +154,23 @@ class _ChatWidgetState extends State<ChatWidget> {
                 Registry.registry()!.getMediumApi().showVideo(context, widget.app, medium);
               }
             });
-            widgets.add(
-              widgetBubble(widget.app, context,
-                  isSender: itsMe,
-                  sent: itsMe,
-                  seen: hasRead,
-                  timeWidget: Text(
-                    timeString,
-                    style: styleSmallText(widget.app, context),
-                  ),
-                  widget: mediaWidget),
-            );
           }
+
+            widgets.add(GestureDetector(
+              onTap: () => BlocProvider.of<ChatBloc>(context)
+                  .add((MarkAsRead(room, value))),
+              child: textBubble(widget.app, context,
+                widget: mediaWidget,
+                button: button,
+                text: from == null ?
+                saying :
+                from + "\n  " + saying,
+                isSender: itsMe,
+                sent: itsMe,
+                seen: hasRead,
+                time: timeString,
+              ),
+            ));
         }
 
         List<Widget> reorderedWidgets = [];
@@ -227,6 +243,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                         widget.app.documentID + '/addtochat',
                         title: 'Add one of your followers to the chat',
                         child: MembersWidget(
+                          blockedMembers: widget.blockedMembers,
                           membersType: widget.membersType,
                           app: widget.app,
                           selectedMember: (String newMemberId) async {

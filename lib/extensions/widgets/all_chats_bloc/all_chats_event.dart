@@ -37,6 +37,18 @@ class UpdateAllChats extends AllChatsEvent {
   String toString() => 'UpdateAllChats{ value: $value }';
 }
 
+class BlockMember extends AllChatsEvent {
+  final String memberId;
+
+  const BlockMember({ required this.memberId });
+
+  @override
+  List<Object?> get props => [ memberId ];
+
+  @override
+  String toString() => 'BlockMember{ value: $memberId }';
+}
+
 class DeleteAllChats extends AllChatsEvent {
   final RoomModel? value;
 

@@ -22,6 +22,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final bool? detailed;
   final int chatLimit;
   final String thisMemberId;
+  final List<String> blockedMembers;
 
   void _mapLoadChatWithDetailsToState(EnhancedRoomModel room) {
     var appId = room.roomModel.appId;
@@ -31,10 +32,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _chatsListSubscription?.cancel();
     _chatsListSubscription = chatRepository(appId: appId, roomId: roomId)!
         .listenWithDetails((list) async {
-      add(ChatUpdated(
-          value: list.map((value) => value!).toList(),
-          mightHaveMore: amountNow != list.length,
-          room: room));
+      List<ChatModel?> newList = [];
+      list.forEach((element) {
+        if ((element != null) && (!blockedMembers.contains(element.authorId))) {
+          newList.add(element);
+        }
+      });
+
+      if (newList.isNotEmpty) {
+        add(ChatUpdated(
+            value: newList.map((value) => value!).toList(),
+            mightHaveMore: amountNow != list.length,
+            room: room));
+      }
     },
             orderBy: orderBy,
             descending: descending,
@@ -61,7 +71,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   ChatBloc(
       {required this.appId,
-        required this.thisMemberId,
+      required this.thisMemberId,
+      required this.blockedMembers,
       this.paged = true,
       this.orderBy = 'timestamp',
       this.descending = true,
@@ -77,18 +88,23 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<OpenChatWithAMemberEvent>((event, emit) async {
       var roomModel = await RoomHelper.getRoomForMembers(
           appId, thisMemberId, [thisMemberId, event.otherMember]);
-      var otherMemberRoomInfo =
-      await RoomHelper.getOtherMembersRoomInfo(thisMemberId, appId, roomModel.members!);
-      var enhancedRoomModel = EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
+      var otherMemberRoomInfo = await RoomHelper.getOtherMembersRoomInfo(
+          thisMemberId, appId, roomModel.members!);
+      var enhancedRoomModel =
+          EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
       _mapLoadChatWithDetailsToState(enhancedRoomModel);
+      emit(ChatLoaded(room: enhancedRoomModel, mightHaveMore: true ));
     });
 
     on<OpenChatWithMembersEvent>((event, emit) async {
       var roomModel = await RoomHelper.getRoomForMembers(
           appId, thisMemberId, event.members);
-      var otherMemberRoomInfo = await RoomHelper.getOtherMembersRoomInfo(thisMemberId, appId, roomModel.members!);
-      var enhancedRoomModel = EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
+      var otherMemberRoomInfo = await RoomHelper.getOtherMembersRoomInfo(
+          thisMemberId, appId, roomModel.members!);
+      var enhancedRoomModel =
+          EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
       _mapLoadChatWithDetailsToState(enhancedRoomModel);
+      emit(ChatLoaded(room: enhancedRoomModel, mightHaveMore: true ));
     });
 
     on<UpdateEnhancedRoomModel>((event, emit) {

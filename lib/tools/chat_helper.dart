@@ -10,13 +10,15 @@ import '../model/chat_dashboard_model.dart';
 
 class ChatHelper {
   Widget openForMember(AppModel app, String thisMemberId, String otherMemberId,
-      MembersType membersType) {
+      MembersType membersType, List<String> blockedMembers) {
     return BlocProvider<ChatBloc>(
         create: (context) => ChatBloc(
               thisMemberId: thisMemberId,
               appId: app.documentID,
+              blockedMembers: blockedMembers,
             )..add(OpenChatWithAMemberEvent(otherMemberId)),
         child: ChatWidget(
+            blockedMembers: blockedMembers,
             app: app,
             memberId: thisMemberId,
             canAddMember: false,
@@ -24,13 +26,15 @@ class ChatHelper {
   }
 
   Widget openForMembers(AppModel app, String thisMemberId,
-      List<String> otherMemberIds, MembersType membersType) {
+      List<String> otherMemberIds, MembersType membersType,List<String> blockedMembers) {
     return BlocProvider<ChatBloc>(
         create: (context) => ChatBloc(
               thisMemberId: thisMemberId,
               appId: app.documentID,
+              blockedMembers: blockedMembers,
             )..add(OpenChatWithMembersEvent(otherMemberIds)),
         child: ChatWidget(
+          blockedMembers: blockedMembers,
             app: app,
             memberId: thisMemberId,
             canAddMember: false,

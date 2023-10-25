@@ -67,7 +67,7 @@ class RoomHelper {
         if (member != null) {
           var otherMemberRoomInfo = OtherMemberRoomInfo(
               memberId: member.documentID,
-              name: member.name != null ? member.name! : 'No name',
+              name: (member.name != null && member.name!.length > 0) ? member.name! : 'No name',
               avatar: member.photoURL);
           otherMembersRoomInfo.add(otherMemberRoomInfo);
         }
@@ -75,5 +75,4 @@ class RoomHelper {
     }
     return otherMembersRoomInfo;
   }
-
 }

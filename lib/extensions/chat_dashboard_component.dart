@@ -1,5 +1,6 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
+import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state.dart';
@@ -59,8 +60,10 @@ class ChatDashboard extends AbstractChatDashboardComponent {
         var chatBloc = ChatBloc(
           appId: appId,
           thisMemberId: memberId,
+          blockedMembers: accessState is LoggedIn ? accessState.blockedMembers : []
         );
         var allChatsBloc = AllChatsBloc(
+            loggedIn: accessState is LoggedIn ? accessState : null,
             chatBloc: chatBloc,
             appId: appId,
             thisMemberId: memberId,
@@ -79,6 +82,7 @@ class ChatDashboard extends AbstractChatDashboardComponent {
                 ],
                 child: AllChatsWidget(
                   app: app,
+                  blockedMembers: accessState is LoggedIn ? accessState.blockedMembers : [],
                   memberId: memberId,
                   membersType: value!.membersType
                 )));

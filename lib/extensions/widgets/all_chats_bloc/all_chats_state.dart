@@ -65,6 +65,10 @@ class AllChatsLoaded extends AllChatsState {
 
   @override
   String toString() => 'AllChatsLoaded { values: $enhancedRoomModels }';
+
+  AllChatsLoaded copyWith({required RoomModel? newCurrentRoom}) {
+    return AllChatsLoaded(currentRoom: newCurrentRoom, enhancedRoomModels: enhancedRoomModels, mightHaveMore: mightHaveMore);
+  }
 }
 
 class AllChatsNotLoaded extends AllChatsState {}

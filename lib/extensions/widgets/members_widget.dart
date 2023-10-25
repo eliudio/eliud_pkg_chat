@@ -1,4 +1,7 @@
 import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core/model/decoration_color_model.dart';
+import 'package:eliud_core/model/rgb_model.dart';
+import 'package:eliud_core/style/frontend/has_list_tile.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/selected_member.dart';
 import 'package:eliud_pkg_follow/model/following_list.dart';
@@ -24,12 +27,14 @@ class MembersWidget extends StatefulWidget {
   final String currentMemberId;
   final SelectedMember selectedMember;
   final MembersType? membersType;
+  final List<String> blockedMembers;
 
   const MembersWidget({
     required this.app,
     required this.currentMemberId,
     required this.selectedMember,
     required this.membersType,
+    required this.blockedMembers,
     Key? key,
   }) : super(key: key);
 
@@ -43,12 +48,14 @@ class MembersWidgetState extends State<MembersWidget> {
     if ((widget.membersType == null) ||
         (widget.membersType == MembersType.FollowingMembers)) {
       return _FollowingMembersWidget(
+        blockedMembers: widget.blockedMembers,
         app: widget.app,
         currentMemberId: widget.currentMemberId,
         selectedMember: widget.selectedMember,
       );
     } else {
       return _AllMembersWidget(
+        blockedMembers: widget.blockedMembers,
         app: widget.app,
         currentMemberId: widget.currentMemberId,
         selectedMember: widget.selectedMember,
@@ -61,8 +68,10 @@ class _AllMembersWidget extends StatefulWidget {
   final AppModel app;
   final String currentMemberId;
   final SelectedMember selectedMember;
+  final List<String> blockedMembers;
 
   const _AllMembersWidget({
+    required this.blockedMembers,
     required this.app,
     required this.currentMemberId,
     required this.selectedMember,
@@ -84,10 +93,24 @@ class _AllMembersWidgetState extends State<_AllMembersWidget> {
         value: value);
   }
 
+  List<MemberPublicInfoModel> filterBlocked(List<MemberPublicInfoModel?> values) {
+    List<MemberPublicInfoModel> members = [];
+    values.forEach((element) {
+      if ((element != null) && (element.documentID != null)) {
+        var memberId = element.documentID;
+        if ((memberId != widget.currentMemberId) && (!widget.blockedMembers.contains(memberId))) {
+          members.add(element);
+        }
+      }
+    });
+    return members;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MemberPublicInfoListBloc>(
         create: (context) => MemberPublicInfoListBloc(
+              filter: (values) => filterBlocked(values),
               detailed: true,
               memberPublicInfoRepository:
                   memberPublicInfoRepository(appId: widget.app.documentID)!,
@@ -96,7 +119,12 @@ class _AllMembersWidgetState extends State<_AllMembersWidget> {
             app: widget.app,
             readOnly: true,
             widgetProvider: (value) => widgetProvider(widget.app, value!),
-            listBackground: BackgroundModel()));
+            // transparent bg
+            listBackground: BackgroundModel(decorationColors: [DecorationColorModel(
+                documentID: 'N/A',
+                color: RgbModel(r: 0, g: 0, b: 0, opacity: 0.0),
+              stop: 0,
+            )])));
   }
 }
 
@@ -127,10 +155,20 @@ class _MemberPublicInfoDashboardItem extends StatelessWidget {
         placeholder: kTransparentImage,
         image: data.photoURL!,
       );
-
-      name = data.name;
+      name = (data.name != null && data.name!.length > 0) ? data.name! : 'No name';
     }
+    return getListTile(context, app,
+/*
+        onTap,
+          Widget? leading,
+          Widget? trailing,
+          Widget? title,
+          Widget? subtitle,
+          bool? isThreeLine}) =>
+
+
     return ListTile(
+*/
         onTap: () async {
           Navigator.of(context).pop();
           selectedMember(value!.documentID);
@@ -153,8 +191,10 @@ class _FollowingMembersWidget extends StatefulWidget {
   final AppModel app;
   final String currentMemberId;
   final SelectedMember selectedMember;
+  final List<String> blockedMembers;
 
   const _FollowingMembersWidget({
+    required this.blockedMembers,
     required this.app,
     required this.currentMemberId,
     required this.selectedMember,
@@ -182,10 +222,24 @@ class _FollowingMembersWidgetState extends State<_FollowingMembersWidget> {
         value: value);
   }
 
+  List<FollowingModel> filterBlocked(List<FollowingModel?> values) {
+    List<FollowingModel> following = [];
+    values.forEach((element) {
+      if ((element != null) && (element.followed != null)) {
+        var memberId = element.followed!.documentID;
+        if ((memberId != widget.currentMemberId) && (!widget.blockedMembers.contains(memberId))) {
+          following.add(element);
+        }
+      }
+    });
+    return following;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FollowingListBloc>(
         create: (context) => FollowingListBloc(
+              filter: (values) => filterBlocked(values),
               eliudQuery: getQuery(widget.currentMemberId),
               detailed: true,
               followingRepository:
@@ -226,8 +280,7 @@ class FollowingDashboardItem extends StatelessWidget {
         placeholder: kTransparentImage,
         image: data.photoURL!,
       );
-
-      name = data.name;
+      name = (data.name != null && data.name!.length > 0) ? data.name! : 'No name';
     }
     return ListTile(
         onTap: () async {

@@ -25,9 +25,11 @@ class AllChatsWidget extends StatefulWidget {
   final String memberId;
   final AppModel app;
   final MembersType? membersType;
+  final List<String> blockedMembers;
 
   const AllChatsWidget({
     Key? key,
+    required this.blockedMembers,
     required this.app,
     required this.memberId,
     required this.membersType,
@@ -47,8 +49,9 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
             const Spacer(),
             button(widget.app, context, label: 'Member', onPressed: () {
               openFlexibleDialog(widget.app, context, '${widget.app.documentID}/chat',
-                  title: 'Chat with one of your followers',
+                  title: 'Chat with one of these members',
                   child: MembersWidget(
+                    blockedMembers: widget.blockedMembers,
                     membersType: widget.membersType,
                     app: widget.app,
                     selectedMember: (String memberId) async {
@@ -93,6 +96,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                         })
                 ]),(currentChat != null)?
                   ChatWidget(app: widget.app,
+                    blockedMembers: widget.blockedMembers,
                     memberId: widget.memberId,
                     canAddMember: widget.memberId == currentChat.ownerId,
                     membersType: widget.membersType,
@@ -128,17 +132,22 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
 
     int amountOfAvatars = 0;
     List<Widget> widgets = [];
-    for (int i = 0; i < room.otherMembersRoomInfo.length; i++) {
-      var avatar = room.otherMembersRoomInfo[i].avatar;
-      if (avatar != null) {
-        widgets.add(FadeInImage.memoryNetwork(
-          height: 10,
-          placeholder: kTransparentImage,
-          image: avatar,
-        ));
-        amountOfAvatars++;
-      } else {
-        widgets.add(const Icon(Icons.person));
+    if (room.otherMembersRoomInfo.length > 1) {
+      widgets.add(const Icon(Icons.group));
+      amountOfAvatars = 1;
+    } else {
+      for (int i = 0; i < room.otherMembersRoomInfo.length; i++) {
+        var avatar = room.otherMembersRoomInfo[i].avatar;
+        if (avatar != null) {
+          widgets.add(FadeInImage.memoryNetwork(
+            height: 10,
+            placeholder: kTransparentImage,
+            image: avatar,
+          ));
+          amountOfAvatars++;
+        } else {
+          widgets.add(const Icon(Icons.person));
+        }
       }
     }
 

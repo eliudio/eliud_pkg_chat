@@ -124,3 +124,4 @@ abstract class ChatPackage extends Package {
 
   static ChatPackage instance() => getChatPackage();
 }
+
