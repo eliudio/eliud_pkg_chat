@@ -239,7 +239,7 @@ class _FollowingMembersWidgetState extends State<_FollowingMembersWidget> {
   Widget build(BuildContext context) {
     return BlocProvider<FollowingListBloc>(
         create: (context) => FollowingListBloc(
-              filter: (values) => filterBlocked(values),
+              //filter: (values) => filterBlocked(values),
               eliudQuery: getQuery(widget.currentMemberId),
               detailed: true,
               followingRepository:
