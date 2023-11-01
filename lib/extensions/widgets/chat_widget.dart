@@ -4,7 +4,6 @@ import 'package:eliud_core/model/member_medium_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_dialog.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
-import 'package:eliud_core/style/frontend/has_style.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/style/frontend/has_text_bubble.dart';
 import 'package:eliud_core/style/frontend/has_text_form_field.dart';
@@ -17,11 +16,9 @@ import 'chat_bloc/chat_event.dart';
 import 'chat_bloc/chat_state.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
-import 'package:eliud_pkg_medium/platform/medium_platform.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
-import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:flutter/material.dart';
@@ -95,8 +92,8 @@ class _ChatWidgetState extends State<ChatWidget> {
               (value.timestamp == 'null') || (value.timestamp == null)
                   ? 'Now'
                   : formatHHMM(value.timestamp!);
-          var hasRead;
-          var from;
+          bool hasRead;
+          String? from;
           if (itsMe) {
             hasRead = (timestamp != null) &&
                 (state.room.otherMemberLastRead != null) &&
@@ -126,7 +123,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 onPressed: () {
                   //_blockMemberWithPostModel(postModel);
                   openAckNackDialog(
-                      widget.app, context, widget.app.documentID + '/_blockmember1',
+                      widget.app, context, '${widget.app.documentID}/_blockmember1',
                       title: 'Block member?',
                       message: 'You are sure you want to block this member?',
                       onSelection: (choice) async {
@@ -164,7 +161,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                 button: button,
                 text: from == null ?
                 saying :
-                from + "\n  " + saying,
+                "$from\n  $saying",
                 isSender: itsMe,
                 sent: itsMe,
                 seen: hasRead,
@@ -240,7 +237,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   ),
                   onPressed: () {
                     openFlexibleDialog(widget.app, context,
-                        widget.app.documentID + '/addtochat',
+                        '${widget.app.documentID}/addtochat',
                         title: 'Add one of your followers to the chat',
                         child: MembersWidget(
                           blockedMembers: widget.blockedMembers,

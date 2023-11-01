@@ -59,7 +59,7 @@ class ChatDashboardComponentEditorConstructor
     if (chatDashboard != null) {
       _openIt(app, context, false, chatDashboard, feedback);
     } else {
-      openErrorDialog(app, context, app.documentID + '/_error',
+      openErrorDialog(app, context, '${app.documentID}/_error',
           title: 'Error',
           errorMessage: 'Cannot find chat dashboard with id $id');
     }
@@ -70,7 +70,7 @@ class ChatDashboardComponentEditorConstructor
     openComplexDialog(
       app,
       context,
-      app.documentID + '/chatdashboard',
+      '${app.documentID}/chatdashboard',
       title: create ? 'Create Chat Dashboard' : 'Update Chat Dashboard',
       includeHeading: false,
       widthFraction: .9,
@@ -156,11 +156,11 @@ class _ChatDashboardComponentEditorState
                       collapsed: true,
                       children: [
                         getListTile(context, widget.app,
-                            leading: Icon(Icons.vpn_key),
+                            leading: const Icon(Icons.vpn_key),
                             title: text(widget.app, context,
                                 chatDashboardState.model.documentID)),
                         getListTile(context, widget.app,
-                            leading: Icon(Icons.description),
+                            leading: const Icon(Icons.description),
                             title: dialogField(
                               widget.app,
                               context,
@@ -199,7 +199,7 @@ class _ChatDashboardComponentEditorState
                       collapsed: true,
                       children: [
                         getListTile(context, widget.app,
-                            leading: Icon(Icons.security),
+                            leading: const Icon(Icons.security),
                             title: ConditionsSimpleWidget(
                               app: widget.app,
                               value: chatDashboardState.model.conditions!,

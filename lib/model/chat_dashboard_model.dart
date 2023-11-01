@@ -13,29 +13,14 @@
 
 */
 
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_chat/model/chat_dashboard_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 enum MembersType {
   FollowingMembers, AllMembers, Unknown
@@ -55,18 +40,19 @@ class ChatDashboardModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
   static const String id = 'chatDashboards';
 
+  @override
   String documentID;
 
   // This is the identifier of the app to which this belongs
+  @override
   String appId;
   String? description;
   StorageConditionsModel? conditions;
   MembersType? membersType;
 
-  ChatDashboardModel({required this.documentID, required this.appId, this.description, this.conditions, this.membersType, })  {
-    assert(documentID != null);
-  }
+  ChatDashboardModel({required this.documentID, required this.appId, this.description, this.conditions, this.membersType, });
 
+  @override
   ChatDashboardModel copyWith({String? documentID, String? appId, String? description, StorageConditionsModel? conditions, MembersType? membersType, }) {
     return ChatDashboardModel(documentID: documentID ?? this.documentID, appId: appId ?? this.appId, description: description ?? this.description, conditions: conditions ?? this.conditions, membersType: membersType ?? this.membersType, );
   }
@@ -90,12 +76,14 @@ class ChatDashboardModel implements ModelBase, WithAppId {
     return 'ChatDashboardModel{documentID: $documentID, appId: $appId, description: $description, conditions: $conditions, membersType: $membersType}';
   }
 
+  @override
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     if (conditions != null) referencesCollector.addAll(await conditions!.collectReferences(appId: appId));
     return referencesCollector;
   }
 
+  @override
   ChatDashboardEntity toEntity({String? appId}) {
     return ChatDashboardEntity(
           appId: (appId != null) ? appId : null, 

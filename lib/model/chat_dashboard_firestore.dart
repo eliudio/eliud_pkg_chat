@@ -16,16 +16,8 @@
 import 'package:eliud_pkg_chat/model/chat_dashboard_repository.dart';
 
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
@@ -41,22 +33,27 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return ChatDashboardEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  @override
   Future<ChatDashboardEntity> addEntity(String documentID, ChatDashboardEntity value) {
     return ChatDashboardCollection.doc(documentID).set(value.toDocument()).then((_) => value);
   }
 
+  @override
   Future<ChatDashboardEntity> updateEntity(String documentID, ChatDashboardEntity value) {
     return ChatDashboardCollection.doc(documentID).update(value.toDocument()).then((_) => value);
   }
 
+  @override
   Future<ChatDashboardModel> add(ChatDashboardModel value) {
     return ChatDashboardCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
 
+  @override
   Future<void> delete(ChatDashboardModel value) {
     return ChatDashboardCollection.doc(value.documentID).delete();
   }
 
+  @override
   Future<ChatDashboardModel> update(ChatDashboardModel value) {
     return ChatDashboardCollection.doc(value.documentID).update(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -68,6 +65,7 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
   Future<ChatDashboardModel?> _populateDocPlus(DocumentSnapshot value) async {
     return ChatDashboardModel.fromEntityPlus(value.id, ChatDashboardEntity.fromMap(value.data()), appId: appId);  }
 
+  @override
   Future<ChatDashboardEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
     try {
       var collection = ChatDashboardCollection.doc(id);
@@ -80,9 +78,11 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
         print("Error whilst retrieving ChatDashboard with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
+  @override
   Future<ChatDashboardModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
       var collection = ChatDashboardCollection.doc(id);
@@ -95,9 +95,11 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
         print("Error whilst retrieving ChatDashboard with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
+  @override
   StreamSubscription<List<ChatDashboardModel?>> listen(ChatDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<ChatDashboardModel?>> stream;
     stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
@@ -112,6 +114,7 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     });
   }
 
+  @override
   StreamSubscription<List<ChatDashboardModel?>> listenWithDetails(ChatDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<ChatDashboardModel?>> stream;
     stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
@@ -144,33 +147,36 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return theStream;
   }
 
+  @override
   Stream<List<ChatDashboardModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     DocumentSnapshot? lastDoc;
-    Stream<List<ChatDashboardModel?>> _values = getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<ChatDashboardModel?>> values = getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Stream<List<ChatDashboardModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     DocumentSnapshot? lastDoc;
-    Stream<List<ChatDashboardModel?>> _values = getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<ChatDashboardModel?>> values = getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Future<List<ChatDashboardModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     DocumentSnapshot? lastDoc;
-    List<ChatDashboardModel?> _values = await getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<ChatDashboardModel?> values = await getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -178,12 +184,13 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Future<List<ChatDashboardModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     DocumentSnapshot? lastDoc;
-    List<ChatDashboardModel?> _values = await getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<ChatDashboardModel?> values = await getQuery(ChatDashboardCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -191,11 +198,13 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   void flush() {}
 
+  @override
   Future<void> deleteAll() {
     return ChatDashboardCollection.get().then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs){
@@ -204,14 +213,17 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     });
   }
 
+  @override
   dynamic getSubCollection(String documentId, String name) {
     return ChatDashboardCollection.doc(documentId).collection(name);
   }
 
+  @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   } 
 
+  @override
   Future<ChatDashboardModel?> changeValue(String documentId, String fieldName, num changeByThisValue) {
     var change = FieldValue.increment(changeByThisValue);
     return ChatDashboardCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));

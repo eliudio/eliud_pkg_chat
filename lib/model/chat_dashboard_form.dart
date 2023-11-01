@@ -15,45 +15,21 @@
 
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
-import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
-import 'package:eliud_core/tools/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/style/admin/admin_form_style.dart';
 
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-import 'package:intl/intl.dart';
 
-import 'package:eliud_core/eliud.dart';
 
-import 'package:eliud_core/model/internal_component.dart';
-import 'package:eliud_pkg_chat/model/embedded_component.dart';
-import 'package:eliud_pkg_chat/tools/bespoke_formfields.dart';
-import 'package:eliud_core/tools/bespoke_formfields.dart';
 
 import 'package:eliud_core/tools/enums.dart';
-import 'package:eliud_core/tools/etc.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/embedded_component.dart';
-import 'package:eliud_pkg_chat/model/embedded_component.dart';
 import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_event.dart';
@@ -114,9 +90,10 @@ class MyChatDashboardForm extends StatefulWidget {
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyChatDashboardForm({required this.app, this.formAction, this.submitAction});
+  const MyChatDashboardForm({super.key, required this.app, this.formAction, this.submitAction});
 
-  _MyChatDashboardFormState createState() => _MyChatDashboardFormState(this.formAction);
+  @override
+  _MyChatDashboardFormState createState() => _MyChatDashboardFormState(formAction);
 }
 
 
@@ -146,27 +123,33 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ChatDashboardFormBloc, ChatDashboardFormState>(builder: (context, state) {
-      if (state is ChatDashboardFormUninitialized) return Center(
+      if (state is ChatDashboardFormUninitialized) {
+        return Center(
         child: StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context),
       );
+      }
 
       if (state is ChatDashboardFormLoaded) {
-        if (state.value!.documentID != null)
+        if (state.value!.documentID != null) {
           _documentIDController.text = state.value!.documentID.toString();
-        else
+        } else {
           _documentIDController.text = "";
-        if (state.value!.appId != null)
+        }
+        if (state.value!.appId != null) {
           _appIdController.text = state.value!.appId.toString();
-        else
+        } else {
           _appIdController.text = "";
-        if (state.value!.description != null)
+        }
+        if (state.value!.description != null) {
           _descriptionController.text = state.value!.description.toString();
-        else
+        } else {
           _descriptionController.text = "";
-        if (state.value!.membersType != null)
+        }
+        if (state.value!.membersType != null) {
           _membersTypeSelectedRadioTile = state.value!.membersType!.index;
-        else
+        } else {
           _membersTypeSelectedRadioTile = 0;
+        }
       }
       if (state is ChatDashboardFormInitialized) {
         List<Widget> children = [];
@@ -228,11 +211,11 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
         children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
 
-        if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
+        if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData)) {
           children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is ChatDashboardFormError) {
-                      return null;
+                      return;
                     } else {
                       if (formAction == FormAction.UpdateAction) {
                         BlocProvider.of<ChatDashboardListBloc>(context).add(
@@ -261,13 +244,14 @@ class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
                     }
                   },
                 ));
+        }
 
         return StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().container(widget.app, context, Form(
             child: ListView(
               padding: const EdgeInsets.all(8),
-              physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? NeverScrollableScrollPhysics() : null,
+              physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? const NeverScrollableScrollPhysics() : null,
               shrinkWrap: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)),
-              children: children as List<Widget>
+              children: children
             ),
           ), formAction!
         );

@@ -15,7 +15,6 @@
 
 
 import 'package:eliud_core/tools/component/component_constructor.dart';
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
@@ -28,87 +27,35 @@ import 'package:eliud_pkg_chat/model/chat_list.dart';
 import 'package:eliud_pkg_chat/model/chat_dropdown_button.dart';
 import 'package:eliud_pkg_chat/model/chat_list_event.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_list.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_dropdown_button.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_event.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_dropdown_button.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/member_has_chat_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_list.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_dropdown_button.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_list_event.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_list.dart';
 import 'package:eliud_pkg_chat/model/room_dropdown_button.dart';
 import 'package:eliud_pkg_chat/model/room_list_event.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 class ListComponentFactory implements ComponentConstructor {
+  @override
   Widget? createNew({Key? key, required AppModel app,  required String id, int? privilegeLevel, Map<String, dynamic>? parameters}) {
     return ListComponent(app: app, componentId: id);
   }
@@ -120,7 +67,7 @@ class ListComponentFactory implements ComponentConstructor {
 }
 
 
-typedef DropdownButtonChanged(String? value, int? privilegeLevel);
+typedef DropdownButtonChanged = Function(String? value, int? privilegeLevel);
 
 class DropdownButtonComponentFactory implements ComponentDropDown {
   @override
@@ -129,6 +76,7 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
   }
 
 
+  @override
   bool supports(String id) {
 
     if (id == "chats") return true;
@@ -139,22 +87,28 @@ class DropdownButtonComponentFactory implements ComponentDropDown {
     return false;
   }
 
+  @override
   Widget createNew({Key? key, required AppModel app, required String id, int? privilegeLevel, Map<String, dynamic>? parameters, String? value, DropdownButtonChanged? trigger, bool? optional}) {
 
-    if (id == "chats")
+    if (id == "chats") {
       return DropdownButtonComponent(app: app, componentId: id, value: value, privilegeLevel: privilegeLevel, trigger: trigger, optional: optional);
+    }
 
-    if (id == "chatDashboards")
+    if (id == "chatDashboards") {
       return DropdownButtonComponent(app: app, componentId: id, value: value, privilegeLevel: privilegeLevel, trigger: trigger, optional: optional);
+    }
 
-    if (id == "chatMemberInfos")
+    if (id == "chatMemberInfos") {
       return DropdownButtonComponent(app: app, componentId: id, value: value, privilegeLevel: privilegeLevel, trigger: trigger, optional: optional);
+    }
 
-    if (id == "memberHasChats")
+    if (id == "memberHasChats") {
       return DropdownButtonComponent(app: app, componentId: id, value: value, privilegeLevel: privilegeLevel, trigger: trigger, optional: optional);
+    }
 
-    if (id == "rooms")
+    if (id == "rooms") {
       return DropdownButtonComponent(app: app, componentId: id, value: value, privilegeLevel: privilegeLevel, trigger: trigger, optional: optional);
+    }
 
     return Text("Id $id not found");
   }
@@ -176,7 +130,7 @@ class ListComponent extends StatelessWidget with HasFab {
     return null;
   }
 
-  ListComponent({required this.app, this.privilegeLevel, this.componentId}) {
+  ListComponent({super.key, required this.app, this.privilegeLevel, this.componentId}) {
     initWidget();
   }
 
@@ -287,7 +241,7 @@ class ListComponent extends StatelessWidget with HasFab {
 }
 
 
-typedef Changed(String? value, int? privilegeLevel);
+typedef Changed = Function(String? value, int? privilegeLevel);
 
 class DropdownButtonComponent extends StatelessWidget {
   final AppModel app;
@@ -297,7 +251,7 @@ class DropdownButtonComponent extends StatelessWidget {
   final bool? optional;
   int? privilegeLevel;
 
-  DropdownButtonComponent({required this.app, this.componentId, this.privilegeLevel, this.value, this.trigger, this.optional});
+  DropdownButtonComponent({super.key, required this.app, this.componentId, this.privilegeLevel, this.value, this.trigger, this.optional});
 
   @override
   Widget build(BuildContext context) {

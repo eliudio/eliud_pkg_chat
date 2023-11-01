@@ -13,29 +13,13 @@
 
 */
 
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_chat/model/member_has_chat_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 
 
@@ -43,17 +27,18 @@ class MemberHasChatModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
   static const String id = 'memberHasChats';
 
+  @override
   String documentID;
   String memberId;
 
   // This is the identifier of the app to which this chat belongs
+  @override
   String appId;
   bool? hasUnread;
 
-  MemberHasChatModel({required this.documentID, required this.memberId, required this.appId, this.hasUnread, })  {
-    assert(documentID != null);
-  }
+  MemberHasChatModel({required this.documentID, required this.memberId, required this.appId, this.hasUnread, });
 
+  @override
   MemberHasChatModel copyWith({String? documentID, String? memberId, String? appId, bool? hasUnread, }) {
     return MemberHasChatModel(documentID: documentID ?? this.documentID, memberId: memberId ?? this.memberId, appId: appId ?? this.appId, hasUnread: hasUnread ?? this.hasUnread, );
   }
@@ -76,11 +61,13 @@ class MemberHasChatModel implements ModelBase, WithAppId {
     return 'MemberHasChatModel{documentID: $documentID, memberId: $memberId, appId: $appId, hasUnread: $hasUnread}';
   }
 
+  @override
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     return referencesCollector;
   }
 
+  @override
   MemberHasChatEntity toEntity({String? appId}) {
     return MemberHasChatEntity(
           memberId: (memberId != null) ? memberId : null, 

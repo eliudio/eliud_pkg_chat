@@ -27,11 +27,11 @@ class ChatComponentUninitialized extends ChatComponentState {}
 
 class ChatComponentError extends ChatComponentState {
   final String? message;
-  ChatComponentError({ this.message });
+  const ChatComponentError({ this.message });
 }
 
 class ChatComponentPermissionDenied extends ChatComponentState {
-  ChatComponentPermissionDenied();
+  const ChatComponentPermissionDenied();
 }
 
 class ChatComponentLoaded extends ChatComponentState {
@@ -40,7 +40,7 @@ class ChatComponentLoaded extends ChatComponentState {
   const ChatComponentLoaded({ required this.value });
 
   ChatComponentLoaded copyWith({ ChatModel? copyThis }) {
-    return ChatComponentLoaded(value: copyThis ?? this.value);
+    return ChatComponentLoaded(value: copyThis ?? value);
   }
 
   @override

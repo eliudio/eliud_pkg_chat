@@ -16,31 +16,16 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core/tools/firestore/firestore_tools.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:eliud_core/tools/enums.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 
-import 'package:eliud_core/model/rgb_model.dart';
 
-import 'package:eliud_core/tools/string_validator.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/member_has_chat_form_event.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_form_state.dart';
-import 'package:eliud_pkg_chat/model/member_has_chat_repository.dart';
 
 class MemberHasChatFormBloc extends Bloc<MemberHasChatFormEvent, MemberHasChatFormState> {
   final FormAction? formAction;
@@ -67,7 +52,7 @@ class MemberHasChatFormBloc extends Bloc<MemberHasChatFormEvent, MemberHasChatFo
         MemberHasChatFormLoaded loaded = MemberHasChatFormLoaded(value: event.value);
         emit(loaded);
       });
-      MemberHasChatModel? newValue = null;
+      MemberHasChatModel? newValue;
       on <ChangedMemberHasChatDocumentID> ((event, emit) async {
       if (state is MemberHasChatFormInitialized) {
         final currentState = state as MemberHasChatFormInitialized;
@@ -111,7 +96,7 @@ class MemberHasChatFormBloc extends Bloc<MemberHasChatFormEvent, MemberHasChatFo
 
   Future<MemberHasChatFormState> _isDocumentIDValid(String? value, MemberHasChatModel newValue) async {
     if (value == null) return Future.value(error("Provide value for documentID", newValue));
-    if (value.length == 0) return Future.value(error("Provide value for documentID", newValue));
+    if (value.isEmpty) return Future.value(error("Provide value for documentID", newValue));
     Future<MemberHasChatModel?> findDocument = memberHasChatRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {

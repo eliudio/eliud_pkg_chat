@@ -16,11 +16,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
-import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/chat_component_event.dart';
 import 'package:eliud_pkg_chat/model/chat_component_state.dart';
 import 'package:eliud_pkg_chat/model/chat_repository.dart';
-import 'package:flutter/services.dart';
 
 class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
   final ChatRepository? chatRepository;

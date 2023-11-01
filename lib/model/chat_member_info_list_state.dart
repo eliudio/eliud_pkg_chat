@@ -42,7 +42,7 @@ class ChatMemberInfoListLoaded extends ChatMemberInfoListState {
   bool operator ==(Object other) => 
           other is ChatMemberInfoListLoaded &&
               runtimeType == other.runtimeType &&
-              ListEquality().equals(values, other.values) &&
+              const ListEquality().equals(values, other.values) &&
               mightHaveMore == other.mightHaveMore;
 }
 

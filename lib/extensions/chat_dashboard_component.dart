@@ -3,18 +3,11 @@ import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_widget.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_event.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/chat_widget.dart';
-import 'package:eliud_pkg_chat/extensions/widgets/members_widget.dart';
-import '../model/room_model.dart';
 import 'widgets/all_chats_bloc/all_chats_bloc.dart';
 import 'widgets/all_chats_bloc/all_chats_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:eliud_core/tools/component/component_constructor.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_component.dart';
@@ -40,7 +33,7 @@ class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
 class ChatDashboard extends AbstractChatDashboardComponent {
   static double HEADER_HEIGHT = 155;
 
-  ChatDashboard({Key? key, required AppModel app, required String id})
+  const ChatDashboard({Key? key, required AppModel app, required String id})
       : super(key: key, app: app, chatDashboardId: id);
 
   @override

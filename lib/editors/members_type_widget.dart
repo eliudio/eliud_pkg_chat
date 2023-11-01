@@ -28,6 +28,7 @@ class MembersTypeWidget extends StatefulWidget {
 class _MembersTypeWidgetState extends State<MembersTypeWidget> {
   int? _heightTypeSelectedRadioTile;
 
+  @override
   void initState() {
     super.initState();
     _heightTypeSelectedRadioTile = widget.membersType.index;
@@ -51,7 +52,7 @@ class _MembersTypeWidgetState extends State<MembersTypeWidget> {
   }
 
   Widget getPrivilegeOption(MembersType? membersType) {
-    if (membersType == null) return Text("?");
+    if (membersType == null) return const Text("?");
     var stringValue = heighttTypeLandscapeStringValue(membersType);
     return Center(
         child: radioListTile(
@@ -66,7 +67,7 @@ class _MembersTypeWidgetState extends State<MembersTypeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(shrinkWrap: true, physics: ScrollPhysics(), children: [
+    return ListView(shrinkWrap: true, physics: const ScrollPhysics(), children: [
       getPrivilegeOption(MembersType.AllMembers),
       getPrivilegeOption(MembersType.FollowingMembers)
     ]);

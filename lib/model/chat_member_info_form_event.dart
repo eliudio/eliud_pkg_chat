@@ -15,18 +15,7 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 @immutable
@@ -47,7 +36,7 @@ class InitialiseChatMemberInfoFormEvent extends ChatMemberInfoFormEvent {
   @override
   List<Object?> get props => [ value ];
 
-  InitialiseChatMemberInfoFormEvent({this.value});
+  const InitialiseChatMemberInfoFormEvent({this.value});
 }
 
 class InitialiseChatMemberInfoFormNoLoadEvent extends ChatMemberInfoFormEvent {
@@ -56,13 +45,13 @@ class InitialiseChatMemberInfoFormNoLoadEvent extends ChatMemberInfoFormEvent {
   @override
   List<Object?> get props => [ value ];
 
-  InitialiseChatMemberInfoFormNoLoadEvent({this.value});
+  const InitialiseChatMemberInfoFormNoLoadEvent({this.value});
 }
 
 class ChangedChatMemberInfoDocumentID extends ChatMemberInfoFormEvent {
   final String? value;
 
-  ChangedChatMemberInfoDocumentID({this.value});
+  const ChangedChatMemberInfoDocumentID({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -74,7 +63,7 @@ class ChangedChatMemberInfoDocumentID extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoAuthorId extends ChatMemberInfoFormEvent {
   final String? value;
 
-  ChangedChatMemberInfoAuthorId({this.value});
+  const ChangedChatMemberInfoAuthorId({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -86,7 +75,7 @@ class ChangedChatMemberInfoAuthorId extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoAppId extends ChatMemberInfoFormEvent {
   final String? value;
 
-  ChangedChatMemberInfoAppId({this.value});
+  const ChangedChatMemberInfoAppId({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -98,7 +87,7 @@ class ChangedChatMemberInfoAppId extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoRoomId extends ChatMemberInfoFormEvent {
   final String? value;
 
-  ChangedChatMemberInfoRoomId({this.value});
+  const ChangedChatMemberInfoRoomId({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -110,7 +99,7 @@ class ChangedChatMemberInfoRoomId extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoTimestamp extends ChatMemberInfoFormEvent {
   final String? value;
 
-  ChangedChatMemberInfoTimestamp({this.value});
+  const ChangedChatMemberInfoTimestamp({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -122,7 +111,7 @@ class ChangedChatMemberInfoTimestamp extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoAccessibleByGroup extends ChatMemberInfoFormEvent {
   final ChatMemberInfoAccessibleByGroup? value;
 
-  ChangedChatMemberInfoAccessibleByGroup({this.value});
+  const ChangedChatMemberInfoAccessibleByGroup({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -134,7 +123,7 @@ class ChangedChatMemberInfoAccessibleByGroup extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoAccessibleByMembers extends ChatMemberInfoFormEvent {
   final String? value;
 
-  ChangedChatMemberInfoAccessibleByMembers({this.value});
+  const ChangedChatMemberInfoAccessibleByMembers({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -146,7 +135,7 @@ class ChangedChatMemberInfoAccessibleByMembers extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoReadAccess extends ChatMemberInfoFormEvent {
   final String? value;
 
-  ChangedChatMemberInfoReadAccess({this.value});
+  const ChangedChatMemberInfoReadAccess({this.value});
 
   @override
   List<Object?> get props => [ value ];

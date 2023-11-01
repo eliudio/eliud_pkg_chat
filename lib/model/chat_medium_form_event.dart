@@ -15,18 +15,7 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 @immutable
@@ -47,7 +36,7 @@ class InitialiseChatMediumFormEvent extends ChatMediumFormEvent {
   @override
   List<Object?> get props => [ value ];
 
-  InitialiseChatMediumFormEvent({this.value});
+  const InitialiseChatMediumFormEvent({this.value});
 }
 
 class InitialiseChatMediumFormNoLoadEvent extends ChatMediumFormEvent {
@@ -56,13 +45,13 @@ class InitialiseChatMediumFormNoLoadEvent extends ChatMediumFormEvent {
   @override
   List<Object?> get props => [ value ];
 
-  InitialiseChatMediumFormNoLoadEvent({this.value});
+  const InitialiseChatMediumFormNoLoadEvent({this.value});
 }
 
 class ChangedChatMediumDocumentID extends ChatMediumFormEvent {
   final String? value;
 
-  ChangedChatMediumDocumentID({this.value});
+  const ChangedChatMediumDocumentID({this.value});
 
   @override
   List<Object?> get props => [ value ];
@@ -74,7 +63,7 @@ class ChangedChatMediumDocumentID extends ChatMediumFormEvent {
 class ChangedChatMediumMemberMedium extends ChatMediumFormEvent {
   final String? value;
 
-  ChangedChatMediumMemberMedium({this.value});
+  const ChangedChatMediumMemberMedium({this.value});
 
   @override
   List<Object?> get props => [ value ];

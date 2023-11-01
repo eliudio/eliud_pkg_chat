@@ -14,29 +14,15 @@
 */
 
 import 'package:collection/collection.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_chat/model/chat_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 enum ChatAccessibleByGroup {
   Public, Followers, Me, SpecificMembers, Unknown
@@ -58,12 +44,14 @@ class ChatModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
   static const String id = 'chats';
 
+  @override
   String documentID;
 
   // The person initiating the conversation, or the owner of the group
   String authorId;
 
   // This is the identifier of the app to which this chat belongs
+  @override
   String appId;
 
   // This is the identifier of the room to which this chat belongs
@@ -77,10 +65,9 @@ class ChatModel implements ModelBase, WithAppId {
   List<String>? readAccess;
   List<ChatMediumModel>? chatMedia;
 
-  ChatModel({required this.documentID, required this.authorId, required this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, })  {
-    assert(documentID != null);
-  }
+  ChatModel({required this.documentID, required this.authorId, required this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, });
 
+  @override
   ChatModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, DateTime? timestamp, String? saying, ChatAccessibleByGroup? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, List<ChatMediumModel>? chatMedia, }) {
     return ChatModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, saying: saying ?? this.saying, accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers, readAccess: readAccess ?? this.readAccess, chatMedia: chatMedia ?? this.chatMedia, );
   }
@@ -100,9 +87,9 @@ class ChatModel implements ModelBase, WithAppId {
           timestamp == other.timestamp &&
           saying == other.saying &&
           accessibleByGroup == other.accessibleByGroup &&
-          ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
-          ListEquality().equals(readAccess, other.readAccess) &&
-          ListEquality().equals(chatMedia, other.chatMedia);
+          const ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
+          const ListEquality().equals(readAccess, other.readAccess) &&
+          const ListEquality().equals(chatMedia, other.chatMedia);
 
   @override
   String toString() {
@@ -113,6 +100,7 @@ class ChatModel implements ModelBase, WithAppId {
     return 'ChatModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, saying: $saying, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }, chatMedia: ChatMedium[] { $chatMediaCsv }}';
   }
 
+  @override
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     if (chatMedia != null) {
@@ -123,6 +111,7 @@ class ChatModel implements ModelBase, WithAppId {
     return referencesCollector;
   }
 
+  @override
   ChatEntity toEntity({String? appId}) {
     return ChatEntity(
           authorId: (authorId != null) ? authorId : null, 

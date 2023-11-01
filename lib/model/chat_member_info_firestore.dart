@@ -16,16 +16,8 @@
 import 'package:eliud_pkg_chat/model/chat_member_info_repository.dart';
 
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
@@ -41,6 +33,7 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
     return ChatMemberInfoEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  @override
   Future<ChatMemberInfoEntity> addEntity(String documentID, ChatMemberInfoEntity value) {
     return ChatMemberInfoCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
       var newValue = await getEntity(documentID);
@@ -53,6 +46,7 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
 ;
   }
 
+  @override
   Future<ChatMemberInfoEntity> updateEntity(String documentID, ChatMemberInfoEntity value) {
     return ChatMemberInfoCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
       var newValue = await getEntity(documentID);
@@ -65,6 +59,7 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
 ;
   }
 
+  @override
   Future<ChatMemberInfoModel> add(ChatMemberInfoModel value) {
     return ChatMemberInfoCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -77,10 +72,12 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
 ;
   }
 
+  @override
   Future<void> delete(ChatMemberInfoModel value) {
     return ChatMemberInfoCollection.doc(value.documentID).delete();
   }
 
+  @override
   Future<ChatMemberInfoModel> update(ChatMemberInfoModel value) {
     return ChatMemberInfoCollection.doc(value.documentID).update(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
       var newValue = await get(value.documentID);
@@ -100,6 +97,7 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
   Future<ChatMemberInfoModel?> _populateDocPlus(DocumentSnapshot value) async {
     return ChatMemberInfoModel.fromEntityPlus(value.id, ChatMemberInfoEntity.fromMap(value.data()), appId: appId);  }
 
+  @override
   Future<ChatMemberInfoEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
     try {
       var collection = ChatMemberInfoCollection.doc(id);
@@ -112,9 +110,11 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
         print("Error whilst retrieving ChatMemberInfo with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
+  @override
   Future<ChatMemberInfoModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
       var collection = ChatMemberInfoCollection.doc(id);
@@ -127,9 +127,11 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
         print("Error whilst retrieving ChatMemberInfo with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
+  @override
   StreamSubscription<List<ChatMemberInfoModel?>> listen(ChatMemberInfoModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<ChatMemberInfoModel?>> stream;
     stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
@@ -144,6 +146,7 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
     });
   }
 
+  @override
   StreamSubscription<List<ChatMemberInfoModel?>> listenWithDetails(ChatMemberInfoModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<ChatMemberInfoModel?>> stream;
     stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
@@ -176,33 +179,36 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
     return theStream;
   }
 
+  @override
   Stream<List<ChatMemberInfoModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     DocumentSnapshot? lastDoc;
-    Stream<List<ChatMemberInfoModel?>> _values = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<ChatMemberInfoModel?>> values = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Stream<List<ChatMemberInfoModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     DocumentSnapshot? lastDoc;
-    Stream<List<ChatMemberInfoModel?>> _values = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<ChatMemberInfoModel?>> values = getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Future<List<ChatMemberInfoModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     DocumentSnapshot? lastDoc;
-    List<ChatMemberInfoModel?> _values = await getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<ChatMemberInfoModel?> values = await getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -210,12 +216,13 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Future<List<ChatMemberInfoModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     DocumentSnapshot? lastDoc;
-    List<ChatMemberInfoModel?> _values = await getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<ChatMemberInfoModel?> values = await getQuery(ChatMemberInfoCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -223,11 +230,13 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   void flush() {}
 
+  @override
   Future<void> deleteAll() {
     return ChatMemberInfoCollection.get().then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs){
@@ -236,14 +245,17 @@ class ChatMemberInfoFirestore implements ChatMemberInfoRepository {
     });
   }
 
+  @override
   dynamic getSubCollection(String documentId, String name) {
     return ChatMemberInfoCollection.doc(documentId).collection(name);
   }
 
+  @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   } 
 
+  @override
   Future<ChatMemberInfoModel?> changeValue(String documentId, String fieldName, num changeByThisValue) {
     var change = FieldValue.increment(changeByThisValue);
     return ChatMemberInfoCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));

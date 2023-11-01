@@ -20,18 +20,11 @@ import 'package:eliud_core/style/style_registry.dart';
 import 'package:eliud_core/tools/has_fab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/tools/screen_size.dart';
 import 'package:eliud_core/model/background_model.dart';
 import 'package:eliud_core/tools/delete_snackbar.dart';
 import 'package:eliud_core/tools/router_builders.dart';
 import 'package:eliud_core/tools/etc.dart';
 import 'package:eliud_core/tools/enums.dart';
-import 'package:eliud_core/eliud.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
 
 import 'package:eliud_pkg_chat/model/chat_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_list_state.dart';
@@ -44,7 +37,7 @@ import 'package:eliud_core/model/app_model.dart';
 import 'chat_form.dart';
 
 
-typedef ChatWidgetProvider(ChatModel? value);
+typedef ChatWidgetProvider = Function(ChatModel? value);
 
 class ChatListWidget extends StatefulWidget with HasFab {
   AppModel app;
@@ -77,7 +70,7 @@ class ChatListWidgetState extends State<ChatListWidget> {
   Widget? fab(BuildContext aContext, AccessState accessState) {
     return !accessState.memberIsOwner(widget.app.documentID) 
       ? null
-      : StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().floatingActionButton(widget.app, context, 'PageFloatBtnTag', Icon(Icons.add),
+      : StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().floatingActionButton(widget.app, context, 'PageFloatBtnTag', const Icon(Icons.add),
       onPressed: () {
         Navigator.of(context).push(
           pageRouteBuilder(widget.app, page: BlocProvider.value(
@@ -120,7 +113,7 @@ class ChatListWidgetState extends State<ChatListWidget> {
                     ));
               return ListView(
                 padding: const EdgeInsets.all(8),
-                physics: ScrollPhysics(),
+                physics: const ScrollPhysics(),
                 shrinkWrap: true,
                 children: children
               );
@@ -143,7 +136,7 @@ class ChatListWidgetState extends State<ChatListWidget> {
       child: ListView.separated(
         separatorBuilder: (context, index) => StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().divider(widget.app, context),
         shrinkWrap: true,
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         itemCount: values.length,
         itemBuilder: (context, index) {
           final value = values[index];
@@ -202,7 +195,7 @@ class ChatListItem extends StatelessWidget {
   final GestureTapCallback onTap;
   final ChatModel value;
 
-  ChatListItem({
+  const ChatListItem({
     Key? key,
     required this.app,
     required this.onDismissed,

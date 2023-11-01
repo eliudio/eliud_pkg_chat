@@ -4,9 +4,7 @@ import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
-import '../../../tools/chat_helper.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
@@ -33,11 +31,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _chatsListSubscription = chatRepository(appId: appId, roomId: roomId)!
         .listenWithDetails((list) async {
       List<ChatModel?> newList = [];
-      list.forEach((element) {
+      for (var element in list) {
         if ((element != null) && (!blockedMembers.contains(element.authorId))) {
           newList.add(element);
         }
-      });
+      }
 
       if (newList.isNotEmpty) {
         add(ChatUpdated(

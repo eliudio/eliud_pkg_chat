@@ -83,8 +83,9 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
       }
     } else {
       throw Exception(
-          'Unexpected class for parameters: ' + parameters.toString());
+          'Unexpected class for parameters: $parameters');
     }
+    return null;
   }
 
   @override

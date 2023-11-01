@@ -1,9 +1,6 @@
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
-import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class ChatState extends Equatable {

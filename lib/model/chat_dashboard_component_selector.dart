@@ -14,23 +14,18 @@
 */
 
 import 'dart:math';
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/style/frontend/has_divider.dart';
 import 'package:eliud_core/style/frontend/has_list_tile.dart';
-import 'package:eliud_core/style/frontend/has_progress_indicator.dart';
 import 'package:eliud_core/style/frontend/has_tabs.dart';
 import 'package:eliud_core/style/frontend/has_text.dart';
 import 'package:eliud_core/tools/component/component_spec.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
 import 'chat_dashboard_list_bloc.dart';
 import 'chat_dashboard_list_event.dart';
 import 'chat_dashboard_list_state.dart';
@@ -86,9 +81,9 @@ class _SelectChatDashboardWidgetState extends State<SelectChatDashboardWidget> w
 
   @override
   void initState() {
-    var _privilegeASize = _privilegeItems.length;
+    var privilegeASize = _privilegeItems.length;
     _privilegeTabController =
-        TabController(vsync: this, length: _privilegeASize);
+        TabController(vsync: this, length: privilegeASize);
     _privilegeTabController!.addListener(_handlePrivilegeTabSelection);
     _privilegeTabController!.index = _initialPrivilege;
 
@@ -116,7 +111,7 @@ class _SelectChatDashboardWidgetState extends State<SelectChatDashboardWidget> w
     var app = widget.app; 
     return ListView.builder(
         shrinkWrap: true,
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         itemCount: values.length,
         itemBuilder: (context, index) {
           final value = values[index];
@@ -125,7 +120,6 @@ class _SelectChatDashboardWidgetState extends State<SelectChatDashboardWidget> w
               context,
               widget.app,
               trailing: PopupMenuButton<int>(
-                  child: Icon(Icons.more_vert),
                   elevation: 10,
                   itemBuilder: (context) => [
                         PopupMenuItem(
@@ -143,7 +137,8 @@ class _SelectChatDashboardWidgetState extends State<SelectChatDashboardWidget> w
                     } else if (selectedValue == 2) {
                       widget.editorConstructor.updateComponent(widget.app, context, value, (_, __) {});
                     }
-                  }),
+                  },
+                  child: const Icon(Icons.more_vert)),
               title: value.description != null ? Center(child: text(app, context, value.description!)) : value.documentID != null ? Center(child: text(app, context, value.documentID)) : Container(),
               subtitle: null,
             );
@@ -161,13 +156,13 @@ class _SelectChatDashboardWidgetState extends State<SelectChatDashboardWidget> w
       var newPrivilegeItems = <Widget>[];
       int i = 0;
       for (var privilegeItem in _privilegeItems) {
-        newPrivilegeItems.add(Wrap(children: [(i <= widget.containerPrivilege) ? Icon(Icons.check) : Icon(Icons.close), Container(width: 2), text(widget.app, context, privilegeItem)]));
+        newPrivilegeItems.add(Wrap(children: [(i <= widget.containerPrivilege) ? const Icon(Icons.check) : const Icon(Icons.close), Container(width: 2), text(widget.app, context, privilegeItem)]));
         i++;
       }
       children.add(tabBar2(widget.app, context,
           items: newPrivilegeItems, tabController: _privilegeTabController!));
       if ((state is ChatDashboardListLoaded) && (state.values != null)) {
-        children.add(Container(
+        children.add(SizedBox(
             height: max(30, widget.height - 101),
             child: theList(
               context,
@@ -186,11 +181,11 @@ class _SelectChatDashboardWidgetState extends State<SelectChatDashboardWidget> w
           onPressed: () {
             widget.editorConstructor.createNewComponent(widget.app, context, (_, __) {});
           },
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
         ))
       ]));
       return ListView(
-          physics: ScrollPhysics(), shrinkWrap: true, children: children);
+          physics: const ScrollPhysics(), shrinkWrap: true, children: children);
     });
   }
 }

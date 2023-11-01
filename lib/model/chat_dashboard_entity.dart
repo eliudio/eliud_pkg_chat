@@ -15,15 +15,9 @@
 
 import 'dart:collection';
 import 'dart:convert';
-import 'package:eliud_core/tools/random.dart';
-import 'abstract_repository_singleton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
 import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_core/tools/common_tools.dart';
 class ChatDashboardEntity implements EntityBase {
   final String? appId;
   final String? description;
@@ -48,8 +42,9 @@ class ChatDashboardEntity implements EntityBase {
 
     var conditionsFromMap;
     conditionsFromMap = map['conditions'];
-    if (conditionsFromMap != null)
+    if (conditionsFromMap != null) {
       conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap, newDocumentIds: newDocumentIds);
+    }
 
     return ChatDashboardEntity(
       appId: map['appId'], 
@@ -59,20 +54,33 @@ class ChatDashboardEntity implements EntityBase {
     );
   }
 
+  @override
   Map<String, Object?> toDocument() {
     final Map<String, dynamic>? conditionsMap = conditions != null 
         ? conditions!.toDocument()
         : null;
 
     Map<String, Object?> theDocument = HashMap();
-    if (appId != null) theDocument["appId"] = appId;
-      else theDocument["appId"] = null;
-    if (description != null) theDocument["description"] = description;
-      else theDocument["description"] = null;
-    if (conditions != null) theDocument["conditions"] = conditionsMap;
-      else theDocument["conditions"] = null;
-    if (membersType != null) theDocument["membersType"] = membersType;
-      else theDocument["membersType"] = null;
+    if (appId != null) {
+      theDocument["appId"] = appId;
+    } else {
+      theDocument["appId"] = null;
+    }
+    if (description != null) {
+      theDocument["description"] = description;
+    } else {
+      theDocument["description"] = null;
+    }
+    if (conditions != null) {
+      theDocument["conditions"] = conditionsMap;
+    } else {
+      theDocument["conditions"] = null;
+    }
+    if (membersType != null) {
+      theDocument["membersType"] = membersType;
+    } else {
+      theDocument["membersType"] = null;
+    }
     return theDocument;
   }
 
@@ -91,6 +99,7 @@ class ChatDashboardEntity implements EntityBase {
     return jsonEncode(toDocument());
   }
 
+  @override
   Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
     return theDocument;
   }

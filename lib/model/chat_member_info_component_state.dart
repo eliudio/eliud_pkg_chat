@@ -27,11 +27,11 @@ class ChatMemberInfoComponentUninitialized extends ChatMemberInfoComponentState 
 
 class ChatMemberInfoComponentError extends ChatMemberInfoComponentState {
   final String? message;
-  ChatMemberInfoComponentError({ this.message });
+  const ChatMemberInfoComponentError({ this.message });
 }
 
 class ChatMemberInfoComponentPermissionDenied extends ChatMemberInfoComponentState {
-  ChatMemberInfoComponentPermissionDenied();
+  const ChatMemberInfoComponentPermissionDenied();
 }
 
 class ChatMemberInfoComponentLoaded extends ChatMemberInfoComponentState {
@@ -40,7 +40,7 @@ class ChatMemberInfoComponentLoaded extends ChatMemberInfoComponentState {
   const ChatMemberInfoComponentLoaded({ required this.value });
 
   ChatMemberInfoComponentLoaded copyWith({ ChatMemberInfoModel? copyThis }) {
-    return ChatMemberInfoComponentLoaded(value: copyThis ?? this.value);
+    return ChatMemberInfoComponentLoaded(value: copyThis ?? value);
   }
 
   @override

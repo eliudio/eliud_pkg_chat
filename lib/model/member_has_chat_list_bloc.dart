@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_chat/model/member_has_chat_repository.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_list_event.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'member_has_chat_model.dart';
+
+typedef FilterMemberHasChatModels = List<MemberHasChatModel?> Function(List<MemberHasChatModel?> values);
+
 
 
 class MemberHasChatListBloc extends Bloc<MemberHasChatListEvent, MemberHasChatListState> {
+  final FilterMemberHasChatModels? filter;
   final MemberHasChatRepository _memberHasChatRepository;
   StreamSubscription? _memberHasChatsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class MemberHasChatListBloc extends Bloc<MemberHasChatListEvent, MemberHasChatLi
   final bool? detailed;
   final int memberHasChatLimit;
 
-  MemberHasChatListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MemberHasChatRepository memberHasChatRepository, this.memberHasChatLimit = 5})
-      : assert(memberHasChatRepository != null),
-        _memberHasChatRepository = memberHasChatRepository,
+  MemberHasChatListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MemberHasChatRepository memberHasChatRepository, this.memberHasChatLimit = 5})
+      : _memberHasChatRepository = memberHasChatRepository,
         super(MemberHasChatListLoading()) {
     on <LoadMemberHasChatList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class MemberHasChatListBloc extends Bloc<MemberHasChatListEvent, MemberHasChatLi
     });
   }
 
+  List<MemberHasChatModel?> _filter(List<MemberHasChatModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadMemberHasChatListToState() async {
     int amountNow =  (state is MemberHasChatListLoaded) ? (state as MemberHasChatListLoaded).values!.length : 0;
     _memberHasChatsListSubscription?.cancel();
     _memberHasChatsListSubscription = _memberHasChatRepository.listen(
-          (list) => add(MemberHasChatListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(MemberHasChatListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class MemberHasChatListBloc extends Bloc<MemberHasChatListEvent, MemberHasChatLi
     int amountNow =  (state is MemberHasChatListLoaded) ? (state as MemberHasChatListLoaded).values!.length : 0;
     _memberHasChatsListSubscription?.cancel();
     _memberHasChatsListSubscription = _memberHasChatRepository.listenWithDetails(
-            (list) => add(MemberHasChatListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(MemberHasChatListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

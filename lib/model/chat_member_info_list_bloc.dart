@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_chat/model/chat_member_info_repository.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'chat_member_info_model.dart';
+
+typedef FilterChatMemberInfoModels = List<ChatMemberInfoModel?> Function(List<ChatMemberInfoModel?> values);
+
 
 
 class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInfoListState> {
+  final FilterChatMemberInfoModels? filter;
   final ChatMemberInfoRepository _chatMemberInfoRepository;
   StreamSubscription? _chatMemberInfosListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
   final bool? detailed;
   final int chatMemberInfoLimit;
 
-  ChatMemberInfoListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMemberInfoRepository chatMemberInfoRepository, this.chatMemberInfoLimit = 5})
-      : assert(chatMemberInfoRepository != null),
-        _chatMemberInfoRepository = chatMemberInfoRepository,
+  ChatMemberInfoListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMemberInfoRepository chatMemberInfoRepository, this.chatMemberInfoLimit = 5})
+      : _chatMemberInfoRepository = chatMemberInfoRepository,
         super(ChatMemberInfoListLoading()) {
     on <LoadChatMemberInfoList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
     });
   }
 
+  List<ChatMemberInfoModel?> _filter(List<ChatMemberInfoModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadChatMemberInfoListToState() async {
     int amountNow =  (state is ChatMemberInfoListLoaded) ? (state as ChatMemberInfoListLoaded).values!.length : 0;
     _chatMemberInfosListSubscription?.cancel();
     _chatMemberInfosListSubscription = _chatMemberInfoRepository.listen(
-          (list) => add(ChatMemberInfoListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(ChatMemberInfoListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInf
     int amountNow =  (state is ChatMemberInfoListLoaded) ? (state as ChatMemberInfoListLoaded).values!.length : 0;
     _chatMemberInfosListSubscription?.cancel();
     _chatMemberInfosListSubscription = _chatMemberInfoRepository.listenWithDetails(
-            (list) => add(ChatMemberInfoListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(ChatMemberInfoListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

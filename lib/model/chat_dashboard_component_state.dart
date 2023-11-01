@@ -27,11 +27,11 @@ class ChatDashboardComponentUninitialized extends ChatDashboardComponentState {}
 
 class ChatDashboardComponentError extends ChatDashboardComponentState {
   final String? message;
-  ChatDashboardComponentError({ this.message });
+  const ChatDashboardComponentError({ this.message });
 }
 
 class ChatDashboardComponentPermissionDenied extends ChatDashboardComponentState {
-  ChatDashboardComponentPermissionDenied();
+  const ChatDashboardComponentPermissionDenied();
 }
 
 class ChatDashboardComponentLoaded extends ChatDashboardComponentState {
@@ -40,7 +40,7 @@ class ChatDashboardComponentLoaded extends ChatDashboardComponentState {
   const ChatDashboardComponentLoaded({ required this.value });
 
   ChatDashboardComponentLoaded copyWith({ ChatDashboardModel? copyThis }) {
-    return ChatDashboardComponentLoaded(value: copyThis ?? this.value);
+    return ChatDashboardComponentLoaded(value: copyThis ?? value);
   }
 
   @override

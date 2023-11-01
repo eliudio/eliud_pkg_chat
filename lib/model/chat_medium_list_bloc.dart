@@ -15,16 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_chat/model/chat_medium_repository.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_list_state.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 
+import 'chat_medium_model.dart';
+
+typedef FilterChatMediumModels = List<ChatMediumModel?> Function(List<ChatMediumModel?> values);
+
 
 
 class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> {
+  final FilterChatMediumModels? filter;
   final ChatMediumRepository _chatMediumRepository;
   StreamSubscription? _chatMediumsListSubscription;
   EliudQuery? eliudQuery;
@@ -35,9 +39,8 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
   final bool? detailed;
   final int chatMediumLimit;
 
-  ChatMediumListBloc({this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMediumRepository chatMediumRepository, this.chatMediumLimit = 5})
-      : assert(chatMediumRepository != null),
-        _chatMediumRepository = chatMediumRepository,
+  ChatMediumListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMediumRepository chatMediumRepository, this.chatMediumLimit = 5})
+      : _chatMediumRepository = chatMediumRepository,
         super(ChatMediumListLoading()) {
     on <LoadChatMediumList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
@@ -78,11 +81,19 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
     });
   }
 
+  List<ChatMediumModel?> _filter(List<ChatMediumModel?> original) {
+    if (filter != null) {
+      return filter!(original);
+    } else {
+      return original;
+    }
+  }
+
   Future<void> _mapLoadChatMediumListToState() async {
     int amountNow =  (state is ChatMediumListLoaded) ? (state as ChatMediumListLoaded).values!.length : 0;
     _chatMediumsListSubscription?.cancel();
     _chatMediumsListSubscription = _chatMediumRepository.listen(
-          (list) => add(ChatMediumListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+          (list) => add(ChatMediumListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
       orderBy: orderBy,
       descending: descending,
       eliudQuery: eliudQuery,
@@ -94,7 +105,7 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
     int amountNow =  (state is ChatMediumListLoaded) ? (state as ChatMediumListLoaded).values!.length : 0;
     _chatMediumsListSubscription?.cancel();
     _chatMediumsListSubscription = _chatMediumRepository.listenWithDetails(
-            (list) => add(ChatMediumListUpdated(value: list, mightHaveMore: amountNow != list.length)),
+            (list) => add(ChatMediumListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,

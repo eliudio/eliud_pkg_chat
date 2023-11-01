@@ -84,16 +84,15 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
           return splitView(widget.app, context,
                 ListView(children: [
                   header(),
-                  if (chats != null)
-                    ListView.separated(
-                        separatorBuilder: (context, index) => divider(widget.app, context),
-                        shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        itemCount: chats.length,
-                        itemBuilder: (context, index) {
-                          final value = chats[index];
-                          return roomListEntry(value, currentChat == null ? false : value.roomModel.documentID == currentChat!.documentID);
-                        })
+                  ListView.separated(
+                      separatorBuilder: (context, index) => divider(widget.app, context),
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
+                      itemCount: chats.length,
+                      itemBuilder: (context, index) {
+                        final value = chats[index];
+                        return roomListEntry(value, currentChat == null ? false : value.roomModel.documentID == currentChat.documentID);
+                      })
                 ]),(currentChat != null)?
                   ChatWidget(app: widget.app,
                     blockedMembers: widget.blockedMembers,

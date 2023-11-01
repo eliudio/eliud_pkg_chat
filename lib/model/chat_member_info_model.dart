@@ -14,29 +14,14 @@
 */
 
 import 'package:collection/collection.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_chat/model/chat_member_info_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 enum ChatMemberInfoAccessibleByGroup {
   Public, Followers, Me, SpecificMembers, Unknown
@@ -58,12 +43,14 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
   static const String id = 'chatMemberInfos';
 
+  @override
   String documentID;
 
   // The person who this info is about
   String authorId;
 
   // This is the identifier of the app to which this chat belongs
+  @override
   String appId;
   String? roomId;
 
@@ -75,10 +62,9 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
   List<String>? accessibleByMembers;
   List<String>? readAccess;
 
-  ChatMemberInfoModel({required this.documentID, required this.authorId, required this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, })  {
-    assert(documentID != null);
-  }
+  ChatMemberInfoModel({required this.documentID, required this.authorId, required this.appId, this.roomId, this.timestamp, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, });
 
+  @override
   ChatMemberInfoModel copyWith({String? documentID, String? authorId, String? appId, String? roomId, DateTime? timestamp, ChatMemberInfoAccessibleByGroup? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, }) {
     return ChatMemberInfoModel(documentID: documentID ?? this.documentID, authorId: authorId ?? this.authorId, appId: appId ?? this.appId, roomId: roomId ?? this.roomId, timestamp: timestamp ?? this.timestamp, accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers, readAccess: readAccess ?? this.readAccess, );
   }
@@ -97,8 +83,8 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
           roomId == other.roomId &&
           timestamp == other.timestamp &&
           accessibleByGroup == other.accessibleByGroup &&
-          ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
-          ListEquality().equals(readAccess, other.readAccess);
+          const ListEquality().equals(accessibleByMembers, other.accessibleByMembers) &&
+          const ListEquality().equals(readAccess, other.readAccess);
 
   @override
   String toString() {
@@ -108,11 +94,13 @@ class ChatMemberInfoModel implements ModelBase, WithAppId {
     return 'ChatMemberInfoModel{documentID: $documentID, authorId: $authorId, appId: $appId, roomId: $roomId, timestamp: $timestamp, accessibleByGroup: $accessibleByGroup, accessibleByMembers: String[] { $accessibleByMembersCsv }, readAccess: String[] { $readAccessCsv }}';
   }
 
+  @override
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     return referencesCollector;
   }
 
+  @override
   ChatMemberInfoEntity toEntity({String? appId}) {
     return ChatMemberInfoEntity(
           authorId: (authorId != null) ? authorId : null, 

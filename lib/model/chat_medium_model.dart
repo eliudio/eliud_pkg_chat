@@ -13,29 +13,15 @@
 
 */
 
-import 'package:eliud_core/tools/common_tools.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
 import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_chat/model/chat_medium_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 
 
@@ -43,13 +29,13 @@ class ChatMediumModel implements ModelBase {
   static const String packageName = 'eliud_pkg_chat';
   static const String id = 'chatMediums';
 
+  @override
   String documentID;
   MemberMediumModel? memberMedium;
 
-  ChatMediumModel({required this.documentID, this.memberMedium, })  {
-    assert(documentID != null);
-  }
+  ChatMediumModel({required this.documentID, this.memberMedium, });
 
+  @override
   ChatMediumModel copyWith({String? documentID, MemberMediumModel? memberMedium, }) {
     return ChatMediumModel(documentID: documentID ?? this.documentID, memberMedium: memberMedium ?? this.memberMedium, );
   }
@@ -70,6 +56,7 @@ class ChatMediumModel implements ModelBase {
     return 'ChatMediumModel{documentID: $documentID, memberMedium: $memberMedium}';
   }
 
+  @override
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     if (memberMedium != null) {
@@ -79,6 +66,7 @@ class ChatMediumModel implements ModelBase {
     return referencesCollector;
   }
 
+  @override
   ChatMediumEntity toEntity({String? appId}) {
     return ChatMediumEntity(
           memberMediumId: (memberMedium != null) ? memberMedium!.documentID : null, 

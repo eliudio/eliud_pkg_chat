@@ -5,10 +5,6 @@ import 'chat_package.dart';
 ChatPackage getChatPackage() => ChatWebPackage();
 
 class ChatWebPackage extends ChatPackage {
-  @override
-  void init() {
-    super.init();
-  }
 
   @override
   List<Object?> get props => [state_CONDITION_MEMBER_HAS_UNREAD_CHAT];

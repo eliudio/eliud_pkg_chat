@@ -14,29 +14,14 @@
 */
 
 import 'package:collection/collection.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/model_base.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:eliud_core/model/app_model.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
-import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
 import 'package:eliud_pkg_chat/model/room_entity.dart';
 
-import 'package:eliud_core/tools/random.dart';
 
 
 
@@ -44,22 +29,23 @@ class RoomModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
   static const String id = 'rooms';
 
+  @override
   String documentID;
 
   // The person creating the room
   String ownerId;
 
   // This is the identifier of the app to which this feed belongs
+  @override
   String appId;
   String? description;
   bool? isRoom;
   List<String>? members;
   DateTime? timestamp;
 
-  RoomModel({required this.documentID, required this.ownerId, required this.appId, this.description, this.isRoom, this.members, this.timestamp, })  {
-    assert(documentID != null);
-  }
+  RoomModel({required this.documentID, required this.ownerId, required this.appId, this.description, this.isRoom, this.members, this.timestamp, });
 
+  @override
   RoomModel copyWith({String? documentID, String? ownerId, String? appId, String? description, bool? isRoom, List<String>? members, DateTime? timestamp, }) {
     return RoomModel(documentID: documentID ?? this.documentID, ownerId: ownerId ?? this.ownerId, appId: appId ?? this.appId, description: description ?? this.description, isRoom: isRoom ?? this.isRoom, members: members ?? this.members, timestamp: timestamp ?? this.timestamp, );
   }
@@ -77,7 +63,7 @@ class RoomModel implements ModelBase, WithAppId {
           appId == other.appId &&
           description == other.description &&
           isRoom == other.isRoom &&
-          ListEquality().equals(members, other.members) &&
+          const ListEquality().equals(members, other.members) &&
           timestamp == other.timestamp;
 
   @override
@@ -87,11 +73,13 @@ class RoomModel implements ModelBase, WithAppId {
     return 'RoomModel{documentID: $documentID, ownerId: $ownerId, appId: $appId, description: $description, isRoom: $isRoom, members: String[] { $membersCsv }, timestamp: $timestamp}';
   }
 
+  @override
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     return referencesCollector;
   }
 
+  @override
   RoomEntity toEntity({String? appId}) {
     return RoomEntity(
           ownerId: (ownerId != null) ? ownerId : null, 

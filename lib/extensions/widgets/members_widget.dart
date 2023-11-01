@@ -95,14 +95,14 @@ class _AllMembersWidgetState extends State<_AllMembersWidget> {
 
   List<MemberPublicInfoModel> filterBlocked(List<MemberPublicInfoModel?> values) {
     List<MemberPublicInfoModel> members = [];
-    values.forEach((element) {
+    for (var element in values) {
       if ((element != null) && (element.documentID != null)) {
         var memberId = element.documentID;
         if ((memberId != widget.currentMemberId) && (!widget.blockedMembers.contains(memberId))) {
           members.add(element);
         }
       }
-    });
+    }
     return members;
   }
 
@@ -145,8 +145,8 @@ class _MemberPublicInfoDashboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var data = value!;
-    var photo;
-    var name;
+    Widget photo;
+    String name;
     if ((data == null) || (data.photoURL == null)) {
       name = 'No name';
       photo = const Icon(Icons.person);
@@ -155,7 +155,7 @@ class _MemberPublicInfoDashboardItem extends StatelessWidget {
         placeholder: kTransparentImage,
         image: data.photoURL!,
       );
-      name = (data.name != null && data.name!.length > 0) ? data.name! : 'No name';
+      name = (data.name != null && data.name!.isNotEmpty) ? data.name! : 'No name';
     }
     return getListTile(context, app,
 /*
@@ -174,7 +174,7 @@ class _MemberPublicInfoDashboardItem extends StatelessWidget {
           selectedMember(value!.documentID);
         },
         leading: const Icon(Icons.chat_bubble_outline),
-        trailing: Container(
+        trailing: SizedBox(
           height: 100,
           width: 100,
           child: photo,
@@ -224,14 +224,14 @@ class _FollowingMembersWidgetState extends State<_FollowingMembersWidget> {
 
   List<FollowingModel> filterBlocked(List<FollowingModel?> values) {
     List<FollowingModel> following = [];
-    values.forEach((element) {
+    for (var element in values) {
       if ((element != null) && (element.followed != null)) {
         var memberId = element.followed!.documentID;
         if ((memberId != widget.currentMemberId) && (!widget.blockedMembers.contains(memberId))) {
           following.add(element);
         }
       }
-    });
+    }
     return following;
   }
 
@@ -270,8 +270,8 @@ class FollowingDashboardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var data = value!.follower;
-    var photo;
-    var name;
+    Widget photo;
+    String name;
     if ((data == null) || (data.photoURL == null)) {
       name = 'No name';
       photo = const Icon(Icons.person);
@@ -280,7 +280,7 @@ class FollowingDashboardItem extends StatelessWidget {
         placeholder: kTransparentImage,
         image: data.photoURL!,
       );
-      name = (data.name != null && data.name!.length > 0) ? data.name! : 'No name';
+      name = (data.name != null && data.name!.isNotEmpty) ? data.name! : 'No name';
     }
     return ListTile(
         onTap: () async {
@@ -288,7 +288,7 @@ class FollowingDashboardItem extends StatelessWidget {
           selectedMember(value!.follower!.documentID);
         },
         leading: const Icon(Icons.chat_bubble_outline),
-        trailing: Container(
+        trailing: SizedBox(
           height: 100,
           width: 100,
           child: photo,

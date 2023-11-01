@@ -16,11 +16,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
-import 'package:eliud_pkg_chat/model/member_has_chat_model.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_component_event.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_component_state.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_repository.dart';
-import 'package:flutter/services.dart';
 
 class MemberHasChatComponentBloc extends Bloc<MemberHasChatComponentEvent, MemberHasChatComponentState> {
   final MemberHasChatRepository? memberHasChatRepository;

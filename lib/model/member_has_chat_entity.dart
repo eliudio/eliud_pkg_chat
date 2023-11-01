@@ -15,15 +15,8 @@
 
 import 'dart:collection';
 import 'dart:convert';
-import 'package:eliud_core/tools/random.dart';
-import 'abstract_repository_singleton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_core/tools/common_tools.dart';
 class MemberHasChatEntity implements EntityBase {
   final String? memberId;
   final String? appId;
@@ -52,14 +45,24 @@ class MemberHasChatEntity implements EntityBase {
     );
   }
 
+  @override
   Map<String, Object?> toDocument() {
     Map<String, Object?> theDocument = HashMap();
-    if (memberId != null) theDocument["memberId"] = memberId;
-      else theDocument["memberId"] = null;
-    if (appId != null) theDocument["appId"] = appId;
-      else theDocument["appId"] = null;
-    if (hasUnread != null) theDocument["hasUnread"] = hasUnread;
-      else theDocument["hasUnread"] = null;
+    if (memberId != null) {
+      theDocument["memberId"] = memberId;
+    } else {
+      theDocument["memberId"] = null;
+    }
+    if (appId != null) {
+      theDocument["appId"] = appId;
+    } else {
+      theDocument["appId"] = null;
+    }
+    if (hasUnread != null) {
+      theDocument["hasUnread"] = hasUnread;
+    } else {
+      theDocument["hasUnread"] = null;
+    }
     return theDocument;
   }
 
@@ -78,6 +81,7 @@ class MemberHasChatEntity implements EntityBase {
     return jsonEncode(toDocument());
   }
 
+  @override
   Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
     return theDocument;
   }

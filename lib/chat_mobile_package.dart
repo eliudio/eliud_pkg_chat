@@ -7,13 +7,8 @@ ChatPackage getChatPackage() => ChatMobilePackage();
 
 class ChatMobilePackage extends ChatPackage {
 
-  ChatMobilePackage() {
-  }
+  ChatMobilePackage();
 
-  @override
-  void init() {
-    super.init();
-  }
 
   @override
   List<Object?> get props => [state_CONDITION_MEMBER_HAS_UNREAD_CHAT];

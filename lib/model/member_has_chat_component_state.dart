@@ -27,11 +27,11 @@ class MemberHasChatComponentUninitialized extends MemberHasChatComponentState {}
 
 class MemberHasChatComponentError extends MemberHasChatComponentState {
   final String? message;
-  MemberHasChatComponentError({ this.message });
+  const MemberHasChatComponentError({ this.message });
 }
 
 class MemberHasChatComponentPermissionDenied extends MemberHasChatComponentState {
-  MemberHasChatComponentPermissionDenied();
+  const MemberHasChatComponentPermissionDenied();
 }
 
 class MemberHasChatComponentLoaded extends MemberHasChatComponentState {
@@ -40,7 +40,7 @@ class MemberHasChatComponentLoaded extends MemberHasChatComponentState {
   const MemberHasChatComponentLoaded({ required this.value });
 
   MemberHasChatComponentLoaded copyWith({ MemberHasChatModel? copyThis }) {
-    return MemberHasChatComponentLoaded(value: copyThis ?? this.value);
+    return MemberHasChatComponentLoaded(value: copyThis ?? value);
   }
 
   @override

@@ -16,11 +16,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
-import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/model/room_component_event.dart';
 import 'package:eliud_pkg_chat/model/room_component_state.dart';
 import 'package:eliud_pkg_chat/model/room_repository.dart';
-import 'package:flutter/services.dart';
 
 class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
   final RoomRepository? roomRepository;

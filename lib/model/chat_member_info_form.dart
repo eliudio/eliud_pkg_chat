@@ -15,45 +15,21 @@
 
 import 'package:eliud_core/model/app_model.dart';
 import 'package:eliud_core/core/blocs/access/state/access_state.dart';
-import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import '../tools/bespoke_models.dart';
 import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
-import 'package:eliud_core/tools/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/style/admin/admin_form_style.dart';
 
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-import 'package:intl/intl.dart';
 
-import 'package:eliud_core/eliud.dart';
 
-import 'package:eliud_core/model/internal_component.dart';
-import 'package:eliud_pkg_chat/model/embedded_component.dart';
-import 'package:eliud_pkg_chat/tools/bespoke_formfields.dart';
-import 'package:eliud_core/tools/bespoke_formfields.dart';
 
 import 'package:eliud_core/tools/enums.dart';
-import 'package:eliud_core/tools/etc.dart';
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/embedded_component.dart';
-import 'package:eliud_pkg_chat/model/embedded_component.dart';
 import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/chat_member_info_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart';
@@ -114,9 +90,10 @@ class MyChatMemberInfoForm extends StatefulWidget {
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyChatMemberInfoForm({required this.app, this.formAction, this.submitAction});
+  const MyChatMemberInfoForm({super.key, required this.app, this.formAction, this.submitAction});
 
-  _MyChatMemberInfoFormState createState() => _MyChatMemberInfoFormState(this.formAction);
+  @override
+  _MyChatMemberInfoFormState createState() => _MyChatMemberInfoFormState(formAction);
 }
 
 
@@ -148,31 +125,38 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
     return BlocBuilder<ChatMemberInfoFormBloc, ChatMemberInfoFormState>(builder: (context, state) {
-      if (state is ChatMemberInfoFormUninitialized) return Center(
+      if (state is ChatMemberInfoFormUninitialized) {
+        return Center(
         child: StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context),
       );
+      }
 
       if (state is ChatMemberInfoFormLoaded) {
-        if (state.value!.documentID != null)
+        if (state.value!.documentID != null) {
           _documentIDController.text = state.value!.documentID.toString();
-        else
+        } else {
           _documentIDController.text = "";
-        if (state.value!.authorId != null)
+        }
+        if (state.value!.authorId != null) {
           _authorIdController.text = state.value!.authorId.toString();
-        else
+        } else {
           _authorIdController.text = "";
-        if (state.value!.appId != null)
+        }
+        if (state.value!.appId != null) {
           _appIdController.text = state.value!.appId.toString();
-        else
+        } else {
           _appIdController.text = "";
-        if (state.value!.roomId != null)
+        }
+        if (state.value!.roomId != null) {
           _roomIdController.text = state.value!.roomId.toString();
-        else
+        } else {
           _roomIdController.text = "";
-        if (state.value!.accessibleByGroup != null)
+        }
+        if (state.value!.accessibleByGroup != null) {
           _accessibleByGroupSelectedRadioTile = state.value!.accessibleByGroup!.index;
-        else
+        } else {
           _accessibleByGroupSelectedRadioTile = 0;
+        }
       }
       if (state is ChatMemberInfoFormInitialized) {
         List<Widget> children = [];
@@ -236,11 +220,11 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
         children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
 
-        if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData))
+        if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData)) {
           children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
                   onPressed: _readOnly(accessState, state) ? null : () {
                     if (state is ChatMemberInfoFormError) {
-                      return null;
+                      return;
                     } else {
                       if (formAction == FormAction.UpdateAction) {
                         BlocProvider.of<ChatMemberInfoListBloc>(context).add(
@@ -275,13 +259,14 @@ class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
                     }
                   },
                 ));
+        }
 
         return StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().container(widget.app, context, Form(
             child: ListView(
               padding: const EdgeInsets.all(8),
-              physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? NeverScrollableScrollPhysics() : null,
+              physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? const NeverScrollableScrollPhysics() : null,
               shrinkWrap: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)),
-              children: children as List<Widget>
+              children: children
             ),
           ), formAction!
         );

@@ -16,14 +16,8 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:eliud_core/tools/random.dart';
-import 'abstract_repository_singleton.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_core/tools/common_tools.dart';
 class ChatMediumEntity implements EntityBase {
   final String? memberMediumId;
 
@@ -54,10 +48,14 @@ class ChatMediumEntity implements EntityBase {
     );
   }
 
+  @override
   Map<String, Object?> toDocument() {
     Map<String, Object?> theDocument = HashMap();
-    if (memberMediumId != null) theDocument["memberMediumId"] = memberMediumId;
-      else theDocument["memberMediumId"] = null;
+    if (memberMediumId != null) {
+      theDocument["memberMediumId"] = memberMediumId;
+    } else {
+      theDocument["memberMediumId"] = null;
+    }
     return theDocument;
   }
 
@@ -76,6 +74,7 @@ class ChatMediumEntity implements EntityBase {
     return jsonEncode(toDocument());
   }
 
+  @override
   Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
     return theDocument;
   }

@@ -15,15 +15,9 @@
 
 import 'dart:collection';
 import 'dart:convert';
-import 'package:eliud_core/tools/random.dart';
-import 'abstract_repository_singleton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eliud_core/core/base/entity_base.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
-import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-import 'package:eliud_core/tools/common_tools.dart';
 class RoomEntity implements EntityBase {
   final String? ownerId;
   final String? appId;
@@ -60,18 +54,34 @@ class RoomEntity implements EntityBase {
     );
   }
 
+  @override
   Map<String, Object?> toDocument() {
     Map<String, Object?> theDocument = HashMap();
-    if (ownerId != null) theDocument["ownerId"] = ownerId;
-      else theDocument["ownerId"] = null;
-    if (appId != null) theDocument["appId"] = appId;
-      else theDocument["appId"] = null;
-    if (description != null) theDocument["description"] = description;
-      else theDocument["description"] = null;
-    if (isRoom != null) theDocument["isRoom"] = isRoom;
-      else theDocument["isRoom"] = null;
-    if (members != null) theDocument["members"] = members!.toList();
-      else theDocument["members"] = null;
+    if (ownerId != null) {
+      theDocument["ownerId"] = ownerId;
+    } else {
+      theDocument["ownerId"] = null;
+    }
+    if (appId != null) {
+      theDocument["appId"] = appId;
+    } else {
+      theDocument["appId"] = null;
+    }
+    if (description != null) {
+      theDocument["description"] = description;
+    } else {
+      theDocument["description"] = null;
+    }
+    if (isRoom != null) {
+      theDocument["isRoom"] = isRoom;
+    } else {
+      theDocument["isRoom"] = null;
+    }
+    if (members != null) {
+      theDocument["members"] = members!.toList();
+    } else {
+      theDocument["members"] = null;
+    }
     theDocument["timestamp"] = timestamp;
     return theDocument;
   }
@@ -91,6 +101,7 @@ class RoomEntity implements EntityBase {
     return jsonEncode(toDocument());
   }
 
+  @override
   Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
     return theDocument;
   }

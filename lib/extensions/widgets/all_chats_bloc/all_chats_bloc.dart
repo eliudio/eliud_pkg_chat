@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_bloc.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_event.dart';
-import '../../../tools/chat_helper.dart';
 import '../../../tools/room_helper.dart';
 import 'all_chats_event.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
@@ -55,7 +53,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
 
   List<EnhancedRoomModel> filter(List<EnhancedRoomModel> rooms) {
     List<EnhancedRoomModel> newRooms = [];
-    rooms.forEach((element) {
+    for (var element in rooms) {
       var ok = true;
 
       if (loggedIn != null) {
@@ -76,13 +74,12 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
       if (ok) {
         newRooms.add(element);
       }
-    });
+    }
     return newRooms;
   }
 
   void listToChatMemberInfoRepository(String appId, String roomId) async {
-    var key = appId + "-" + roomId;
-    ;
+    var key = "$appId-$roomId";
     chatMemberInfoSubscriptions[key]?.cancel();
     chatMemberInfoSubscriptions[key] =
         chatMemberInfoRepository(appId: appId, roomId: roomId)!
@@ -133,8 +130,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
       this.eliudQuery,
       required RoomRepository roomRepository,
       this.roomLimit = 5})
-      : assert(roomRepository != null),
-        _roomRepository = roomRepository,
+      : _roomRepository = roomRepository,
         super(AllChatsLoading()) {
     on<LoadAllChats>((event, emit) {
       _mapLoadAllChatsWithDetailsToState();
@@ -172,7 +168,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         }
         emit(_mapAllChatsUpdatedToState(event, currentRoom));
       } else {
-        var currentRoom = null;
+        var currentRoom;
         emit(_mapAllChatsUpdatedToState(event, currentRoom));
       }
     });
@@ -214,7 +210,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         List<EnhancedRoomModel> newEnhancedRoomModels = [];
         for (var enhancedRoomModel in theState.enhancedRoomModels) {
           if (enhancedRoomModel.roomModel.documentID == event.roomId) {
-            var newEnhancedModel;
+            EnhancedRoomModel newEnhancedModel;
             if (event.memberId == thisMemberId) {
               newEnhancedModel = enhancedRoomModel.copyWith(
                   timeStampThisMemberRead: event.lastRead);

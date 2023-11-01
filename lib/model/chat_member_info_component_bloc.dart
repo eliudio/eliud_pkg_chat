@@ -16,11 +16,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
-import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_component_event.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_component_state.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_repository.dart';
-import 'package:flutter/services.dart';
 
 class ChatMemberInfoComponentBloc extends Bloc<ChatMemberInfoComponentEvent, ChatMemberInfoComponentState> {
   final ChatMemberInfoRepository? chatMemberInfoRepository;

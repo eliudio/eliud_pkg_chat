@@ -12,25 +12,25 @@ abstract class ChatEvent extends Equatable {
 class OpenChatWithAMemberEvent extends ChatEvent {
   final String otherMember;
 
-  OpenChatWithAMemberEvent(this.otherMember);
+  const OpenChatWithAMemberEvent(this.otherMember);
 }
 
 class OpenChatWithMembersEvent extends ChatEvent {
   final List<String> members;
 
-  OpenChatWithMembersEvent(this.members);
+  const OpenChatWithMembersEvent(this.members);
 }
 
 class SelectChatEvent extends ChatEvent {
   final EnhancedRoomModel room;
 
-  SelectChatEvent(this.room);
+  const SelectChatEvent(this.room);
 }
 
 class NewChatPage extends ChatEvent {
   final RoomModel room;
 
-  NewChatPage(this.room);
+  const NewChatPage(this.room);
 }
 
 class AddChat extends ChatEvent {
@@ -62,12 +62,12 @@ class ChatUpdated extends ChatEvent {
 
 class UpdateEnhancedRoomModel extends ChatEvent {
   final EnhancedRoomModel model;
-  UpdateEnhancedRoomModel(this.model);
+  const UpdateEnhancedRoomModel(this.model);
 }
 
 class MarkAsRead extends ChatEvent {
   final EnhancedRoomModel enhancedRoomModel;
   final ChatModel chat;
 
-  MarkAsRead(this.enhancedRoomModel, this.chat);
+  const MarkAsRead(this.enhancedRoomModel, this.chat);
 }

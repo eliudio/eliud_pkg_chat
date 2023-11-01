@@ -1,5 +1,4 @@
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 
@@ -67,7 +66,7 @@ class RoomHelper {
         if (member != null) {
           var otherMemberRoomInfo = OtherMemberRoomInfo(
               memberId: member.documentID,
-              name: (member.name != null && member.name!.length > 0) ? member.name! : 'No name',
+              name: (member.name != null && member.name!.isNotEmpty) ? member.name! : 'No name',
               avatar: member.photoURL);
           otherMembersRoomInfo.add(otherMemberRoomInfo);
         }

@@ -16,16 +16,8 @@
 import 'package:eliud_pkg_chat/model/member_has_chat_repository.dart';
 
 
-import 'package:eliud_core/model/repository_export.dart';
-import 'package:eliud_core/model/abstract_repository_singleton.dart';
-import 'package:eliud_core/tools/main_abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/repository_export.dart';
-import 'package:eliud_core/model/model_export.dart';
-import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
-import 'package:eliud_core/model/entity_export.dart';
-import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 
@@ -41,22 +33,27 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return MemberHasChatEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  @override
   Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value) {
     return MemberHasChatCollection.doc(documentID).set(value.toDocument()).then((_) => value);
   }
 
+  @override
   Future<MemberHasChatEntity> updateEntity(String documentID, MemberHasChatEntity value) {
     return MemberHasChatCollection.doc(documentID).update(value.toDocument()).then((_) => value);
   }
 
+  @override
   Future<MemberHasChatModel> add(MemberHasChatModel value) {
     return MemberHasChatCollection.doc(value.documentID).set(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
 
+  @override
   Future<void> delete(MemberHasChatModel value) {
     return MemberHasChatCollection.doc(value.documentID).delete();
   }
 
+  @override
   Future<MemberHasChatModel> update(MemberHasChatModel value) {
     return MemberHasChatCollection.doc(value.documentID).update(value.toEntity(appId: appId).toDocument()).then((_) => value);
   }
@@ -68,6 +65,7 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
   Future<MemberHasChatModel?> _populateDocPlus(DocumentSnapshot value) async {
     return MemberHasChatModel.fromEntityPlus(value.id, MemberHasChatEntity.fromMap(value.data()), appId: appId);  }
 
+  @override
   Future<MemberHasChatEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
     try {
       var collection = MemberHasChatCollection.doc(id);
@@ -80,9 +78,11 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
         print("Error whilst retrieving MemberHasChat with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
+  @override
   Future<MemberHasChatModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
       var collection = MemberHasChatCollection.doc(id);
@@ -95,9 +95,11 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
         print("Error whilst retrieving MemberHasChat with id $id");
         print("Exceptoin: $e");
       }
-    };
+    }
+return null;
   }
 
+  @override
   StreamSubscription<List<MemberHasChatModel?>> listen(MemberHasChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<MemberHasChatModel?>> stream;
     stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
@@ -112,6 +114,7 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     });
   }
 
+  @override
   StreamSubscription<List<MemberHasChatModel?>> listenWithDetails(MemberHasChatModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
     Stream<List<MemberHasChatModel?>> stream;
     stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
@@ -144,33 +147,36 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return theStream;
   }
 
+  @override
   Stream<List<MemberHasChatModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     DocumentSnapshot? lastDoc;
-    Stream<List<MemberHasChatModel?>> _values = getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<MemberHasChatModel?>> values = getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Stream<List<MemberHasChatModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
     DocumentSnapshot? lastDoc;
-    Stream<List<MemberHasChatModel?>> _values = getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<MemberHasChatModel?>> values = getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Future<List<MemberHasChatModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     DocumentSnapshot? lastDoc;
-    List<MemberHasChatModel?> _values = await getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<MemberHasChatModel?> values = await getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -178,12 +184,13 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   Future<List<MemberHasChatModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
     DocumentSnapshot? lastDoc;
-    List<MemberHasChatModel?> _values = await getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<MemberHasChatModel?> values = await getQuery(MemberHasChatCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -191,11 +198,13 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
       }).toList());
     });
     if ((setLastDoc != null) && (lastDoc != null)) setLastDoc(lastDoc);
-    return _values;
+    return values;
   }
 
+  @override
   void flush() {}
 
+  @override
   Future<void> deleteAll() {
     return MemberHasChatCollection.get().then((snapshot) {
       for (DocumentSnapshot ds in snapshot.docs){
@@ -204,14 +213,17 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     });
   }
 
+  @override
   dynamic getSubCollection(String documentId, String name) {
     return MemberHasChatCollection.doc(documentId).collection(name);
   }
 
+  @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   } 
 
+  @override
   Future<MemberHasChatModel?> changeValue(String documentId, String fieldName, num changeByThisValue) {
     var change = FieldValue.increment(changeByThisValue);
     return MemberHasChatCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));

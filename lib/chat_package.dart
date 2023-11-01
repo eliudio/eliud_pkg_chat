@@ -112,6 +112,7 @@ abstract class ChatPackage extends Package {
   /*
    * Register depending packages
    */
+  @override
   void registerDependencies(Eliud eliud) {
     eliud.registerPackage(CorePackage.instance());
     eliud.registerPackage(FollowPackage.instance());

@@ -92,7 +92,7 @@ class NewLastReadEvent extends AllChatsEvent {
   final String memberId;
   final DateTime lastRead;
 
-  NewLastReadEvent(this.appId, this.roomId, this.memberId, this.lastRead);
+  const NewLastReadEvent(this.appId, this.roomId, this.memberId, this.lastRead);
 
 }
 

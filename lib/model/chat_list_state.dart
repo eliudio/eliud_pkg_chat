@@ -42,7 +42,7 @@ class ChatListLoaded extends ChatListState {
   bool operator ==(Object other) => 
           other is ChatListLoaded &&
               runtimeType == other.runtimeType &&
-              ListEquality().equals(values, other.values) &&
+              const ListEquality().equals(values, other.values) &&
               mightHaveMore == other.mightHaveMore;
 }
 
