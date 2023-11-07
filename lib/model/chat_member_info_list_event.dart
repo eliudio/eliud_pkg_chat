@@ -30,10 +30,10 @@ class NewPage extends ChatMemberInfoListEvent {}
 class AddChatMemberInfoList extends ChatMemberInfoListEvent {
   final ChatMemberInfoModel? value;
 
-  const AddChatMemberInfoList({ this.value });
+  const AddChatMemberInfoList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddChatMemberInfoList{ value: $value }';
@@ -42,10 +42,10 @@ class AddChatMemberInfoList extends ChatMemberInfoListEvent {
 class UpdateChatMemberInfoList extends ChatMemberInfoListEvent {
   final ChatMemberInfoModel? value;
 
-  const UpdateChatMemberInfoList({ this.value });
+  const UpdateChatMemberInfoList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateChatMemberInfoList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateChatMemberInfoList extends ChatMemberInfoListEvent {
 class DeleteChatMemberInfoList extends ChatMemberInfoListEvent {
   final ChatMemberInfoModel? value;
 
-  const DeleteChatMemberInfoList({ this.value });
+  const DeleteChatMemberInfoList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteChatMemberInfoList{ value: $value }';
@@ -67,24 +67,24 @@ class ChatMemberInfoListUpdated extends ChatMemberInfoListEvent {
   final List<ChatMemberInfoModel?>? value;
   final bool? mightHaveMore;
 
-  const ChatMemberInfoListUpdated({ this.value, this.mightHaveMore });
+  const ChatMemberInfoListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'ChatMemberInfoListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'ChatMemberInfoListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class ChatMemberInfoChangeQuery extends ChatMemberInfoListEvent {
   final EliudQuery? newQuery;
 
-  const ChatMemberInfoChangeQuery({ required this.newQuery });
+  const ChatMemberInfoChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'ChatMemberInfoChangeQuery{ value: $newQuery }';
 }
-

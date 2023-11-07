@@ -24,13 +24,11 @@ abstract class MemberHasChatComponentEvent extends Equatable {
 class FetchMemberHasChatComponent extends MemberHasChatComponentEvent {
   final String? id;
 
-  FetchMemberHasChatComponent({ this.id });
+  FetchMemberHasChatComponent({this.id});
 }
 
 class MemberHasChatComponentUpdated extends MemberHasChatComponentEvent {
   final MemberHasChatModel value;
 
-  MemberHasChatComponentUpdated({ required this.value });
+  MemberHasChatComponentUpdated({required this.value});
 }
-
-

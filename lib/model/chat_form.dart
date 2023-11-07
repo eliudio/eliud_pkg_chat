@@ -23,9 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/style/style_registry.dart';
 
-
-
-
 import 'package:eliud_pkg_chat/model/embedded_component.dart';
 
 import 'package:eliud_core/tools/enums.dart';
@@ -40,64 +37,76 @@ import 'package:eliud_pkg_chat/model/chat_form_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_form_event.dart';
 import 'package:eliud_pkg_chat/model/chat_form_state.dart';
 
-
 class ChatForm extends StatelessWidget {
   final AppModel app;
-  FormAction formAction;
-  ChatModel? value;
-  ActionModel? submitAction;
+  final FormAction formAction;
+  final ChatModel? value;
+  final ActionModel? submitAction;
 
-  ChatForm({Key? key, required this.app, required this.formAction, required this.value, this.submitAction}) : super(key: key);
+  ChatForm(
+      {super.key,
+      required this.app,
+      required this.formAction,
+      required this.value,
+      this.submitAction});
 
+  /// Build the ChatForm
   @override
   Widget build(BuildContext context) {
-    var accessState = AccessBloc.getState(context);
+    //var accessState = AccessBloc.getState(context);
     var appId = app.documentID;
-    if (formAction == FormAction.ShowData) {
-      return BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add(InitialiseChatFormEvent(value: value)),
-  
-        child: MyChatForm(app:app, submitAction: submitAction, formAction: formAction),
-          );
-    } if (formAction == FormAction.ShowPreloadedData) {
-      return BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add(InitialiseChatFormNoLoadEvent(value: value)),
-  
-        child: MyChatForm(app:app, submitAction: submitAction, formAction: formAction),
-          );
+    if (formAction == FormAction.showData) {
+      return BlocProvider<ChatFormBloc>(
+        create: (context) => ChatFormBloc(
+          appId,
+          formAction: formAction,
+        )..add(InitialiseChatFormEvent(value: value)),
+        child: MyChatForm(
+            app: app, submitAction: submitAction, formAction: formAction),
+      );
+    }
+    if (formAction == FormAction.showPreloadedData) {
+      return BlocProvider<ChatFormBloc>(
+        create: (context) => ChatFormBloc(
+          appId,
+          formAction: formAction,
+        )..add(InitialiseChatFormNoLoadEvent(value: value)),
+        child: MyChatForm(
+            app: app, submitAction: submitAction, formAction: formAction),
+      );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithApp(app).adminFormStyle().appBarWithString(app, context, title: formAction == FormAction.UpdateAction ? 'Update Chat' : 'Add Chat'),
-        body: BlocProvider<ChatFormBloc >(
-            create: (context) => ChatFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add((formAction == FormAction.UpdateAction ? InitialiseChatFormEvent(value: value) : InitialiseNewChatFormEvent())),
-  
-        child: MyChatForm(app: app, submitAction: submitAction, formAction: formAction),
+          appBar: StyleRegistry.registry()
+              .styleWithApp(app)
+              .adminFormStyle()
+              .appBarWithString(app, context,
+                  title: formAction == FormAction.updateAction
+                      ? 'Update Chat'
+                      : 'Add Chat'),
+          body: BlocProvider<ChatFormBloc>(
+            create: (context) => ChatFormBloc(
+              appId,
+              formAction: formAction,
+            )..add((formAction == FormAction.updateAction
+                ? InitialiseChatFormEvent(value: value)
+                : InitialiseNewChatFormEvent())),
+            child: MyChatForm(
+                app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
-
 
 class MyChatForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  const MyChatForm({super.key, required this.app, this.formAction, this.submitAction});
+  MyChatForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  _MyChatFormState createState() => _MyChatFormState(formAction);
+  State<MyChatForm> createState() => _MyChatFormState(formAction);
 }
-
 
 class _MyChatFormState extends State<MyChatForm> {
   final FormAction? formAction;
@@ -109,7 +118,6 @@ class _MyChatFormState extends State<MyChatForm> {
   final TextEditingController _roomIdController = TextEditingController();
   final TextEditingController _sayingController = TextEditingController();
   int? _accessibleByGroupSelectedRadioTile;
-
 
   _MyChatFormState(this.formAction);
 
@@ -131,184 +139,275 @@ class _MyChatFormState extends State<MyChatForm> {
     return BlocBuilder<ChatFormBloc, ChatFormState>(builder: (context, state) {
       if (state is ChatFormUninitialized) {
         return Center(
-        child: StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context),
-      );
+          child: StyleRegistry.registry()
+              .styleWithApp(widget.app)
+              .adminListStyle()
+              .progressIndicator(widget.app, context),
+        );
       }
 
       if (state is ChatFormLoaded) {
-        if (state.value!.documentID != null) {
-          _documentIDController.text = state.value!.documentID.toString();
-        } else {
-          _documentIDController.text = "";
-        }
-        if (state.value!.authorId != null) {
-          _authorIdController.text = state.value!.authorId.toString();
-        } else {
-          _authorIdController.text = "";
-        }
-        if (state.value!.appId != null) {
-          _appIdController.text = state.value!.appId.toString();
-        } else {
-          _appIdController.text = "";
-        }
-        if (state.value!.roomId != null) {
-          _roomIdController.text = state.value!.roomId.toString();
-        } else {
-          _roomIdController.text = "";
-        }
-        if (state.value!.saying != null) {
-          _sayingController.text = state.value!.saying.toString();
-        } else {
-          _sayingController.text = "";
-        }
+        _documentIDController.text = state.value!.documentID.toString();
+        _authorIdController.text = state.value!.authorId.toString();
+        _appIdController.text = state.value!.appId.toString();
+        _roomIdController.text = state.value!.roomId.toString();
+        _sayingController.text = state.value!.saying.toString();
         if (state.value!.accessibleByGroup != null) {
-          _accessibleByGroupSelectedRadioTile = state.value!.accessibleByGroup!.index;
+          _accessibleByGroupSelectedRadioTile =
+              state.value!.accessibleByGroup!.index;
         } else {
           _accessibleByGroupSelectedRadioTile = 0;
         }
       }
       if (state is ChatFormInitialized) {
         List<Widget> children = [];
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
-                ));
+        children.add(Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: StyleRegistry.registry()
+                .styleWithApp(widget.app)
+                .adminFormStyle()
+                .groupTitle(widget.app, context, 'General')));
 
-        children.add(
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Author ID',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _authorIdController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is AuthorIdChatFormError ? state.message : null,
+                hintText: 'field.remark'));
 
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Author ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _authorIdController, keyboardType: TextInputType.text, validator: (_) => state is AuthorIdChatFormError ? state.message : null, hintText: 'field.remark')
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Public', 'Public', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
-          );
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Followers', 'Followers', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
-          );
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'Me', 'Me', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
-          );
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _accessibleByGroupSelectedRadioTile, 'SpecificMembers', 'SpecificMembers', !accessState.memberIsOwner(widget.app.documentID) ? null : (dynamic val) => setSelectionAccessibleByGroup(val))
-          );
-
-
-        children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
-
-
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
-                ));
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDChatFormError ? state.message : null, hintText: null)
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdChatFormError ? state.message : null, hintText: 'field.remark')
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Room Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _roomIdController, keyboardType: TextInputType.text, validator: (_) => state is RoomIdChatFormError ? state.message : null, hintText: 'field.remark')
-          );
-
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Saying', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _sayingController, keyboardType: TextInputType.text, validator: (_) => state is SayingChatFormError ? state.message : null, hintText: null)
-          );
-
-
-        children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
-
-
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'Media')
-                ));
-
-        children.add(
-
-                SizedBox(
-                    height: (fullScreenHeight(context) / 2.5), 
-                    child: chatMediumsList(widget.app, context, state.value!.chatMedia, _onChatMediaChanged)
-                )
-          );
-
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .radioListTile(
+                widget.app,
+                context,
+                0,
+                _accessibleByGroupSelectedRadioTile,
+                'public',
+                'public',
+                !accessState.memberIsOwner(widget.app.documentID)
+                    ? null
+                    : (dynamic val) => setSelectionAccessibleByGroup(val)));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .radioListTile(
+                widget.app,
+                context,
+                0,
+                _accessibleByGroupSelectedRadioTile,
+                'followers',
+                'followers',
+                !accessState.memberIsOwner(widget.app.documentID)
+                    ? null
+                    : (dynamic val) => setSelectionAccessibleByGroup(val)));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .radioListTile(
+                widget.app,
+                context,
+                0,
+                _accessibleByGroupSelectedRadioTile,
+                'me',
+                'me',
+                !accessState.memberIsOwner(widget.app.documentID)
+                    ? null
+                    : (dynamic val) => setSelectionAccessibleByGroup(val)));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .radioListTile(
+                widget.app,
+                context,
+                0,
+                _accessibleByGroupSelectedRadioTile,
+                'specificMembers',
+                'specificMembers',
+                !accessState.memberIsOwner(widget.app.documentID)
+                    ? null
+                    : (dynamic val) => setSelectionAccessibleByGroup(val)));
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .divider(widget.app, context));
 
+        children.add(Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: StyleRegistry.registry()
+                .styleWithApp(widget.app)
+                .adminFormStyle()
+                .groupTitle(widget.app, context, 'General')));
 
-        if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData)) {
-          children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
-                  onPressed: _readOnly(accessState, state) ? null : () {
-                    if (state is ChatFormError) {
-                      return;
-                    } else {
-                      if (formAction == FormAction.UpdateAction) {
-                        BlocProvider.of<ChatListBloc>(context).add(
-                          UpdateChatList(value: state.value!.copyWith(
-                              documentID: state.value!.documentID, 
-                              authorId: state.value!.authorId, 
-                              appId: state.value!.appId, 
-                              roomId: state.value!.roomId, 
-                              timestamp: state.value!.timestamp, 
-                              saying: state.value!.saying, 
-                              accessibleByGroup: state.value!.accessibleByGroup, 
-                              accessibleByMembers: state.value!.accessibleByMembers, 
-                              readAccess: state.value!.readAccess, 
-                              chatMedia: state.value!.chatMedia, 
-                        )));
-                      } else {
-                        BlocProvider.of<ChatListBloc>(context).add(
-                          AddChatList(value: ChatModel(
-                              documentID: state.value!.documentID, 
-                              authorId: state.value!.authorId, 
-                              appId: state.value!.appId, 
-                              roomId: state.value!.roomId, 
-                              timestamp: state.value!.timestamp, 
-                              saying: state.value!.saying, 
-                              accessibleByGroup: state.value!.accessibleByGroup, 
-                              accessibleByMembers: state.value!.accessibleByMembers, 
-                              readAccess: state.value!.readAccess, 
-                              chatMedia: state.value!.chatMedia, 
-                          )));
-                      }
-                      if (widget.submitAction != null) {
-                        eliudrouter.Router.navigateTo(context, widget.submitAction!);
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    }
-                  },
-                ));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Document ID',
+                icon: Icons.vpn_key,
+                readOnly: (formAction == FormAction.updateAction),
+                textEditingController: _documentIDController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is DocumentIDChatFormError ? state.message : null,
+                hintText: null));
+
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'App Identifier',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _appIdController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is AppIdChatFormError ? state.message : null,
+                hintText: 'field.remark'));
+
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Room Identifier',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _roomIdController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is RoomIdChatFormError ? state.message : null,
+                hintText: 'field.remark'));
+
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Saying',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _sayingController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is SayingChatFormError ? state.message : null,
+                hintText: null));
+
+        children.add(Container(height: 20.0));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .divider(widget.app, context));
+
+        children.add(Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: StyleRegistry.registry()
+                .styleWithApp(widget.app)
+                .adminFormStyle()
+                .groupTitle(widget.app, context, 'Media')));
+
+        children.add(Container(
+            height: (fullScreenHeight(context) / 2.5),
+            child: chatMediumsList(widget.app, context, state.value!.chatMedia,
+                _onChatMediaChanged)));
+
+        children.add(Container(height: 20.0));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .divider(widget.app, context));
+
+        if ((formAction != FormAction.showData) &&
+            (formAction != FormAction.showPreloadedData)) {
+          children.add(StyleRegistry.registry()
+              .styleWithApp(widget.app)
+              .adminFormStyle()
+              .button(
+                widget.app,
+                context,
+                label: 'Submit',
+                onPressed: _readOnly(accessState, state)
+                    ? null
+                    : () {
+                        if (state is ChatFormError) {
+                          return;
+                        } else {
+                          if (formAction == FormAction.updateAction) {
+                            BlocProvider.of<ChatListBloc>(context)
+                                .add(UpdateChatList(
+                                    value: state.value!.copyWith(
+                              documentID: state.value!.documentID,
+                              authorId: state.value!.authorId,
+                              appId: state.value!.appId,
+                              roomId: state.value!.roomId,
+                              timestamp: state.value!.timestamp,
+                              saying: state.value!.saying,
+                              accessibleByGroup: state.value!.accessibleByGroup,
+                              accessibleByMembers:
+                                  state.value!.accessibleByMembers,
+                              readAccess: state.value!.readAccess,
+                              chatMedia: state.value!.chatMedia,
+                            )));
+                          } else {
+                            BlocProvider.of<ChatListBloc>(context)
+                                .add(AddChatList(
+                                    value: ChatModel(
+                              documentID: state.value!.documentID,
+                              authorId: state.value!.authorId,
+                              appId: state.value!.appId,
+                              roomId: state.value!.roomId,
+                              timestamp: state.value!.timestamp,
+                              saying: state.value!.saying,
+                              accessibleByGroup: state.value!.accessibleByGroup,
+                              accessibleByMembers:
+                                  state.value!.accessibleByMembers,
+                              readAccess: state.value!.readAccess,
+                              chatMedia: state.value!.chatMedia,
+                            )));
+                          }
+                          if (widget.submitAction != null) {
+                            eliudrouter.Router.navigateTo(
+                                context, widget.submitAction!);
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        }
+                      },
+              ));
         }
 
-        return StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().container(widget.app, context, Form(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? const NeverScrollableScrollPhysics() : null,
-              shrinkWrap: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)),
-              children: children
-            ),
-          ), formAction!
-        );
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .container(
+                widget.app,
+                context,
+                Form(
+                  child: ListView(
+                      padding: const EdgeInsets.all(8),
+                      physics: ((formAction == FormAction.showData) ||
+                              (formAction == FormAction.showPreloadedData))
+                          ? NeverScrollableScrollPhysics()
+                          : null,
+                      shrinkWrap: ((formAction == FormAction.showData) ||
+                          (formAction == FormAction.showPreloadedData)),
+                      children: children),
+                ),
+                formAction!);
       } else {
-        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminListStyle()
+            .progressIndicator(widget.app, context);
       }
     });
   }
@@ -317,53 +416,34 @@ class _MyChatFormState extends State<MyChatForm> {
     _myFormBloc.add(ChangedChatDocumentID(value: _documentIDController.text));
   }
 
-
   void _onAuthorIdChanged() {
     _myFormBloc.add(ChangedChatAuthorId(value: _authorIdController.text));
   }
-
 
   void _onAppIdChanged() {
     _myFormBloc.add(ChangedChatAppId(value: _appIdController.text));
   }
 
-
   void _onRoomIdChanged() {
     _myFormBloc.add(ChangedChatRoomId(value: _roomIdController.text));
   }
-
 
   void _onSayingChanged() {
     _myFormBloc.add(ChangedChatSaying(value: _sayingController.text));
   }
 
-
   void setSelectionAccessibleByGroup(int? val) {
     setState(() {
       _accessibleByGroupSelectedRadioTile = val;
     });
-    _myFormBloc.add(ChangedChatAccessibleByGroup(value: toChatAccessibleByGroup(val)));
+    _myFormBloc
+        .add(ChangedChatAccessibleByGroup(value: toChatAccessibleByGroup(val)));
   }
-
-
-  void _onAccessibleByMembersChanged(value) {
-    _myFormBloc.add(ChangedChatAccessibleByMembers(value: value));
-    setState(() {});
-  }
-
-
-  void _onReadAccessChanged(value) {
-    _myFormBloc.add(ChangedChatReadAccess(value: value));
-    setState(() {});
-  }
-
 
   void _onChatMediaChanged(value) {
     _myFormBloc.add(ChangedChatChatMedia(value: value));
     setState(() {});
   }
-
-
 
   @override
   void dispose() {
@@ -375,12 +455,10 @@ class _MyChatFormState extends State<MyChatForm> {
     super.dispose();
   }
 
+  /// Is the form read-only?
   bool _readOnly(AccessState accessState, ChatFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
+    return (formAction == FormAction.showData) ||
+        (formAction == FormAction.showPreloadedData) ||
+        (!accessState.memberIsOwner(widget.app.documentID));
   }
-  
-
 }
-
-
-

@@ -23,35 +23,42 @@ import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/component/update_component.dart';
 
-
 import 'package:eliud_pkg_chat/model/room_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_list_state.dart';
 import 'package:eliud_pkg_chat/model/room_list_event.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 
-
-
-typedef RoomChanged = Function(String? value, int? privilegeLevel,);
+typedef RoomChanged = Function(
+  String? value,
+  int? privilegeLevel,
+);
 
 class RoomDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
-  int? privilegeLevel;
-  String? value;
+  final int? privilegeLevel;
+  final String? value;
   final RoomChanged? trigger;
   final bool? optional;
 
-  RoomDropdownButtonWidget({ required this.app, this.privilegeLevel, this.value, this.trigger, this.optional, Key? key }): super(key: key);
+  RoomDropdownButtonWidget(
+      {required this.app,
+      this.privilegeLevel,
+      this.value,
+      this.trigger,
+      this.optional,
+      super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return RoomDropdownButtonWidgetState();
+    return RoomDropdownButtonWidgetState(value);
   }
 }
 
 class RoomDropdownButtonWidgetState extends State<RoomDropdownButtonWidget> {
   RoomListBloc? bloc;
+  String? value;
 
-  RoomDropdownButtonWidgetState();
+  RoomDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -65,31 +72,44 @@ class RoomDropdownButtonWidgetState extends State<RoomDropdownButtonWidget> {
     super.dispose();
   }
 
-List<Widget> widgets(RoomModel value) {
-var app = widget.app;
-var widgets = <Widget>[];
-widgets.add(value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container());
-widgets.add(value.description != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.description!)) : Container());
-return widgets;
-}
-
+  List<Widget> widgets(RoomModel value) {
+    var app = widget.app;
+    var widgets = <Widget>[];
+    widgets.add(Center(
+        child: StyleRegistry.registry()
+            .styleWithApp(app)
+            .frontEndStyle()
+            .textStyle()
+            .text(app, context, value.documentID)));
+    widgets.add(value.description != null
+        ? Center(
+            child: StyleRegistry.registry()
+                .styleWithApp(app)
+                .frontEndStyle()
+                .textStyle()
+                .text(app, context, value.description!))
+        : Container());
+    return widgets;
+  }
 
   @override
   Widget build(BuildContext context) {
     //var accessState = AccessBloc.getState(context);
     return BlocBuilder<RoomListBloc, RoomListState>(builder: (context, state) {
       if (state is RoomListLoading) {
-        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminListStyle()
+            .progressIndicator(widget.app, context);
       } else if (state is RoomListLoaded) {
         int? privilegeChosen = widget.privilegeLevel;
-        if ((widget.value != null) && (privilegeChosen == null)) {
+        if ((value != null) && (privilegeChosen == null)) {
           if (state.values != null) {
-            var selectedValue = state.values!.firstWhere((v) => (v!.documentID == widget.value), orElse: () => null);
             privilegeChosen = 0;
           }
         }
-          
-        final values = state.values;
+
+//        final values = state.values;
         final items = <DropdownMenuItem<String>>[];
         if (state.values!.isNotEmpty) {
           if (widget.optional != null && widget.optional!) {
@@ -98,9 +118,9 @@ return widgets;
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 5.0),
                   height: 100.0,
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget> [ Text("None") ],
+                    children: <Widget>[Text("None")],
                   ),
                 )));
           }
@@ -117,12 +137,10 @@ return widgets;
                 )));
           }
         }
-        return ListView(
-            physics: const ScrollPhysics(),
-            shrinkWrap: true,
-            children: [
+        return ListView(physics: ScrollPhysics(), shrinkWrap: true, children: [
           dropdownButton<int>(
-            widget.app, context,
+            widget.app,
+            context,
             isDense: false,
             isExpanded: false,
             items: [
@@ -147,49 +165,57 @@ return widgets;
             hint: text(widget.app, context, 'Select a privilege'),
             onChanged: _onPrivilegeLevelChange,
           ),
-          Row(children: [(false)
-            ? SizedBox(
-                height: 48, 
-                child: dropdownButton<String>(
-                      widget.app, context,
+          Row(children: [
+            ((false) == true)
+                ? Container(
+                    height: 48,
+                    child: dropdownButton<String>(
+                      widget.app,
+                      context,
                       isDense: false,
                       isExpanded: false,
                       items: items,
-                      value: widget.value,
+                      value: value,
                       hint: text(widget.app, context, 'Select a room'),
                       onChanged: _onValueChange,
-                    )
-                ) 
-            : dropdownButton<String>(
-                widget.app, context,
-                isDense: false,
-                isExpanded: false,
-                items: items,
-                value: widget.value,
-                hint: text(widget.app, context, 'Select a room'),
-                onChanged: _onValueChange,
-              ),
-          if (widget.value != null) const Spacer(),
-          if (widget.value != null) 
-            Align(alignment: Alignment.topRight, child: button(
-              widget.app,
-              context,
-              icon: const Icon(
-                Icons.edit,
-              ),
-              label: 'Update',
-              onPressed: () {
-                updateComponent(context, widget.app, 'rooms', widget.value, (newValue, _) {
-                  setState(() {
-                    widget.value = widget.value;
-                  });
-                });
-              },
-            ))
+                    ))
+                : dropdownButton<String>(
+                    widget.app,
+                    context,
+                    isDense: false,
+                    isExpanded: false,
+                    items: items,
+                    value: value,
+                    hint: text(widget.app, context, 'Select a room'),
+                    onChanged: _onValueChange,
+                  ),
+            if (value != null) Spacer(),
+            if (value != null)
+              Align(
+                  alignment: Alignment.topRight,
+                  child: button(
+                    widget.app,
+                    context,
+                    icon: Icon(
+                      Icons.edit,
+                    ),
+                    label: 'Update',
+                    onPressed: () {
+                      updateComponent(context, widget.app, 'rooms', value,
+                          (newValue, _) {
+                        setState(() {
+                          value = value;
+                        });
+                      });
+                    },
+                  ))
           ])
         ]);
       } else {
-        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminListStyle()
+            .progressIndicator(widget.app, context);
       }
     });
   }
@@ -200,12 +226,12 @@ return widgets;
 
   void _onPrivilegeLevelChange(int? value) {
     BlocProvider.of<RoomListBloc>(context).add(RoomChangeQuery(
-       newQuery: EliudQuery(theConditions: [
-         EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: value ?? 0),
-         EliudQueryCondition('appId', isEqualTo: widget.app.documentID),]
-       ),
-     ));
-     widget.trigger!(null, value);
+      newQuery: EliudQuery(theConditions: [
+        EliudQueryCondition('conditions.privilegeLevelRequired',
+            isEqualTo: value ?? 0),
+        EliudQueryCondition('appId', isEqualTo: widget.app.documentID),
+      ]),
+    ));
+    widget.trigger!(null, value);
   }
 }
-

@@ -13,11 +13,8 @@
 
 */
 
-
-
 import 'package:eliud_pkg_chat/model/model_export.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
-
 
 import 'dart:async';
 import 'package:eliud_core/tools/query/query_tools.dart';
@@ -26,50 +23,96 @@ import 'package:eliud_core/core/base/repository_base.dart';
 
 typedef ChatDashboardModelTrigger = Function(List<ChatDashboardModel?> list);
 typedef ChatDashboardChanged = Function(ChatDashboardModel? value);
-typedef ChatDashboardErrorHandler(o, e);
+typedef ChatDashboardErrorHandler = Function(dynamic o, dynamic e);
 
-abstract class ChatDashboardRepository extends RepositoryBase<ChatDashboardModel, ChatDashboardEntity> {
+abstract class ChatDashboardRepository
+    extends RepositoryBase<ChatDashboardModel, ChatDashboardEntity> {
   @override
-  Future<ChatDashboardEntity> addEntity(String documentID, ChatDashboardEntity value);
+  Future<ChatDashboardEntity> addEntity(
+      String documentID, ChatDashboardEntity value);
   @override
-  Future<ChatDashboardEntity> updateEntity(String documentID, ChatDashboardEntity value);
+  Future<ChatDashboardEntity> updateEntity(
+      String documentID, ChatDashboardEntity value);
   @override
   Future<ChatDashboardModel> add(ChatDashboardModel value);
   @override
   Future<void> delete(ChatDashboardModel value);
   @override
-  Future<ChatDashboardModel?> get(String? id, { Function(Exception)? onError });
+  Future<ChatDashboardModel?> get(String? id, {Function(Exception)? onError});
   @override
   Future<ChatDashboardModel> update(ChatDashboardModel value);
 
   @override
-  Stream<List<ChatDashboardModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Stream<List<ChatDashboardModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
   @override
-  Stream<List<ChatDashboardModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Stream<List<ChatDashboardModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
   @override
-  Future<List<ChatDashboardModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Future<List<ChatDashboardModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
   @override
-  Future<List<ChatDashboardModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery });
+  Future<List<ChatDashboardModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
 
   @override
-  StreamSubscription<List<ChatDashboardModel?>> listen(ChatDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
+  StreamSubscription<List<ChatDashboardModel?>> listen(
+      ChatDashboardModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
   @override
-  StreamSubscription<List<ChatDashboardModel?>> listenWithDetails(ChatDashboardModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery });
+  StreamSubscription<List<ChatDashboardModel?>> listenWithDetails(
+      ChatDashboardModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery});
   @override
-  StreamSubscription<ChatDashboardModel?> listenTo(String documentId, ChatDashboardChanged changed, {ChatDashboardErrorHandler? errorHandler});
+  StreamSubscription<ChatDashboardModel?> listenTo(
+      String documentId, ChatDashboardChanged changed,
+      {ChatDashboardErrorHandler? errorHandler});
   @override
   void flush();
-  
+
   @override
   String? timeStampToString(dynamic timeStamp);
 
   @override
   dynamic getSubCollection(String documentId, String name);
   @override
-  Future<ChatDashboardModel?> changeValue(String documentId, String fieldName, num changeByThisValue);
+  Future<ChatDashboardModel?> changeValue(
+      String documentId, String fieldName, num changeByThisValue);
 
   @override
   Future<void> deleteAll();
 }
-
-

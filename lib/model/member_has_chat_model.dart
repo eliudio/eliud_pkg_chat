@@ -17,11 +17,7 @@ import 'package:eliud_core/core/base/model_base.dart';
 
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-
 import 'package:eliud_pkg_chat/model/member_has_chat_entity.dart';
-
-
-
 
 class MemberHasChatModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
@@ -36,21 +32,40 @@ class MemberHasChatModel implements ModelBase, WithAppId {
   String appId;
   bool? hasUnread;
 
-  MemberHasChatModel({required this.documentID, required this.memberId, required this.appId, this.hasUnread, });
+  MemberHasChatModel({
+    required this.documentID,
+    required this.memberId,
+    required this.appId,
+    this.hasUnread,
+  });
 
   @override
-  MemberHasChatModel copyWith({String? documentID, String? memberId, String? appId, bool? hasUnread, }) {
-    return MemberHasChatModel(documentID: documentID ?? this.documentID, memberId: memberId ?? this.memberId, appId: appId ?? this.appId, hasUnread: hasUnread ?? this.hasUnread, );
+  MemberHasChatModel copyWith({
+    String? documentID,
+    String? memberId,
+    String? appId,
+    bool? hasUnread,
+  }) {
+    return MemberHasChatModel(
+      documentID: documentID ?? this.documentID,
+      memberId: memberId ?? this.memberId,
+      appId: appId ?? this.appId,
+      hasUnread: hasUnread ?? this.hasUnread,
+    );
   }
 
   @override
-  int get hashCode => documentID.hashCode ^ memberId.hashCode ^ appId.hashCode ^ hasUnread.hashCode;
+  int get hashCode =>
+      documentID.hashCode ^
+      memberId.hashCode ^
+      appId.hashCode ^
+      hasUnread.hashCode;
 
   @override
   bool operator ==(Object other) =>
-          identical(this, other) ||
-          other is MemberHasChatModel &&
-          runtimeType == other.runtimeType && 
+      identical(this, other) ||
+      other is MemberHasChatModel &&
+          runtimeType == other.runtimeType &&
           documentID == other.documentID &&
           memberId == other.memberId &&
           appId == other.appId &&
@@ -70,34 +85,33 @@ class MemberHasChatModel implements ModelBase, WithAppId {
   @override
   MemberHasChatEntity toEntity({String? appId}) {
     return MemberHasChatEntity(
-          memberId: (memberId != null) ? memberId : null, 
-          appId: (appId != null) ? appId : null, 
-          hasUnread: (hasUnread != null) ? hasUnread : null, 
+      memberId: memberId,
+      appId: appId,
+      hasUnread: (hasUnread != null) ? hasUnread : null,
     );
   }
 
-  static Future<MemberHasChatModel?> fromEntity(String documentID, MemberHasChatEntity? entity) async {
+  static Future<MemberHasChatModel?> fromEntity(
+      String documentID, MemberHasChatEntity? entity) async {
     if (entity == null) return null;
-    var counter = 0;
     return MemberHasChatModel(
-          documentID: documentID, 
-          memberId: entity.memberId ?? '', 
-          appId: entity.appId ?? '', 
-          hasUnread: entity.hasUnread, 
+      documentID: documentID,
+      memberId: entity.memberId ?? '',
+      appId: entity.appId ?? '',
+      hasUnread: entity.hasUnread,
     );
   }
 
-  static Future<MemberHasChatModel?> fromEntityPlus(String documentID, MemberHasChatEntity? entity, { String? appId}) async {
+  static Future<MemberHasChatModel?> fromEntityPlus(
+      String documentID, MemberHasChatEntity? entity,
+      {String? appId}) async {
     if (entity == null) return null;
 
-    var counter = 0;
     return MemberHasChatModel(
-          documentID: documentID, 
-          memberId: entity.memberId ?? '', 
-          appId: entity.appId ?? '', 
-          hasUnread: entity.hasUnread, 
+      documentID: documentID,
+      memberId: entity.memberId ?? '',
+      appId: entity.appId ?? '',
+      hasUnread: entity.hasUnread,
     );
   }
-
 }
-

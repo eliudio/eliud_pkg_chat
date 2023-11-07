@@ -17,7 +17,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
 
-
 @immutable
 abstract class RoomFormEvent extends Equatable {
   const RoomFormEvent();
@@ -26,35 +25,33 @@ abstract class RoomFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewRoomFormEvent extends RoomFormEvent {
-}
-
+class InitialiseNewRoomFormEvent extends RoomFormEvent {}
 
 class InitialiseRoomFormEvent extends RoomFormEvent {
   final RoomModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const InitialiseRoomFormEvent({this.value});
+  InitialiseRoomFormEvent({this.value});
 }
 
 class InitialiseRoomFormNoLoadEvent extends RoomFormEvent {
   final RoomModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const InitialiseRoomFormNoLoadEvent({this.value});
+  InitialiseRoomFormNoLoadEvent({this.value});
 }
 
 class ChangedRoomDocumentID extends RoomFormEvent {
   final String? value;
 
-  const ChangedRoomDocumentID({this.value});
+  ChangedRoomDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedRoomDocumentID{ value: $value }';
@@ -63,10 +60,10 @@ class ChangedRoomDocumentID extends RoomFormEvent {
 class ChangedRoomOwnerId extends RoomFormEvent {
   final String? value;
 
-  const ChangedRoomOwnerId({this.value});
+  ChangedRoomOwnerId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedRoomOwnerId{ value: $value }';
@@ -75,10 +72,10 @@ class ChangedRoomOwnerId extends RoomFormEvent {
 class ChangedRoomAppId extends RoomFormEvent {
   final String? value;
 
-  const ChangedRoomAppId({this.value});
+  ChangedRoomAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedRoomAppId{ value: $value }';
@@ -87,10 +84,10 @@ class ChangedRoomAppId extends RoomFormEvent {
 class ChangedRoomDescription extends RoomFormEvent {
   final String? value;
 
-  const ChangedRoomDescription({this.value});
+  ChangedRoomDescription({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedRoomDescription{ value: $value }';
@@ -99,10 +96,10 @@ class ChangedRoomDescription extends RoomFormEvent {
 class ChangedRoomIsRoom extends RoomFormEvent {
   final bool? value;
 
-  const ChangedRoomIsRoom({this.value});
+  ChangedRoomIsRoom({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedRoomIsRoom{ value: $value }';
@@ -111,10 +108,10 @@ class ChangedRoomIsRoom extends RoomFormEvent {
 class ChangedRoomMembers extends RoomFormEvent {
   final String? value;
 
-  const ChangedRoomMembers({this.value});
+  ChangedRoomMembers({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedRoomMembers{ value: $value }';
@@ -123,12 +120,11 @@ class ChangedRoomMembers extends RoomFormEvent {
 class ChangedRoomTimestamp extends RoomFormEvent {
   final String? value;
 
-  const ChangedRoomTimestamp({this.value});
+  ChangedRoomTimestamp({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedRoomTimestamp{ value: $value }';
 }
-

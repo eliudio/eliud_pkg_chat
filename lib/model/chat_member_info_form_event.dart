@@ -17,7 +17,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
 
-
 @immutable
 abstract class ChatMemberInfoFormEvent extends Equatable {
   const ChatMemberInfoFormEvent();
@@ -26,35 +25,33 @@ abstract class ChatMemberInfoFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewChatMemberInfoFormEvent extends ChatMemberInfoFormEvent {
-}
-
+class InitialiseNewChatMemberInfoFormEvent extends ChatMemberInfoFormEvent {}
 
 class InitialiseChatMemberInfoFormEvent extends ChatMemberInfoFormEvent {
   final ChatMemberInfoModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const InitialiseChatMemberInfoFormEvent({this.value});
+  InitialiseChatMemberInfoFormEvent({this.value});
 }
 
 class InitialiseChatMemberInfoFormNoLoadEvent extends ChatMemberInfoFormEvent {
   final ChatMemberInfoModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const InitialiseChatMemberInfoFormNoLoadEvent({this.value});
+  InitialiseChatMemberInfoFormNoLoadEvent({this.value});
 }
 
 class ChangedChatMemberInfoDocumentID extends ChatMemberInfoFormEvent {
   final String? value;
 
-  const ChangedChatMemberInfoDocumentID({this.value});
+  ChangedChatMemberInfoDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedChatMemberInfoDocumentID{ value: $value }';
@@ -63,10 +60,10 @@ class ChangedChatMemberInfoDocumentID extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoAuthorId extends ChatMemberInfoFormEvent {
   final String? value;
 
-  const ChangedChatMemberInfoAuthorId({this.value});
+  ChangedChatMemberInfoAuthorId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedChatMemberInfoAuthorId{ value: $value }';
@@ -75,10 +72,10 @@ class ChangedChatMemberInfoAuthorId extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoAppId extends ChatMemberInfoFormEvent {
   final String? value;
 
-  const ChangedChatMemberInfoAppId({this.value});
+  ChangedChatMemberInfoAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedChatMemberInfoAppId{ value: $value }';
@@ -87,10 +84,10 @@ class ChangedChatMemberInfoAppId extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoRoomId extends ChatMemberInfoFormEvent {
   final String? value;
 
-  const ChangedChatMemberInfoRoomId({this.value});
+  ChangedChatMemberInfoRoomId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedChatMemberInfoRoomId{ value: $value }';
@@ -99,10 +96,10 @@ class ChangedChatMemberInfoRoomId extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoTimestamp extends ChatMemberInfoFormEvent {
   final String? value;
 
-  const ChangedChatMemberInfoTimestamp({this.value});
+  ChangedChatMemberInfoTimestamp({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedChatMemberInfoTimestamp{ value: $value }';
@@ -111,36 +108,37 @@ class ChangedChatMemberInfoTimestamp extends ChatMemberInfoFormEvent {
 class ChangedChatMemberInfoAccessibleByGroup extends ChatMemberInfoFormEvent {
   final ChatMemberInfoAccessibleByGroup? value;
 
-  const ChangedChatMemberInfoAccessibleByGroup({this.value});
+  ChangedChatMemberInfoAccessibleByGroup({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedChatMemberInfoAccessibleByGroup{ value: $value }';
+  String toString() =>
+      'ChangedChatMemberInfoAccessibleByGroup{ value: $value }';
 }
 
 class ChangedChatMemberInfoAccessibleByMembers extends ChatMemberInfoFormEvent {
   final String? value;
 
-  const ChangedChatMemberInfoAccessibleByMembers({this.value});
+  ChangedChatMemberInfoAccessibleByMembers({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
-  String toString() => 'ChangedChatMemberInfoAccessibleByMembers{ value: $value }';
+  String toString() =>
+      'ChangedChatMemberInfoAccessibleByMembers{ value: $value }';
 }
 
 class ChangedChatMemberInfoReadAccess extends ChatMemberInfoFormEvent {
   final String? value;
 
-  const ChangedChatMemberInfoReadAccess({this.value});
+  ChangedChatMemberInfoReadAccess({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedChatMemberInfoReadAccess{ value: $value }';
 }
-

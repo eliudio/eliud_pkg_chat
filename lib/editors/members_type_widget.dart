@@ -5,19 +5,18 @@ import 'package:flutter/widgets.dart';
 
 import '../model/chat_dashboard_model.dart';
 
-typedef MembersTypeCallback = Function(
-    MembersType membersType);
+typedef MembersTypeCallback = Function(MembersType membersType);
 
 class MembersTypeWidget extends StatefulWidget {
-  MembersTypeCallback membersTypeCallback;
+  final MembersTypeCallback membersTypeCallback;
   final MembersType membersType;
   final AppModel app;
+
   MembersTypeWidget(
-      {Key? key,
-        required this.app,
-        required this.membersTypeCallback,
-        required this.membersType})
-      : super(key: key);
+      {super.key,
+      required this.app,
+      required this.membersTypeCallback,
+      required this.membersType});
 
   @override
   State<StatefulWidget> createState() {
@@ -36,10 +35,14 @@ class _MembersTypeWidgetState extends State<MembersTypeWidget> {
 
   String heighttTypeLandscapeStringValue(MembersType? membersType) {
     switch (membersType) {
-      case MembersType.FollowingMembers:
+      case MembersType.followingMembers:
         return 'Following members';
-      case MembersType.AllMembers:
+      case MembersType.allMembers:
         return 'All members';
+      case MembersType.unknown:
+        break;
+      case null:
+        break;
     }
     return '?';
   }
@@ -62,14 +65,17 @@ class _MembersTypeWidgetState extends State<MembersTypeWidget> {
             _heightTypeSelectedRadioTile,
             stringValue,
             null,
-                (dynamic val) => setSelection(val)));
+            (dynamic val) => setSelection(val)));
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(shrinkWrap: true, physics: const ScrollPhysics(), children: [
-      getPrivilegeOption(MembersType.AllMembers),
-      getPrivilegeOption(MembersType.FollowingMembers)
-    ]);
+    return ListView(
+        shrinkWrap: true,
+        physics: const ScrollPhysics(),
+        children: [
+          getPrivilegeOption(MembersType.allMembers),
+          getPrivilegeOption(MembersType.followingMembers)
+        ]);
   }
 }

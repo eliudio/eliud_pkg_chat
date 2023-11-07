@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_chat/model/chat_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_component_event.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
@@ -31,24 +30,25 @@ abstract class AbstractChatComponent extends StatelessWidget {
   final AppModel app;
   final String chatId;
 
-  const AbstractChatComponent({Key? key, required this.app, required this.chatId}): super(key: key);
+  AbstractChatComponent({super.key, required this.app, required this.chatId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ChatComponentBloc> (
-          create: (context) => ChatComponentBloc(
-            chatRepository: chatRepository(appId: app.documentID)!)
+    return BlocProvider<ChatComponentBloc>(
+      create: (context) => ChatComponentBloc(
+          chatRepository: chatRepository(appId: app.documentID)!)
         ..add(FetchChatComponent(id: chatId)),
       child: _chatBlockBuilder(context),
     );
   }
 
   Widget _chatBlockBuilder(BuildContext context) {
-    return BlocBuilder<ChatComponentBloc, ChatComponentState>(builder: (context, state) {
+    return BlocBuilder<ChatComponentBloc, ChatComponentState>(
+        builder: (context, state) {
       if (state is ChatComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is ChatComponentPermissionDenied) {
-        return const Icon(
+        return Icon(
           Icons.highlight_off,
           color: Colors.red,
           size: 30.0,
@@ -57,7 +57,11 @@ abstract class AbstractChatComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +69,3 @@ abstract class AbstractChatComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, ChatModel value);
 }
-

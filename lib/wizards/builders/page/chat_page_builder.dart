@@ -1,7 +1,7 @@
 import 'package:eliud_core/core/wizards/builders/page_builder.dart';
 import 'package:eliud_core/model/abstract_repository_singleton.dart'
     as corerepo;
-import 'package:eliud_core/core/wizards/tools/documentIdentifier.dart';
+import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_core/tools/action/action_model.dart';
 import 'package:eliud_pkg_chat/chat_package.dart';
@@ -11,16 +11,15 @@ import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
 
 class ChatPageBuilder extends PageBuilder {
   ChatPageBuilder(
-    String uniqueId,
-    String pageId,
-    AppModel app,
-    String memberId,
-    HomeMenuModel theHomeMenu,
-    AppBarModel theAppBar,
-    DrawerModel leftDrawer,
-    DrawerModel rightDrawer,
-  ) : super(uniqueId, pageId, app, memberId, theHomeMenu, theAppBar, leftDrawer,
-            rightDrawer, );
+    super.uniqueId,
+    super.pageId,
+    super.app,
+    super.memberId,
+    super.theHomeMenu,
+    super.theAppBar,
+    super.leftDrawer,
+    super.rightDrawer,
+  );
 
   // Security is setup to indicate if a page or dialog is accessible
   // For this reason we need 2 dialogs, one for unread and one for read chats
@@ -28,16 +27,18 @@ class ChatPageBuilder extends PageBuilder {
   static String identifierUnread = "chat_page_unread";
 
   static GotoPage unReadAction(AppModel app, String uniqueId) => GotoPage(app,
-      pageID: constructDocumentId(uniqueId: uniqueId, documentId: identifierUnread),
+      pageID:
+          constructDocumentId(uniqueId: uniqueId, documentId: identifierUnread),
       conditions: DisplayConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.NoPrivilegeRequired,
-          packageCondition: ChatPackage.CONDITION_MEMBER_HAS_UNREAD_CHAT));
+          privilegeLevelRequired: PrivilegeLevelRequired.noPrivilegeRequired,
+          packageCondition: ChatPackage.conditionMemberHasUnreadChat));
 
   static GotoPage readAction(AppModel app, String uniqueId) => GotoPage(app,
-      pageID: constructDocumentId(uniqueId: uniqueId, documentId: identifierRead),
+      pageID:
+          constructDocumentId(uniqueId: uniqueId, documentId: identifierRead),
       conditions: DisplayConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequired.NoPrivilegeRequired,
-          packageCondition: ChatPackage.CONDITION_MEMBER_ALL_HAVE_BEEN_READ));
+          privilegeLevelRequired: PrivilegeLevelRequired.noPrivilegeRequired,
+          packageCondition: ChatPackage.conditionMemberAllHaveBeenRead));
 
   static String chatId = "chat";
 
@@ -52,10 +53,12 @@ class ChatPageBuilder extends PageBuilder {
     components.add(BodyComponentModel(
         documentID: "1",
         componentName: AbstractChatDashboardComponent.componentName,
-        componentId: constructDocumentId(uniqueId: uniqueId, documentId: chatId)));
+        componentId:
+            constructDocumentId(uniqueId: uniqueId, documentId: chatId)));
 
     return PageModel(
-        documentID: constructDocumentId(uniqueId: uniqueId, documentId: identifier),
+        documentID:
+            constructDocumentId(uniqueId: uniqueId, documentId: identifier),
         appId: app.documentID,
         title: "Chat",
         description: "Chat",
@@ -63,10 +66,10 @@ class ChatPageBuilder extends PageBuilder {
         endDrawer: rightDrawer,
         homeMenu: theHomeMenu,
         appBar: theAppBar,
-        layout: PageLayout.ListView,
+        layout: PageLayout.listView,
         conditions: StorageConditionsModel(
           privilegeLevelRequired:
-              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple,
+              PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple,
         ),
         bodyComponents: components);
   }
@@ -78,7 +81,7 @@ class ChatPageBuilder extends PageBuilder {
       description: "Chat",
       conditions: StorageConditionsModel(
           privilegeLevelRequired:
-              PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+              PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple),
     );
   }
 

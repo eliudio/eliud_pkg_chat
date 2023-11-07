@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 
 import 'chat_package.dart';
@@ -6,18 +5,19 @@ import 'chat_package.dart';
 ChatPackage getChatPackage() => ChatMobilePackage();
 
 class ChatMobilePackage extends ChatPackage {
-
   ChatMobilePackage();
 
+  @override
+  List<Object?> get props => [stateConditionMemberHasUnreadChat];
 
   @override
-  List<Object?> get props => [state_CONDITION_MEMBER_HAS_UNREAD_CHAT];
-
-  @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is ChatMobilePackage &&
-              mapEquals(state_CONDITION_MEMBER_HAS_UNREAD_CHAT, other.state_CONDITION_MEMBER_HAS_UNREAD_CHAT) &&
-              runtimeType == other.runtimeType;
-}
+      other is ChatMobilePackage &&
+          mapEquals(stateConditionMemberHasUnreadChat,
+              other.stateConditionMemberHasUnreadChat) &&
+          runtimeType == other.runtimeType;
 
+  @override
+  int get hashCode => stateConditionMemberHasUnreadChat.hashCode;
+}

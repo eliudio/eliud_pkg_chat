@@ -20,24 +20,27 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_component_event.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_component_state.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_repository.dart';
 
-class ChatDashboardComponentBloc extends Bloc<ChatDashboardComponentEvent, ChatDashboardComponentState> {
+class ChatDashboardComponentBloc
+    extends Bloc<ChatDashboardComponentEvent, ChatDashboardComponentState> {
   final ChatDashboardRepository? chatDashboardRepository;
   StreamSubscription? _chatDashboardSubscription;
 
   void _mapLoadChatDashboardComponentUpdateToState(String documentId) {
     _chatDashboardSubscription?.cancel();
-    _chatDashboardSubscription = chatDashboardRepository!.listenTo(documentId, (value) {
+    _chatDashboardSubscription =
+        chatDashboardRepository!.listenTo(documentId, (value) {
       if (value != null) {
         add(ChatDashboardComponentUpdated(value: value));
       }
     });
   }
 
-  ChatDashboardComponentBloc({ this.chatDashboardRepository }): super(ChatDashboardComponentUninitialized()) {
-    on <FetchChatDashboardComponent> ((event, emit) {
+  ChatDashboardComponentBloc({this.chatDashboardRepository})
+      : super(ChatDashboardComponentUninitialized()) {
+    on<FetchChatDashboardComponent>((event, emit) {
       _mapLoadChatDashboardComponentUpdateToState(event.id!);
     });
-    on <ChatDashboardComponentUpdated> ((event, emit) {
+    on<ChatDashboardComponentUpdated>((event, emit) {
       emit(ChatDashboardComponentLoaded(value: event.value));
     });
   }
@@ -47,6 +50,4 @@ class ChatDashboardComponentBloc extends Bloc<ChatDashboardComponentEvent, ChatD
     _chatDashboardSubscription?.cancel();
     return super.close();
   }
-
 }
-

@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_chat/model/member_has_chat_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_component_event.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_model.dart';
@@ -31,24 +30,27 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
   final AppModel app;
   final String memberHasChatId;
 
-  const AbstractMemberHasChatComponent({Key? key, required this.app, required this.memberHasChatId}): super(key: key);
+  AbstractMemberHasChatComponent(
+      {super.key, required this.app, required this.memberHasChatId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<MemberHasChatComponentBloc> (
-          create: (context) => MemberHasChatComponentBloc(
-            memberHasChatRepository: memberHasChatRepository(appId: app.documentID)!)
+    return BlocProvider<MemberHasChatComponentBloc>(
+      create: (context) => MemberHasChatComponentBloc(
+          memberHasChatRepository:
+              memberHasChatRepository(appId: app.documentID)!)
         ..add(FetchMemberHasChatComponent(id: memberHasChatId)),
       child: _memberHasChatBlockBuilder(context),
     );
   }
 
   Widget _memberHasChatBlockBuilder(BuildContext context) {
-    return BlocBuilder<MemberHasChatComponentBloc, MemberHasChatComponentState>(builder: (context, state) {
+    return BlocBuilder<MemberHasChatComponentBloc, MemberHasChatComponentState>(
+        builder: (context, state) {
       if (state is MemberHasChatComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is MemberHasChatComponentPermissionDenied) {
-        return const Icon(
+        return Icon(
           Icons.highlight_off,
           color: Colors.red,
           size: 30.0,
@@ -57,7 +59,11 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +71,3 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, MemberHasChatModel value);
 }
-

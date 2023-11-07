@@ -34,20 +34,20 @@ import 'room_model.dart';
 
 class RoomComponentSelector extends ComponentSelector {
   @override
-  Widget createSelectWidget(BuildContext context, AppModel app, int privilegeLevel, double height,
-      SelectComponent selected, editorConstructor) {
+  Widget createSelectWidget(BuildContext context, AppModel app,
+      int privilegeLevel, double height, SelectComponent selected, editor) {
     var appId = app.documentID;
     return BlocProvider<RoomListBloc>(
-          create: (context) => RoomListBloc(
-          eliudQuery: getComponentSelectorQuery(0, app.documentID),
-          roomRepository:
-              roomRepository(appId: appId)!,
-          )..add(LoadRoomList()),
-      child: SelectRoomWidget(app: app,
+      create: (context) => RoomListBloc(
+        eliudQuery: getComponentSelectorQuery(0, app.documentID),
+        roomRepository: roomRepository(appId: appId)!,
+      )..add(LoadRoomList()),
+      child: SelectRoomWidget(
+          app: app,
           height: height,
           containerPrivilege: privilegeLevel,
           selected: selected,
-          editorConstructor: editorConstructor),
+          editorConstructor: editor),
     );
   }
 }
@@ -60,21 +60,21 @@ class SelectRoomWidget extends StatefulWidget {
   final ComponentEditorConstructor editorConstructor;
 
   const SelectRoomWidget(
-      {Key? key,
+      {super.key,
       required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
-      required this.editorConstructor})
-      : super(key: key);
+      required this.editorConstructor});
 
   @override
-  _SelectRoomWidgetState createState() {
+  State<SelectRoomWidget> createState() {
     return _SelectRoomWidgetState();
   }
 }
 
-class _SelectRoomWidgetState extends State<SelectRoomWidget> with TickerProviderStateMixin {
+class _SelectRoomWidgetState extends State<SelectRoomWidget>
+    with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];
   final int _initialPrivilege = 0;
@@ -102,17 +102,18 @@ class _SelectRoomWidgetState extends State<SelectRoomWidget> with TickerProvider
   void _handlePrivilegeTabSelection() {
     if ((_privilegeTabController != null) &&
         (_privilegeTabController!.indexIsChanging)) {
-        _currentPrivilege = _privilegeTabController!.index;
-        BlocProvider.of<RoomListBloc>(context).add(
-            RoomChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID)));
+      _currentPrivilege = _privilegeTabController!.index;
+      BlocProvider.of<RoomListBloc>(context).add(RoomChangeQuery(
+          newQuery: getComponentSelectorQuery(
+              _currentPrivilege, widget.app.documentID)));
     }
   }
 
   Widget theList(BuildContext context, List<RoomModel?> values) {
-    var app = widget.app; 
+    var app = widget.app;
     return ListView.builder(
         shrinkWrap: true,
-        physics: const ScrollPhysics(),
+        physics: ScrollPhysics(),
         itemCount: values.length,
         itemBuilder: (context, index) {
           final value = values[index];
@@ -121,6 +122,7 @@ class _SelectRoomWidgetState extends State<SelectRoomWidget> with TickerProvider
               context,
               widget.app,
               trailing: PopupMenuButton<int>(
+                  child: Icon(Icons.more_vert),
                   elevation: 10,
                   itemBuilder: (context) => [
                         PopupMenuItem(
@@ -136,12 +138,24 @@ class _SelectRoomWidgetState extends State<SelectRoomWidget> with TickerProvider
                     if (selectedValue == 1) {
                       widget.selected(value.documentID);
                     } else if (selectedValue == 2) {
-                      widget.editorConstructor.updateComponent(widget.app, context, value, (_, __) {});
+                      widget.editorConstructor.updateComponent(
+                          widget.app, context, value, (_, __) {});
                     }
-                  },
-                  child: const Icon(Icons.more_vert)),
-              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container(),
-              subtitle: value.description != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.description!)) : Container(),
+                  }),
+              title: Center(
+                  child: StyleRegistry.registry()
+                      .styleWithApp(app)
+                      .frontEndStyle()
+                      .textStyle()
+                      .text(app, context, value.documentID)),
+              subtitle: value.description != null
+                  ? Center(
+                      child: StyleRegistry.registry()
+                          .styleWithApp(app)
+                          .frontEndStyle()
+                          .textStyle()
+                          .text(app, context, value.description!))
+                  : Container(),
             );
           } else {
             return Container();
@@ -151,19 +165,24 @@ class _SelectRoomWidgetState extends State<SelectRoomWidget> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RoomListBloc, RoomListState>(
-        builder: (context, state) {
+    return BlocBuilder<RoomListBloc, RoomListState>(builder: (context, state) {
       var children = <Widget>[];
       var newPrivilegeItems = <Widget>[];
       int i = 0;
       for (var privilegeItem in _privilegeItems) {
-        newPrivilegeItems.add(Wrap(children: [(i <= widget.containerPrivilege) ? const Icon(Icons.check) : const Icon(Icons.close), Container(width: 2), text(widget.app, context, privilegeItem)]));
+        newPrivilegeItems.add(Wrap(children: [
+          (i <= widget.containerPrivilege)
+              ? Icon(Icons.check)
+              : Icon(Icons.close),
+          Container(width: 2),
+          text(widget.app, context, privilegeItem)
+        ]));
         i++;
       }
       children.add(tabBar2(widget.app, context,
           items: newPrivilegeItems, tabController: _privilegeTabController!));
       if ((state is RoomListLoaded) && (state.values != null)) {
-        children.add(SizedBox(
+        children.add(Container(
             height: max(30, widget.height - 101),
             child: theList(
               context,
@@ -171,25 +190,24 @@ class _SelectRoomWidgetState extends State<SelectRoomWidget> with TickerProvider
             )));
       } else {
         children.add(Container(
-            height: max(30, widget.height - 101),
-            ));
+          height: max(30, widget.height - 101),
+        ));
       }
       children.add(Column(children: [
         divider(widget.app, context),
         Center(
-            child: iconButton(widget.app, 
+            child: iconButton(
+          widget.app,
           context,
           onPressed: () {
-            widget.editorConstructor.createNewComponent(widget.app, context, (_, __) {});
+            widget.editorConstructor
+                .createNewComponent(widget.app, context, (_, __) {});
           },
-          icon: const Icon(Icons.add),
+          icon: Icon(Icons.add),
         ))
       ]));
       return ListView(
-          physics: const ScrollPhysics(), shrinkWrap: true, children: children);
+          physics: ScrollPhysics(), shrinkWrap: true, children: children);
     });
   }
 }
-
-
-

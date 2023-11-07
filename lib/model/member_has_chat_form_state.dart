@@ -41,9 +41,9 @@ class MemberHasChatFormInitialized extends MemberHasChatFormState {
   final MemberHasChatModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const MemberHasChatFormInitialized({ this.value });
+  const MemberHasChatFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class MemberHasChatFormError extends MemberHasChatFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const MemberHasChatFormError({this.message, MemberHasChatModel? value }) : super(value: value);
+  const MemberHasChatFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class MemberHasChatFormError extends MemberHasChatFormInitialized {
     }''';
   }
 }
-class DocumentIDMemberHasChatFormError extends MemberHasChatFormError { 
-  const DocumentIDMemberHasChatFormError({ String? message, MemberHasChatModel? value }): super(message: message, value: value);
+
+class DocumentIDMemberHasChatFormError extends MemberHasChatFormError {
+  const DocumentIDMemberHasChatFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDMemberHasChatFormError extends MemberHasChatFormError {
   }
 }
 
-
-class MemberIdMemberHasChatFormError extends MemberHasChatFormError { 
-  const MemberIdMemberHasChatFormError({ String? message, MemberHasChatModel? value }): super(message: message, value: value);
+class MemberIdMemberHasChatFormError extends MemberHasChatFormError {
+  const MemberIdMemberHasChatFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class MemberIdMemberHasChatFormError extends MemberHasChatFormError {
   }
 }
 
-
-class AppIdMemberHasChatFormError extends MemberHasChatFormError { 
-  const AppIdMemberHasChatFormError({ String? message, MemberHasChatModel? value }): super(message: message, value: value);
+class AppIdMemberHasChatFormError extends MemberHasChatFormError {
+  const AppIdMemberHasChatFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class AppIdMemberHasChatFormError extends MemberHasChatFormError {
   }
 }
 
-
-class HasUnreadMemberHasChatFormError extends MemberHasChatFormError { 
-  const HasUnreadMemberHasChatFormError({ String? message, MemberHasChatModel? value }): super(message: message, value: value);
+class HasUnreadMemberHasChatFormError extends MemberHasChatFormError {
+  const HasUnreadMemberHasChatFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class HasUnreadMemberHasChatFormError extends MemberHasChatFormError {
   }
 }
 
-
-class MemberHasChatFormLoaded extends MemberHasChatFormInitialized { 
-  const MemberHasChatFormLoaded({ MemberHasChatModel? value }): super(value: value);
+class MemberHasChatFormLoaded extends MemberHasChatFormInitialized {
+  const MemberHasChatFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -141,12 +138,11 @@ class MemberHasChatFormLoaded extends MemberHasChatFormInitialized {
   }
 }
 
-
-class SubmittableMemberHasChatForm extends MemberHasChatFormInitialized { 
-  const SubmittableMemberHasChatForm({ MemberHasChatModel? value }): super(value: value);
+class SubmittableMemberHasChatForm extends MemberHasChatFormInitialized {
+  const SubmittableMemberHasChatForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -155,5 +151,3 @@ class SubmittableMemberHasChatForm extends MemberHasChatFormInitialized {
     }''';
   }
 }
-
-

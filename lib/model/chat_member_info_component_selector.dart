@@ -34,20 +34,20 @@ import 'chat_member_info_model.dart';
 
 class ChatMemberInfoComponentSelector extends ComponentSelector {
   @override
-  Widget createSelectWidget(BuildContext context, AppModel app, int privilegeLevel, double height,
-      SelectComponent selected, editorConstructor) {
+  Widget createSelectWidget(BuildContext context, AppModel app,
+      int privilegeLevel, double height, SelectComponent selected, editor) {
     var appId = app.documentID;
     return BlocProvider<ChatMemberInfoListBloc>(
-          create: (context) => ChatMemberInfoListBloc(
-          eliudQuery: getComponentSelectorQuery(0, app.documentID),
-          chatMemberInfoRepository:
-              chatMemberInfoRepository(appId: appId)!,
-          )..add(LoadChatMemberInfoList()),
-      child: SelectChatMemberInfoWidget(app: app,
+      create: (context) => ChatMemberInfoListBloc(
+        eliudQuery: getComponentSelectorQuery(0, app.documentID),
+        chatMemberInfoRepository: chatMemberInfoRepository(appId: appId)!,
+      )..add(LoadChatMemberInfoList()),
+      child: SelectChatMemberInfoWidget(
+          app: app,
           height: height,
           containerPrivilege: privilegeLevel,
           selected: selected,
-          editorConstructor: editorConstructor),
+          editorConstructor: editor),
     );
   }
 }
@@ -60,21 +60,21 @@ class SelectChatMemberInfoWidget extends StatefulWidget {
   final ComponentEditorConstructor editorConstructor;
 
   const SelectChatMemberInfoWidget(
-      {Key? key,
+      {super.key,
       required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
-      required this.editorConstructor})
-      : super(key: key);
+      required this.editorConstructor});
 
   @override
-  _SelectChatMemberInfoWidgetState createState() {
+  State<SelectChatMemberInfoWidget> createState() {
     return _SelectChatMemberInfoWidgetState();
   }
 }
 
-class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget> with TickerProviderStateMixin {
+class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
+    with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];
   final int _initialPrivilege = 0;
@@ -102,17 +102,19 @@ class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
   void _handlePrivilegeTabSelection() {
     if ((_privilegeTabController != null) &&
         (_privilegeTabController!.indexIsChanging)) {
-        _currentPrivilege = _privilegeTabController!.index;
-        BlocProvider.of<ChatMemberInfoListBloc>(context).add(
-            ChatMemberInfoChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID)));
+      _currentPrivilege = _privilegeTabController!.index;
+      BlocProvider.of<ChatMemberInfoListBloc>(context).add(
+          ChatMemberInfoChangeQuery(
+              newQuery: getComponentSelectorQuery(
+                  _currentPrivilege, widget.app.documentID)));
     }
   }
 
   Widget theList(BuildContext context, List<ChatMemberInfoModel?> values) {
-    var app = widget.app; 
+    var app = widget.app;
     return ListView.builder(
         shrinkWrap: true,
-        physics: const ScrollPhysics(),
+        physics: ScrollPhysics(),
         itemCount: values.length,
         itemBuilder: (context, index) {
           final value = values[index];
@@ -121,6 +123,7 @@ class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
               context,
               widget.app,
               trailing: PopupMenuButton<int>(
+                  child: Icon(Icons.more_vert),
                   elevation: 10,
                   itemBuilder: (context) => [
                         PopupMenuItem(
@@ -136,12 +139,22 @@ class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
                     if (selectedValue == 1) {
                       widget.selected(value.documentID);
                     } else if (selectedValue == 2) {
-                      widget.editorConstructor.updateComponent(widget.app, context, value, (_, __) {});
+                      widget.editorConstructor.updateComponent(
+                          widget.app, context, value, (_, __) {});
                     }
-                  },
-                  child: const Icon(Icons.more_vert)),
-              title: value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container(),
-              subtitle: value.authorId != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.authorId)) : Container(),
+                  }),
+              title: Center(
+                  child: StyleRegistry.registry()
+                      .styleWithApp(app)
+                      .frontEndStyle()
+                      .textStyle()
+                      .text(app, context, value.documentID)),
+              subtitle: Center(
+                  child: StyleRegistry.registry()
+                      .styleWithApp(app)
+                      .frontEndStyle()
+                      .textStyle()
+                      .text(app, context, value.authorId)),
             );
           } else {
             return Container();
@@ -157,13 +170,19 @@ class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
       var newPrivilegeItems = <Widget>[];
       int i = 0;
       for (var privilegeItem in _privilegeItems) {
-        newPrivilegeItems.add(Wrap(children: [(i <= widget.containerPrivilege) ? const Icon(Icons.check) : const Icon(Icons.close), Container(width: 2), text(widget.app, context, privilegeItem)]));
+        newPrivilegeItems.add(Wrap(children: [
+          (i <= widget.containerPrivilege)
+              ? Icon(Icons.check)
+              : Icon(Icons.close),
+          Container(width: 2),
+          text(widget.app, context, privilegeItem)
+        ]));
         i++;
       }
       children.add(tabBar2(widget.app, context,
           items: newPrivilegeItems, tabController: _privilegeTabController!));
       if ((state is ChatMemberInfoListLoaded) && (state.values != null)) {
-        children.add(SizedBox(
+        children.add(Container(
             height: max(30, widget.height - 101),
             child: theList(
               context,
@@ -171,25 +190,24 @@ class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
             )));
       } else {
         children.add(Container(
-            height: max(30, widget.height - 101),
-            ));
+          height: max(30, widget.height - 101),
+        ));
       }
       children.add(Column(children: [
         divider(widget.app, context),
         Center(
-            child: iconButton(widget.app, 
+            child: iconButton(
+          widget.app,
           context,
           onPressed: () {
-            widget.editorConstructor.createNewComponent(widget.app, context, (_, __) {});
+            widget.editorConstructor
+                .createNewComponent(widget.app, context, (_, __) {});
           },
-          icon: const Icon(Icons.add),
+          icon: Icon(Icons.add),
         ))
       ]));
       return ListView(
-          physics: const ScrollPhysics(), shrinkWrap: true, children: children);
+          physics: ScrollPhysics(), shrinkWrap: true, children: children);
     });
   }
 }
-
-
-

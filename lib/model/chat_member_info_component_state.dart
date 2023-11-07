@@ -23,23 +23,25 @@ abstract class ChatMemberInfoComponentState extends Equatable {
   List<Object?> get props => [];
 }
 
-class ChatMemberInfoComponentUninitialized extends ChatMemberInfoComponentState {}
+class ChatMemberInfoComponentUninitialized
+    extends ChatMemberInfoComponentState {}
 
 class ChatMemberInfoComponentError extends ChatMemberInfoComponentState {
   final String? message;
-  const ChatMemberInfoComponentError({ this.message });
+  ChatMemberInfoComponentError({this.message});
 }
 
-class ChatMemberInfoComponentPermissionDenied extends ChatMemberInfoComponentState {
-  const ChatMemberInfoComponentPermissionDenied();
+class ChatMemberInfoComponentPermissionDenied
+    extends ChatMemberInfoComponentState {
+  ChatMemberInfoComponentPermissionDenied();
 }
 
 class ChatMemberInfoComponentLoaded extends ChatMemberInfoComponentState {
   final ChatMemberInfoModel value;
 
-  const ChatMemberInfoComponentLoaded({ required this.value });
+  const ChatMemberInfoComponentLoaded({required this.value});
 
-  ChatMemberInfoComponentLoaded copyWith({ ChatMemberInfoModel? copyThis }) {
+  ChatMemberInfoComponentLoaded copyWith({ChatMemberInfoModel? copyThis}) {
     return ChatMemberInfoComponentLoaded(value: copyThis ?? value);
   }
 
@@ -49,4 +51,3 @@ class ChatMemberInfoComponentLoaded extends ChatMemberInfoComponentState {
   @override
   String toString() => 'ChatMemberInfoComponentLoaded { value: $value }';
 }
-

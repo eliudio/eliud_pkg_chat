@@ -22,26 +22,45 @@ class MemberHasChatEntity implements EntityBase {
   final String? appId;
   final bool? hasUnread;
 
-  MemberHasChatEntity({required this.memberId, required this.appId, this.hasUnread, });
+  MemberHasChatEntity({
+    required this.memberId,
+    required this.appId,
+    this.hasUnread,
+  });
 
-  MemberHasChatEntity copyWith({String? documentID, String? memberId, String? appId, bool? hasUnread, }) {
-    return MemberHasChatEntity(memberId : memberId ?? this.memberId, appId : appId ?? this.appId, hasUnread : hasUnread ?? this.hasUnread, );
+  MemberHasChatEntity copyWith({
+    String? documentID,
+    String? memberId,
+    String? appId,
+    bool? hasUnread,
+  }) {
+    return MemberHasChatEntity(
+      memberId: memberId ?? this.memberId,
+      appId: appId ?? this.appId,
+      hasUnread: hasUnread ?? this.hasUnread,
+    );
   }
-  List<Object?> get props => [memberId, appId, hasUnread, ];
+
+  List<Object?> get props => [
+        memberId,
+        appId,
+        hasUnread,
+      ];
 
   @override
   String toString() {
     return 'MemberHasChatEntity{memberId: $memberId, appId: $appId, hasUnread: $hasUnread}';
   }
 
-  static MemberHasChatEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+  static MemberHasChatEntity? fromMap(Object? o,
+      {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
     return MemberHasChatEntity(
-      memberId: map['memberId'], 
-      appId: map['appId'], 
-      hasUnread: map['hasUnread'], 
+      memberId: map['memberId'],
+      appId: map['appId'],
+      hasUnread: map['hasUnread'],
     );
   }
 
@@ -72,7 +91,8 @@ class MemberHasChatEntity implements EntityBase {
     return newEntity;
   }
 
-  static MemberHasChatEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
+  static MemberHasChatEntity? fromJsonString(String json,
+      {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
@@ -82,9 +102,8 @@ class MemberHasChatEntity implements EntityBase {
   }
 
   @override
-  Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
+  Future<Map<String, Object?>> enrichedDocument(
+      Map<String, Object?> theDocument) async {
     return theDocument;
   }
-
 }
-

@@ -26,12 +26,42 @@ class RoomEntity implements EntityBase {
   final List<String>? members;
   final Object? timestamp;
 
-  RoomEntity({required this.ownerId, required this.appId, this.description, this.isRoom, this.members, this.timestamp, });
+  RoomEntity({
+    required this.ownerId,
+    required this.appId,
+    this.description,
+    this.isRoom,
+    this.members,
+    this.timestamp,
+  });
 
-  RoomEntity copyWith({String? documentID, String? ownerId, String? appId, String? description, bool? isRoom, List<String>? members, Object? timestamp, }) {
-    return RoomEntity(ownerId : ownerId ?? this.ownerId, appId : appId ?? this.appId, description : description ?? this.description, isRoom : isRoom ?? this.isRoom, members : members ?? this.members, timestamp : timestamp ?? this.timestamp, );
+  RoomEntity copyWith({
+    String? documentID,
+    String? ownerId,
+    String? appId,
+    String? description,
+    bool? isRoom,
+    List<String>? members,
+    Object? timestamp,
+  }) {
+    return RoomEntity(
+      ownerId: ownerId ?? this.ownerId,
+      appId: appId ?? this.appId,
+      description: description ?? this.description,
+      isRoom: isRoom ?? this.isRoom,
+      members: members ?? this.members,
+      timestamp: timestamp ?? this.timestamp,
+    );
   }
-  List<Object?> get props => [ownerId, appId, description, isRoom, members, timestamp, ];
+
+  List<Object?> get props => [
+        ownerId,
+        appId,
+        description,
+        isRoom,
+        members,
+        timestamp,
+      ];
 
   @override
   String toString() {
@@ -45,12 +75,14 @@ class RoomEntity implements EntityBase {
     var map = o as Map<String, dynamic>;
 
     return RoomEntity(
-      ownerId: map['ownerId'], 
-      appId: map['appId'], 
-      description: map['description'], 
-      isRoom: map['isRoom'], 
-      members: map['members'] == null ? null : List.from(map['members']), 
-      timestamp: map['timestamp'] == null ? null : (map['timestamp']  as Timestamp).millisecondsSinceEpoch,
+      ownerId: map['ownerId'],
+      appId: map['appId'],
+      description: map['description'],
+      isRoom: map['isRoom'],
+      members: map['members'] == null ? null : List.from(map['members']),
+      timestamp: map['timestamp'] == null
+          ? null
+          : (map['timestamp'] as Timestamp).millisecondsSinceEpoch,
     );
   }
 
@@ -92,7 +124,8 @@ class RoomEntity implements EntityBase {
     return newEntity;
   }
 
-  static RoomEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
+  static RoomEntity? fromJsonString(String json,
+      {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
@@ -102,9 +135,8 @@ class RoomEntity implements EntityBase {
   }
 
   @override
-  Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
+  Future<Map<String, Object?>> enrichedDocument(
+      Map<String, Object?> theDocument) async {
     return theDocument;
   }
-
 }
-

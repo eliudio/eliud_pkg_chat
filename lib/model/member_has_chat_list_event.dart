@@ -30,10 +30,10 @@ class NewPage extends MemberHasChatListEvent {}
 class AddMemberHasChatList extends MemberHasChatListEvent {
   final MemberHasChatModel? value;
 
-  const AddMemberHasChatList({ this.value });
+  const AddMemberHasChatList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddMemberHasChatList{ value: $value }';
@@ -42,10 +42,10 @@ class AddMemberHasChatList extends MemberHasChatListEvent {
 class UpdateMemberHasChatList extends MemberHasChatListEvent {
   final MemberHasChatModel? value;
 
-  const UpdateMemberHasChatList({ this.value });
+  const UpdateMemberHasChatList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateMemberHasChatList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateMemberHasChatList extends MemberHasChatListEvent {
 class DeleteMemberHasChatList extends MemberHasChatListEvent {
   final MemberHasChatModel? value;
 
-  const DeleteMemberHasChatList({ this.value });
+  const DeleteMemberHasChatList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteMemberHasChatList{ value: $value }';
@@ -67,24 +67,24 @@ class MemberHasChatListUpdated extends MemberHasChatListEvent {
   final List<MemberHasChatModel?>? value;
   final bool? mightHaveMore;
 
-  const MemberHasChatListUpdated({ this.value, this.mightHaveMore });
+  const MemberHasChatListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'MemberHasChatListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'MemberHasChatListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class MemberHasChatChangeQuery extends MemberHasChatListEvent {
   final EliudQuery? newQuery;
 
-  const MemberHasChatChangeQuery({ required this.newQuery });
+  const MemberHasChatChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'MemberHasChatChangeQuery{ value: $newQuery }';
 }
-

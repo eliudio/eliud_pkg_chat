@@ -16,18 +16,18 @@ import 'model/member_has_chat_model.dart';
 import 'model/repository_singleton.dart';
 
 import 'package:eliud_pkg_chat/chat_package_stub.dart'
-if (dart.library.io) 'chat_mobile_package.dart'
-if (dart.library.html) 'chat_web_package.dart';
+    if (dart.library.io) 'chat_mobile_package.dart'
+    if (dart.library.html) 'chat_web_package.dart';
 
 import 'dart:async';
 
 abstract class ChatPackage extends Package {
-  static const String CONDITION_MEMBER_HAS_UNREAD_CHAT =
+  static const String conditionMemberHasUnreadChat =
       'There are some unread messages';
-  static const String CONDITION_MEMBER_ALL_HAVE_BEEN_READ =
+  static const String conditionMemberAllHaveBeenRead =
       'All messages have been read';
-  Map<String, bool?> state_CONDITION_MEMBER_HAS_UNREAD_CHAT = {};
-  Map<String, StreamSubscription<MemberHasChatModel?>> subscription = {};
+  final Map<String, bool?> stateConditionMemberHasUnreadChat = {};
+  final Map<String, StreamSubscription<MemberHasChatModel?>> subscription = {};
 
   ChatPackage() : super('eliud_pkg_chat');
 
@@ -52,40 +52,40 @@ abstract class ChatPackage extends Package {
           hasUnread = value.hasUnread!;
         }
         if (!c.isCompleted) {
-          state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID] = hasUnread;
+          stateConditionMemberHasUnreadChat[app.documentID] = hasUnread;
           // the first time we get this trigger, it's upon entry of the getAndSubscribe. Now we simply return the value
           c.complete([
             PackageConditionDetails(
                 packageName: packageName,
-                conditionName: CONDITION_MEMBER_HAS_UNREAD_CHAT,
+                conditionName: conditionMemberHasUnreadChat,
                 value: hasUnread),
             PackageConditionDetails(
                 packageName: packageName,
-                conditionName: CONDITION_MEMBER_ALL_HAVE_BEEN_READ,
+                conditionName: conditionMemberAllHaveBeenRead,
                 value: !hasUnread),
           ]);
         } else {
           // subsequent calls we get this trigger, it's when the date has changed. Now add the event to the bloc
-          if (hasUnread != state_CONDITION_MEMBER_HAS_UNREAD_CHAT[appId]) {
-            state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID] = hasUnread;
+          if (hasUnread != stateConditionMemberHasUnreadChat[appId]) {
+            stateConditionMemberHasUnreadChat[app.documentID] = hasUnread;
             accessBloc.add(UpdatePackageConditionEvent(
-                app, this, CONDITION_MEMBER_HAS_UNREAD_CHAT, hasUnread));
+                app, this, conditionMemberHasUnreadChat, hasUnread));
             accessBloc.add(UpdatePackageConditionEvent(
-                app, this, CONDITION_MEMBER_ALL_HAVE_BEEN_READ, !hasUnread));
+                app, this, conditionMemberAllHaveBeenRead, !hasUnread));
           }
         }
       });
       return c.future;
     } else {
-      state_CONDITION_MEMBER_HAS_UNREAD_CHAT[app.documentID] = false;
+      stateConditionMemberHasUnreadChat[app.documentID] = false;
       return Future.value([
         PackageConditionDetails(
             packageName: packageName,
-            conditionName: CONDITION_MEMBER_HAS_UNREAD_CHAT,
+            conditionName: conditionMemberHasUnreadChat,
             value: false),
         PackageConditionDetails(
             packageName: packageName,
-            conditionName: CONDITION_MEMBER_ALL_HAVE_BEEN_READ,
+            conditionName: conditionMemberAllHaveBeenRead,
             value: false),
       ]);
     }
@@ -93,10 +93,7 @@ abstract class ChatPackage extends Package {
 
   @override
   List<String> retrieveAllPackageConditions() {
-    return [
-      CONDITION_MEMBER_HAS_UNREAD_CHAT,
-      CONDITION_MEMBER_ALL_HAVE_BEEN_READ
-    ];
+    return [conditionMemberHasUnreadChat, conditionMemberAllHaveBeenRead];
   }
 
   @override
@@ -125,4 +122,3 @@ abstract class ChatPackage extends Package {
 
   static ChatPackage instance() => getChatPackage();
 }
-

@@ -24,13 +24,11 @@ abstract class ChatMemberInfoComponentEvent extends Equatable {
 class FetchChatMemberInfoComponent extends ChatMemberInfoComponentEvent {
   final String? id;
 
-  FetchChatMemberInfoComponent({ this.id });
+  FetchChatMemberInfoComponent({this.id});
 }
 
 class ChatMemberInfoComponentUpdated extends ChatMemberInfoComponentEvent {
   final ChatMemberInfoModel value;
 
-  ChatMemberInfoComponentUpdated({ required this.value });
+  ChatMemberInfoComponentUpdated({required this.value});
 }
-
-

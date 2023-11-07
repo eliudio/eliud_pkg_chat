@@ -23,11 +23,11 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 
 import 'chat_medium_model.dart';
 
-typedef FilterChatMediumModels = List<ChatMediumModel?> Function(List<ChatMediumModel?> values);
+typedef FilterChatMediumModels = List<ChatMediumModel?> Function(
+    List<ChatMediumModel?> values);
 
-
-
-class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> {
+class ChatMediumListBloc
+    extends Bloc<ChatMediumListEvent, ChatMediumListState> {
   final FilterChatMediumModels? filter;
   final ChatMediumRepository _chatMediumRepository;
   StreamSubscription? _chatMediumsListSubscription;
@@ -39,23 +39,32 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
   final bool? detailed;
   final int chatMediumLimit;
 
-  ChatMediumListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMediumRepository chatMediumRepository, this.chatMediumLimit = 5})
+  ChatMediumListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required ChatMediumRepository chatMediumRepository,
+      this.chatMediumLimit = 5})
       : _chatMediumRepository = chatMediumRepository,
         super(ChatMediumListLoading()) {
-    on <LoadChatMediumList> ((event, emit) {
+    on<LoadChatMediumList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadChatMediumListToState();
       } else {
         _mapLoadChatMediumListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadChatMediumListWithDetailsToState();
     });
-    
-    on <ChatMediumChangeQuery> ((event, emit) {
+
+    on<ChatMediumChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadChatMediumListToState();
@@ -63,20 +72,20 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
         _mapLoadChatMediumListWithDetailsToState();
       }
     });
-      
-    on <AddChatMediumList> ((event, emit) async {
+
+    on<AddChatMediumList>((event, emit) async {
       await _mapAddChatMediumListToState(event);
     });
-    
-    on <UpdateChatMediumList> ((event, emit) async {
+
+    on<UpdateChatMediumList>((event, emit) async {
       await _mapUpdateChatMediumListToState(event);
     });
-    
-    on <DeleteChatMediumList> ((event, emit) async {
+
+    on<DeleteChatMediumList>((event, emit) async {
       await _mapDeleteChatMediumListToState(event);
     });
-    
-    on <ChatMediumListUpdated> ((event, emit) {
+
+    on<ChatMediumListUpdated>((event, emit) {
       emit(_mapChatMediumListUpdatedToState(event));
     });
   }
@@ -90,27 +99,31 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
   }
 
   Future<void> _mapLoadChatMediumListToState() async {
-    int amountNow =  (state is ChatMediumListLoaded) ? (state as ChatMediumListLoaded).values!.length : 0;
+    int amountNow = (state is ChatMediumListLoaded)
+        ? (state as ChatMediumListLoaded).values!.length
+        : 0;
     _chatMediumsListSubscription?.cancel();
     _chatMediumsListSubscription = _chatMediumRepository.listen(
-          (list) => add(ChatMediumListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * chatMediumLimit : null
-    );
-  }
-
-  Future<void> _mapLoadChatMediumListWithDetailsToState() async {
-    int amountNow =  (state is ChatMediumListLoaded) ? (state as ChatMediumListLoaded).values!.length : 0;
-    _chatMediumsListSubscription?.cancel();
-    _chatMediumsListSubscription = _chatMediumRepository.listenWithDetails(
-            (list) => add(ChatMediumListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(ChatMediumListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * chatMediumLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * chatMediumLimit : null);
+  }
+
+  Future<void> _mapLoadChatMediumListWithDetailsToState() async {
+    int amountNow = (state is ChatMediumListLoaded)
+        ? (state as ChatMediumListLoaded).values!.length
+        : 0;
+    _chatMediumsListSubscription?.cancel();
+    _chatMediumsListSubscription = _chatMediumRepository.listenWithDetails(
+        (list) => add(ChatMediumListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * chatMediumLimit : null);
   }
 
   Future<void> _mapAddChatMediumListToState(AddChatMediumList event) async {
@@ -120,14 +133,16 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
     }
   }
 
-  Future<void> _mapUpdateChatMediumListToState(UpdateChatMediumList event) async {
+  Future<void> _mapUpdateChatMediumListToState(
+      UpdateChatMediumList event) async {
     var value = event.value;
     if (value != null) {
       await _chatMediumRepository.update(value);
     }
   }
 
-  Future<void> _mapDeleteChatMediumListToState(DeleteChatMediumList event) async {
+  Future<void> _mapDeleteChatMediumListToState(
+      DeleteChatMediumList event) async {
     var value = event.value;
     if (value != null) {
       await _chatMediumRepository.delete(value);
@@ -135,7 +150,9 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
   }
 
   ChatMediumListLoaded _mapChatMediumListUpdatedToState(
-      ChatMediumListUpdated event) => ChatMediumListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+          ChatMediumListUpdated event) =>
+      ChatMediumListLoaded(
+          values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +160,3 @@ class ChatMediumListBloc extends Bloc<ChatMediumListEvent, ChatMediumListState> 
     return super.close();
   }
 }
-
-

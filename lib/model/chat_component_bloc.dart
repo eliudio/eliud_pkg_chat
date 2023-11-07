@@ -33,11 +33,12 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
     });
   }
 
-  ChatComponentBloc({ this.chatRepository }): super(ChatComponentUninitialized()) {
-    on <FetchChatComponent> ((event, emit) {
+  ChatComponentBloc({this.chatRepository})
+      : super(ChatComponentUninitialized()) {
+    on<FetchChatComponent>((event, emit) {
       _mapLoadChatComponentUpdateToState(event.id!);
     });
-    on <ChatComponentUpdated> ((event, emit) {
+    on<ChatComponentUpdated>((event, emit) {
       emit(ChatComponentLoaded(value: event.value));
     });
   }
@@ -47,6 +48,4 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
     _chatSubscription?.cancel();
     return super.close();
   }
-
 }
-

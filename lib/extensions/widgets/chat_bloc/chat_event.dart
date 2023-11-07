@@ -36,10 +36,10 @@ class NewChatPage extends ChatEvent {
 class AddChat extends ChatEvent {
   final ChatModel? value;
 
-  const AddChat({ this.value });
+  const AddChat({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddChat{ value: $value }';
@@ -50,15 +50,16 @@ class ChatUpdated extends ChatEvent {
   final List<ChatModel> value;
   final bool? mightHaveMore;
 
-  const ChatUpdated({ required this.room, required this.value, this.mightHaveMore });
+  const ChatUpdated(
+      {required this.room, required this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore, room ];
+  List<Object?> get props => [value, mightHaveMore, room];
 
   @override
-  String toString() => 'ChatUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'ChatUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
-
 
 class UpdateEnhancedRoomModel extends ChatEvent {
   final EnhancedRoomModel model;

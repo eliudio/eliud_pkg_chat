@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_chat/model/room_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_component_event.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
@@ -31,24 +30,25 @@ abstract class AbstractRoomComponent extends StatelessWidget {
   final AppModel app;
   final String roomId;
 
-  const AbstractRoomComponent({Key? key, required this.app, required this.roomId}): super(key: key);
+  AbstractRoomComponent({super.key, required this.app, required this.roomId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<RoomComponentBloc> (
-          create: (context) => RoomComponentBloc(
-            roomRepository: roomRepository(appId: app.documentID)!)
+    return BlocProvider<RoomComponentBloc>(
+      create: (context) => RoomComponentBloc(
+          roomRepository: roomRepository(appId: app.documentID)!)
         ..add(FetchRoomComponent(id: roomId)),
       child: _roomBlockBuilder(context),
     );
   }
 
   Widget _roomBlockBuilder(BuildContext context) {
-    return BlocBuilder<RoomComponentBloc, RoomComponentState>(builder: (context, state) {
+    return BlocBuilder<RoomComponentBloc, RoomComponentState>(
+        builder: (context, state) {
       if (state is RoomComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is RoomComponentPermissionDenied) {
-        return const Icon(
+        return Icon(
           Icons.highlight_off,
           color: Colors.red,
           size: 30.0,
@@ -57,7 +57,11 @@ abstract class AbstractRoomComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +69,3 @@ abstract class AbstractRoomComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, RoomModel value);
 }
-

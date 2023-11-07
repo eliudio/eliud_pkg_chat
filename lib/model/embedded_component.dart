@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_core/tools/random.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
@@ -33,147 +32,196 @@ import '../model/chat_medium_repository.dart';
 
 typedef ChatMediumListChanged = Function(List<ChatMediumModel> values);
 
-chatMediumsList(app, context, value, trigger) => EmbeddedComponentFactory.chatMediumsList(app, context, value, trigger);
+chatMediumsList(app, context, value, trigger) =>
+    EmbeddedComponentFactory.chatMediumsList(app, context, value, trigger);
 
 class EmbeddedComponentFactory {
-
-static Widget chatMediumsList(AppModel app, BuildContext context, List<ChatMediumModel> values, ChatMediumListChanged trigger) {
-  ChatMediumInMemoryRepository inMemoryRepository = ChatMediumInMemoryRepository(trigger, values,);
-  return MultiBlocProvider(
-    providers: [
-      BlocProvider<ChatMediumListBloc>(
-        create: (context) => ChatMediumListBloc(
-          chatMediumRepository: inMemoryRepository,
+  static Widget chatMediumsList(AppModel app, BuildContext context,
+      List<ChatMediumModel> values, ChatMediumListChanged trigger) {
+    ChatMediumInMemoryRepository inMemoryRepository =
+        ChatMediumInMemoryRepository(
+      trigger,
+      values,
+    );
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChatMediumListBloc>(
+          create: (context) => ChatMediumListBloc(
+            chatMediumRepository: inMemoryRepository,
           )..add(LoadChatMediumList()),
         )
-        ],
-    child: ChatMediumListWidget(app: app, isEmbedded: true),
-  );
-}
-
-
+      ],
+      child: ChatMediumListWidget(app: app, isEmbedded: true),
+    );
+  }
 }
 
 class ChatMediumInMemoryRepository implements ChatMediumRepository {
-    final List<ChatMediumModel> items;
-    final ChatMediumListChanged trigger;
-    Stream<List<ChatMediumModel>>? theValues;
+  final List<ChatMediumModel> items;
+  final ChatMediumListChanged trigger;
+  Stream<List<ChatMediumModel>>? theValues;
 
-    ChatMediumInMemoryRepository(this.trigger, this.items) {
-        List<List<ChatMediumModel>> myList = <List<ChatMediumModel>>[];
-        myList.add(items);
-        theValues = Stream<List<ChatMediumModel>>.fromIterable(myList);
-    }
+  ChatMediumInMemoryRepository(this.trigger, this.items) {
+    List<List<ChatMediumModel>> myList = <List<ChatMediumModel>>[];
+    myList.add(items);
+    theValues = Stream<List<ChatMediumModel>>.fromIterable(myList);
+  }
 
-    int _index(String documentID) {
-      int i = 0;
-      for (final item in items) {
-        if (item.documentID == documentID) {
-          return i;
-        }
-        i++;
+  int _index(String documentID) {
+    int i = 0;
+    for (final item in items) {
+      if (item.documentID == documentID) {
+        return i;
       }
-      return -1;
+      i++;
     }
+    return -1;
+  }
 
-    @override
-  Future<ChatMediumEntity> addEntity(String documentID, ChatMediumEntity value) {
-      throw Exception('Not implemented'); 
-    }
+  @override
+  Future<ChatMediumEntity> addEntity(
+      String documentID, ChatMediumEntity value) {
+    throw Exception('Not implemented');
+  }
 
-    @override
-  Future<ChatMediumEntity> updateEntity(String documentID, ChatMediumEntity value) {
-      throw Exception('Not implemented'); 
-    }
+  @override
+  Future<ChatMediumEntity> updateEntity(
+      String documentID, ChatMediumEntity value) {
+    throw Exception('Not implemented');
+  }
 
-    @override
+  @override
   Future<ChatMediumModel> add(ChatMediumModel value) {
-        items.add(value.copyWith(documentID: newRandomKey()));
-        trigger(items);
-        return Future.value(value);
-    }
+    items.add(value.copyWith(documentID: newRandomKey()));
+    trigger(items);
+    return Future.value(value);
+  }
 
-    @override
+  @override
   Future<void> delete(ChatMediumModel value) {
-      int index = _index(value.documentID);
-      if (index >= 0) items.removeAt(index);
-      trigger(items);
-      return Future.value(value);
-    }
+    int index = _index(value.documentID);
+    if (index >= 0) items.removeAt(index);
+    trigger(items);
+    return Future.value();
+  }
 
-    @override
+  @override
   Future<ChatMediumModel> update(ChatMediumModel value) {
-      int index = _index(value.documentID);
-      if (index >= 0) {
-        items.replaceRange(index, index+1, [value]);
-        trigger(items);
-      }
-      return Future.value(value);
+    int index = _index(value.documentID);
+    if (index >= 0) {
+      items.replaceRange(index, index + 1, [value]);
+      trigger(items);
     }
+    return Future.value(value);
+  }
 
-    @override
-  Future<ChatMediumModel> get(String? id, { Function(Exception)? onError }) {
-      int index = _index(id!);
-      var completer = Completer<ChatMediumModel>();
-      completer.complete(items[index]);
-      return completer.future;
-    }
+  @override
+  Future<ChatMediumModel> get(String? id, {Function(Exception)? onError}) {
+    int index = _index(id!);
+    var completer = Completer<ChatMediumModel>();
+    completer.complete(items[index]);
+    return completer.future;
+  }
 
-    @override
-  Stream<List<ChatMediumModel>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-      return theValues!;
-    }
-    
-    @override
-  Stream<List<ChatMediumModel>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-      return theValues!;
-    }
-    
-    @override
-    StreamSubscription<List<ChatMediumModel>> listen(trigger, { String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery }) {
-      return theValues!.listen((theList) => trigger(theList));
-    }
-  
-    @override
-    StreamSubscription<List<ChatMediumModel>> listenWithDetails(trigger, { String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery }) {
-      return theValues!.listen((theList) => trigger(theList));
-    }
-    
-    @override
+  @override
+  Stream<List<ChatMediumModel>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return theValues!;
+  }
+
+  @override
+  Stream<List<ChatMediumModel>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return theValues!;
+  }
+
+  @override
+  StreamSubscription<List<ChatMediumModel>> listen(trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return theValues!.listen((theList) => trigger(theList));
+  }
+
+  @override
+  StreamSubscription<List<ChatMediumModel>> listenWithDetails(trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return theValues!.listen((theList) => trigger(theList));
+  }
+
+  @override
   void flush() {}
 
-    @override
-  Future<List<ChatMediumModel>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-      return Future.value(items);
-    }
-    
-    @override
-  Future<List<ChatMediumModel>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-      return Future.value(items);
-    }
+  @override
+  Future<List<ChatMediumModel>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return Future.value(items);
+  }
 
-    @override
-    getSubCollection(String documentId, String name) {
-      throw UnimplementedError();
-    }
+  @override
+  Future<List<ChatMediumModel>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return Future.value(items);
+  }
+
+  @override
+  getSubCollection(String documentId, String name) {
+    throw UnimplementedError();
+  }
 
   @override
   String timeStampToString(timeStamp) {
     throw UnimplementedError();
   }
-  
+
   @override
-  StreamSubscription<ChatMediumModel> listenTo(String documentId, ChatMediumChanged changed, {ChatMediumErrorHandler? errorHandler}) {
+  StreamSubscription<ChatMediumModel> listenTo(
+      String documentId, ChatMediumChanged changed,
+      {ChatMediumErrorHandler? errorHandler}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<ChatMediumModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
+  Future<ChatMediumModel> changeValue(
+      String documentId, String fieldName, num changeByThisValue) {
     throw UnimplementedError();
   }
-  
+
   @override
-  Future<ChatMediumEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+  Future<ChatMediumEntity?> getEntity(String? id,
+      {Function(Exception p1)? onError}) {
     throw UnimplementedError();
   }
 
@@ -182,7 +230,6 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     throw UnimplementedError();
   }
 
-    @override
+  @override
   Future<void> deleteAll() async {}
 }
-

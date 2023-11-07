@@ -16,10 +16,10 @@ class NewPage extends AllChatsEvent {}
 class AddAllChats extends AllChatsEvent {
   final RoomModel? value;
 
-  const AddAllChats({ this.value });
+  const AddAllChats({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddAllChats{ value: $value }';
@@ -28,10 +28,10 @@ class AddAllChats extends AllChatsEvent {
 class UpdateAllChats extends AllChatsEvent {
   final RoomModel? value;
 
-  const UpdateAllChats({ this.value });
+  const UpdateAllChats({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateAllChats{ value: $value }';
@@ -40,10 +40,10 @@ class UpdateAllChats extends AllChatsEvent {
 class BlockMember extends AllChatsEvent {
   final String memberId;
 
-  const BlockMember({ required this.memberId });
+  const BlockMember({required this.memberId});
 
   @override
-  List<Object?> get props => [ memberId ];
+  List<Object?> get props => [memberId];
 
   @override
   String toString() => 'BlockMember{ value: $memberId }';
@@ -52,10 +52,10 @@ class BlockMember extends AllChatsEvent {
 class DeleteAllChats extends AllChatsEvent {
   final RoomModel? value;
 
-  const DeleteAllChats({ this.value });
+  const DeleteAllChats({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteAllChats{ value: $value }';
@@ -65,22 +65,23 @@ class AllChatsUpdated extends AllChatsEvent {
   final List<EnhancedRoomModel> value;
   final bool? mightHaveMore;
 
-  const AllChatsUpdated({ required this.value, this.mightHaveMore });
+  const AllChatsUpdated({required this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'AllChatsUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'AllChatsUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class SelectChat extends AllChatsEvent {
   final RoomModel selected;
 
-  const SelectChat({ required this.selected });
+  const SelectChat({required this.selected});
 
   @override
-  List<Object?> get props => [ selected ];
+  List<Object?> get props => [selected];
 
   @override
   String toString() => 'SelectChat{ selected: $selected }';
@@ -93,6 +94,4 @@ class NewLastReadEvent extends AllChatsEvent {
   final DateTime lastRead;
 
   const NewLastReadEvent(this.appId, this.roomId, this.memberId, this.lastRead);
-
 }
-

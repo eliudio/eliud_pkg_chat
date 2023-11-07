@@ -36,25 +36,30 @@ class ChatLoaded extends ChatState {
   final List<ChatModel> values;
   final bool? mightHaveMore;
 
-  const ChatLoaded({required this.room, this.mightHaveMore, this.values = const []});
+  const ChatLoaded(
+      {required this.room, this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object?> get props => [ values, mightHaveMore, room ];
+  List<Object?> get props => [values, mightHaveMore, room];
 
   @override
   String toString() => 'ChatLoaded { values: $values }';
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is ChatLoaded &&
-              room == other.room &&
-              mightHaveMore == other.mightHaveMore &&
-              const ListEquality().equals(values, other.values);
+      other is ChatLoaded &&
+          room == other.room &&
+          mightHaveMore == other.mightHaveMore &&
+          const ListEquality().equals(values, other.values);
 
   ChatLoaded withNewEnhancedRoomModel(EnhancedRoomModel newRoom) {
-    return ChatLoaded(room: newRoom, mightHaveMore: mightHaveMore, values: values);
+    return ChatLoaded(
+        room: newRoom, mightHaveMore: mightHaveMore, values: values);
   }
+
+  @override
+  int get hashCode => room.hashCode ^ mightHaveMore.hashCode ^ values.hashCode;
 }
 
 class ChatNotLoaded extends ChatState {}

@@ -24,41 +24,63 @@ class ChatDashboardEntity implements EntityBase {
   final StorageConditionsEntity? conditions;
   final int? membersType;
 
-  ChatDashboardEntity({required this.appId, this.description, this.conditions, this.membersType, });
+  ChatDashboardEntity({
+    required this.appId,
+    this.description,
+    this.conditions,
+    this.membersType,
+  });
 
-  ChatDashboardEntity copyWith({String? documentID, String? appId, String? description, StorageConditionsEntity? conditions, int? membersType, }) {
-    return ChatDashboardEntity(appId : appId ?? this.appId, description : description ?? this.description, conditions : conditions ?? this.conditions, membersType : membersType ?? this.membersType, );
+  ChatDashboardEntity copyWith({
+    String? documentID,
+    String? appId,
+    String? description,
+    StorageConditionsEntity? conditions,
+    int? membersType,
+  }) {
+    return ChatDashboardEntity(
+      appId: appId ?? this.appId,
+      description: description ?? this.description,
+      conditions: conditions ?? this.conditions,
+      membersType: membersType ?? this.membersType,
+    );
   }
-  List<Object?> get props => [appId, description, conditions, membersType, ];
+
+  List<Object?> get props => [
+        appId,
+        description,
+        conditions,
+        membersType,
+      ];
 
   @override
   String toString() {
     return 'ChatDashboardEntity{appId: $appId, description: $description, conditions: $conditions, membersType: $membersType}';
   }
 
-  static ChatDashboardEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+  static ChatDashboardEntity? fromMap(Object? o,
+      {Map<String, String>? newDocumentIds}) {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
-    var conditionsFromMap;
-    conditionsFromMap = map['conditions'];
+    var conditionsFromMap = map['conditions'];
     if (conditionsFromMap != null) {
-      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap, newDocumentIds: newDocumentIds);
+      conditionsFromMap = StorageConditionsEntity.fromMap(conditionsFromMap,
+          newDocumentIds: newDocumentIds);
     }
 
     return ChatDashboardEntity(
-      appId: map['appId'], 
-      description: map['description'], 
-      conditions: conditionsFromMap, 
-      membersType: map['membersType'], 
+      appId: map['appId'],
+      description: map['description'],
+      conditions: conditionsFromMap,
+      membersType: map['membersType'],
     );
   }
 
   @override
   Map<String, Object?> toDocument() {
-    final Map<String, dynamic>? conditionsMap = conditions != null 
-        ? conditions!.toDocument()
-        : null;
+    final Map<String, dynamic>? conditionsMap =
+        conditions != null ? conditions!.toDocument() : null;
 
     Map<String, Object?> theDocument = HashMap();
     if (appId != null) {
@@ -90,7 +112,8 @@ class ChatDashboardEntity implements EntityBase {
     return newEntity;
   }
 
-  static ChatDashboardEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
+  static ChatDashboardEntity? fromJsonString(String json,
+      {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
@@ -100,9 +123,8 @@ class ChatDashboardEntity implements EntityBase {
   }
 
   @override
-  Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
+  Future<Map<String, Object?>> enrichedDocument(
+      Map<String, Object?> theDocument) async {
     return theDocument;
   }
-
 }
-

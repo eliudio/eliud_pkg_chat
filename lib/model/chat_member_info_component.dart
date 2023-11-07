@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_chat/model/chat_member_info_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_component_event.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
@@ -31,24 +30,27 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
   final AppModel app;
   final String chatMemberInfoId;
 
-  const AbstractChatMemberInfoComponent({Key? key, required this.app, required this.chatMemberInfoId}): super(key: key);
+  AbstractChatMemberInfoComponent(
+      {super.key, required this.app, required this.chatMemberInfoId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ChatMemberInfoComponentBloc> (
-          create: (context) => ChatMemberInfoComponentBloc(
-            chatMemberInfoRepository: chatMemberInfoRepository(appId: app.documentID)!)
+    return BlocProvider<ChatMemberInfoComponentBloc>(
+      create: (context) => ChatMemberInfoComponentBloc(
+          chatMemberInfoRepository:
+              chatMemberInfoRepository(appId: app.documentID)!)
         ..add(FetchChatMemberInfoComponent(id: chatMemberInfoId)),
       child: _chatMemberInfoBlockBuilder(context),
     );
   }
 
   Widget _chatMemberInfoBlockBuilder(BuildContext context) {
-    return BlocBuilder<ChatMemberInfoComponentBloc, ChatMemberInfoComponentState>(builder: (context, state) {
+    return BlocBuilder<ChatMemberInfoComponentBloc,
+        ChatMemberInfoComponentState>(builder: (context, state) {
       if (state is ChatMemberInfoComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is ChatMemberInfoComponentPermissionDenied) {
-        return const Icon(
+        return Icon(
           Icons.highlight_off,
           color: Colors.red,
           size: 30.0,
@@ -57,7 +59,11 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +71,3 @@ abstract class AbstractChatMemberInfoComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, ChatMemberInfoModel value);
 }
-

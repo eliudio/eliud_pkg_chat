@@ -13,10 +13,8 @@
 
 */
 
-
 import 'package:eliud_core/tools/admin_app_base.dart';
 import '../tools/bespoke_models.dart';
-
 
 import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/model_export.dart';
@@ -30,17 +28,29 @@ class AdminApp extends AdminAppInstallerBase {
   final RgbModel menuItemColor;
   final RgbModel selectedMenuItemColor;
   final RgbModel backgroundColor;
-  
-  AdminApp(this.appId, this._drawer, this._endDrawer, this._appBar, this._homeMenu, this.menuItemColor, this.selectedMenuItemColor, this.backgroundColor);
 
+  /// Construct the AdminApp
+  AdminApp(
+      this.appId,
+      this._drawer,
+      this._endDrawer,
+      this._appBar,
+      this._homeMenu,
+      this.menuItemColor,
+      this.selectedMenuItemColor,
+      this.backgroundColor);
 
+  /// Retrieve the admin pages
   PageModel _chatsPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
-      documentID: "internalWidget-chats", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chats"));
+        documentID: "internalWidget-chats",
+        componentName: "eliud_pkg_chat_internalWidgets",
+        componentId: "chats"));
     PageModel page = PageModel(
         conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.ownerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_chats_page",
@@ -51,19 +61,21 @@ class AdminApp extends AdminAppInstallerBase {
         appBar: _appBar,
         homeMenu: _homeMenu,
         bodyComponents: components,
-        layout: PageLayout.OnlyTheFirstComponent
-    );
+        layout: PageLayout.onlyTheFirstComponent);
     return page;
   }
 
-
+  /// Retrieve the admin pages
   PageModel _chatDashboardsPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
-      documentID: "internalWidget-chatDashboards", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chatDashboards"));
+        documentID: "internalWidget-chatDashboards",
+        componentName: "eliud_pkg_chat_internalWidgets",
+        componentId: "chatDashboards"));
     PageModel page = PageModel(
         conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.ownerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_chatdashboards_page",
@@ -74,19 +86,21 @@ class AdminApp extends AdminAppInstallerBase {
         appBar: _appBar,
         homeMenu: _homeMenu,
         bodyComponents: components,
-        layout: PageLayout.OnlyTheFirstComponent
-    );
+        layout: PageLayout.onlyTheFirstComponent);
     return page;
   }
 
-
+  /// Retrieve the admin pages
   PageModel _chatMemberInfosPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
-      documentID: "internalWidget-chatMemberInfos", componentName: "eliud_pkg_chat_internalWidgets", componentId: "chatMemberInfos"));
+        documentID: "internalWidget-chatMemberInfos",
+        componentName: "eliud_pkg_chat_internalWidgets",
+        componentId: "chatMemberInfos"));
     PageModel page = PageModel(
         conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.ownerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_chatmemberinfos_page",
@@ -97,19 +111,21 @@ class AdminApp extends AdminAppInstallerBase {
         appBar: _appBar,
         homeMenu: _homeMenu,
         bodyComponents: components,
-        layout: PageLayout.OnlyTheFirstComponent
-    );
+        layout: PageLayout.onlyTheFirstComponent);
     return page;
   }
 
-
+  /// Retrieve the admin pages
   PageModel _memberHasChatsPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
-      documentID: "internalWidget-memberHasChats", componentName: "eliud_pkg_chat_internalWidgets", componentId: "memberHasChats"));
+        documentID: "internalWidget-memberHasChats",
+        componentName: "eliud_pkg_chat_internalWidgets",
+        componentId: "memberHasChats"));
     PageModel page = PageModel(
         conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.ownerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_memberhaschats_page",
@@ -120,19 +136,21 @@ class AdminApp extends AdminAppInstallerBase {
         appBar: _appBar,
         homeMenu: _homeMenu,
         bodyComponents: components,
-        layout: PageLayout.OnlyTheFirstComponent
-    );
+        layout: PageLayout.onlyTheFirstComponent);
     return page;
   }
 
-
+  /// Retrieve the admin pages
   PageModel _roomsPages() {
     List<BodyComponentModel> components = [];
     components.add(BodyComponentModel(
-      documentID: "internalWidget-rooms", componentName: "eliud_pkg_chat_internalWidgets", componentId: "rooms"));
+        documentID: "internalWidget-rooms",
+        componentName: "eliud_pkg_chat_internalWidgets",
+        componentId: "rooms"));
     PageModel page = PageModel(
         conditions: StorageConditionsModel(
-          privilegeLevelRequired: PrivilegeLevelRequiredSimple.OwnerPrivilegeRequiredSimple,
+          privilegeLevelRequired:
+              PrivilegeLevelRequiredSimple.ownerPrivilegeRequiredSimple,
         ),
         appId: appId,
         documentID: "eliud_pkg_chat_rooms_page",
@@ -143,109 +161,80 @@ class AdminApp extends AdminAppInstallerBase {
         appBar: _appBar,
         homeMenu: _homeMenu,
         bodyComponents: components,
-        layout: PageLayout.OnlyTheFirstComponent
-    );
+        layout: PageLayout.onlyTheFirstComponent);
     return page;
   }
 
-
   Future<void> _setupAdminPages() {
-
-    return pageRepository(appId: appId)!.add(_chatsPages())
-
+    return pageRepository(appId: appId)!
+        .add(_chatsPages())
         .then((_) => pageRepository(appId: appId)!.add(_chatDashboardsPages()))
-
         .then((_) => pageRepository(appId: appId)!.add(_chatMemberInfosPages()))
-
         .then((_) => pageRepository(appId: appId)!.add(_memberHasChatsPages()))
-
-        .then((_) => pageRepository(appId: appId)!.add(_roomsPages()))
-
-    ;
+        .then((_) => pageRepository(appId: appId)!.add(_roomsPages()));
   }
 
+  /// Run the admin, i.e setup all admin pages
   @override
   Future<void> run() async {
     return _setupAdminPages();
   }
-
-
 }
 
 class AdminMenu extends AdminAppMenuInstallerBase {
-
+  /// Construct the admin menu
   @override
   Future<MenuDefModel> menu(AppModel app) async {
     var menuItems = <MenuItemModel>[];
 
-    menuItems.add(
-      MenuItemModel(
+    menuItems.add(MenuItemModel(
         documentID: "Chats",
         text: "Chats",
         description: "Chats",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(app, pageID: "eliud_pkg_chat_chats_page"))
-    );
+        action: GotoPage(app, pageID: "eliud_pkg_chat_chats_page")));
 
-
-    menuItems.add(
-      MenuItemModel(
+    menuItems.add(MenuItemModel(
         documentID: "ChatDashboards",
         text: "ChatDashboards",
         description: "ChatDashboards",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(app, pageID: "eliud_pkg_chat_chatdashboards_page"))
-    );
+        action: GotoPage(app, pageID: "eliud_pkg_chat_chatdashboards_page")));
 
-
-    menuItems.add(
-      MenuItemModel(
+    menuItems.add(MenuItemModel(
         documentID: "ChatMemberInfos",
         text: "ChatMemberInfos",
         description: "ChatMemberInfos",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(app, pageID: "eliud_pkg_chat_chatmemberinfos_page"))
-    );
+        action: GotoPage(app, pageID: "eliud_pkg_chat_chatmemberinfos_page")));
 
-
-    menuItems.add(
-      MenuItemModel(
+    menuItems.add(MenuItemModel(
         documentID: "MemberHasChats",
         text: "MemberHasChats",
         description: "MemberHasChats",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(app, pageID: "eliud_pkg_chat_memberhaschats_page"))
-    );
+        action: GotoPage(app, pageID: "eliud_pkg_chat_memberhaschats_page")));
 
-
-    menuItems.add(
-      MenuItemModel(
+    menuItems.add(MenuItemModel(
         documentID: "Rooms",
         text: "Rooms",
         description: "Rooms",
         icon: IconModel(codePoint: 0xe88a, fontFamily: "MaterialIcons"),
-        action: GotoPage(app, pageID: "eliud_pkg_chat_rooms_page"))
-    );
-
+        action: GotoPage(app, pageID: "eliud_pkg_chat_rooms_page")));
 
     MenuDefModel menu = MenuDefModel(
-      admin: true,
-      documentID: "eliud_pkg_chat_admin_menu",
-      appId: app.documentID,
-      name: "eliud_pkg_chat",
-      menuItems: menuItems
-    );
+        admin: true,
+        documentID: "eliud_pkg_chat_admin_menu",
+        appId: app.documentID,
+        name: "eliud_pkg_chat",
+        menuItems: menuItems);
     await menuDefRepository(appId: app.documentID)!.add(menu);
     return menu;
   }
 }
 
 class AdminAppWiper extends AdminAppWiperBase {
-
+  /// Delete all admin pages
   @override
-  Future<void> deleteAll(String appId) async {
-  }
-
-
+  Future<void> deleteAll(String appID) async {}
 }
-

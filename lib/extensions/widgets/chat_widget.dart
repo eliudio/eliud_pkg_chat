@@ -36,16 +36,16 @@ class ChatWidget extends StatefulWidget {
   final List<String> blockedMembers;
 
   const ChatWidget({
-    Key? key,
+    super.key,
     required this.app,
     required this.memberId,
     required this.canAddMember,
     required this.membersType,
     required this.blockedMembers,
-  }) : super(key: key);
+  });
 
   @override
-  _ChatWidgetState createState() => _ChatWidgetState();
+  State<ChatWidget> createState() => _ChatWidgetState();
 }
 
 class _ChatWidgetState extends State<ChatWidget> {
@@ -72,7 +72,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         var room = state.room;
         List<Widget> widgets = [];
         int len = state.values.length;
-        String? timeString;
+        //String? timeString;
         for (int i = 0; i < len; i++) {
           List<MemberMediumModel> itemMedia = [];
           ChatModel value = state.values[len - i - 1];
@@ -84,32 +84,27 @@ class _ChatWidgetState extends State<ChatWidget> {
             }
           }
           var itsMe = value.authorId == widget.memberId;
-          var timestamp =
+          /*DateTime timestamp =
               (value.timestamp == 'null') || (value.timestamp == null)
                   ? DateTime.now()
                   : value.timestamp!;
+          */
           var timeString =
-              (value.timestamp == 'null') || (value.timestamp == null)
-                  ? 'Now'
-                  : formatHHMM(value.timestamp!);
+              (value.timestamp == null) ? 'Now' : formatHHMM(value.timestamp!);
           bool hasRead;
           String? from;
           if (itsMe) {
-            hasRead = (timestamp != null) &&
-                (state.room.otherMemberLastRead != null) &&
-                (state.room.otherMemberLastRead!.compareTo(timestamp) >= 0);
+            hasRead = (state.room.otherMemberLastRead != null);
           } else {
 //            if (room.otherMembersRoomInfo.length > 1) {
-              for (var other in room.otherMembersRoomInfo) {
-                if (other.memberId == value.authorId) {
-                  from = other.name;
-                }
+            for (var other in room.otherMembersRoomInfo) {
+              if (other.memberId == value.authorId) {
+                from = other.name;
+              }
 //              }
             }
 
-            hasRead = (timestamp != null) &&
-                (state.room.timeStampThisMemberRead != null) &&
-                (state.room.timeStampThisMemberRead!.compareTo(timestamp) >= 0);
+            hasRead = (state.room.timeStampThisMemberRead != null);
           }
 
           var saying = value.saying ?? '.';
@@ -119,21 +114,20 @@ class _ChatWidgetState extends State<ChatWidget> {
             button = dialogButton(widget.app, context,
                 label: 'Block member',
                 tooltip:
-                "Block this member to stop seeing all of it's past and future posts, comments, messages, or anything else",
+                    "Block this member to stop seeing all of it's past and future posts, comments, messages, or anything else",
                 onPressed: () {
-                  //_blockMemberWithPostModel(postModel);
-                  openAckNackDialog(
-                      widget.app, context, '${widget.app.documentID}/_blockmember1',
-                      title: 'Block member?',
-                      message: 'You are sure you want to block this member?',
-                      onSelection: (choice) async {
-                        if (choice == 0) {
-                          BlocProvider.of<AllChatsBloc>(context)
-                              .add(BlockMember(memberId: value.authorId));
-                        }
-                      });
-                });
-
+              //_blockMemberWithPostModel(postModel);
+              openAckNackDialog(
+                  widget.app, context, '${widget.app.documentID}/_blockmember1',
+                  title: 'Block member?',
+                  message: 'You are sure you want to block this member?',
+                  onSelection: (choice) async {
+                if (choice == 0) {
+                  BlocProvider.of<AllChatsBloc>(context)
+                      .add(BlockMember(memberId: value.authorId));
+                }
+              });
+            });
           }
 
           if (itemMedia.isNotEmpty) {
@@ -144,30 +138,34 @@ class _ChatWidgetState extends State<ChatWidget> {
                 height: 150,
                 progressExtra: null, viewAction: (index) {
               var medium = itemMedia[index];
-              if (medium.mediumType == MediumType.Photo) {
+              if (medium.mediumType == MediumType.photo) {
                 var photos = itemMedia;
-                Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, index);
+                Registry.registry()!
+                    .getMediumApi()
+                    .showPhotos(context, widget.app, photos, index);
               } else {
-                Registry.registry()!.getMediumApi().showVideo(context, widget.app, medium);
+                Registry.registry()!
+                    .getMediumApi()
+                    .showVideo(context, widget.app, medium);
               }
             });
           }
 
-            widgets.add(GestureDetector(
-              onTap: () => BlocProvider.of<ChatBloc>(context)
-                  .add((MarkAsRead(room, value))),
-              child: textBubble(widget.app, context,
-                widget: mediaWidget,
-                button: button,
-                text: from == null ?
-                saying :
-                "$from\n  $saying",
-                isSender: itsMe,
-                sent: itsMe,
-                seen: hasRead,
-                time: timeString,
-              ),
-            ));
+          widgets.add(GestureDetector(
+            onTap: () => BlocProvider.of<ChatBloc>(context)
+                .add((MarkAsRead(room, value))),
+            child: textBubble(
+              widget.app,
+              context,
+              widget: mediaWidget,
+              button: button,
+              text: from == null ? saying : "$from\n  $saying",
+              isSender: itsMe,
+              sent: itsMe,
+              seen: hasRead,
+              time: timeString,
+            ),
+          ));
         }
 
         List<Widget> reorderedWidgets = [];
@@ -193,11 +191,11 @@ class _ChatWidgetState extends State<ChatWidget> {
     });
   }
 
-  double MEDIA_ROW_HEIGHT = 100;
+  double mediaRowHeight = 100;
   Widget _mediaRow(BuildContext context) {
     if ((media.isNotEmpty) || (progressValue != null)) {
       return MediaHelper.staggeredMemberMediumModel(widget.app, context, media,
-          height: MEDIA_ROW_HEIGHT,
+          height: mediaRowHeight,
           progressLabel: 'Uploading...',
           progressExtra: progressValue, deleteAction: (index) {
         setState(() {
@@ -205,11 +203,15 @@ class _ChatWidgetState extends State<ChatWidget> {
         });
       }, viewAction: (index) {
         var medium = media[index];
-        if (medium.mediumType == MediumType.Photo) {
+        if (medium.mediumType == MediumType.photo) {
           var photos = media;
-          Registry.registry()!.getMediumApi().showPhotos(context, widget.app, photos, index);
+          Registry.registry()!
+              .getMediumApi()
+              .showPhotos(context, widget.app, photos, index);
         } else {
-          Registry.registry()!.getMediumApi().showVideo(context, widget.app, medium);
+          Registry.registry()!
+              .getMediumApi()
+              .showVideo(context, widget.app, medium);
         }
       });
     } else {
@@ -217,63 +219,63 @@ class _ChatWidgetState extends State<ChatWidget> {
     }
   }
 
-  double SPEAK_ROW_HEIGHT = 50.0;
+  double speakRowHeight = 50.0;
   Widget header(RoomModel room) {
     return ListView(
         shrinkWrap: true,
         physics: const ScrollPhysics(),
         children: [
           SizedBox(
-              height: SPEAK_ROW_HEIGHT,
+              height: speakRowHeight,
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 if (!widget.canAddMember) Container(width: 20),
-                if (widget.canAddMember) iconButton(
-                  widget.app,
-                  context,
-                  icon: const Icon(
-                    Icons.people,
-                    size: 30.0,
-                  ),
-                  onPressed: () {
-                    openFlexibleDialog(widget.app, context,
-                        '${widget.app.documentID}/addtochat',
-                        title: 'Add one of your followers to the chat',
-                        child: MembersWidget(
-                          blockedMembers: widget.blockedMembers,
-                          membersType: widget.membersType,
-                          app: widget.app,
-                          selectedMember: (String newMemberId) async {
-                            List<String> newMembers = room.members!;
-                            if (!newMembers.contains(newMemberId)) {
-                              newMembers.add(newMemberId);
-                              if (room.members!.length == 3) {
-                                // was 2, so we need to create a new room with multiple members
+                if (widget.canAddMember)
+                  iconButton(
+                    widget.app,
+                    context,
+                    icon: const Icon(
+                      Icons.people,
+                      size: 30.0,
+                    ),
+                    onPressed: () {
+                      openFlexibleDialog(widget.app, context,
+                          '${widget.app.documentID}/addtochat',
+                          title: 'Add one of your followers to the chat',
+                          child: MembersWidget(
+                            blockedMembers: widget.blockedMembers,
+                            membersType: widget.membersType,
+                            app: widget.app,
+                            selectedMember: (String newMemberId) async {
+                              List<String> newMembers = room.members!;
+                              if (!newMembers.contains(newMemberId)) {
+                                newMembers.add(newMemberId);
+                                if (room.members!.length == 3) {
+                                  // was 2, so we need to create a new room with multiple members
 //                                Navigator.of(context).pop();
-                                var newRoom =
-                                    await RoomHelper.getRoomForMembers(
-                                        widget.app.documentID,
-                                        widget.memberId,
-                                        [widget.memberId,
-                                        ...newMembers]);
-                                selectRoom(context, newRoom);
-                              } else {
-                                BlocProvider.of<AllChatsBloc>(context).add(
-                                    UpdateAllChats(
-                                        value: room.copyWith(
-                                            members: newMembers)));
+                                  var newRoom =
+                                      await RoomHelper.getRoomForMembers(
+                                          widget.app.documentID,
+                                          widget.memberId,
+                                          [widget.memberId, ...newMembers]);
+                                  selectRoom(context, newRoom);
+                                } else {
+                                  BlocProvider.of<AllChatsBloc>(context).add(
+                                      UpdateAllChats(
+                                          value: room.copyWith(
+                                              members: newMembers)));
+                                }
                               }
-                            }
-                          },
-                          currentMemberId: widget.memberId,
-                        ),
-                        buttons: [
-                          dialogButton(widget.app, context,
-                              label: 'Close',
-                              onPressed: () => Navigator.of(context).pop()),
-                        ]);
-                  },
-                ),
+                            },
+                            currentMemberId: widget.memberId,
+                          ),
+                          buttons: [
+                            dialogButton(widget.app, context,
+                                label: 'Close',
+                                onPressed: () => Navigator.of(context).pop()),
+                          ]);
+                    },
+                  ),
                 Flexible(
                   child: Container(
                       alignment: Alignment.center,
@@ -291,9 +293,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                       )),
                 ),
                 const SizedBox(width: 8),
-                MediaButtons.mediaButtons(context, widget.app, () => Tuple2(
-                    MemberMediumAccessibleByGroup.SpecificMembers,
-                    room.members,),
+                MediaButtons.mediaButtons(
+                    context,
+                    widget.app,
+                    () => Tuple2(
+                          MemberMediumAccessibleByGroup.specificMembers,
+                          room.members,
+                        ),
                     tooltip: 'Add video or photo',
                     photoFeedbackFunction: (photo) {
                       setState(() {
@@ -344,11 +350,13 @@ class _ChatWidgetState extends State<ChatWidget> {
         appId: room.appId,
         roomId: room.documentID,
         authorId: widget.memberId,
-        accessibleByGroup: ChatAccessibleByGroup.SpecificMembers,
+        accessibleByGroup: ChatAccessibleByGroup.specificMembers,
         accessibleByMembers: room.members,
         chatMedia: mappedMedia,
         saying: value,
-        readAccess: [widget.memberId],  // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
+        readAccess: [
+          widget.memberId
+        ], // default readAccess to the owner. The function will expand this based on accessibleByGroup/Members
       )));
       _commentController.clear();
       media.clear();
@@ -383,11 +391,10 @@ class MyButton extends StatefulWidget {
   final AppModel app;
   final VoidCallback? onClickFunction;
 
-  const MyButton({Key? key, required this.app, this.onClickFunction})
-      : super(key: key);
+  const MyButton({super.key, required this.app, this.onClickFunction});
 
   @override
-  _MyButtonState createState() => _MyButtonState();
+  State<MyButton> createState() => _MyButtonState();
 }
 
 class _MyButtonState extends State<MyButton> {

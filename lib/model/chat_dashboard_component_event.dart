@@ -24,13 +24,11 @@ abstract class ChatDashboardComponentEvent extends Equatable {
 class FetchChatDashboardComponent extends ChatDashboardComponentEvent {
   final String? id;
 
-  FetchChatDashboardComponent({ this.id });
+  FetchChatDashboardComponent({this.id});
 }
 
 class ChatDashboardComponentUpdated extends ChatDashboardComponentEvent {
   final ChatDashboardModel value;
 
-  ChatDashboardComponentUpdated({ required this.value });
+  ChatDashboardComponentUpdated({required this.value});
 }
-
-

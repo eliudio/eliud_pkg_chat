@@ -91,7 +91,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       var enhancedRoomModel =
           EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
       _mapLoadChatWithDetailsToState(enhancedRoomModel);
-      emit(ChatLoaded(room: enhancedRoomModel, mightHaveMore: true ));
+      emit(ChatLoaded(room: enhancedRoomModel, mightHaveMore: true));
     });
 
     on<OpenChatWithMembersEvent>((event, emit) async {
@@ -102,7 +102,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       var enhancedRoomModel =
           EnhancedRoomModel(roomModel, null, otherMemberRoomInfo, null);
       _mapLoadChatWithDetailsToState(enhancedRoomModel);
-      emit(ChatLoaded(room: enhancedRoomModel, mightHaveMore: true ));
+      emit(ChatLoaded(room: enhancedRoomModel, mightHaveMore: true));
     });
 
     on<UpdateEnhancedRoomModel>((event, emit) {
@@ -156,7 +156,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           documentID: RoomHelper.getChatMemberInfoId(thisMemberId, roomId),
           authorId: thisMemberId,
           roomId: roomId,
-          accessibleByGroup: ChatMemberInfoAccessibleByGroup.SpecificMembers,
+          accessibleByGroup: ChatMemberInfoAccessibleByGroup.specificMembers,
           accessibleByMembers: room.roomModel.members,
           readAccess: [
             thisMemberId

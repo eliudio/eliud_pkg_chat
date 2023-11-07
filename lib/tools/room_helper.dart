@@ -14,7 +14,7 @@ class RoomHelper {
   }
 
   static String getRoomKey(String currentMemberId, List<String> members) {
-    var uniqueList = getUniqueList([currentMemberId, ... members]);
+    var uniqueList = getUniqueList([currentMemberId, ...members]);
     return uniqueList.join('+');
   }
 
@@ -26,7 +26,8 @@ class RoomHelper {
   static Future<RoomModel> getRoomForMembers(
       String appId, String currentMemberId, List<String> members) async {
     var roomId = RoomHelper.getRoomKey(currentMemberId, members);
-    return await _storeRoom(appId, roomId, currentMemberId, members, 'Chat between ${members.join(', ')}');
+    return await _storeRoom(appId, roomId, currentMemberId, members,
+        'Chat between ${members.join(', ')}');
   }
 
   static Future<RoomModel> getRoomWithId(String appId, String roomId) async {
@@ -38,9 +39,11 @@ class RoomHelper {
     }
   }
 
-  static Future<RoomModel> _storeRoom(String appId, String roomId, String ownerId, List<String> members, String descr) async {
+  static Future<RoomModel> _storeRoom(String appId, String roomId,
+      String ownerId, List<String> members, String descr) async {
     var uniqueMembers = getUniqueList(members);
-    var roomModel = await roomRepository(appId: appId)!.get(roomId, onError: (_) {});
+    var roomModel =
+        await roomRepository(appId: appId)!.get(roomId, onError: (_) {});
     if (roomModel == null) {
       roomModel = RoomModel(
         documentID: roomId,
@@ -56,17 +59,19 @@ class RoomHelper {
     return roomModel;
   }
 
-  static Future<List<OtherMemberRoomInfo>> getOtherMembersRoomInfo(String thisMemberId,
-      String appId, List<String> memberIds) async {
+  static Future<List<OtherMemberRoomInfo>> getOtherMembersRoomInfo(
+      String thisMemberId, String appId, List<String> memberIds) async {
     List<OtherMemberRoomInfo> otherMembersRoomInfo = [];
     for (var memberId in memberIds) {
       if (memberId != thisMemberId) {
         var member =
-        await memberPublicInfoRepository(appId: appId)!.get(memberId);
+            await memberPublicInfoRepository(appId: appId)!.get(memberId);
         if (member != null) {
           var otherMemberRoomInfo = OtherMemberRoomInfo(
               memberId: member.documentID,
-              name: (member.name != null && member.name!.isNotEmpty) ? member.name! : 'No name',
+              name: (member.name != null && member.name!.isNotEmpty)
+                  ? member.name!
+                  : 'No name',
               avatar: member.photoURL);
           otherMembersRoomInfo.add(otherMemberRoomInfo);
         }

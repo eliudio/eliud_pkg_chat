@@ -70,7 +70,7 @@
       "fieldName": "accessibleByGroup",
       "fieldType": "enum",
       "enumName": "ChatAccessibleByGroup",
-      "enumValues" : [ "Public", "Followers", "Me", "SpecificMembers" ]
+      "enumValues" : [ "public", "followers", "me", "specificMembers" ]
     },
     {
       "fieldName": "accessibleByMembers",
@@ -108,7 +108,7 @@
     }
  ],
   "listFields": {
-    "title": "value.documentID != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)) : Container()",
+    "title": "Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID))",
     "subTitle": "value.saying != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.saying!)) : Container()"
   },
   "depends": ["eliud_core"]

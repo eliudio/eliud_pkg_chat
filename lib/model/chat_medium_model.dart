@@ -19,11 +19,7 @@ import 'package:eliud_core/model/abstract_repository_singleton.dart';
 import 'package:eliud_core/model/model_export.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
-
 import 'package:eliud_pkg_chat/model/chat_medium_entity.dart';
-
-
-
 
 class ChatMediumModel implements ModelBase {
   static const String packageName = 'eliud_pkg_chat';
@@ -33,11 +29,20 @@ class ChatMediumModel implements ModelBase {
   String documentID;
   MemberMediumModel? memberMedium;
 
-  ChatMediumModel({required this.documentID, this.memberMedium, });
+  ChatMediumModel({
+    required this.documentID,
+    this.memberMedium,
+  });
 
   @override
-  ChatMediumModel copyWith({String? documentID, MemberMediumModel? memberMedium, }) {
-    return ChatMediumModel(documentID: documentID ?? this.documentID, memberMedium: memberMedium ?? this.memberMedium, );
+  ChatMediumModel copyWith({
+    String? documentID,
+    MemberMediumModel? memberMedium,
+  }) {
+    return ChatMediumModel(
+      documentID: documentID ?? this.documentID,
+      memberMedium: memberMedium ?? this.memberMedium,
+    );
   }
 
   @override
@@ -45,9 +50,9 @@ class ChatMediumModel implements ModelBase {
 
   @override
   bool operator ==(Object other) =>
-          identical(this, other) ||
-          other is ChatMediumModel &&
-          runtimeType == other.runtimeType && 
+      identical(this, other) ||
+      other is ChatMediumModel &&
+          runtimeType == other.runtimeType &&
           documentID == other.documentID &&
           memberMedium == other.memberMedium;
 
@@ -60,47 +65,52 @@ class ChatMediumModel implements ModelBase {
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     if (memberMedium != null) {
-      referencesCollector.add(ModelReference(MemberMediumModel.packageName, MemberMediumModel.id, memberMedium!));
+      referencesCollector.add(ModelReference(
+          MemberMediumModel.packageName, MemberMediumModel.id, memberMedium!));
     }
-    if (memberMedium != null) referencesCollector.addAll(await memberMedium!.collectReferences(appId: appId));
+    if (memberMedium != null) {
+      referencesCollector
+          .addAll(await memberMedium!.collectReferences(appId: appId));
+    }
     return referencesCollector;
   }
 
   @override
   ChatMediumEntity toEntity({String? appId}) {
     return ChatMediumEntity(
-          memberMediumId: (memberMedium != null) ? memberMedium!.documentID : null, 
+      memberMediumId: (memberMedium != null) ? memberMedium!.documentID : null,
     );
   }
 
-  static Future<ChatMediumModel?> fromEntity(String documentID, ChatMediumEntity? entity) async {
+  static Future<ChatMediumModel?> fromEntity(
+      String documentID, ChatMediumEntity? entity) async {
     if (entity == null) return null;
-    var counter = 0;
     return ChatMediumModel(
-          documentID: documentID, 
+      documentID: documentID,
     );
   }
 
-  static Future<ChatMediumModel?> fromEntityPlus(String documentID, ChatMediumEntity? entity, { String? appId}) async {
+  static Future<ChatMediumModel?> fromEntityPlus(
+      String documentID, ChatMediumEntity? entity,
+      {String? appId}) async {
     if (entity == null) return null;
 
     MemberMediumModel? memberMediumHolder;
     if (entity.memberMediumId != null) {
       try {
-          memberMediumHolder = await memberMediumRepository(appId: appId)!.get(entity.memberMediumId);
-      } on Exception catch(e) {
+        memberMediumHolder = await memberMediumRepository(appId: appId)!
+            .get(entity.memberMediumId);
+      } on Exception catch (e) {
         print('Error whilst trying to initialise memberMedium');
-        print('Error whilst retrieving memberMedium with id ${entity.memberMediumId}');
+        print(
+            'Error whilst retrieving memberMedium with id ${entity.memberMediumId}');
         print('Exception: $e');
       }
     }
 
-    var counter = 0;
     return ChatMediumModel(
-          documentID: documentID, 
-          memberMedium: memberMediumHolder, 
+      documentID: documentID,
+      memberMedium: memberMediumHolder,
     );
   }
-
 }
-

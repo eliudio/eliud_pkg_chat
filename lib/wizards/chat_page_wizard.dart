@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'builders/page/chat_page_builder.dart';
 
 class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
-  static String FEED_PAGE_ID = 'feed';
+  static String feedPageId = 'feed';
 
   ChatPageWizard() : super('chat', 'Chat', 'Generate a default Chat Page');
 
@@ -68,22 +68,20 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
         var memberId = member.documentID;
         tasks.add(() async {
           await ChatPageBuilder(
-                  uniqueId,
-                  FEED_PAGE_ID,
-                  app,
-                  memberId,
-                  homeMenuProvider(),
-                  appBarProvider(),
-                  leftDrawerProvider(),
-                  rightDrawerProvider(),
-                  )
-              .create();
+            uniqueId,
+            feedPageId,
+            app,
+            memberId,
+            homeMenuProvider(),
+            appBarProvider(),
+            leftDrawerProvider(),
+            rightDrawerProvider(),
+          ).create();
         });
         return tasks;
       }
     } else {
-      throw Exception(
-          'Unexpected class for parameters: $parameters');
+      throw Exception('Unexpected class for parameters: $parameters');
     }
     return null;
   }
@@ -111,5 +109,7 @@ class ChatPageWizard extends NewAppWizardInfoWithActionSpecification {
       null;
 
   @override
-  PublicMediumModel? getPublicMediumModel(String uniqueId, NewAppWizardParameters parameters, String pageType) => null;
+  PublicMediumModel? getPublicMediumModel(String uniqueId,
+          NewAppWizardParameters parameters, String mediumType) =>
+      null;
 }

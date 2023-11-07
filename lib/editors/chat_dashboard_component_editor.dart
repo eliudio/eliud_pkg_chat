@@ -46,7 +46,7 @@ class ChatDashboardComponentEditorConstructor
           description: 'Chat',
           conditions: StorageConditionsModel(
               privilegeLevelRequired:
-                  PrivilegeLevelRequiredSimple.NoPrivilegeRequiredSimple),
+                  PrivilegeLevelRequiredSimple.noPrivilegeRequiredSimple),
         ),
         feedback);
   }
@@ -99,7 +99,7 @@ class ChatDashboardBloc
         appId: appId,
         description: 'Chat',
         documentID: newRandomKey(),
-        membersType: MembersType.AllMembers,
+        membersType: MembersType.allMembers,
         conditions: conditions);
   }
 
@@ -114,9 +114,9 @@ class ChatDashboardComponentEditor extends StatefulWidget {
   final AppModel app;
 
   const ChatDashboardComponentEditor({
-    Key? key,
+    super.key,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _ChatDashboardComponentEditorState();
@@ -190,7 +190,7 @@ class _ChatDashboardComponentEditorState
                             });
                           },
                           membersType: chatDashboardState.model.membersType ??
-                              MembersType.AllMembers,
+                              MembersType.allMembers,
                         ),
                       ]),
                   topicContainer(widget.app, context,

@@ -41,9 +41,9 @@ class ChatDashboardFormInitialized extends ChatDashboardFormState {
   final ChatDashboardModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const ChatDashboardFormInitialized({ this.value });
+  const ChatDashboardFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class ChatDashboardFormError extends ChatDashboardFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const ChatDashboardFormError({this.message, ChatDashboardModel? value }) : super(value: value);
+  const ChatDashboardFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class ChatDashboardFormError extends ChatDashboardFormInitialized {
     }''';
   }
 }
-class DocumentIDChatDashboardFormError extends ChatDashboardFormError { 
-  const DocumentIDChatDashboardFormError({ String? message, ChatDashboardModel? value }): super(message: message, value: value);
+
+class DocumentIDChatDashboardFormError extends ChatDashboardFormError {
+  const DocumentIDChatDashboardFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDChatDashboardFormError extends ChatDashboardFormError {
   }
 }
 
-
-class AppIdChatDashboardFormError extends ChatDashboardFormError { 
-  const AppIdChatDashboardFormError({ String? message, ChatDashboardModel? value }): super(message: message, value: value);
+class AppIdChatDashboardFormError extends ChatDashboardFormError {
+  const AppIdChatDashboardFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AppIdChatDashboardFormError extends ChatDashboardFormError {
   }
 }
 
-
-class DescriptionChatDashboardFormError extends ChatDashboardFormError { 
-  const DescriptionChatDashboardFormError({ String? message, ChatDashboardModel? value }): super(message: message, value: value);
+class DescriptionChatDashboardFormError extends ChatDashboardFormError {
+  const DescriptionChatDashboardFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class DescriptionChatDashboardFormError extends ChatDashboardFormError {
   }
 }
 
-
-class ConditionsChatDashboardFormError extends ChatDashboardFormError { 
-  const ConditionsChatDashboardFormError({ String? message, ChatDashboardModel? value }): super(message: message, value: value);
+class ConditionsChatDashboardFormError extends ChatDashboardFormError {
+  const ConditionsChatDashboardFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class ConditionsChatDashboardFormError extends ChatDashboardFormError {
   }
 }
 
-
-class MembersTypeChatDashboardFormError extends ChatDashboardFormError { 
-  const MembersTypeChatDashboardFormError({ String? message, ChatDashboardModel? value }): super(message: message, value: value);
+class MembersTypeChatDashboardFormError extends ChatDashboardFormError {
+  const MembersTypeChatDashboardFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class MembersTypeChatDashboardFormError extends ChatDashboardFormError {
   }
 }
 
-
-class ChatDashboardFormLoaded extends ChatDashboardFormInitialized { 
-  const ChatDashboardFormLoaded({ ChatDashboardModel? value }): super(value: value);
+class ChatDashboardFormLoaded extends ChatDashboardFormInitialized {
+  const ChatDashboardFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -157,12 +153,11 @@ class ChatDashboardFormLoaded extends ChatDashboardFormInitialized {
   }
 }
 
-
-class SubmittableChatDashboardForm extends ChatDashboardFormInitialized { 
-  const SubmittableChatDashboardForm({ ChatDashboardModel? value }): super(value: value);
+class SubmittableChatDashboardForm extends ChatDashboardFormInitialized {
+  const SubmittableChatDashboardForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -171,5 +166,3 @@ class SubmittableChatDashboardForm extends ChatDashboardFormInitialized {
     }''';
   }
 }
-
-

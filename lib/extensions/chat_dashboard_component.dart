@@ -31,10 +31,10 @@ class ChatDashboardComponentConstructorDefault implements ComponentConstructor {
 }
 
 class ChatDashboard extends AbstractChatDashboardComponent {
-  static double HEADER_HEIGHT = 155;
+  static double headerHeight = 155;
 
-  const ChatDashboard({Key? key, required AppModel app, required String id})
-      : super(key: key, app: app, chatDashboardId: id);
+  ChatDashboard({super.key, required super.app, required String id})
+      : super(chatDashboardId: id);
 
   @override
   Widget yourWidget(BuildContext context, ChatDashboardModel? value) {
@@ -51,10 +51,10 @@ class ChatDashboard extends AbstractChatDashboardComponent {
             kToolbarHeight -
             kBottomNavigationBarHeight;
         var chatBloc = ChatBloc(
-          appId: appId,
-          thisMemberId: memberId,
-          blockedMembers: accessState is LoggedIn ? accessState.blockedMembers : []
-        );
+            appId: appId,
+            thisMemberId: memberId,
+            blockedMembers:
+                accessState is LoggedIn ? accessState.blockedMembers : []);
         var allChatsBloc = AllChatsBloc(
             loggedIn: accessState is LoggedIn ? accessState : null,
             chatBloc: chatBloc,
@@ -74,11 +74,12 @@ class ChatDashboard extends AbstractChatDashboardComponent {
                   BlocProvider<ChatBloc>(create: (context) => chatBloc)
                 ],
                 child: AllChatsWidget(
-                  app: app,
-                  blockedMembers: accessState is LoggedIn ? accessState.blockedMembers : [],
-                  memberId: memberId,
-                  membersType: value!.membersType
-                )));
+                    app: app,
+                    blockedMembers: accessState is LoggedIn
+                        ? accessState.blockedMembers
+                        : [],
+                    memberId: memberId,
+                    membersType: value!.membersType)));
       } else {
         return const Text('Member not available');
       }

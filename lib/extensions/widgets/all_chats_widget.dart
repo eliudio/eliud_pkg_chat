@@ -28,27 +28,28 @@ class AllChatsWidget extends StatefulWidget {
   final List<String> blockedMembers;
 
   const AllChatsWidget({
-    Key? key,
+    super.key,
     required this.blockedMembers,
     required this.app,
     required this.memberId,
     required this.membersType,
-  }) : super(key: key);
+  });
 
   @override
   AllChatsWidgetState createState() => AllChatsWidgetState();
 }
 
 class AllChatsWidgetState extends State<AllChatsWidget> {
-  double HEADER_HEIGHT = 60;
+  double headerHeight = 60;
   Widget header() {
     return SizedBox(
-        height: HEADER_HEIGHT,
+        height: headerHeight,
         child: Column(children: [
           Row(children: [
             const Spacer(),
             button(widget.app, context, label: 'Member', onPressed: () {
-              openFlexibleDialog(widget.app, context, '${widget.app.documentID}/chat',
+              openFlexibleDialog(
+                  widget.app, context, '${widget.app.documentID}/chat',
                   title: 'Chat with one of these members',
                   child: MembersWidget(
                     blockedMembers: widget.blockedMembers,
@@ -56,7 +57,9 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
                     app: widget.app,
                     selectedMember: (String memberId) async {
                       var room = await RoomHelper.getRoomForMembers(
-                          widget.app.documentID, widget.memberId, [widget.memberId, memberId]);
+                          widget.app.documentID,
+                          widget.memberId,
+                          [widget.memberId, memberId]);
                       selectRoom(context, room);
                     },
                     currentMemberId: widget.memberId,
@@ -81,29 +84,39 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         final currentChat = state.currentRoom;
         return OrientationBuilder(builder: (context, orientation) {
           //var weight = _splitViewController!.weights[0]!;
-          return splitView(widget.app, context,
-                ListView(children: [
-                  header(),
-                  ListView.separated(
-                      separatorBuilder: (context, index) => divider(widget.app, context),
-                      shrinkWrap: true,
-                      physics: const ScrollPhysics(),
-                      itemCount: chats.length,
-                      itemBuilder: (context, index) {
-                        final value = chats[index];
-                        return roomListEntry(value, currentChat == null ? false : value.roomModel.documentID == currentChat.documentID);
-                      })
-                ]),(currentChat != null)?
-                  ChatWidget(app: widget.app,
-                    blockedMembers: widget.blockedMembers,
-                    memberId: widget.memberId,
-                    canAddMember: widget.memberId == currentChat.ownerId,
-                    membersType: widget.membersType,
-                  ):
-                  Container(),
-            0.3, 0.2, 0.8
-          );
-
+          return splitView(
+              widget.app,
+              context,
+              ListView(children: [
+                header(),
+                ListView.separated(
+                    separatorBuilder: (context, index) =>
+                        divider(widget.app, context),
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemCount: chats.length,
+                    itemBuilder: (context, index) {
+                      final value = chats[index];
+                      return roomListEntry(
+                          value,
+                          currentChat == null
+                              ? false
+                              : value.roomModel.documentID ==
+                                  currentChat.documentID);
+                    })
+              ]),
+              (currentChat != null)
+                  ? ChatWidget(
+                      app: widget.app,
+                      blockedMembers: widget.blockedMembers,
+                      memberId: widget.memberId,
+                      canAddMember: widget.memberId == currentChat.ownerId,
+                      membersType: widget.membersType,
+                    )
+                  : Container(),
+              0.3,
+              0.2,
+              0.8);
         });
       } else {
         return progressIndicator(widget.app, context);
@@ -120,12 +133,14 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
     if (isCurrent) names = "*$names";
 
     var nameWidget = room.hasUnread
-        ? highLight1(widget.app,
-      context,
+        ? highLight1(
+            widget.app,
+            context,
             names,
           )
-        : text(widget.app,
-      context,
+        : text(
+            widget.app,
+            context,
             names,
           );
 
@@ -170,7 +185,7 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
       staggeredPhotos = const Icon(Icons.error);
     }
 
-    var theTime = timestampRoom != null ? formatHHMM(timestampRoom) : 'now';
+    var theTime = formatHHMM(timestampRoom);
     return ListTile(
         onTap: () async {
           selectRoom(context, room.roomModel);
@@ -184,7 +199,6 @@ class AllChatsWidgetState extends State<AllChatsWidget> {
         title: nameWidget);
   }
 }
-
 
 void selectRoom(BuildContext context, RoomModel room) {
   BlocProvider.of<AllChatsBloc>(context).add(SelectChat(selected: room));

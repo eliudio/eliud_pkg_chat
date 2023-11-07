@@ -24,13 +24,11 @@ abstract class RoomComponentEvent extends Equatable {
 class FetchRoomComponent extends RoomComponentEvent {
   final String? id;
 
-  FetchRoomComponent({ this.id });
+  FetchRoomComponent({this.id});
 }
 
 class RoomComponentUpdated extends RoomComponentEvent {
   final RoomModel value;
 
-  RoomComponentUpdated({ required this.value });
+  RoomComponentUpdated({required this.value});
 }
-
-

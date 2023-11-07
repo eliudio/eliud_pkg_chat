@@ -33,11 +33,12 @@ class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
     });
   }
 
-  RoomComponentBloc({ this.roomRepository }): super(RoomComponentUninitialized()) {
-    on <FetchRoomComponent> ((event, emit) {
+  RoomComponentBloc({this.roomRepository})
+      : super(RoomComponentUninitialized()) {
+    on<FetchRoomComponent>((event, emit) {
       _mapLoadRoomComponentUpdateToState(event.id!);
     });
-    on <RoomComponentUpdated> ((event, emit) {
+    on<RoomComponentUpdated>((event, emit) {
       emit(RoomComponentLoaded(value: event.value));
     });
   }
@@ -47,6 +48,4 @@ class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
     _roomSubscription?.cancel();
     return super.close();
   }
-
 }
-

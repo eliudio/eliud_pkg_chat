@@ -15,11 +15,9 @@
 
 import 'package:eliud_pkg_chat/model/room_repository.dart';
 
-
 import 'package:eliud_pkg_chat/model/repository_export.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
-
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,59 +33,81 @@ class RoomFirestore implements RoomRepository {
 
   @override
   Future<RoomEntity> addEntity(String documentID, RoomEntity value) {
-    return RoomCollection.doc(documentID).set(value.toDocument()).then((_) => value).then((v) async {
+    return roomCollection
+        .doc(documentID)
+        .set(value.toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await getEntity(documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
   @override
   Future<RoomEntity> updateEntity(String documentID, RoomEntity value) {
-    return RoomCollection.doc(documentID).update(value.toDocument()).then((_) => value).then((v) async {
+    return roomCollection
+        .doc(documentID)
+        .update(value.toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await getEntity(documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
   @override
   Future<RoomModel> add(RoomModel value) {
-    return RoomCollection.doc(value.documentID).set(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+    return roomCollection
+        .doc(value.documentID)
+        .set(value
+            .toEntity(appId: appId)
+            .copyWith(
+              timestamp: FieldValue.serverTimestamp(),
+            )
+            .toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await get(value.documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
   @override
   Future<void> delete(RoomModel value) {
-    return RoomCollection.doc(value.documentID).delete();
+    return roomCollection.doc(value.documentID).delete();
   }
 
   @override
   Future<RoomModel> update(RoomModel value) {
-    return RoomCollection.doc(value.documentID).update(value.toEntity(appId: appId).copyWith(timestamp : FieldValue.serverTimestamp(), ).toDocument()).then((_) => value).then((v) async {
+    return roomCollection
+        .doc(value.documentID)
+        .update(value
+            .toEntity(appId: appId)
+            .copyWith(
+              timestamp: FieldValue.serverTimestamp(),
+            )
+            .toDocument())
+        .then((_) => value)
+        .then((v) async {
       var newValue = await get(value.documentID);
       if (newValue == null) {
         return value;
       } else {
         return newValue;
       }
-    })
-;
+    });
   }
 
   Future<RoomModel?> _populateDoc(DocumentSnapshot value) async {
@@ -95,15 +115,18 @@ class RoomFirestore implements RoomRepository {
   }
 
   Future<RoomModel?> _populateDocPlus(DocumentSnapshot value) async {
-    return RoomModel.fromEntityPlus(value.id, RoomEntity.fromMap(value.data()), appId: appId);  }
+    return RoomModel.fromEntityPlus(value.id, RoomEntity.fromMap(value.data()),
+        appId: appId);
+  }
 
   @override
-  Future<RoomEntity?> getEntity(String? id, {Function(Exception)? onError}) async {
+  Future<RoomEntity?> getEntity(String? id,
+      {Function(Exception)? onError}) async {
     try {
-      var collection = RoomCollection.doc(id);
+      var collection = roomCollection.doc(id);
       var doc = await collection.get();
       return RoomEntity.fromMap(doc.data());
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       if (onError != null) {
         onError(e);
       } else {
@@ -111,16 +134,16 @@ class RoomFirestore implements RoomRepository {
         print("Exceptoin: $e");
       }
     }
-return null;
+    return null;
   }
 
   @override
   Future<RoomModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
-      var collection = RoomCollection.doc(id);
+      var collection = roomCollection.doc(id);
       var doc = await collection.get();
       return await _populateDocPlus(doc);
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       if (onError != null) {
         onError(e);
       } else {
@@ -128,44 +151,75 @@ return null;
         print("Exceptoin: $e");
       }
     }
-return null;
+    return null;
   }
 
   @override
-  StreamSubscription<List<RoomModel?>> listen(RoomModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
+  StreamSubscription<List<RoomModel?>> listen(RoomModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
     Stream<List<RoomModel?>> stream;
-    stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
-//  see comment listen(...) above
-//  stream = getQuery(RoomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
-        .asyncMap((data) async {
-      return await Future.wait(data.docs.map((doc) =>  _populateDoc(doc)).toList());
-    });
-
-    return stream.listen((listOfRoomModels) {
-      trigger(listOfRoomModels);
-    });
-  }
-
-  @override
-  StreamSubscription<List<RoomModel?>> listenWithDetails(RoomModelTrigger trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
-    Stream<List<RoomModel?>> stream;
-    stream = getQuery(getCollection(), orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
-//  see comment listen(...) above
-//  stream = getQuery(RoomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
-        .asyncMap((data) async {
-      return await Future.wait(data.docs.map((doc) =>  _populateDocPlus(doc)).toList());
-    });
-
-    return stream.listen((listOfRoomModels) {
-      trigger(listOfRoomModels);
-    });
-  }
-
-  @override
-  StreamSubscription<RoomModel?> listenTo(String documentId, RoomChanged changed, {RoomErrorHandler? errorHandler}) {
-    var stream = RoomCollection.doc(documentId)
+    stream = getQuery(getCollection(),
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
         .snapshots()
-        .asyncMap((data) {
+//  see comment listen(...) above
+//  stream = getQuery(roomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
+        .asyncMap((data) async {
+      return await Future.wait(
+          data.docs.map((doc) => _populateDoc(doc)).toList());
+    });
+
+    return stream.listen((listOfRoomModels) {
+      trigger(listOfRoomModels);
+    });
+  }
+
+  @override
+  StreamSubscription<List<RoomModel?>> listenWithDetails(
+      RoomModelTrigger trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    Stream<List<RoomModel?>> stream;
+    stream = getQuery(getCollection(),
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .snapshots()
+//  see comment listen(...) above
+//  stream = getQuery(roomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots()
+        .asyncMap((data) async {
+      return await Future.wait(
+          data.docs.map((doc) => _populateDocPlus(doc)).toList());
+    });
+
+    return stream.listen((listOfRoomModels) {
+      trigger(listOfRoomModels);
+    });
+  }
+
+  @override
+  StreamSubscription<RoomModel?> listenTo(
+      String documentId, RoomChanged changed,
+      {RoomErrorHandler? errorHandler}) {
+    var stream = roomCollection.doc(documentId).snapshots().asyncMap((data) {
       return _populateDocPlus(data);
     });
     var theStream = stream.listen((value) {
@@ -180,9 +234,25 @@ return null;
   }
 
   @override
-  Stream<List<RoomModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+  Stream<List<RoomModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
     DocumentSnapshot? lastDoc;
-    Stream<List<RoomModel?>> values = getQuery(RoomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<RoomModel?>> values = getQuery(roomCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .snapshots()
+        .asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDoc(doc);
@@ -193,9 +263,25 @@ return null;
   }
 
   @override
-  Stream<List<RoomModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
+  Stream<List<RoomModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
     DocumentSnapshot? lastDoc;
-    Stream<List<RoomModel?>> values = getQuery(RoomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.snapshots().asyncMap((snapshot) {
+    Stream<List<RoomModel?>> values = getQuery(roomCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .snapshots()
+        .asyncMap((snapshot) {
       return Future.wait(snapshot.docs.map((doc) {
         lastDoc = doc;
         return _populateDocPlus(doc);
@@ -206,9 +292,25 @@ return null;
   }
 
   @override
-  Future<List<RoomModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+  Future<List<RoomModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) async {
     DocumentSnapshot? lastDoc;
-    List<RoomModel?> values = await getQuery(RoomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<RoomModel?> values = await getQuery(roomCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .get()
+        .then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -220,9 +322,25 @@ return null;
   }
 
   @override
-  Future<List<RoomModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
+  Future<List<RoomModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) async {
     DocumentSnapshot? lastDoc;
-    List<RoomModel?> values = await getQuery(RoomCollection, orderBy: orderBy,  descending: descending,  startAfter: startAfter as DocumentSnapshot?,  limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery, appId: appId)!.get().then((value) {
+    List<RoomModel?> values = await getQuery(roomCollection,
+            orderBy: orderBy,
+            descending: descending,
+            startAfter: startAfter as DocumentSnapshot?,
+            limit: limit,
+            privilegeLevel: privilegeLevel,
+            eliudQuery: eliudQuery,
+            appId: appId)!
+        .get()
+        .then((value) {
       var list = value.docs;
       return Future.wait(list.map((doc) {
         lastDoc = doc;
@@ -238,8 +356,8 @@ return null;
 
   @override
   Future<void> deleteAll() {
-    return RoomCollection.get().then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.docs){
+    return roomCollection.get().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs) {
         ds.reference.delete();
       }
     });
@@ -247,25 +365,27 @@ return null;
 
   @override
   dynamic getSubCollection(String documentId, String name) {
-    return RoomCollection.doc(documentId).collection(name);
+    return roomCollection.doc(documentId).collection(name);
   }
 
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
-  } 
-
-  @override
-  Future<RoomModel?> changeValue(String documentId, String fieldName, num changeByThisValue) {
-    var change = FieldValue.increment(changeByThisValue);
-    return RoomCollection.doc(documentId).update({fieldName: change}).then((v) => get(documentId));
   }
 
+  @override
+  Future<RoomModel?> changeValue(
+      String documentId, String fieldName, num changeByThisValue) {
+    var change = FieldValue.increment(changeByThisValue);
+    return roomCollection
+        .doc(documentId)
+        .update({fieldName: change}).then((v) => get(documentId));
+  }
 
   final String appId;
-  RoomFirestore(this.getCollection, this.appId): RoomCollection = getCollection();
+  RoomFirestore(this.getCollection, this.appId)
+      : roomCollection = getCollection();
 
-  final CollectionReference RoomCollection;
+  final CollectionReference roomCollection;
   final GetCollection getCollection;
 }
-

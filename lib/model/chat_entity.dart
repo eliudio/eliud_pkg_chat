@@ -30,16 +30,59 @@ class ChatEntity implements EntityBase {
   final List<String>? readAccess;
   final List<ChatMediumEntity>? chatMedia;
 
-  ChatEntity({required this.authorId, required this.appId, this.roomId, this.timestamp, this.saying, this.accessibleByGroup, this.accessibleByMembers, this.readAccess, this.chatMedia, });
+  ChatEntity({
+    required this.authorId,
+    required this.appId,
+    this.roomId,
+    this.timestamp,
+    this.saying,
+    this.accessibleByGroup,
+    this.accessibleByMembers,
+    this.readAccess,
+    this.chatMedia,
+  });
 
-  ChatEntity copyWith({String? documentID, String? authorId, String? appId, String? roomId, Object? timestamp, String? saying, int? accessibleByGroup, List<String>? accessibleByMembers, List<String>? readAccess, List<ChatMediumEntity>? chatMedia, }) {
-    return ChatEntity(authorId : authorId ?? this.authorId, appId : appId ?? this.appId, roomId : roomId ?? this.roomId, timestamp : timestamp ?? this.timestamp, saying : saying ?? this.saying, accessibleByGroup : accessibleByGroup ?? this.accessibleByGroup, accessibleByMembers : accessibleByMembers ?? this.accessibleByMembers, readAccess : readAccess ?? this.readAccess, chatMedia : chatMedia ?? this.chatMedia, );
+  ChatEntity copyWith({
+    String? documentID,
+    String? authorId,
+    String? appId,
+    String? roomId,
+    Object? timestamp,
+    String? saying,
+    int? accessibleByGroup,
+    List<String>? accessibleByMembers,
+    List<String>? readAccess,
+    List<ChatMediumEntity>? chatMedia,
+  }) {
+    return ChatEntity(
+      authorId: authorId ?? this.authorId,
+      appId: appId ?? this.appId,
+      roomId: roomId ?? this.roomId,
+      timestamp: timestamp ?? this.timestamp,
+      saying: saying ?? this.saying,
+      accessibleByGroup: accessibleByGroup ?? this.accessibleByGroup,
+      accessibleByMembers: accessibleByMembers ?? this.accessibleByMembers,
+      readAccess: readAccess ?? this.readAccess,
+      chatMedia: chatMedia ?? this.chatMedia,
+    );
   }
-  List<Object?> get props => [authorId, appId, roomId, timestamp, saying, accessibleByGroup, accessibleByMembers, readAccess, chatMedia, ];
+
+  List<Object?> get props => [
+        authorId,
+        appId,
+        roomId,
+        timestamp,
+        saying,
+        accessibleByGroup,
+        accessibleByMembers,
+        readAccess,
+        chatMedia,
+      ];
 
   @override
   String toString() {
-    String accessibleByMembersCsv = (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
+    String accessibleByMembersCsv =
+        (accessibleByMembers == null) ? '' : accessibleByMembers!.join(', ');
     String readAccessCsv = (readAccess == null) ? '' : readAccess!.join(', ');
     String chatMediaCsv = (chatMedia == null) ? '' : chatMedia!.join(', ');
 
@@ -50,34 +93,38 @@ class ChatEntity implements EntityBase {
     if (o == null) return null;
     var map = o as Map<String, dynamic>;
 
-    var chatMediaFromMap;
-    chatMediaFromMap = map['chatMedia'];
+    var chatMediaFromMap = map['chatMedia'];
     List<ChatMediumEntity> chatMediaList;
     if (chatMediaFromMap != null) {
       chatMediaList = (map['chatMedia'] as List<dynamic>)
-        .map((dynamic item) =>
-        ChatMediumEntity.fromMap(item as Map, newDocumentIds: newDocumentIds)!)
-        .toList();
+          .map((dynamic item) => ChatMediumEntity.fromMap(item as Map,
+              newDocumentIds: newDocumentIds)!)
+          .toList();
     } else {
       chatMediaList = [];
     }
 
     return ChatEntity(
-      authorId: map['authorId'], 
-      appId: map['appId'], 
-      roomId: map['roomId'], 
-      timestamp: map['timestamp'] == null ? null : (map['timestamp']  as Timestamp).millisecondsSinceEpoch,
-      saying: map['saying'], 
-      accessibleByGroup: map['accessibleByGroup'], 
-      accessibleByMembers: map['accessibleByMembers'] == null ? null : List.from(map['accessibleByMembers']), 
-      readAccess: map['readAccess'] == null ? null : List.from(map['readAccess']), 
-      chatMedia: chatMediaList, 
+      authorId: map['authorId'],
+      appId: map['appId'],
+      roomId: map['roomId'],
+      timestamp: map['timestamp'] == null
+          ? null
+          : (map['timestamp'] as Timestamp).millisecondsSinceEpoch,
+      saying: map['saying'],
+      accessibleByGroup: map['accessibleByGroup'],
+      accessibleByMembers: map['accessibleByMembers'] == null
+          ? null
+          : List.from(map['accessibleByMembers']),
+      readAccess:
+          map['readAccess'] == null ? null : List.from(map['readAccess']),
+      chatMedia: chatMediaList,
     );
   }
 
   @override
   Map<String, Object?> toDocument() {
-    final List<Map<String?, dynamic>>? chatMediaListMap = chatMedia != null 
+    final List<Map<String?, dynamic>>? chatMediaListMap = chatMedia != null
         ? chatMedia!.map((item) => item.toDocument()).toList()
         : null;
 
@@ -132,7 +179,8 @@ class ChatEntity implements EntityBase {
     return newEntity;
   }
 
-  static ChatEntity? fromJsonString(String json, {Map<String, String>? newDocumentIds}) {
+  static ChatEntity? fromJsonString(String json,
+      {Map<String, String>? newDocumentIds}) {
     Map<String, dynamic>? generationSpecificationMap = jsonDecode(json);
     return fromMap(generationSpecificationMap, newDocumentIds: newDocumentIds);
   }
@@ -142,9 +190,8 @@ class ChatEntity implements EntityBase {
   }
 
   @override
-  Future<Map<String, Object?>> enrichedDocument(Map<String, Object?> theDocument) async {
+  Future<Map<String, Object?>> enrichedDocument(
+      Map<String, Object?> theDocument) async {
     return theDocument;
   }
-
 }
-

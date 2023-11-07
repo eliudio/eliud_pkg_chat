@@ -17,7 +17,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
 
-
 @immutable
 abstract class MemberHasChatFormEvent extends Equatable {
   const MemberHasChatFormEvent();
@@ -26,35 +25,33 @@ abstract class MemberHasChatFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewMemberHasChatFormEvent extends MemberHasChatFormEvent {
-}
-
+class InitialiseNewMemberHasChatFormEvent extends MemberHasChatFormEvent {}
 
 class InitialiseMemberHasChatFormEvent extends MemberHasChatFormEvent {
   final MemberHasChatModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const InitialiseMemberHasChatFormEvent({this.value});
+  InitialiseMemberHasChatFormEvent({this.value});
 }
 
 class InitialiseMemberHasChatFormNoLoadEvent extends MemberHasChatFormEvent {
   final MemberHasChatModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const InitialiseMemberHasChatFormNoLoadEvent({this.value});
+  InitialiseMemberHasChatFormNoLoadEvent({this.value});
 }
 
 class ChangedMemberHasChatDocumentID extends MemberHasChatFormEvent {
   final String? value;
 
-  const ChangedMemberHasChatDocumentID({this.value});
+  ChangedMemberHasChatDocumentID({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberHasChatDocumentID{ value: $value }';
@@ -63,10 +60,10 @@ class ChangedMemberHasChatDocumentID extends MemberHasChatFormEvent {
 class ChangedMemberHasChatMemberId extends MemberHasChatFormEvent {
   final String? value;
 
-  const ChangedMemberHasChatMemberId({this.value});
+  ChangedMemberHasChatMemberId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberHasChatMemberId{ value: $value }';
@@ -75,10 +72,10 @@ class ChangedMemberHasChatMemberId extends MemberHasChatFormEvent {
 class ChangedMemberHasChatAppId extends MemberHasChatFormEvent {
   final String? value;
 
-  const ChangedMemberHasChatAppId({this.value});
+  ChangedMemberHasChatAppId({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberHasChatAppId{ value: $value }';
@@ -87,12 +84,11 @@ class ChangedMemberHasChatAppId extends MemberHasChatFormEvent {
 class ChangedMemberHasChatHasUnread extends MemberHasChatFormEvent {
   final bool? value;
 
-  const ChangedMemberHasChatHasUnread({this.value});
+  ChangedMemberHasChatHasUnread({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'ChangedMemberHasChatHasUnread{ value: $value }';
 }
-

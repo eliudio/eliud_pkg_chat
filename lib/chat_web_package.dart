@@ -5,15 +5,17 @@ import 'chat_package.dart';
 ChatPackage getChatPackage() => ChatWebPackage();
 
 class ChatWebPackage extends ChatPackage {
+  @override
+  List<Object?> get props => [stateConditionMemberHasUnreadChat];
 
   @override
-  List<Object?> get props => [state_CONDITION_MEMBER_HAS_UNREAD_CHAT];
-
-  @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is ChatWebPackage &&
-              mapEquals(state_CONDITION_MEMBER_HAS_UNREAD_CHAT, other.state_CONDITION_MEMBER_HAS_UNREAD_CHAT) &&
-              runtimeType == other.runtimeType;
-}
+      other is ChatWebPackage &&
+          mapEquals(stateConditionMemberHasUnreadChat,
+              other.stateConditionMemberHasUnreadChat) &&
+          runtimeType == other.runtimeType;
 
+  @override
+  int get hashCode => stateConditionMemberHasUnreadChat.hashCode;
+}

@@ -18,31 +18,45 @@ class EnhancedRoomModel {
   final bool hasUnread;
   final DateTime? otherMemberLastRead;
 
-  EnhancedRoomModel(this.roomModel, this.timeStampThisMemberRead, this.otherMembersRoomInfo, this.otherMemberLastRead) :
-    hasUnread = (timeStampThisMemberRead != null) &&
-        (roomModel.timestamp!.compareTo(timeStampThisMemberRead) > 0);
+  EnhancedRoomModel(this.roomModel, this.timeStampThisMemberRead,
+      this.otherMembersRoomInfo, this.otherMemberLastRead)
+      : hasUnread = (timeStampThisMemberRead != null) &&
+            (roomModel.timestamp!.compareTo(timeStampThisMemberRead) > 0);
+
+  List<Object?> get props =>
+      [roomModel, timeStampThisMemberRead, otherMembersRoomInfo];
 
   @override
-  List<Object?> get props => [ roomModel, timeStampThisMemberRead, otherMembersRoomInfo ];
-
-  @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is EnhancedRoomModel &&
-              roomModel == other.roomModel &&
-              hasUnread == other.hasUnread &&
-              otherMemberLastRead == other.otherMemberLastRead &&
-              const ListEquality().equals(otherMembersRoomInfo, other.otherMembersRoomInfo) &&
-              timeStampThisMemberRead == other.timeStampThisMemberRead;
+      other is EnhancedRoomModel &&
+          roomModel == other.roomModel &&
+          hasUnread == other.hasUnread &&
+          otherMemberLastRead == other.otherMemberLastRead &&
+          const ListEquality()
+              .equals(otherMembersRoomInfo, other.otherMembersRoomInfo) &&
+          timeStampThisMemberRead == other.timeStampThisMemberRead;
 
-  EnhancedRoomModel copyWith({RoomModel? roomModel, DateTime? timeStampThisMemberRead, List<OtherMemberRoomInfo>? otherMembersRoomInfo,
-    bool? hasUnread, DateTime? otherMemberLastRead}) {
-    return EnhancedRoomModel(roomModel ?? this.roomModel,
-        timeStampThisMemberRead ?? this.timeStampThisMemberRead,
-        otherMembersRoomInfo ?? this.otherMembersRoomInfo,
-        otherMemberLastRead ?? this.otherMemberLastRead,
+  EnhancedRoomModel copyWith(
+      {RoomModel? roomModel,
+      DateTime? timeStampThisMemberRead,
+      List<OtherMemberRoomInfo>? otherMembersRoomInfo,
+      bool? hasUnread,
+      DateTime? otherMemberLastRead}) {
+    return EnhancedRoomModel(
+      roomModel ?? this.roomModel,
+      timeStampThisMemberRead ?? this.timeStampThisMemberRead,
+      otherMembersRoomInfo ?? this.otherMembersRoomInfo,
+      otherMemberLastRead ?? this.otherMemberLastRead,
     );
   }
+
+  @override
+  int get hashCode =>
+      roomModel.hashCode ^
+      timeStampThisMemberRead.hashCode ^
+      otherMembersRoomInfo.hashCode ^
+      otherMemberLastRead.hashCode;
 }
 
 class AllChatsLoaded extends AllChatsState {
@@ -50,25 +64,38 @@ class AllChatsLoaded extends AllChatsState {
   final RoomModel? currentRoom;
   final bool? mightHaveMore;
 
-  const AllChatsLoaded({this.mightHaveMore, required this.currentRoom, required this.enhancedRoomModels});
+  const AllChatsLoaded(
+      {this.mightHaveMore,
+      required this.currentRoom,
+      required this.enhancedRoomModels});
 
   @override
-  List<Object?> get props => [ currentRoom, enhancedRoomModels, mightHaveMore ];
+  List<Object?> get props => [currentRoom, enhancedRoomModels, mightHaveMore];
 
   @override
-  bool operator == (Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
-          other is AllChatsLoaded &&
-              currentRoom == other.currentRoom &&
-              mightHaveMore == other.mightHaveMore &&
-              const ListEquality().equals(enhancedRoomModels, other.enhancedRoomModels);
+      other is AllChatsLoaded &&
+          currentRoom == other.currentRoom &&
+          mightHaveMore == other.mightHaveMore &&
+          const ListEquality()
+              .equals(enhancedRoomModels, other.enhancedRoomModels);
 
   @override
   String toString() => 'AllChatsLoaded { values: $enhancedRoomModels }';
 
   AllChatsLoaded copyWith({required RoomModel? newCurrentRoom}) {
-    return AllChatsLoaded(currentRoom: newCurrentRoom, enhancedRoomModels: enhancedRoomModels, mightHaveMore: mightHaveMore);
+    return AllChatsLoaded(
+        currentRoom: newCurrentRoom,
+        enhancedRoomModels: enhancedRoomModels,
+        mightHaveMore: mightHaveMore);
   }
+
+  @override
+  int get hashCode =>
+      currentRoom.hashCode ^
+      enhancedRoomModels.hashCode ^
+      mightHaveMore.hashCode;
 }
 
 class AllChatsNotLoaded extends AllChatsState {}
@@ -78,6 +105,6 @@ class OtherMemberRoomInfo {
   final String name;
   final String? avatar;
 
-  OtherMemberRoomInfo({required this.memberId, required this.name, required this.avatar});
+  OtherMemberRoomInfo(
+      {required this.memberId, required this.name, required this.avatar});
 }
-

@@ -13,7 +13,6 @@
 
 */
 
-
 import 'package:eliud_pkg_chat/model/chat_dashboard_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_component_event.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
@@ -31,24 +30,27 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
   final AppModel app;
   final String chatDashboardId;
 
-  const AbstractChatDashboardComponent({Key? key, required this.app, required this.chatDashboardId}): super(key: key);
+  AbstractChatDashboardComponent(
+      {super.key, required this.app, required this.chatDashboardId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ChatDashboardComponentBloc> (
-          create: (context) => ChatDashboardComponentBloc(
-            chatDashboardRepository: chatDashboardRepository(appId: app.documentID)!)
+    return BlocProvider<ChatDashboardComponentBloc>(
+      create: (context) => ChatDashboardComponentBloc(
+          chatDashboardRepository:
+              chatDashboardRepository(appId: app.documentID)!)
         ..add(FetchChatDashboardComponent(id: chatDashboardId)),
       child: _chatDashboardBlockBuilder(context),
     );
   }
 
   Widget _chatDashboardBlockBuilder(BuildContext context) {
-    return BlocBuilder<ChatDashboardComponentBloc, ChatDashboardComponentState>(builder: (context, state) {
+    return BlocBuilder<ChatDashboardComponentBloc, ChatDashboardComponentState>(
+        builder: (context, state) {
       if (state is ChatDashboardComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is ChatDashboardComponentPermissionDenied) {
-        return const Icon(
+        return Icon(
           Icons.highlight_off,
           color: Colors.red,
           size: 30.0,
@@ -57,7 +59,11 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
+          child: StyleRegistry.registry()
+              .styleWithApp(app)
+              .frontEndStyle()
+              .progressIndicatorStyle()
+              .progressIndicator(app, context),
         );
       }
     });
@@ -65,4 +71,3 @@ abstract class AbstractChatDashboardComponent extends StatelessWidget {
 
   Widget yourWidget(BuildContext context, ChatDashboardModel value);
 }
-

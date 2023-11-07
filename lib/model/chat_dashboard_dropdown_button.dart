@@ -23,35 +23,43 @@ import 'package:eliud_core/style/frontend/has_button.dart';
 import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/component/update_component.dart';
 
-
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 
-
-
-typedef ChatDashboardChanged = Function(String? value, int? privilegeLevel,);
+typedef ChatDashboardChanged = Function(
+  String? value,
+  int? privilegeLevel,
+);
 
 class ChatDashboardDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
-  int? privilegeLevel;
-  String? value;
+  final int? privilegeLevel;
+  final String? value;
   final ChatDashboardChanged? trigger;
   final bool? optional;
 
-  ChatDashboardDropdownButtonWidget({ required this.app, this.privilegeLevel, this.value, this.trigger, this.optional, Key? key }): super(key: key);
+  ChatDashboardDropdownButtonWidget(
+      {required this.app,
+      this.privilegeLevel,
+      this.value,
+      this.trigger,
+      this.optional,
+      super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return ChatDashboardDropdownButtonWidgetState();
+    return ChatDashboardDropdownButtonWidgetState(value);
   }
 }
 
-class ChatDashboardDropdownButtonWidgetState extends State<ChatDashboardDropdownButtonWidget> {
+class ChatDashboardDropdownButtonWidgetState
+    extends State<ChatDashboardDropdownButtonWidget> {
   ChatDashboardListBloc? bloc;
+  String? value;
 
-  ChatDashboardDropdownButtonWidgetState();
+  ChatDashboardDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -65,30 +73,41 @@ class ChatDashboardDropdownButtonWidgetState extends State<ChatDashboardDropdown
     super.dispose();
   }
 
-List<Widget> widgets(ChatDashboardModel value) {
-var app = widget.app;
-var widgets = <Widget>[];
-widgets.add(value.description != null ? Center(child: text(app, context, value.description!)) : value.documentID != null ? Center(child: text(app, context, value.documentID)) : Container());
-return widgets;
-}
-
+  List<Widget> widgets(ChatDashboardModel value) {
+    var app = widget.app;
+    var widgets = <Widget>[];
+    widgets.add(value.description != null
+        ? Center(child: text(app, context, value.description!))
+        : Center(child: text(app, context, value.documentID)));
+    return widgets;
+  }
 
   @override
   Widget build(BuildContext context) {
     //var accessState = AccessBloc.getState(context);
-    return BlocBuilder<ChatDashboardListBloc, ChatDashboardListState>(builder: (context, state) {
+    return BlocBuilder<ChatDashboardListBloc, ChatDashboardListState>(
+        builder: (context, state) {
       if (state is ChatDashboardListLoading) {
-        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminListStyle()
+            .progressIndicator(widget.app, context);
       } else if (state is ChatDashboardListLoaded) {
         int? privilegeChosen = widget.privilegeLevel;
-        if ((widget.value != null) && (privilegeChosen == null)) {
+        if ((value != null) && (privilegeChosen == null)) {
           if (state.values != null) {
-            var selectedValue = state.values!.firstWhere((v) => (v!.documentID == widget.value), orElse: () => null);
-            privilegeChosen = selectedValue != null && selectedValue.conditions != null && selectedValue.conditions!.privilegeLevelRequired != null ? selectedValue.conditions!.privilegeLevelRequired!.index : 0;
+            var selectedValue = state.values!.firstWhere(
+                (v) => (v!.documentID == value),
+                orElse: () => null);
+            privilegeChosen = selectedValue != null &&
+                    selectedValue.conditions != null &&
+                    selectedValue.conditions!.privilegeLevelRequired != null
+                ? selectedValue.conditions!.privilegeLevelRequired!.index
+                : 0;
           }
         }
-          
-        final values = state.values;
+
+//        final values = state.values;
         final items = <DropdownMenuItem<String>>[];
         if (state.values!.isNotEmpty) {
           if (widget.optional != null && widget.optional!) {
@@ -97,9 +116,9 @@ return widgets;
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 5.0),
                   height: 100.0,
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget> [ Text("None") ],
+                    children: <Widget>[Text("None")],
                   ),
                 )));
           }
@@ -116,12 +135,10 @@ return widgets;
                 )));
           }
         }
-        return ListView(
-            physics: const ScrollPhysics(),
-            shrinkWrap: true,
-            children: [
+        return ListView(physics: ScrollPhysics(), shrinkWrap: true, children: [
           dropdownButton<int>(
-            widget.app, context,
+            widget.app,
+            context,
             isDense: false,
             isExpanded: false,
             items: [
@@ -146,49 +163,58 @@ return widgets;
             hint: text(widget.app, context, 'Select a privilege'),
             onChanged: _onPrivilegeLevelChange,
           ),
-          Row(children: [(false)
-            ? SizedBox(
-                height: 48, 
-                child: dropdownButton<String>(
-                      widget.app, context,
+          Row(children: [
+            ((false) == true)
+                ? Container(
+                    height: 48,
+                    child: dropdownButton<String>(
+                      widget.app,
+                      context,
                       isDense: false,
                       isExpanded: false,
                       items: items,
-                      value: widget.value,
+                      value: value,
                       hint: text(widget.app, context, 'Select a chatDashboard'),
                       onChanged: _onValueChange,
-                    )
-                ) 
-            : dropdownButton<String>(
-                widget.app, context,
-                isDense: false,
-                isExpanded: false,
-                items: items,
-                value: widget.value,
-                hint: text(widget.app, context, 'Select a chatDashboard'),
-                onChanged: _onValueChange,
-              ),
-          if (widget.value != null) const Spacer(),
-          if (widget.value != null) 
-            Align(alignment: Alignment.topRight, child: button(
-              widget.app,
-              context,
-              icon: const Icon(
-                Icons.edit,
-              ),
-              label: 'Update',
-              onPressed: () {
-                updateComponent(context, widget.app, 'chatDashboards', widget.value, (newValue, _) {
-                  setState(() {
-                    widget.value = widget.value;
-                  });
-                });
-              },
-            ))
+                    ))
+                : dropdownButton<String>(
+                    widget.app,
+                    context,
+                    isDense: false,
+                    isExpanded: false,
+                    items: items,
+                    value: value,
+                    hint: text(widget.app, context, 'Select a chatDashboard'),
+                    onChanged: _onValueChange,
+                  ),
+            if (value != null) Spacer(),
+            if (value != null)
+              Align(
+                  alignment: Alignment.topRight,
+                  child: button(
+                    widget.app,
+                    context,
+                    icon: Icon(
+                      Icons.edit,
+                    ),
+                    label: 'Update',
+                    onPressed: () {
+                      updateComponent(
+                          context, widget.app, 'chatDashboards', value,
+                          (newValue, _) {
+                        setState(() {
+                          value = value;
+                        });
+                      });
+                    },
+                  ))
           ])
         ]);
       } else {
-        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminListStyle()
+            .progressIndicator(widget.app, context);
       }
     });
   }
@@ -198,13 +224,14 @@ return widgets;
   }
 
   void _onPrivilegeLevelChange(int? value) {
-    BlocProvider.of<ChatDashboardListBloc>(context).add(ChatDashboardChangeQuery(
-       newQuery: EliudQuery(theConditions: [
-         EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: value ?? 0),
-         EliudQueryCondition('appId', isEqualTo: widget.app.documentID),]
-       ),
-     ));
-     widget.trigger!(null, value);
+    BlocProvider.of<ChatDashboardListBloc>(context)
+        .add(ChatDashboardChangeQuery(
+      newQuery: EliudQuery(theConditions: [
+        EliudQueryCondition('conditions.privilegeLevelRequired',
+            isEqualTo: value ?? 0),
+        EliudQueryCondition('appId', isEqualTo: widget.app.documentID),
+      ]),
+    ));
+    widget.trigger!(null, value);
   }
 }
-

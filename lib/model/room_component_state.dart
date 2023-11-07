@@ -27,19 +27,19 @@ class RoomComponentUninitialized extends RoomComponentState {}
 
 class RoomComponentError extends RoomComponentState {
   final String? message;
-  const RoomComponentError({ this.message });
+  RoomComponentError({this.message});
 }
 
 class RoomComponentPermissionDenied extends RoomComponentState {
-  const RoomComponentPermissionDenied();
+  RoomComponentPermissionDenied();
 }
 
 class RoomComponentLoaded extends RoomComponentState {
   final RoomModel value;
 
-  const RoomComponentLoaded({ required this.value });
+  const RoomComponentLoaded({required this.value});
 
-  RoomComponentLoaded copyWith({ RoomModel? copyThis }) {
+  RoomComponentLoaded copyWith({RoomModel? copyThis}) {
     return RoomComponentLoaded(value: copyThis ?? value);
   }
 
@@ -49,4 +49,3 @@ class RoomComponentLoaded extends RoomComponentState {
   @override
   String toString() => 'RoomComponentLoaded { value: $value }';
 }
-

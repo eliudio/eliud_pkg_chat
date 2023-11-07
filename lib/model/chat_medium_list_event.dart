@@ -30,10 +30,10 @@ class NewPage extends ChatMediumListEvent {}
 class AddChatMediumList extends ChatMediumListEvent {
   final ChatMediumModel? value;
 
-  const AddChatMediumList({ this.value });
+  const AddChatMediumList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'AddChatMediumList{ value: $value }';
@@ -42,10 +42,10 @@ class AddChatMediumList extends ChatMediumListEvent {
 class UpdateChatMediumList extends ChatMediumListEvent {
   final ChatMediumModel? value;
 
-  const UpdateChatMediumList({ this.value });
+  const UpdateChatMediumList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'UpdateChatMediumList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateChatMediumList extends ChatMediumListEvent {
 class DeleteChatMediumList extends ChatMediumListEvent {
   final ChatMediumModel? value;
 
-  const DeleteChatMediumList({ this.value });
+  const DeleteChatMediumList({this.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() => 'DeleteChatMediumList{ value: $value }';
@@ -67,24 +67,24 @@ class ChatMediumListUpdated extends ChatMediumListEvent {
   final List<ChatMediumModel?>? value;
   final bool? mightHaveMore;
 
-  const ChatMediumListUpdated({ this.value, this.mightHaveMore });
+  const ChatMediumListUpdated({this.value, this.mightHaveMore});
 
   @override
-  List<Object?> get props => [ value, mightHaveMore ];
+  List<Object?> get props => [value, mightHaveMore];
 
   @override
-  String toString() => 'ChatMediumListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() =>
+      'ChatMediumListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class ChatMediumChangeQuery extends ChatMediumListEvent {
   final EliudQuery? newQuery;
 
-  const ChatMediumChangeQuery({ required this.newQuery });
+  const ChatMediumChangeQuery({required this.newQuery});
 
   @override
-  List<Object?> get props => [ newQuery ];
+  List<Object?> get props => [newQuery];
 
   @override
   String toString() => 'ChatMediumChangeQuery{ value: $newQuery }';
 }
-

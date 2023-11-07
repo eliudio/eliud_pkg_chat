@@ -41,9 +41,9 @@ class RoomFormInitialized extends RoomFormState {
   final RoomModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const RoomFormInitialized({ this.value });
+  const RoomFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class RoomFormError extends RoomFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const RoomFormError({this.message, RoomModel? value }) : super(value: value);
+  const RoomFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class RoomFormError extends RoomFormInitialized {
     }''';
   }
 }
-class DocumentIDRoomFormError extends RoomFormError { 
-  const DocumentIDRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+
+class DocumentIDRoomFormError extends RoomFormError {
+  const DocumentIDRoomFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDRoomFormError extends RoomFormError {
   }
 }
 
-
-class OwnerIdRoomFormError extends RoomFormError { 
-  const OwnerIdRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+class OwnerIdRoomFormError extends RoomFormError {
+  const OwnerIdRoomFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class OwnerIdRoomFormError extends RoomFormError {
   }
 }
 
-
-class AppIdRoomFormError extends RoomFormError { 
-  const AppIdRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+class AppIdRoomFormError extends RoomFormError {
+  const AppIdRoomFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class AppIdRoomFormError extends RoomFormError {
   }
 }
 
-
-class DescriptionRoomFormError extends RoomFormError { 
-  const DescriptionRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+class DescriptionRoomFormError extends RoomFormError {
+  const DescriptionRoomFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class DescriptionRoomFormError extends RoomFormError {
   }
 }
 
-
-class IsRoomRoomFormError extends RoomFormError { 
-  const IsRoomRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+class IsRoomRoomFormError extends RoomFormError {
+  const IsRoomRoomFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class IsRoomRoomFormError extends RoomFormError {
   }
 }
 
-
-class MembersRoomFormError extends RoomFormError { 
-  const MembersRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+class MembersRoomFormError extends RoomFormError {
+  const MembersRoomFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,11 @@ class MembersRoomFormError extends RoomFormError {
   }
 }
 
-
-class TimestampRoomFormError extends RoomFormError { 
-  const TimestampRoomFormError({ String? message, RoomModel? value }): super(message: message, value: value);
+class TimestampRoomFormError extends RoomFormError {
+  const TimestampRoomFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +169,11 @@ class TimestampRoomFormError extends RoomFormError {
   }
 }
 
-
-class RoomFormLoaded extends RoomFormInitialized { 
-  const RoomFormLoaded({ RoomModel? value }): super(value: value);
+class RoomFormLoaded extends RoomFormInitialized {
+  const RoomFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -189,12 +183,11 @@ class RoomFormLoaded extends RoomFormInitialized {
   }
 }
 
-
-class SubmittableRoomForm extends RoomFormInitialized { 
-  const SubmittableRoomForm({ RoomModel? value }): super(value: value);
+class SubmittableRoomForm extends RoomFormInitialized {
+  const SubmittableRoomForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -203,5 +196,3 @@ class SubmittableRoomForm extends RoomFormInitialized {
     }''';
   }
 }
-
-

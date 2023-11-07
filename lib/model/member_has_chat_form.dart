@@ -22,10 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eliud_core/style/style_registry.dart';
 
-
-
-
-
 import 'package:eliud_core/tools/enums.dart';
 
 import 'package:eliud_core/model/model_export.dart';
@@ -38,64 +34,77 @@ import 'package:eliud_pkg_chat/model/member_has_chat_form_bloc.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_form_event.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_form_state.dart';
 
-
 class MemberHasChatForm extends StatelessWidget {
   final AppModel app;
-  FormAction formAction;
-  MemberHasChatModel? value;
-  ActionModel? submitAction;
+  final FormAction formAction;
+  final MemberHasChatModel? value;
+  final ActionModel? submitAction;
 
-  MemberHasChatForm({Key? key, required this.app, required this.formAction, required this.value, this.submitAction}) : super(key: key);
+  MemberHasChatForm(
+      {super.key,
+      required this.app,
+      required this.formAction,
+      required this.value,
+      this.submitAction});
 
+  /// Build the MemberHasChatForm
   @override
   Widget build(BuildContext context) {
-    var accessState = AccessBloc.getState(context);
+    //var accessState = AccessBloc.getState(context);
     var appId = app.documentID;
-    if (formAction == FormAction.ShowData) {
-      return BlocProvider<MemberHasChatFormBloc >(
-            create: (context) => MemberHasChatFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add(InitialiseMemberHasChatFormEvent(value: value)),
-  
-        child: MyMemberHasChatForm(app:app, submitAction: submitAction, formAction: formAction),
-          );
-    } if (formAction == FormAction.ShowPreloadedData) {
-      return BlocProvider<MemberHasChatFormBloc >(
-            create: (context) => MemberHasChatFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add(InitialiseMemberHasChatFormNoLoadEvent(value: value)),
-  
-        child: MyMemberHasChatForm(app:app, submitAction: submitAction, formAction: formAction),
-          );
+    if (formAction == FormAction.showData) {
+      return BlocProvider<MemberHasChatFormBloc>(
+        create: (context) => MemberHasChatFormBloc(
+          appId,
+          formAction: formAction,
+        )..add(InitialiseMemberHasChatFormEvent(value: value)),
+        child: MyMemberHasChatForm(
+            app: app, submitAction: submitAction, formAction: formAction),
+      );
+    }
+    if (formAction == FormAction.showPreloadedData) {
+      return BlocProvider<MemberHasChatFormBloc>(
+        create: (context) => MemberHasChatFormBloc(
+          appId,
+          formAction: formAction,
+        )..add(InitialiseMemberHasChatFormNoLoadEvent(value: value)),
+        child: MyMemberHasChatForm(
+            app: app, submitAction: submitAction, formAction: formAction),
+      );
     } else {
       return Scaffold(
-        appBar: StyleRegistry.registry().styleWithApp(app).adminFormStyle().appBarWithString(app, context, title: formAction == FormAction.UpdateAction ? 'Update MemberHasChat' : 'Add MemberHasChat'),
-        body: BlocProvider<MemberHasChatFormBloc >(
-            create: (context) => MemberHasChatFormBloc(appId,
-                                       formAction: formAction,
-
-                                                )..add((formAction == FormAction.UpdateAction ? InitialiseMemberHasChatFormEvent(value: value) : InitialiseNewMemberHasChatFormEvent())),
-  
-        child: MyMemberHasChatForm(app: app, submitAction: submitAction, formAction: formAction),
+          appBar: StyleRegistry.registry()
+              .styleWithApp(app)
+              .adminFormStyle()
+              .appBarWithString(app, context,
+                  title: formAction == FormAction.updateAction
+                      ? 'Update MemberHasChat'
+                      : 'Add MemberHasChat'),
+          body: BlocProvider<MemberHasChatFormBloc>(
+            create: (context) => MemberHasChatFormBloc(
+              appId,
+              formAction: formAction,
+            )..add((formAction == FormAction.updateAction
+                ? InitialiseMemberHasChatFormEvent(value: value)
+                : InitialiseNewMemberHasChatFormEvent())),
+            child: MyMemberHasChatForm(
+                app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
-
 
 class MyMemberHasChatForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  const MyMemberHasChatForm({super.key, required this.app, this.formAction, this.submitAction});
+  MyMemberHasChatForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  _MyMemberHasChatFormState createState() => _MyMemberHasChatFormState(formAction);
+  State<MyMemberHasChatForm> createState() =>
+      _MyMemberHasChatFormState(formAction);
 }
-
 
 class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
   final FormAction? formAction;
@@ -105,7 +114,6 @@ class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
   final TextEditingController _memberIdController = TextEditingController();
   final TextEditingController _appIdController = TextEditingController();
   bool? _hasUnreadSelection;
-
 
   _MyMemberHasChatFormState(this.formAction);
 
@@ -122,29 +130,21 @@ class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
   @override
   Widget build(BuildContext context) {
     var accessState = AccessBloc.getState(context);
-    return BlocBuilder<MemberHasChatFormBloc, MemberHasChatFormState>(builder: (context, state) {
+    return BlocBuilder<MemberHasChatFormBloc, MemberHasChatFormState>(
+        builder: (context, state) {
       if (state is MemberHasChatFormUninitialized) {
         return Center(
-        child: StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context),
-      );
+          child: StyleRegistry.registry()
+              .styleWithApp(widget.app)
+              .adminListStyle()
+              .progressIndicator(widget.app, context),
+        );
       }
 
       if (state is MemberHasChatFormLoaded) {
-        if (state.value!.documentID != null) {
-          _documentIDController.text = state.value!.documentID.toString();
-        } else {
-          _documentIDController.text = "";
-        }
-        if (state.value!.memberId != null) {
-          _memberIdController.text = state.value!.memberId.toString();
-        } else {
-          _memberIdController.text = "";
-        }
-        if (state.value!.appId != null) {
-          _appIdController.text = state.value!.appId.toString();
-        } else {
-          _appIdController.text = "";
-        }
+        _documentIDController.text = state.value!.documentID.toString();
+        _memberIdController.text = state.value!.memberId.toString();
+        _appIdController.text = state.value!.appId.toString();
         if (state.value!.hasUnread != null) {
           _hasUnreadSelection = state.value!.hasUnread;
         } else {
@@ -153,110 +153,172 @@ class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
       }
       if (state is MemberHasChatFormInitialized) {
         List<Widget> children = [];
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
-                ));
+        children.add(Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: StyleRegistry.registry()
+                .styleWithApp(widget.app)
+                .adminFormStyle()
+                .groupTitle(widget.app, context, 'General')));
 
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Member ID', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _memberIdController, keyboardType: TextInputType.text, validator: (_) => state is MemberIdMemberHasChatFormError ? state.message : null, hintText: null)
-          );
-
-
-        children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
-
-
-         children.add(Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
-                ));
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.UpdateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDMemberHasChatFormError ? state.message : null, hintText: null)
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(accessState, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdMemberHasChatFormError ? state.message : null, hintText: 'field.remark')
-          );
-
-        children.add(
-
-                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().checkboxListTile(widget.app, context, 'Has Unread', _hasUnreadSelection, _readOnly(accessState, state) ? null : (dynamic val) => setSelectionHasUnread(val))
-          );
-
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Member ID',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _memberIdController,
+                keyboardType: TextInputType.text,
+                validator: (_) => state is MemberIdMemberHasChatFormError
+                    ? state.message
+                    : null,
+                hintText: null));
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .divider(widget.app, context));
 
+        children.add(Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: StyleRegistry.registry()
+                .styleWithApp(widget.app)
+                .adminFormStyle()
+                .groupTitle(widget.app, context, 'General')));
 
-        if ((formAction != FormAction.ShowData) && (formAction != FormAction.ShowPreloadedData)) {
-          children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
-                  onPressed: _readOnly(accessState, state) ? null : () {
-                    if (state is MemberHasChatFormError) {
-                      return;
-                    } else {
-                      if (formAction == FormAction.UpdateAction) {
-                        BlocProvider.of<MemberHasChatListBloc>(context).add(
-                          UpdateMemberHasChatList(value: state.value!.copyWith(
-                              documentID: state.value!.documentID, 
-                              memberId: state.value!.memberId, 
-                              appId: state.value!.appId, 
-                              hasUnread: state.value!.hasUnread, 
-                        )));
-                      } else {
-                        BlocProvider.of<MemberHasChatListBloc>(context).add(
-                          AddMemberHasChatList(value: MemberHasChatModel(
-                              documentID: state.value!.documentID, 
-                              memberId: state.value!.memberId, 
-                              appId: state.value!.appId, 
-                              hasUnread: state.value!.hasUnread, 
-                          )));
-                      }
-                      if (widget.submitAction != null) {
-                        eliudrouter.Router.navigateTo(context, widget.submitAction!);
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    }
-                  },
-                ));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'Document ID',
+                icon: Icons.vpn_key,
+                readOnly: (formAction == FormAction.updateAction),
+                textEditingController: _documentIDController,
+                keyboardType: TextInputType.text,
+                validator: (_) => state is DocumentIDMemberHasChatFormError
+                    ? state.message
+                    : null,
+                hintText: null));
+
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .textFormField(widget.app, context,
+                labelText: 'App Identifier',
+                icon: Icons.text_format,
+                readOnly: _readOnly(accessState, state),
+                textEditingController: _appIdController,
+                keyboardType: TextInputType.text,
+                validator: (_) =>
+                    state is AppIdMemberHasChatFormError ? state.message : null,
+                hintText: 'field.remark'));
+
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .checkboxListTile(
+                widget.app,
+                context,
+                'Has Unread',
+                _hasUnreadSelection,
+                _readOnly(accessState, state)
+                    ? null
+                    : (dynamic val) => setSelectionHasUnread(val)));
+
+        children.add(Container(height: 20.0));
+        children.add(StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .divider(widget.app, context));
+
+        if ((formAction != FormAction.showData) &&
+            (formAction != FormAction.showPreloadedData)) {
+          children.add(StyleRegistry.registry()
+              .styleWithApp(widget.app)
+              .adminFormStyle()
+              .button(
+                widget.app,
+                context,
+                label: 'Submit',
+                onPressed: _readOnly(accessState, state)
+                    ? null
+                    : () {
+                        if (state is MemberHasChatFormError) {
+                          return;
+                        } else {
+                          if (formAction == FormAction.updateAction) {
+                            BlocProvider.of<MemberHasChatListBloc>(context)
+                                .add(UpdateMemberHasChatList(
+                                    value: state.value!.copyWith(
+                              documentID: state.value!.documentID,
+                              memberId: state.value!.memberId,
+                              appId: state.value!.appId,
+                              hasUnread: state.value!.hasUnread,
+                            )));
+                          } else {
+                            BlocProvider.of<MemberHasChatListBloc>(context)
+                                .add(AddMemberHasChatList(
+                                    value: MemberHasChatModel(
+                              documentID: state.value!.documentID,
+                              memberId: state.value!.memberId,
+                              appId: state.value!.appId,
+                              hasUnread: state.value!.hasUnread,
+                            )));
+                          }
+                          if (widget.submitAction != null) {
+                            eliudrouter.Router.navigateTo(
+                                context, widget.submitAction!);
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        }
+                      },
+              ));
         }
 
-        return StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().container(widget.app, context, Form(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              physics: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)) ? const NeverScrollableScrollPhysics() : null,
-              shrinkWrap: ((formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData)),
-              children: children
-            ),
-          ), formAction!
-        );
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminFormStyle()
+            .container(
+                widget.app,
+                context,
+                Form(
+                  child: ListView(
+                      padding: const EdgeInsets.all(8),
+                      physics: ((formAction == FormAction.showData) ||
+                              (formAction == FormAction.showPreloadedData))
+                          ? NeverScrollableScrollPhysics()
+                          : null,
+                      shrinkWrap: ((formAction == FormAction.showData) ||
+                          (formAction == FormAction.showPreloadedData)),
+                      children: children),
+                ),
+                formAction!);
       } else {
-        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
+        return StyleRegistry.registry()
+            .styleWithApp(widget.app)
+            .adminListStyle()
+            .progressIndicator(widget.app, context);
       }
     });
   }
 
   void _onDocumentIDChanged() {
-    _myFormBloc.add(ChangedMemberHasChatDocumentID(value: _documentIDController.text));
+    _myFormBloc
+        .add(ChangedMemberHasChatDocumentID(value: _documentIDController.text));
   }
-
 
   void _onMemberIdChanged() {
-    _myFormBloc.add(ChangedMemberHasChatMemberId(value: _memberIdController.text));
+    _myFormBloc
+        .add(ChangedMemberHasChatMemberId(value: _memberIdController.text));
   }
-
 
   void _onAppIdChanged() {
     _myFormBloc.add(ChangedMemberHasChatAppId(value: _appIdController.text));
   }
-
 
   void setSelectionHasUnread(bool? val) {
     setState(() {
@@ -264,7 +326,6 @@ class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
     });
     _myFormBloc.add(ChangedMemberHasChatHasUnread(value: val));
   }
-
 
   @override
   void dispose() {
@@ -274,12 +335,10 @@ class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
     super.dispose();
   }
 
+  /// Is the form read-only?
   bool _readOnly(AccessState accessState, MemberHasChatFormInitialized state) {
-    return (formAction == FormAction.ShowData) || (formAction == FormAction.ShowPreloadedData) || (!accessState.memberIsOwner(widget.app.documentID));
+    return (formAction == FormAction.showData) ||
+        (formAction == FormAction.showPreloadedData) ||
+        (!accessState.memberIsOwner(widget.app.documentID));
   }
-  
-
 }
-
-
-

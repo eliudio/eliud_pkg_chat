@@ -41,9 +41,9 @@ class ChatMemberInfoFormInitialized extends ChatMemberInfoFormState {
   final ChatMemberInfoModel? value;
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
-  const ChatMemberInfoFormInitialized({ this.value });
+  const ChatMemberInfoFormInitialized({this.value});
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class ChatMemberInfoFormError extends ChatMemberInfoFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
-  const ChatMemberInfoFormError({this.message, ChatMemberInfoModel? value }) : super(value: value);
+  const ChatMemberInfoFormError({this.message, super.value});
 
   @override
   String toString() {
@@ -63,11 +63,12 @@ abstract class ChatMemberInfoFormError extends ChatMemberInfoFormInitialized {
     }''';
   }
 }
-class DocumentIDChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const DocumentIDChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+
+class DocumentIDChatMemberInfoFormError extends ChatMemberInfoFormError {
+  const DocumentIDChatMemberInfoFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -78,12 +79,11 @@ class DocumentIDChatMemberInfoFormError extends ChatMemberInfoFormError {
   }
 }
 
-
-class AuthorIdChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const AuthorIdChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class AuthorIdChatMemberInfoFormError extends ChatMemberInfoFormError {
+  const AuthorIdChatMemberInfoFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -94,12 +94,11 @@ class AuthorIdChatMemberInfoFormError extends ChatMemberInfoFormError {
   }
 }
 
-
-class AppIdChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const AppIdChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class AppIdChatMemberInfoFormError extends ChatMemberInfoFormError {
+  const AppIdChatMemberInfoFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -110,12 +109,11 @@ class AppIdChatMemberInfoFormError extends ChatMemberInfoFormError {
   }
 }
 
-
-class RoomIdChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const RoomIdChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class RoomIdChatMemberInfoFormError extends ChatMemberInfoFormError {
+  const RoomIdChatMemberInfoFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -126,12 +124,11 @@ class RoomIdChatMemberInfoFormError extends ChatMemberInfoFormError {
   }
 }
 
-
-class TimestampChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const TimestampChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class TimestampChatMemberInfoFormError extends ChatMemberInfoFormError {
+  const TimestampChatMemberInfoFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -142,12 +139,11 @@ class TimestampChatMemberInfoFormError extends ChatMemberInfoFormError {
   }
 }
 
-
-class AccessibleByGroupChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const AccessibleByGroupChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class AccessibleByGroupChatMemberInfoFormError extends ChatMemberInfoFormError {
+  const AccessibleByGroupChatMemberInfoFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -158,12 +154,13 @@ class AccessibleByGroupChatMemberInfoFormError extends ChatMemberInfoFormError {
   }
 }
 
-
-class AccessibleByMembersChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const AccessibleByMembersChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class AccessibleByMembersChatMemberInfoFormError
+    extends ChatMemberInfoFormError {
+  const AccessibleByMembersChatMemberInfoFormError(
+      {super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -174,12 +171,11 @@ class AccessibleByMembersChatMemberInfoFormError extends ChatMemberInfoFormError
   }
 }
 
-
-class ReadAccessChatMemberInfoFormError extends ChatMemberInfoFormError { 
-  const ReadAccessChatMemberInfoFormError({ String? message, ChatMemberInfoModel? value }): super(message: message, value: value);
+class ReadAccessChatMemberInfoFormError extends ChatMemberInfoFormError {
+  const ReadAccessChatMemberInfoFormError({super.message, super.value});
 
   @override
-  List<Object?> get props => [ message, value ];
+  List<Object?> get props => [message, value];
 
   @override
   String toString() {
@@ -190,12 +186,11 @@ class ReadAccessChatMemberInfoFormError extends ChatMemberInfoFormError {
   }
 }
 
-
-class ChatMemberInfoFormLoaded extends ChatMemberInfoFormInitialized { 
-  const ChatMemberInfoFormLoaded({ ChatMemberInfoModel? value }): super(value: value);
+class ChatMemberInfoFormLoaded extends ChatMemberInfoFormInitialized {
+  const ChatMemberInfoFormLoaded({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -205,12 +200,11 @@ class ChatMemberInfoFormLoaded extends ChatMemberInfoFormInitialized {
   }
 }
 
-
-class SubmittableChatMemberInfoForm extends ChatMemberInfoFormInitialized { 
-  const SubmittableChatMemberInfoForm({ ChatMemberInfoModel? value }): super(value: value);
+class SubmittableChatMemberInfoForm extends ChatMemberInfoFormInitialized {
+  const SubmittableChatMemberInfoForm({super.value});
 
   @override
-  List<Object?> get props => [ value ];
+  List<Object?> get props => [value];
 
   @override
   String toString() {
@@ -219,5 +213,3 @@ class SubmittableChatMemberInfoForm extends ChatMemberInfoFormInitialized {
     }''';
   }
 }
-
-

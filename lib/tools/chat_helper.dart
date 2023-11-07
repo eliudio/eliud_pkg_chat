@@ -25,8 +25,12 @@ class ChatHelper {
             membersType: membersType));
   }
 
-  Widget openForMembers(AppModel app, String thisMemberId,
-      List<String> otherMemberIds, MembersType membersType,List<String> blockedMembers) {
+  Widget openForMembers(
+      AppModel app,
+      String thisMemberId,
+      List<String> otherMemberIds,
+      MembersType membersType,
+      List<String> blockedMembers) {
     return BlocProvider<ChatBloc>(
         create: (context) => ChatBloc(
               thisMemberId: thisMemberId,
@@ -34,7 +38,7 @@ class ChatHelper {
               blockedMembers: blockedMembers,
             )..add(OpenChatWithMembersEvent(otherMemberIds)),
         child: ChatWidget(
-          blockedMembers: blockedMembers,
+            blockedMembers: blockedMembers,
             app: app,
             memberId: thisMemberId,
             canAddMember: false,

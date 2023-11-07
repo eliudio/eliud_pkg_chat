@@ -68,7 +68,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
             }
           }
           // this room is ok if there are more members in it other than blocked members, excluding myself
-          ok = (element.roomModel.members!.length -1 > bad);
+          ok = (element.roomModel.members!.length - 1 > bad);
         }
       }
       if (ok) {
@@ -119,8 +119,8 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         currentRoom: currentRoom);
   }
 
-  AllChatsBloc({
-      required this.loggedIn,
+  AllChatsBloc(
+      {required this.loggedIn,
       required this.thisMemberId,
       required this.appId,
       required this.chatBloc,
@@ -168,7 +168,7 @@ class AllChatsBloc extends Bloc<AllChatsEvent, AllChatsState> {
         }
         emit(_mapAllChatsUpdatedToState(event, currentRoom));
       } else {
-        var currentRoom;
+        RoomModel? currentRoom;
         emit(_mapAllChatsUpdatedToState(event, currentRoom));
       }
     });

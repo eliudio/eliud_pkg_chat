@@ -25,8 +25,6 @@ import 'room_model.dart';
 
 typedef FilterRoomModels = List<RoomModel?> Function(List<RoomModel?> values);
 
-
-
 class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
   final FilterRoomModels? filter;
   final RoomRepository _roomRepository;
@@ -39,23 +37,32 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
   final bool? detailed;
   final int roomLimit;
 
-  RoomListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required RoomRepository roomRepository, this.roomLimit = 5})
+  RoomListBloc(
+      {this.filter,
+      this.paged,
+      this.orderBy,
+      this.descending,
+      this.detailed,
+      this.eliudQuery,
+      required RoomRepository roomRepository,
+      this.roomLimit = 5})
       : _roomRepository = roomRepository,
         super(RoomListLoading()) {
-    on <LoadRoomList> ((event, emit) {
+    on<LoadRoomList>((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadRoomListToState();
       } else {
         _mapLoadRoomListWithDetailsToState();
       }
     });
-    
-    on <NewPage> ((event, emit) {
-      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
+
+    on<NewPage>((event, emit) {
+      pages = pages +
+          1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadRoomListWithDetailsToState();
     });
-    
-    on <RoomChangeQuery> ((event, emit) {
+
+    on<RoomChangeQuery>((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadRoomListToState();
@@ -63,20 +70,20 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
         _mapLoadRoomListWithDetailsToState();
       }
     });
-      
-    on <AddRoomList> ((event, emit) async {
+
+    on<AddRoomList>((event, emit) async {
       await _mapAddRoomListToState(event);
     });
-    
-    on <UpdateRoomList> ((event, emit) async {
+
+    on<UpdateRoomList>((event, emit) async {
       await _mapUpdateRoomListToState(event);
     });
-    
-    on <DeleteRoomList> ((event, emit) async {
+
+    on<DeleteRoomList>((event, emit) async {
       await _mapDeleteRoomListToState(event);
     });
-    
-    on <RoomListUpdated> ((event, emit) {
+
+    on<RoomListUpdated>((event, emit) {
       emit(_mapRoomListUpdatedToState(event));
     });
   }
@@ -90,27 +97,31 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
   }
 
   Future<void> _mapLoadRoomListToState() async {
-    int amountNow =  (state is RoomListLoaded) ? (state as RoomListLoaded).values!.length : 0;
+    int amountNow = (state is RoomListLoaded)
+        ? (state as RoomListLoaded).values!.length
+        : 0;
     _roomsListSubscription?.cancel();
     _roomsListSubscription = _roomRepository.listen(
-          (list) => add(RoomListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
-      orderBy: orderBy,
-      descending: descending,
-      eliudQuery: eliudQuery,
-      limit: ((paged != null) && paged!) ? pages * roomLimit : null
-    );
-  }
-
-  Future<void> _mapLoadRoomListWithDetailsToState() async {
-    int amountNow =  (state is RoomListLoaded) ? (state as RoomListLoaded).values!.length : 0;
-    _roomsListSubscription?.cancel();
-    _roomsListSubscription = _roomRepository.listenWithDetails(
-            (list) => add(RoomListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        (list) => add(RoomListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * roomLimit : null
-    );
+        limit: ((paged != null) && paged!) ? pages * roomLimit : null);
+  }
+
+  Future<void> _mapLoadRoomListWithDetailsToState() async {
+    int amountNow = (state is RoomListLoaded)
+        ? (state as RoomListLoaded).values!.length
+        : 0;
+    _roomsListSubscription?.cancel();
+    _roomsListSubscription = _roomRepository.listenWithDetails(
+        (list) => add(RoomListUpdated(
+            value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * roomLimit : null);
   }
 
   Future<void> _mapAddRoomListToState(AddRoomList event) async {
@@ -134,8 +145,8 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
     }
   }
 
-  RoomListLoaded _mapRoomListUpdatedToState(
-      RoomListUpdated event) => RoomListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+  RoomListLoaded _mapRoomListUpdatedToState(RoomListUpdated event) =>
+      RoomListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -143,5 +154,3 @@ class RoomListBloc extends Bloc<RoomListEvent, RoomListState> {
     return super.close();
   }
 }
-
-

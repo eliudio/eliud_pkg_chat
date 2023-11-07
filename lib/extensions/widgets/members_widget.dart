@@ -35,8 +35,8 @@ class MembersWidget extends StatefulWidget {
     required this.selectedMember,
     required this.membersType,
     required this.blockedMembers,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   MembersWidgetState createState() => MembersWidgetState();
@@ -46,7 +46,7 @@ class MembersWidgetState extends State<MembersWidget> {
   @override
   Widget build(BuildContext context) {
     if ((widget.membersType == null) ||
-        (widget.membersType == MembersType.FollowingMembers)) {
+        (widget.membersType == MembersType.followingMembers)) {
       return _FollowingMembersWidget(
         blockedMembers: widget.blockedMembers,
         app: widget.app,
@@ -75,8 +75,7 @@ class _AllMembersWidget extends StatefulWidget {
     required this.app,
     required this.currentMemberId,
     required this.selectedMember,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   _AllMembersWidgetState createState() => _AllMembersWidgetState();
@@ -93,12 +92,14 @@ class _AllMembersWidgetState extends State<_AllMembersWidget> {
         value: value);
   }
 
-  List<MemberPublicInfoModel> filterBlocked(List<MemberPublicInfoModel?> values) {
+  List<MemberPublicInfoModel> filterBlocked(
+      List<MemberPublicInfoModel?> values) {
     List<MemberPublicInfoModel> members = [];
     for (var element in values) {
-      if ((element != null) && (element.documentID != null)) {
+      if (element != null) {
         var memberId = element.documentID;
-        if ((memberId != widget.currentMemberId) && (!widget.blockedMembers.contains(memberId))) {
+        if ((memberId != widget.currentMemberId) &&
+            (!widget.blockedMembers.contains(memberId))) {
           members.add(element);
         }
       }
@@ -120,11 +121,13 @@ class _AllMembersWidgetState extends State<_AllMembersWidget> {
             readOnly: true,
             widgetProvider: (value) => widgetProvider(widget.app, value!),
             // transparent bg
-            listBackground: BackgroundModel(decorationColors: [DecorationColorModel(
+            listBackground: BackgroundModel(decorationColors: [
+              DecorationColorModel(
                 documentID: 'N/A',
                 color: RgbModel(r: 0, g: 0, b: 0, opacity: 0.0),
-              stop: 0,
-            )])));
+                stop: 0,
+              )
+            ])));
   }
 }
 
@@ -135,19 +138,18 @@ class _MemberPublicInfoDashboardItem extends StatelessWidget {
   final AppModel app;
 
   const _MemberPublicInfoDashboardItem({
-    Key? key,
     required this.selectedMember,
     required this.currentMemberId,
     required this.value,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     var data = value!;
     Widget photo;
     String name;
-    if ((data == null) || (data.photoURL == null)) {
+    if (data.photoURL == null) {
       name = 'No name';
       photo = const Icon(Icons.person);
     } else {
@@ -155,7 +157,8 @@ class _MemberPublicInfoDashboardItem extends StatelessWidget {
         placeholder: kTransparentImage,
         image: data.photoURL!,
       );
-      name = (data.name != null && data.name!.isNotEmpty) ? data.name! : 'No name';
+      name =
+          (data.name != null && data.name!.isNotEmpty) ? data.name! : 'No name';
     }
     return getListTile(context, app,
 /*
@@ -170,9 +173,9 @@ class _MemberPublicInfoDashboardItem extends StatelessWidget {
     return ListTile(
 */
         onTap: () async {
-          Navigator.of(context).pop();
-          selectedMember(value!.documentID);
-        },
+      Navigator.of(context).pop();
+      selectedMember(value!.documentID);
+    },
         leading: const Icon(Icons.chat_bubble_outline),
         trailing: SizedBox(
           height: 100,
@@ -198,8 +201,7 @@ class _FollowingMembersWidget extends StatefulWidget {
     required this.app,
     required this.currentMemberId,
     required this.selectedMember,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   _FollowingMembersWidgetState createState() => _FollowingMembersWidgetState();
@@ -227,7 +229,8 @@ class _FollowingMembersWidgetState extends State<_FollowingMembersWidget> {
     for (var element in values) {
       if ((element != null) && (element.followed != null)) {
         var memberId = element.followed!.documentID;
-        if ((memberId != widget.currentMemberId) && (!widget.blockedMembers.contains(memberId))) {
+        if ((memberId != widget.currentMemberId) &&
+            (!widget.blockedMembers.contains(memberId))) {
           following.add(element);
         }
       }
@@ -260,12 +263,12 @@ class FollowingDashboardItem extends StatelessWidget {
   final AppModel app;
 
   const FollowingDashboardItem({
-    Key? key,
+    super.key,
     required this.selectedMember,
     required this.currentMemberId,
     required this.value,
     required this.app,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +283,8 @@ class FollowingDashboardItem extends StatelessWidget {
         placeholder: kTransparentImage,
         image: data.photoURL!,
       );
-      name = (data.name != null && data.name!.isNotEmpty) ? data.name! : 'No name';
+      name =
+          (data.name != null && data.name!.isNotEmpty) ? data.name! : 'No name';
     }
     return ListTile(
         onTap: () async {

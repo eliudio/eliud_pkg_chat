@@ -24,12 +24,12 @@ import 'package:eliud_pkg_chat/model/model_export.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 class MemberHasChatCache implements MemberHasChatRepository {
-
   final MemberHasChatRepository reference;
   final Map<String?, MemberHasChatModel?> fullCache = {};
 
   MemberHasChatCache(this.reference);
 
+  /// Add a MemberHasChatModel to the repository, cached
   @override
   Future<MemberHasChatModel> add(MemberHasChatModel value) {
     return reference.add(value).then((newValue) {
@@ -38,25 +38,32 @@ class MemberHasChatCache implements MemberHasChatRepository {
     });
   }
 
+  /// Add a MemberHasChatEntity to the repository, cached
   @override
-  Future<MemberHasChatEntity> addEntity(String documentID, MemberHasChatEntity value) {
+  Future<MemberHasChatEntity> addEntity(
+      String documentID, MemberHasChatEntity value) {
     return reference.addEntity(documentID, value);
   }
 
+  /// Update a MemberHasChatEntity in the repository, cached
   @override
-  Future<MemberHasChatEntity> updateEntity(String documentID, MemberHasChatEntity value) {
+  Future<MemberHasChatEntity> updateEntity(
+      String documentID, MemberHasChatEntity value) {
     return reference.updateEntity(documentID, value);
   }
 
+  /// Delete a MemberHasChatModel from the repository, cached
   @override
-  Future<void> delete(MemberHasChatModel value){
+  Future<void> delete(MemberHasChatModel value) {
     fullCache.remove(value.documentID);
     reference.delete(value);
     return Future.value();
   }
 
+  /// Retrieve a MemberHasChatModel with it's id, cached
   @override
-  Future<MemberHasChatModel?> get(String? id, {Function(Exception)? onError}) async {
+  Future<MemberHasChatModel?> get(String? id,
+      {Function(Exception)? onError}) async {
     var value = fullCache[id];
     if (value != null) return refreshRelations(value);
     value = await reference.get(id, onError: onError);
@@ -64,6 +71,7 @@ class MemberHasChatCache implements MemberHasChatRepository {
     return value;
   }
 
+  /// Update a MemberHasChatModel
   @override
   Future<MemberHasChatModel> update(MemberHasChatModel value) {
     return reference.update(value).then((newValue) {
@@ -72,35 +80,92 @@ class MemberHasChatCache implements MemberHasChatRepository {
     });
   }
 
+  /// Retrieve list of List<MemberHasChatModel?>
   @override
-  Stream<List<MemberHasChatModel?>> values({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-    return reference.values(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
+  Stream<List<MemberHasChatModel?>> values(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return reference.values(
+        orderBy: orderBy,
+        descending: descending,
+        startAfter: startAfter,
+        limit: limit,
+        setLastDoc: setLastDoc,
+        privilegeLevel: privilegeLevel,
+        eliudQuery: eliudQuery);
   }
 
   @override
-  Stream<List<MemberHasChatModel?>> valuesWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) {
-    return reference.valuesWithDetails(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
+  Stream<List<MemberHasChatModel?>> valuesWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return reference.valuesWithDetails(
+        orderBy: orderBy,
+        descending: descending,
+        startAfter: startAfter,
+        limit: limit,
+        setLastDoc: setLastDoc,
+        privilegeLevel: privilegeLevel,
+        eliudQuery: eliudQuery);
   }
 
   @override
-  Future<List<MemberHasChatModel?>> valuesList({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
-    return await reference.valuesList(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
+  Future<List<MemberHasChatModel?>> valuesList(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) async {
+    return await reference.valuesList(
+        orderBy: orderBy,
+        descending: descending,
+        startAfter: startAfter,
+        limit: limit,
+        setLastDoc: setLastDoc,
+        privilegeLevel: privilegeLevel,
+        eliudQuery: eliudQuery);
   }
-  
+
   @override
-  Future<List<MemberHasChatModel?>> valuesListWithDetails({String? orderBy, bool? descending, Object? startAfter, int? limit, SetLastDoc? setLastDoc, int? privilegeLevel, EliudQuery? eliudQuery }) async {
-    return await reference.valuesListWithDetails(orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, setLastDoc: setLastDoc, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
+  Future<List<MemberHasChatModel?>> valuesListWithDetails(
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      SetLastDoc? setLastDoc,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) async {
+    return await reference.valuesListWithDetails(
+        orderBy: orderBy,
+        descending: descending,
+        startAfter: startAfter,
+        limit: limit,
+        setLastDoc: setLastDoc,
+        privilegeLevel: privilegeLevel,
+        eliudQuery: eliudQuery);
   }
 
   @override
   void flush() {
     fullCache.clear();
   }
-  
+
   @override
   String? timeStampToString(dynamic timeStamp) {
     return reference.timeStampToString(timeStamp);
-  } 
+  }
 
   @override
   dynamic getSubCollection(String documentId, String name) {
@@ -108,20 +173,25 @@ class MemberHasChatCache implements MemberHasChatRepository {
   }
 
   @override
-  Future<MemberHasChatModel> changeValue(String documentId, String fieldName, num changeByThisValue) {
-    return reference.changeValue(documentId, fieldName, changeByThisValue).then((newValue) {
+  Future<MemberHasChatModel> changeValue(
+      String documentId, String fieldName, num changeByThisValue) {
+    return reference
+        .changeValue(documentId, fieldName, changeByThisValue)
+        .then((newValue) {
       fullCache[documentId] = newValue;
       return newValue!;
     });
   }
 
   @override
-  Future<MemberHasChatEntity?> getEntity(String? id, {Function(Exception p1)? onError}) {
+  Future<MemberHasChatEntity?> getEntity(String? id,
+      {Function(Exception p1)? onError}) {
     return reference.getEntity(id, onError: onError);
   }
 
   @override
-  MemberHasChatEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
+  MemberHasChatEntity? fromMap(Object? o,
+      {Map<String, String>? newDocumentIds}) {
     return reference.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
@@ -131,17 +201,43 @@ class MemberHasChatCache implements MemberHasChatRepository {
   }
 
   @override
-  StreamSubscription<List<MemberHasChatModel?>> listen(trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
-    return reference.listen(trigger, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
+  StreamSubscription<List<MemberHasChatModel?>> listen(trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return reference.listen(trigger,
+        orderBy: orderBy,
+        descending: descending,
+        startAfter: startAfter,
+        limit: limit,
+        privilegeLevel: privilegeLevel,
+        eliudQuery: eliudQuery);
   }
 
   @override
-  StreamSubscription<List<MemberHasChatModel?>> listenWithDetails(trigger, {String? orderBy, bool? descending, Object? startAfter, int? limit, int? privilegeLevel, EliudQuery? eliudQuery}) {
-    return reference.listenWithDetails(trigger, orderBy: orderBy, descending: descending, startAfter: startAfter, limit: limit, privilegeLevel: privilegeLevel, eliudQuery: eliudQuery);
+  StreamSubscription<List<MemberHasChatModel?>> listenWithDetails(trigger,
+      {String? orderBy,
+      bool? descending,
+      Object? startAfter,
+      int? limit,
+      int? privilegeLevel,
+      EliudQuery? eliudQuery}) {
+    return reference.listenWithDetails(trigger,
+        orderBy: orderBy,
+        descending: descending,
+        startAfter: startAfter,
+        limit: limit,
+        privilegeLevel: privilegeLevel,
+        eliudQuery: eliudQuery);
   }
 
   @override
-  StreamSubscription<MemberHasChatModel?> listenTo(String documentId, MemberHasChatChanged changed, {MemberHasChatErrorHandler? errorHandler}) {
+  StreamSubscription<MemberHasChatModel?> listenTo(
+      String documentId, MemberHasChatChanged changed,
+      {MemberHasChatErrorHandler? errorHandler}) {
     return reference.listenTo(documentId, ((value) {
       if (value != null) {
         fullCache[value.documentID] = value;
@@ -150,12 +246,8 @@ class MemberHasChatCache implements MemberHasChatRepository {
     }), errorHandler: errorHandler);
   }
 
-  static Future<MemberHasChatModel> refreshRelations(MemberHasChatModel model) async {
-
-    return model.copyWith(
-
-    );
+  static Future<MemberHasChatModel> refreshRelations(
+      MemberHasChatModel model) async {
+    return model.copyWith();
   }
-
 }
-
