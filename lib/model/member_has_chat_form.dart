@@ -58,7 +58,7 @@ class MemberHasChatForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseMemberHasChatFormEvent(value: value)),
-        child: MyMemberHasChatForm(
+        child: _MyMemberHasChatForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -68,7 +68,7 @@ class MemberHasChatForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseMemberHasChatFormNoLoadEvent(value: value)),
-        child: MyMemberHasChatForm(
+        child: _MyMemberHasChatForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -87,26 +87,26 @@ class MemberHasChatForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseMemberHasChatFormEvent(value: value)
                 : InitialiseNewMemberHasChatFormEvent())),
-            child: MyMemberHasChatForm(
+            child: _MyMemberHasChatForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyMemberHasChatForm extends StatefulWidget {
+class _MyMemberHasChatForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyMemberHasChatForm({required this.app, this.formAction, this.submitAction});
+  _MyMemberHasChatForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyMemberHasChatForm> createState() =>
+  State<_MyMemberHasChatForm> createState() =>
       _MyMemberHasChatFormState(formAction);
 }
 
-class _MyMemberHasChatFormState extends State<MyMemberHasChatForm> {
+class _MyMemberHasChatFormState extends State<_MyMemberHasChatForm> {
   final FormAction? formAction;
   late MemberHasChatFormBloc _myFormBloc;
 

@@ -33,6 +33,9 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
     });
   }
 
+  /*
+   * Construct ChatComponentBloc
+   */
   ChatComponentBloc({this.chatRepository})
       : super(ChatComponentUninitialized()) {
     on<FetchChatComponent>((event, emit) {
@@ -43,6 +46,9 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
     });
   }
 
+  /*
+   * Close the ChatComponentBloc
+   */
   @override
   Future<void> close() {
     _chatSubscription?.cancel();

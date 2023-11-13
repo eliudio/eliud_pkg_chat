@@ -25,13 +25,22 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * MemberHasChatFirestore is the firestore implementation of MemberHasChatRepository
+ */
 class MemberHasChatFirestore implements MemberHasChatRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   MemberHasChatEntity? fromMap(Object? o,
       {Map<String, String>? newDocumentIds}) {
     return MemberHasChatEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<MemberHasChatEntity> addEntity(
       String documentID, MemberHasChatEntity value) {
@@ -41,6 +50,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<MemberHasChatEntity> updateEntity(
       String documentID, MemberHasChatEntity value) {
@@ -50,6 +62,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<MemberHasChatModel> add(MemberHasChatModel value) {
     return memberHasChatCollection
@@ -58,11 +73,17 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(MemberHasChatModel value) {
     return memberHasChatCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<MemberHasChatModel> update(MemberHasChatModel value) {
     return memberHasChatCollection
@@ -82,6 +103,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<MemberHasChatEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -100,6 +124,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<MemberHasChatModel?> get(String? id,
       {Function(Exception)? onError}) async {
@@ -118,6 +145,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<MemberHasChatModel?>> listen(
       MemberHasChatModelTrigger trigger,
@@ -149,6 +179,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<MemberHasChatModel?>> listenWithDetails(
       MemberHasChatModelTrigger trigger,
@@ -180,6 +213,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<MemberHasChatModel?> listenTo(
       String documentId, MemberHasChatChanged changed,
@@ -199,6 +235,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<MemberHasChatModel?>> values(
       {String? orderBy,
@@ -228,6 +267,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<MemberHasChatModel?>> valuesWithDetails(
       {String? orderBy,
@@ -257,6 +299,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<MemberHasChatModel?>> valuesList(
       {String? orderBy,
@@ -287,6 +332,9 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<MemberHasChatModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -317,9 +365,15 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return memberHasChatCollection.get().then((snapshot) {
@@ -329,16 +383,25 @@ class MemberHasChatFirestore implements MemberHasChatRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return memberHasChatCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<MemberHasChatModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

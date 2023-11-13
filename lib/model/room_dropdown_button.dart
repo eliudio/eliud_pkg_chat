@@ -33,6 +33,9 @@ typedef RoomChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * RoomDropdownButtonWidget is the drop down widget to allow to select an instance of Room
+ */
 class RoomDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class RoomDropdownButtonWidget extends StatefulWidget {
   final RoomChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a RoomDropdownButtonWidget
+   */
   RoomDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,17 +54,20 @@ class RoomDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of RoomDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return RoomDropdownButtonWidgetState(value);
+    return _RoomDropdownButtonWidgetState(value);
   }
 }
 
-class RoomDropdownButtonWidgetState extends State<RoomDropdownButtonWidget> {
+class _RoomDropdownButtonWidgetState extends State<RoomDropdownButtonWidget> {
   RoomListBloc? bloc;
   String? value;
 
-  RoomDropdownButtonWidgetState(this.value);
+  _RoomDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -72,7 +81,7 @@ class RoomDropdownButtonWidgetState extends State<RoomDropdownButtonWidget> {
     super.dispose();
   }
 
-  List<Widget> widgets(RoomModel value) {
+  List<Widget> _widgets(RoomModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(Center(
@@ -132,7 +141,7 @@ class RoomDropdownButtonWidgetState extends State<RoomDropdownButtonWidget> {
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

@@ -25,13 +25,22 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * ChatDashboardFirestore is the firestore implementation of ChatDashboardRepository
+ */
 class ChatDashboardFirestore implements ChatDashboardRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   ChatDashboardEntity? fromMap(Object? o,
       {Map<String, String>? newDocumentIds}) {
     return ChatDashboardEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<ChatDashboardEntity> addEntity(
       String documentID, ChatDashboardEntity value) {
@@ -41,6 +50,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<ChatDashboardEntity> updateEntity(
       String documentID, ChatDashboardEntity value) {
@@ -50,6 +62,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<ChatDashboardModel> add(ChatDashboardModel value) {
     return chatDashboardCollection
@@ -58,11 +73,17 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
         .then((_) => value);
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(ChatDashboardModel value) {
     return chatDashboardCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<ChatDashboardModel> update(ChatDashboardModel value) {
     return chatDashboardCollection
@@ -82,6 +103,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<ChatDashboardEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -100,6 +124,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<ChatDashboardModel?> get(String? id,
       {Function(Exception)? onError}) async {
@@ -118,6 +145,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<ChatDashboardModel?>> listen(
       ChatDashboardModelTrigger trigger,
@@ -149,6 +179,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<ChatDashboardModel?>> listenWithDetails(
       ChatDashboardModelTrigger trigger,
@@ -180,6 +213,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<ChatDashboardModel?> listenTo(
       String documentId, ChatDashboardChanged changed,
@@ -199,6 +235,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<ChatDashboardModel?>> values(
       {String? orderBy,
@@ -228,6 +267,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<ChatDashboardModel?>> valuesWithDetails(
       {String? orderBy,
@@ -257,6 +299,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<ChatDashboardModel?>> valuesList(
       {String? orderBy,
@@ -287,6 +332,9 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<ChatDashboardModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -317,9 +365,15 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return chatDashboardCollection.get().then((snapshot) {
@@ -329,16 +383,25 @@ class ChatDashboardFirestore implements ChatDashboardRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return chatDashboardCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<ChatDashboardModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

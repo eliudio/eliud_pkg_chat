@@ -35,6 +35,9 @@ class ChatDashboardComponentBloc
     });
   }
 
+  /*
+   * Construct ChatDashboardComponentBloc
+   */
   ChatDashboardComponentBloc({this.chatDashboardRepository})
       : super(ChatDashboardComponentUninitialized()) {
     on<FetchChatDashboardComponent>((event, emit) {
@@ -45,6 +48,9 @@ class ChatDashboardComponentBloc
     });
   }
 
+  /*
+   * Close the ChatDashboardComponentBloc
+   */
   @override
   Future<void> close() {
     _chatDashboardSubscription?.cancel();

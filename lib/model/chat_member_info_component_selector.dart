@@ -32,7 +32,13 @@ import 'chat_member_info_list_event.dart';
 import 'chat_member_info_list_state.dart';
 import 'chat_member_info_model.dart';
 
+/* 
+ * ChatMemberInfoComponentSelector is a component selector for ChatMemberInfo, allowing to select a ChatMemberInfo component
+ */
 class ChatMemberInfoComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -42,7 +48,7 @@ class ChatMemberInfoComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         chatMemberInfoRepository: chatMemberInfoRepository(appId: appId)!,
       )..add(LoadChatMemberInfoList()),
-      child: SelectChatMemberInfoWidget(
+      child: _SelectChatMemberInfoWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -52,29 +58,31 @@ class ChatMemberInfoComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectChatMemberInfoWidget extends StatefulWidget {
+/* 
+ * _SelectChatMemberInfoWidget 
+ */
+class _SelectChatMemberInfoWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectChatMemberInfoWidget(
-      {super.key,
-      required this.app,
+  const _SelectChatMemberInfoWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectChatMemberInfoWidget> createState() {
+  State<_SelectChatMemberInfoWidget> createState() {
     return _SelectChatMemberInfoWidgetState();
   }
 }
 
-class _SelectChatMemberInfoWidgetState extends State<SelectChatMemberInfoWidget>
-    with TickerProviderStateMixin {
+class _SelectChatMemberInfoWidgetState
+    extends State<_SelectChatMemberInfoWidget> with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];
   final int _initialPrivilege = 0;

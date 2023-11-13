@@ -58,7 +58,7 @@ class RoomForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseRoomFormEvent(value: value)),
-        child: MyRoomForm(
+        child: _MyRoomForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -68,7 +68,7 @@ class RoomForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseRoomFormNoLoadEvent(value: value)),
-        child: MyRoomForm(
+        child: _MyRoomForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -87,25 +87,25 @@ class RoomForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseRoomFormEvent(value: value)
                 : InitialiseNewRoomFormEvent())),
-            child: MyRoomForm(
+            child: _MyRoomForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyRoomForm extends StatefulWidget {
+class _MyRoomForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyRoomForm({required this.app, this.formAction, this.submitAction});
+  _MyRoomForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyRoomForm> createState() => _MyRoomFormState(formAction);
+  State<_MyRoomForm> createState() => _MyRoomFormState(formAction);
 }
 
-class _MyRoomFormState extends State<MyRoomForm> {
+class _MyRoomFormState extends State<_MyRoomForm> {
   final FormAction? formAction;
   late RoomFormBloc _myFormBloc;
 

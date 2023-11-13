@@ -33,6 +33,9 @@ typedef ChatMediumChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * ChatMediumDropdownButtonWidget is the drop down widget to allow to select an instance of ChatMedium
+ */
 class ChatMediumDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class ChatMediumDropdownButtonWidget extends StatefulWidget {
   final ChatMediumChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a ChatMediumDropdownButtonWidget
+   */
   ChatMediumDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,18 +54,21 @@ class ChatMediumDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of ChatMediumDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return ChatMediumDropdownButtonWidgetState(value);
+    return _ChatMediumDropdownButtonWidgetState(value);
   }
 }
 
-class ChatMediumDropdownButtonWidgetState
+class _ChatMediumDropdownButtonWidgetState
     extends State<ChatMediumDropdownButtonWidget> {
   ChatMediumListBloc? bloc;
   String? value;
 
-  ChatMediumDropdownButtonWidgetState(this.value);
+  _ChatMediumDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -73,7 +82,7 @@ class ChatMediumDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> widgets(ChatMediumModel value) {
+  List<Widget> _widgets(ChatMediumModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(Center(
@@ -126,7 +135,7 @@ class ChatMediumDropdownButtonWidgetState
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

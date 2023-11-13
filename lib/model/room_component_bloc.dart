@@ -33,6 +33,9 @@ class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
     });
   }
 
+  /*
+   * Construct RoomComponentBloc
+   */
   RoomComponentBloc({this.roomRepository})
       : super(RoomComponentUninitialized()) {
     on<FetchRoomComponent>((event, emit) {
@@ -43,6 +46,9 @@ class RoomComponentBloc extends Bloc<RoomComponentEvent, RoomComponentState> {
     });
   }
 
+  /*
+   * Close the RoomComponentBloc
+   */
   @override
   Future<void> close() {
     _roomSubscription?.cancel();

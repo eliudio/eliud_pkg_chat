@@ -33,6 +33,9 @@ typedef ChatDashboardChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * ChatDashboardDropdownButtonWidget is the drop down widget to allow to select an instance of ChatDashboard
+ */
 class ChatDashboardDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class ChatDashboardDropdownButtonWidget extends StatefulWidget {
   final ChatDashboardChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a ChatDashboardDropdownButtonWidget
+   */
   ChatDashboardDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,18 +54,21 @@ class ChatDashboardDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of ChatDashboardDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return ChatDashboardDropdownButtonWidgetState(value);
+    return _ChatDashboardDropdownButtonWidgetState(value);
   }
 }
 
-class ChatDashboardDropdownButtonWidgetState
+class _ChatDashboardDropdownButtonWidgetState
     extends State<ChatDashboardDropdownButtonWidget> {
   ChatDashboardListBloc? bloc;
   String? value;
 
-  ChatDashboardDropdownButtonWidgetState(this.value);
+  _ChatDashboardDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -73,7 +82,7 @@ class ChatDashboardDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> widgets(ChatDashboardModel value) {
+  List<Widget> _widgets(ChatDashboardModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(value.description != null
@@ -130,7 +139,7 @@ class ChatDashboardDropdownButtonWidgetState
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

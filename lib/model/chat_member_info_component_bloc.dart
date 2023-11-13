@@ -35,6 +35,9 @@ class ChatMemberInfoComponentBloc
     });
   }
 
+  /*
+   * Construct ChatMemberInfoComponentBloc
+   */
   ChatMemberInfoComponentBloc({this.chatMemberInfoRepository})
       : super(ChatMemberInfoComponentUninitialized()) {
     on<FetchChatMemberInfoComponent>((event, emit) {
@@ -45,6 +48,9 @@ class ChatMemberInfoComponentBloc
     });
   }
 
+  /*
+   * Close the ChatMemberInfoComponentBloc
+   */
   @override
   Future<void> close() {
     _chatMemberInfoSubscription?.cancel();

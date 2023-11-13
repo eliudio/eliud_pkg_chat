@@ -32,7 +32,13 @@ import 'chat_list_event.dart';
 import 'chat_list_state.dart';
 import 'chat_model.dart';
 
+/* 
+ * ChatComponentSelector is a component selector for Chat, allowing to select a Chat component
+ */
 class ChatComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -42,7 +48,7 @@ class ChatComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         chatRepository: chatRepository(appId: appId)!,
       )..add(LoadChatList()),
-      child: SelectChatWidget(
+      child: _SelectChatWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -52,28 +58,30 @@ class ChatComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectChatWidget extends StatefulWidget {
+/* 
+ * _SelectChatWidget 
+ */
+class _SelectChatWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectChatWidget(
-      {super.key,
-      required this.app,
+  const _SelectChatWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectChatWidget> createState() {
+  State<_SelectChatWidget> createState() {
     return _SelectChatWidgetState();
   }
 }
 
-class _SelectChatWidgetState extends State<SelectChatWidget>
+class _SelectChatWidgetState extends State<_SelectChatWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

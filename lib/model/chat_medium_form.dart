@@ -59,7 +59,7 @@ class ChatMediumForm extends StatelessWidget {
         create: (context) => ChatMediumFormBloc(
           appId,
         )..add(InitialiseChatMediumFormEvent(value: value)),
-        child: MyChatMediumForm(
+        child: _MyChatMediumForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -68,7 +68,7 @@ class ChatMediumForm extends StatelessWidget {
         create: (context) => ChatMediumFormBloc(
           appId,
         )..add(InitialiseChatMediumFormNoLoadEvent(value: value)),
-        child: MyChatMediumForm(
+        child: _MyChatMediumForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -86,25 +86,25 @@ class ChatMediumForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseChatMediumFormEvent(value: value)
                 : InitialiseNewChatMediumFormEvent())),
-            child: MyChatMediumForm(
+            child: _MyChatMediumForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyChatMediumForm extends StatefulWidget {
+class _MyChatMediumForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyChatMediumForm({required this.app, this.formAction, this.submitAction});
+  _MyChatMediumForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyChatMediumForm> createState() => _MyChatMediumFormState(formAction);
+  State<_MyChatMediumForm> createState() => _MyChatMediumFormState(formAction);
 }
 
-class _MyChatMediumFormState extends State<MyChatMediumForm> {
+class _MyChatMediumFormState extends State<_MyChatMediumForm> {
   final FormAction? formAction;
   late ChatMediumFormBloc _myFormBloc;
 

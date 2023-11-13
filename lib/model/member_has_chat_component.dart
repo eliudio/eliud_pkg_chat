@@ -25,14 +25,23 @@ import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/app_model.dart';
 
+/*
+ * AbstractMemberHasChatComponent is the base class to extend / implement in case you need to implement a component
+ */
 abstract class AbstractMemberHasChatComponent extends StatelessWidget {
   static String componentName = "memberHasChats";
   final AppModel app;
   final String memberHasChatId;
 
+  /*
+   * Construct AbstractMemberHasChatComponent
+   */
   AbstractMemberHasChatComponent(
       {super.key, required this.app, required this.memberHasChatId});
 
+  /*
+   * build the component
+   */
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MemberHasChatComponentBloc>(
@@ -69,5 +78,8 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
     });
   }
 
+  /*
+   * Implement this method to provide your widget
+   */
   Widget yourWidget(BuildContext context, MemberHasChatModel value);
 }

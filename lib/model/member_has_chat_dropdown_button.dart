@@ -33,6 +33,9 @@ typedef MemberHasChatChanged = Function(
   int? privilegeLevel,
 );
 
+/* 
+ * MemberHasChatDropdownButtonWidget is the drop down widget to allow to select an instance of MemberHasChat
+ */
 class MemberHasChatDropdownButtonWidget extends StatefulWidget {
   final AppModel app;
   final int? privilegeLevel;
@@ -40,6 +43,9 @@ class MemberHasChatDropdownButtonWidget extends StatefulWidget {
   final MemberHasChatChanged? trigger;
   final bool? optional;
 
+  /* 
+   * construct a MemberHasChatDropdownButtonWidget
+   */
   MemberHasChatDropdownButtonWidget(
       {required this.app,
       this.privilegeLevel,
@@ -48,18 +54,21 @@ class MemberHasChatDropdownButtonWidget extends StatefulWidget {
       this.optional,
       super.key});
 
+  /* 
+   * create state of MemberHasChatDropdownButtonWidget
+   */
   @override
   State<StatefulWidget> createState() {
-    return MemberHasChatDropdownButtonWidgetState(value);
+    return _MemberHasChatDropdownButtonWidgetState(value);
   }
 }
 
-class MemberHasChatDropdownButtonWidgetState
+class _MemberHasChatDropdownButtonWidgetState
     extends State<MemberHasChatDropdownButtonWidget> {
   MemberHasChatListBloc? bloc;
   String? value;
 
-  MemberHasChatDropdownButtonWidgetState(this.value);
+  _MemberHasChatDropdownButtonWidgetState(this.value);
 
   @override
   void didChangeDependencies() {
@@ -73,7 +82,7 @@ class MemberHasChatDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> widgets(MemberHasChatModel value) {
+  List<Widget> _widgets(MemberHasChatModel value) {
     var app = widget.app;
     var widgets = <Widget>[];
     widgets.add(Center(
@@ -132,7 +141,7 @@ class MemberHasChatDropdownButtonWidgetState
                   height: 100.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widgets(element),
+                    children: _widgets(element),
                   ),
                 )));
           }

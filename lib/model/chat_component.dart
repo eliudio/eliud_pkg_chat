@@ -25,13 +25,22 @@ import 'abstract_repository_singleton.dart';
 import 'package:eliud_core/core/widgets/alert_widget.dart';
 import 'package:eliud_core/model/app_model.dart';
 
+/*
+ * AbstractChatComponent is the base class to extend / implement in case you need to implement a component
+ */
 abstract class AbstractChatComponent extends StatelessWidget {
   static String componentName = "chats";
   final AppModel app;
   final String chatId;
 
+  /*
+   * Construct AbstractChatComponent
+   */
   AbstractChatComponent({super.key, required this.app, required this.chatId});
 
+  /*
+   * build the component
+   */
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatComponentBloc>(
@@ -67,5 +76,8 @@ abstract class AbstractChatComponent extends StatelessWidget {
     });
   }
 
+  /*
+   * Implement this method to provide your widget
+   */
   Widget yourWidget(BuildContext context, ChatModel value);
 }

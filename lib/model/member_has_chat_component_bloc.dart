@@ -35,6 +35,9 @@ class MemberHasChatComponentBloc
     });
   }
 
+  /*
+   * Construct MemberHasChatComponentBloc
+   */
   MemberHasChatComponentBloc({this.memberHasChatRepository})
       : super(MemberHasChatComponentUninitialized()) {
     on<FetchMemberHasChatComponent>((event, emit) {
@@ -45,6 +48,9 @@ class MemberHasChatComponentBloc
     });
   }
 
+  /*
+   * Close the MemberHasChatComponentBloc
+   */
   @override
   Future<void> close() {
     _memberHasChatSubscription?.cancel();

@@ -58,7 +58,7 @@ class ChatMemberInfoForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseChatMemberInfoFormEvent(value: value)),
-        child: MyChatMemberInfoForm(
+        child: _MyChatMemberInfoForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -68,7 +68,7 @@ class ChatMemberInfoForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseChatMemberInfoFormNoLoadEvent(value: value)),
-        child: MyChatMemberInfoForm(
+        child: _MyChatMemberInfoForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -87,26 +87,27 @@ class ChatMemberInfoForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseChatMemberInfoFormEvent(value: value)
                 : InitialiseNewChatMemberInfoFormEvent())),
-            child: MyChatMemberInfoForm(
+            child: _MyChatMemberInfoForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyChatMemberInfoForm extends StatefulWidget {
+class _MyChatMemberInfoForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyChatMemberInfoForm({required this.app, this.formAction, this.submitAction});
+  _MyChatMemberInfoForm(
+      {required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyChatMemberInfoForm> createState() =>
+  State<_MyChatMemberInfoForm> createState() =>
       _MyChatMemberInfoFormState(formAction);
 }
 
-class _MyChatMemberInfoFormState extends State<MyChatMemberInfoForm> {
+class _MyChatMemberInfoFormState extends State<_MyChatMemberInfoForm> {
   final FormAction? formAction;
   late ChatMemberInfoFormBloc _myFormBloc;
 

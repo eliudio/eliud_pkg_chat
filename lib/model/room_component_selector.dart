@@ -32,7 +32,13 @@ import 'room_list_event.dart';
 import 'room_list_state.dart';
 import 'room_model.dart';
 
+/* 
+ * RoomComponentSelector is a component selector for Room, allowing to select a Room component
+ */
 class RoomComponentSelector extends ComponentSelector {
+  /* 
+   * createSelectWidget creates the widget
+   */
   @override
   Widget createSelectWidget(BuildContext context, AppModel app,
       int privilegeLevel, double height, SelectComponent selected, editor) {
@@ -42,7 +48,7 @@ class RoomComponentSelector extends ComponentSelector {
         eliudQuery: getComponentSelectorQuery(0, app.documentID),
         roomRepository: roomRepository(appId: appId)!,
       )..add(LoadRoomList()),
-      child: SelectRoomWidget(
+      child: _SelectRoomWidget(
           app: app,
           height: height,
           containerPrivilege: privilegeLevel,
@@ -52,28 +58,30 @@ class RoomComponentSelector extends ComponentSelector {
   }
 }
 
-class SelectRoomWidget extends StatefulWidget {
+/* 
+ * _SelectRoomWidget 
+ */
+class _SelectRoomWidget extends StatefulWidget {
   final AppModel app;
   final double height;
   final SelectComponent selected;
   final int containerPrivilege;
   final ComponentEditorConstructor editorConstructor;
 
-  const SelectRoomWidget(
-      {super.key,
-      required this.app,
+  const _SelectRoomWidget(
+      {required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
       required this.editorConstructor});
 
   @override
-  State<SelectRoomWidget> createState() {
+  State<_SelectRoomWidget> createState() {
     return _SelectRoomWidgetState();
   }
 }
 
-class _SelectRoomWidgetState extends State<SelectRoomWidget>
+class _SelectRoomWidgetState extends State<_SelectRoomWidget>
     with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];

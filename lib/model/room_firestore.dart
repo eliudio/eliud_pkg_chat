@@ -25,12 +25,21 @@ import 'package:eliud_core/tools/query/query_tools.dart';
 import 'package:eliud_core/tools/firestore/firestore_tools.dart';
 import 'package:eliud_core/tools/common_tools.dart';
 
+/* 
+ * RoomFirestore is the firestore implementation of RoomRepository
+ */
 class RoomFirestore implements RoomRepository {
+  /* 
+   * transform a map into an entity
+   */
   @override
   RoomEntity? fromMap(Object? o, {Map<String, String>? newDocumentIds}) {
     return RoomEntity.fromMap(o, newDocumentIds: newDocumentIds);
   }
 
+  /* 
+   * add an entity to the repository
+   */
   @override
   Future<RoomEntity> addEntity(String documentID, RoomEntity value) {
     return roomCollection
@@ -47,6 +56,9 @@ class RoomFirestore implements RoomRepository {
     });
   }
 
+  /* 
+   * Update an entity
+   */
   @override
   Future<RoomEntity> updateEntity(String documentID, RoomEntity value) {
     return roomCollection
@@ -63,6 +75,9 @@ class RoomFirestore implements RoomRepository {
     });
   }
 
+  /* 
+   * Add a model to the repository
+   */
   @override
   Future<RoomModel> add(RoomModel value) {
     return roomCollection
@@ -84,11 +99,17 @@ class RoomFirestore implements RoomRepository {
     });
   }
 
+  /* 
+   * Delete a model
+   */
   @override
   Future<void> delete(RoomModel value) {
     return roomCollection.doc(value.documentID).delete();
   }
 
+  /* 
+   * Update a model
+   */
   @override
   Future<RoomModel> update(RoomModel value) {
     return roomCollection
@@ -119,6 +140,9 @@ class RoomFirestore implements RoomRepository {
         appId: appId);
   }
 
+  /* 
+   * Retrieve an entity from the repository with id
+   */
   @override
   Future<RoomEntity?> getEntity(String? id,
       {Function(Exception)? onError}) async {
@@ -137,6 +161,9 @@ class RoomFirestore implements RoomRepository {
     return null;
   }
 
+  /* 
+   * Retrieve an model from the repository with id
+   */
   @override
   Future<RoomModel?> get(String? id, {Function(Exception)? onError}) async {
     try {
@@ -154,6 +181,9 @@ class RoomFirestore implements RoomRepository {
     return null;
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models
+   */
   @override
   StreamSubscription<List<RoomModel?>> listen(RoomModelTrigger trigger,
       {String? orderBy,
@@ -184,6 +214,9 @@ class RoomFirestore implements RoomRepository {
     });
   }
 
+  /* 
+   * Listen to the repository using a query. Retrieve models and linked models
+   */
   @override
   StreamSubscription<List<RoomModel?>> listenWithDetails(
       RoomModelTrigger trigger,
@@ -215,6 +248,9 @@ class RoomFirestore implements RoomRepository {
     });
   }
 
+  /* 
+   * Listen to 1 document in the repository
+   */
   @override
   StreamSubscription<RoomModel?> listenTo(
       String documentId, RoomChanged changed,
@@ -233,6 +269,9 @@ class RoomFirestore implements RoomRepository {
     return theStream;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Stream<List<RoomModel?>> values(
       {String? orderBy,
@@ -262,6 +301,9 @@ class RoomFirestore implements RoomRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Stream<List<RoomModel?>> valuesWithDetails(
       {String? orderBy,
@@ -291,6 +333,9 @@ class RoomFirestore implements RoomRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models from the repository
+   */
   @override
   Future<List<RoomModel?>> valuesList(
       {String? orderBy,
@@ -321,6 +366,9 @@ class RoomFirestore implements RoomRepository {
     return values;
   }
 
+  /* 
+   * Retrieve values/models, including linked models, from the repository
+   */
   @override
   Future<List<RoomModel?>> valuesListWithDetails(
       {String? orderBy,
@@ -351,9 +399,15 @@ class RoomFirestore implements RoomRepository {
     return values;
   }
 
+  /* 
+   * Flush the repository
+   */
   @override
   void flush() {}
 
+  /* 
+   * Delete all entries in the repository
+   */
   @override
   Future<void> deleteAll() {
     return roomCollection.get().then((snapshot) {
@@ -363,16 +417,25 @@ class RoomFirestore implements RoomRepository {
     });
   }
 
+  /* 
+   * Retrieve the subcollection of this repository
+   */
   @override
   dynamic getSubCollection(String documentId, String name) {
     return roomCollection.doc(documentId).collection(name);
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String? timeStampToString(dynamic timeStamp) {
     return firestoreTimeStampToString(timeStamp);
   }
 
+  /* 
+   * change 1 a fieldvalue for 1 document  
+   */
   @override
   Future<RoomModel?> changeValue(
       String documentId, String fieldName, num changeByThisValue) {

@@ -36,6 +36,9 @@ chatMediumsList(app, context, value, trigger) =>
     EmbeddedComponentFactory.chatMediumsList(app, context, value, trigger);
 
 class EmbeddedComponentFactory {
+/* 
+ * chatMediumsList function to construct a list of ChatMediumModel
+ */
   static Widget chatMediumsList(AppModel app, BuildContext context,
       List<ChatMediumModel> values, ChatMediumListChanged trigger) {
     ChatMediumInMemoryRepository inMemoryRepository =
@@ -56,11 +59,17 @@ class EmbeddedComponentFactory {
   }
 }
 
+/* 
+ * ChatMediumInMemoryRepository is an in memory implementation of ChatMediumRepository
+ */
 class ChatMediumInMemoryRepository implements ChatMediumRepository {
   final List<ChatMediumModel> items;
   final ChatMediumListChanged trigger;
   Stream<List<ChatMediumModel>>? theValues;
 
+  /* 
+     * Construct the ChatMediumInMemoryRepository
+     */
   ChatMediumInMemoryRepository(this.trigger, this.items) {
     List<List<ChatMediumModel>> myList = <List<ChatMediumModel>>[];
     myList.add(items);
@@ -78,18 +87,27 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return -1;
   }
 
+  /* 
+     * Add an entity
+     */
   @override
   Future<ChatMediumEntity> addEntity(
       String documentID, ChatMediumEntity value) {
     throw Exception('Not implemented');
   }
 
+  /* 
+     * Update an entity
+     */
   @override
   Future<ChatMediumEntity> updateEntity(
       String documentID, ChatMediumEntity value) {
     throw Exception('Not implemented');
   }
 
+  /* 
+     * Update a model
+     */
   @override
   Future<ChatMediumModel> add(ChatMediumModel value) {
     items.add(value.copyWith(documentID: newRandomKey()));
@@ -97,6 +115,9 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return Future.value(value);
   }
 
+  /* 
+     * Delete a model
+     */
   @override
   Future<void> delete(ChatMediumModel value) {
     int index = _index(value.documentID);
@@ -105,6 +126,9 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return Future.value();
   }
 
+  /* 
+     * Update a model
+     */
   @override
   Future<ChatMediumModel> update(ChatMediumModel value) {
     int index = _index(value.documentID);
@@ -115,6 +139,9 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return Future.value(value);
   }
 
+  /* 
+     * Get a model
+     */
   @override
   Future<ChatMediumModel> get(String? id, {Function(Exception)? onError}) {
     int index = _index(id!);
@@ -123,6 +150,9 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return completer.future;
   }
 
+  /* 
+     * Retrieve to a list of ChatMediumModel base on a query
+     */
   @override
   Stream<List<ChatMediumModel>> values(
       {String? orderBy,
@@ -135,6 +165,9 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return theValues!;
   }
 
+  /* 
+     * Retrieve to a list of ChatMediumModel, including linked models base on a query
+     */
   @override
   Stream<List<ChatMediumModel>> valuesWithDetails(
       {String? orderBy,
@@ -147,6 +180,9 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return theValues!;
   }
 
+  /* 
+     * Subscribe to a list of ChatMediumModel base on a query
+     */
   @override
   StreamSubscription<List<ChatMediumModel>> listen(trigger,
       {String? orderBy,
@@ -158,6 +194,9 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return theValues!.listen((theList) => trigger(theList));
   }
 
+  /* 
+     * Subscribe to a list of ChatMediumModel, including linked models, base on a query
+     */
   @override
   StreamSubscription<List<ChatMediumModel>> listenWithDetails(trigger,
       {String? orderBy,
@@ -169,9 +208,15 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return theValues!.listen((theList) => trigger(theList));
   }
 
+  /* 
+     * Flush the repository
+     */
   @override
   void flush() {}
 
+  /* 
+     * Retrieve the list of models
+     */
   @override
   Future<List<ChatMediumModel>> valuesList(
       {String? orderBy,
@@ -196,16 +241,25 @@ class ChatMediumInMemoryRepository implements ChatMediumRepository {
     return Future.value(items);
   }
 
+  /* 
+     * Retrieve a subcollection of this collection
+     */
   @override
   getSubCollection(String documentId, String name) {
     throw UnimplementedError();
   }
 
+  /* 
+   * Retrieve a timestamp
+   */
   @override
   String timeStampToString(timeStamp) {
     throw UnimplementedError();
   }
 
+  /* 
+   * Subscribe to 1 document / 1 model
+   */
   @override
   StreamSubscription<ChatMediumModel> listenTo(
       String documentId, ChatMediumChanged changed,

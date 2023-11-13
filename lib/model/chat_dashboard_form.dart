@@ -58,7 +58,7 @@ class ChatDashboardForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseChatDashboardFormEvent(value: value)),
-        child: MyChatDashboardForm(
+        child: _MyChatDashboardForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     }
@@ -68,7 +68,7 @@ class ChatDashboardForm extends StatelessWidget {
           appId,
           formAction: formAction,
         )..add(InitialiseChatDashboardFormNoLoadEvent(value: value)),
-        child: MyChatDashboardForm(
+        child: _MyChatDashboardForm(
             app: app, submitAction: submitAction, formAction: formAction),
       );
     } else {
@@ -87,26 +87,26 @@ class ChatDashboardForm extends StatelessWidget {
             )..add((formAction == FormAction.updateAction
                 ? InitialiseChatDashboardFormEvent(value: value)
                 : InitialiseNewChatDashboardFormEvent())),
-            child: MyChatDashboardForm(
+            child: _MyChatDashboardForm(
                 app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
 
-class MyChatDashboardForm extends StatefulWidget {
+class _MyChatDashboardForm extends StatefulWidget {
   final AppModel app;
   final FormAction? formAction;
   final ActionModel? submitAction;
 
-  MyChatDashboardForm({required this.app, this.formAction, this.submitAction});
+  _MyChatDashboardForm({required this.app, this.formAction, this.submitAction});
 
   @override
-  State<MyChatDashboardForm> createState() =>
+  State<_MyChatDashboardForm> createState() =>
       _MyChatDashboardFormState(formAction);
 }
 
-class _MyChatDashboardFormState extends State<MyChatDashboardForm> {
+class _MyChatDashboardFormState extends State<_MyChatDashboardForm> {
   final FormAction? formAction;
   late ChatDashboardFormBloc _myFormBloc;
 
