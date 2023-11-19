@@ -16,6 +16,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 
+
 /*
  * ChatDashboardComponentEvent is the base class for events to be used with constructing a ChatDashboardComponentBloc 
  */
@@ -33,7 +34,7 @@ class FetchChatDashboardComponent extends ChatDashboardComponentEvent {
   /*
    * Construct the FetchChatDashboardComponent
    */
-  FetchChatDashboardComponent({this.id});
+  FetchChatDashboardComponent({ this.id });
 }
 
 /*
@@ -45,5 +46,7 @@ class ChatDashboardComponentUpdated extends ChatDashboardComponentEvent {
   /*
    * Construct the ChatDashboardComponentUpdated
    */
-  ChatDashboardComponentUpdated({required this.value});
+  ChatDashboardComponentUpdated({ required this.value });
 }
+
+

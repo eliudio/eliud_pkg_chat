@@ -7,7 +7,7 @@ import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   StreamSubscription? _chatsListSubscription;

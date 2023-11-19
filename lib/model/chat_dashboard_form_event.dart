@@ -15,8 +15,19 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_core_model/tools/common_tools.dart';
+import 'package:eliud_core_model/model/repository_export.dart';
+import 'package:eliud_core_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core_model/model/model_export.dart';
+import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core_model/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
+
 
 @immutable
 abstract class ChatDashboardFormEvent extends Equatable {
@@ -26,13 +37,15 @@ abstract class ChatDashboardFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewChatDashboardFormEvent extends ChatDashboardFormEvent {}
+class InitialiseNewChatDashboardFormEvent extends ChatDashboardFormEvent {
+}
+
 
 class InitialiseChatDashboardFormEvent extends ChatDashboardFormEvent {
   final ChatDashboardModel? value;
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   InitialiseChatDashboardFormEvent({this.value});
 }
@@ -41,7 +54,7 @@ class InitialiseChatDashboardFormNoLoadEvent extends ChatDashboardFormEvent {
   final ChatDashboardModel? value;
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   InitialiseChatDashboardFormNoLoadEvent({this.value});
 }
@@ -52,7 +65,7 @@ class ChangedChatDashboardDocumentID extends ChatDashboardFormEvent {
   ChangedChatDashboardDocumentID({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedChatDashboardDocumentID{ value: $value }';
@@ -64,7 +77,7 @@ class ChangedChatDashboardAppId extends ChatDashboardFormEvent {
   ChangedChatDashboardAppId({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedChatDashboardAppId{ value: $value }';
@@ -76,7 +89,7 @@ class ChangedChatDashboardDescription extends ChatDashboardFormEvent {
   ChangedChatDashboardDescription({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedChatDashboardDescription{ value: $value }';
@@ -88,7 +101,7 @@ class ChangedChatDashboardConditions extends ChatDashboardFormEvent {
   ChangedChatDashboardConditions({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedChatDashboardConditions{ value: $value }';
@@ -100,8 +113,9 @@ class ChangedChatDashboardMembersType extends ChatDashboardFormEvent {
   ChangedChatDashboardMembersType({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedChatDashboardMembersType{ value: $value }';
 }
+

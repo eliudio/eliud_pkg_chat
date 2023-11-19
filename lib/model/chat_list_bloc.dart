@@ -15,15 +15,18 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_chat/model/chat_repository.dart';
 import 'package:eliud_pkg_chat/model/chat_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_list_state.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 import 'chat_model.dart';
 
-typedef FilterChatModels = List<ChatModel?> Function(List<ChatModel?> values);
+typedef List<ChatModel?> FilterChatModels(List<ChatModel?> values);
+
+
 
 class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final FilterChatModels? filter;
@@ -37,32 +40,24 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   final bool? detailed;
   final int chatLimit;
 
-  ChatListBloc(
-      {this.filter,
-      this.paged,
-      this.orderBy,
-      this.descending,
-      this.detailed,
-      this.eliudQuery,
-      required ChatRepository chatRepository,
-      this.chatLimit = 5})
-      : _chatRepository = chatRepository,
+  ChatListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatRepository chatRepository, this.chatLimit = 5})
+      : assert(chatRepository != null),
+        _chatRepository = chatRepository,
         super(ChatListLoading()) {
-    on<LoadChatList>((event, emit) {
+    on <LoadChatList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadChatListToState();
       } else {
         _mapLoadChatListWithDetailsToState();
       }
     });
-
-    on<NewPage>((event, emit) {
-      pages = pages +
-          1; // it doesn't matter so much if we increase pages beyond the end
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadChatListWithDetailsToState();
     });
-
-    on<ChatChangeQuery>((event, emit) {
+    
+    on <ChatChangeQuery> ((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadChatListToState();
@@ -70,20 +65,20 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
         _mapLoadChatListWithDetailsToState();
       }
     });
-
-    on<AddChatList>((event, emit) async {
+      
+    on <AddChatList> ((event, emit) async {
       await _mapAddChatListToState(event);
     });
-
-    on<UpdateChatList>((event, emit) async {
+    
+    on <UpdateChatList> ((event, emit) async {
       await _mapUpdateChatListToState(event);
     });
-
-    on<DeleteChatList>((event, emit) async {
+    
+    on <DeleteChatList> ((event, emit) async {
       await _mapDeleteChatListToState(event);
     });
-
-    on<ChatListUpdated>((event, emit) {
+    
+    on <ChatListUpdated> ((event, emit) {
       emit(_mapChatListUpdatedToState(event));
     });
   }
@@ -97,31 +92,27 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
   }
 
   Future<void> _mapLoadChatListToState() async {
-    int amountNow = (state is ChatListLoaded)
-        ? (state as ChatListLoaded).values!.length
-        : 0;
+    int amountNow =  (state is ChatListLoaded) ? (state as ChatListLoaded).values!.length : 0;
     _chatsListSubscription?.cancel();
     _chatsListSubscription = _chatRepository.listen(
-        (list) => add(ChatListUpdated(
-            value: _filter(list), mightHaveMore: amountNow != list.length)),
-        orderBy: orderBy,
-        descending: descending,
-        eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * chatLimit : null);
+          (list) => add(ChatListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+      orderBy: orderBy,
+      descending: descending,
+      eliudQuery: eliudQuery,
+      limit: ((paged != null) && paged!) ? pages * chatLimit : null
+    );
   }
 
   Future<void> _mapLoadChatListWithDetailsToState() async {
-    int amountNow = (state is ChatListLoaded)
-        ? (state as ChatListLoaded).values!.length
-        : 0;
+    int amountNow =  (state is ChatListLoaded) ? (state as ChatListLoaded).values!.length : 0;
     _chatsListSubscription?.cancel();
     _chatsListSubscription = _chatRepository.listenWithDetails(
-        (list) => add(ChatListUpdated(
-            value: _filter(list), mightHaveMore: amountNow != list.length)),
+            (list) => add(ChatListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
         orderBy: orderBy,
         descending: descending,
         eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * chatLimit : null);
+        limit: ((paged != null) && paged!) ? pages * chatLimit : null
+    );
   }
 
   Future<void> _mapAddChatListToState(AddChatList event) async {
@@ -145,8 +136,8 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     }
   }
 
-  ChatListLoaded _mapChatListUpdatedToState(ChatListUpdated event) =>
-      ChatListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
+  ChatListLoaded _mapChatListUpdatedToState(
+      ChatListUpdated event) => ChatListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -154,3 +145,5 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     return super.close();
   }
 }
+
+

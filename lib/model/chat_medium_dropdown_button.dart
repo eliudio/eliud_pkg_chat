@@ -13,25 +13,30 @@
 
 */
 
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
+//import 'package:eliud_core_model/package/packages.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/frontend/has_button.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
-import 'package:eliud_core/tools/component/update_component.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:eliud_core_model/style/style_registry.dart';
+import 'package:eliud_core_model/style/frontend/has_text.dart';
+import 'package:eliud_core_model/style/frontend/has_button.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/component/update_component.dart';
+
 
 import 'package:eliud_pkg_chat/model/chat_medium_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_list_state.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
+import 'package:eliud_core_model/style/frontend/has_button.dart';
+//import 'package:eliud_core_model/tools/component/update_component.dart';
 
-typedef ChatMediumChanged = Function(
-  String? value,
-  int? privilegeLevel,
-);
+
+
+typedef ChatMediumChanged(String? value, int? privilegeLevel,);
 
 /* 
  * ChatMediumDropdownButtonWidget is the drop down widget to allow to select an instance of ChatMedium
@@ -46,13 +51,7 @@ class ChatMediumDropdownButtonWidget extends StatefulWidget {
   /* 
    * construct a ChatMediumDropdownButtonWidget
    */
-  ChatMediumDropdownButtonWidget(
-      {required this.app,
-      this.privilegeLevel,
-      this.value,
-      this.trigger,
-      this.optional,
-      super.key});
+  ChatMediumDropdownButtonWidget({ required this.app, this.privilegeLevel, this.value, this.trigger, this.optional, Key? key }): super(key: key);
 
   /* 
    * create state of ChatMediumDropdownButtonWidget
@@ -63,8 +62,7 @@ class ChatMediumDropdownButtonWidget extends StatefulWidget {
   }
 }
 
-class _ChatMediumDropdownButtonWidgetState
-    extends State<ChatMediumDropdownButtonWidget> {
+class _ChatMediumDropdownButtonWidgetState extends State<ChatMediumDropdownButtonWidget> {
   ChatMediumListBloc? bloc;
   String? value;
 
@@ -82,28 +80,20 @@ class _ChatMediumDropdownButtonWidgetState
     super.dispose();
   }
 
-  List<Widget> _widgets(ChatMediumModel value) {
-    var app = widget.app;
-    var widgets = <Widget>[];
-    widgets.add(Center(
-        child: StyleRegistry.registry()
-            .styleWithApp(app)
-            .frontEndStyle()
-            .textStyle()
-            .text(app, context, value.documentID)));
-    return widgets;
-  }
+List<Widget> _widgets(ChatMediumModel value) {
+var app = widget.app;
+var widgets = <Widget>[];
+widgets.add(Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)));
+return widgets;
+}
+
 
   @override
   Widget build(BuildContext context) {
     //var accessState = AccessBloc.getState(context);
-    return BlocBuilder<ChatMediumListBloc, ChatMediumListState>(
-        builder: (context, state) {
+    return BlocBuilder<ChatMediumListBloc, ChatMediumListState>(builder: (context, state) {
       if (state is ChatMediumListLoading) {
-        return StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminListStyle()
-            .progressIndicator(widget.app, context);
+        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
       } else if (state is ChatMediumListLoaded) {
         int? privilegeChosen = widget.privilegeLevel;
         if ((value != null) && (privilegeChosen == null)) {
@@ -111,39 +101,41 @@ class _ChatMediumDropdownButtonWidgetState
             privilegeChosen = 0;
           }
         }
-
+          
 //        final values = state.values;
         final items = <DropdownMenuItem<String>>[];
         if (state.values!.isNotEmpty) {
           if (widget.optional != null && widget.optional!) {
-            items.add(DropdownMenuItem<String>(
+            items.add(new DropdownMenuItem<String>(
                 value: null,
-                child: Container(
+                child: new Container(
                   padding: const EdgeInsets.only(bottom: 5.0),
                   height: 100.0,
-                  child: Row(
+                  child: new Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[Text("None")],
+                    children: <Widget> [ new Text("None") ],
                   ),
                 )));
           }
-          for (var element in state.values!) {
-            items.add(DropdownMenuItem<String>(
+          state.values!.forEach((element) {
+            items.add(new DropdownMenuItem<String>(
                 value: element!.documentID,
-                child: Container(
+                child: new Container(
                   padding: const EdgeInsets.only(bottom: 5.0),
                   height: 100.0,
-                  child: Row(
+                  child: new Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: _widgets(element),
                   ),
                 )));
-          }
+          });
         }
-        return ListView(physics: ScrollPhysics(), shrinkWrap: true, children: [
+        return ListView(
+            physics: ScrollPhysics(),
+            shrinkWrap: true,
+            children: [
           dropdownButton<int>(
-            widget.app,
-            context,
+            widget.app, context,
             isDense: false,
             isExpanded: false,
             items: [
@@ -168,57 +160,49 @@ class _ChatMediumDropdownButtonWidgetState
             hint: text(widget.app, context, 'Select a privilege'),
             onChanged: _onPrivilegeLevelChange,
           ),
-          Row(children: [
-            ((false) == true)
-                ? Container(
-                    height: 48,
-                    child: dropdownButton<String>(
-                      widget.app,
-                      context,
+          Row(children: [((false) == true)
+            ? Container(
+                height: 48, 
+                child: dropdownButton<String>(
+                      widget.app, context,
                       isDense: false,
                       isExpanded: false,
                       items: items,
                       value: value,
                       hint: text(widget.app, context, 'Select a chatMedium'),
                       onChanged: _onValueChange,
-                    ))
-                : dropdownButton<String>(
-                    widget.app,
-                    context,
-                    isDense: false,
-                    isExpanded: false,
-                    items: items,
-                    value: value,
-                    hint: text(widget.app, context, 'Select a chatMedium'),
-                    onChanged: _onValueChange,
-                  ),
-            if (value != null) Spacer(),
-            if (value != null)
-              Align(
-                  alignment: Alignment.topRight,
-                  child: button(
-                    widget.app,
-                    context,
-                    icon: Icon(
-                      Icons.edit,
-                    ),
-                    label: 'Update',
-                    onPressed: () {
-                      updateComponent(context, widget.app, 'chatMediums', value,
-                          (newValue, _) {
-                        setState(() {
-                          value = value;
-                        });
-                      });
-                    },
-                  ))
+                    )
+                ) 
+            : dropdownButton<String>(
+                widget.app, context,
+                isDense: false,
+                isExpanded: false,
+                items: items,
+                value: value,
+                hint: text(widget.app, context, 'Select a chatMedium'),
+                onChanged: _onValueChange,
+              ),
+          if (value != null) Spacer(),
+          if (value != null) 
+            Align(alignment: Alignment.topRight, child: button(
+              widget.app,
+              context,
+              icon: Icon(
+                Icons.edit,
+              ),
+              label: 'Update',
+              onPressed: () {
+                updateComponent(context, widget.app, 'chatMediums', value, (newValue, _) {
+                  setState(() {
+                    value = value;
+                  });
+                });
+              },
+            ))
           ])
         ]);
       } else {
-        return StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminListStyle()
-            .progressIndicator(widget.app, context);
+        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
       }
     });
   }
@@ -229,12 +213,12 @@ class _ChatMediumDropdownButtonWidgetState
 
   void _onPrivilegeLevelChange(int? value) {
     BlocProvider.of<ChatMediumListBloc>(context).add(ChatMediumChangeQuery(
-      newQuery: EliudQuery(theConditions: [
-        EliudQueryCondition('conditions.privilegeLevelRequired',
-            isEqualTo: value ?? 0),
-        EliudQueryCondition('appId', isEqualTo: widget.app.documentID),
-      ]),
-    ));
-    widget.trigger!(null, value);
+       newQuery: EliudQuery(theConditions: [
+         EliudQueryCondition('conditions.privilegeLevelRequired', isEqualTo: value ?? 0),
+         EliudQueryCondition('appId', isEqualTo: widget.app.documentID),]
+       ),
+     ));
+     widget.trigger!(null, value);
   }
 }
+

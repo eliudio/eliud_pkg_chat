@@ -13,17 +13,20 @@
 
 */
 
+
 import 'package:eliud_pkg_chat/model/member_has_chat_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_component_event.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_model.dart';
+import 'package:eliud_pkg_chat/model/member_has_chat_repository.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_component_state.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core_model/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
-import 'package:eliud_core/core/widgets/alert_widget.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/widgets/alert_widget.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 
 /*
  * AbstractMemberHasChatComponent is the base class to extend / implement in case you need to implement a component
@@ -36,26 +39,23 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
   /*
    * Construct AbstractMemberHasChatComponent
    */
-  AbstractMemberHasChatComponent(
-      {super.key, required this.app, required this.memberHasChatId});
+  AbstractMemberHasChatComponent({Key? key, required this.app, required this.memberHasChatId}): super(key: key);
 
   /*
    * build the component
    */
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<MemberHasChatComponentBloc>(
-      create: (context) => MemberHasChatComponentBloc(
-          memberHasChatRepository:
-              memberHasChatRepository(appId: app.documentID)!)
+    return BlocProvider<MemberHasChatComponentBloc> (
+          create: (context) => MemberHasChatComponentBloc(
+            memberHasChatRepository: memberHasChatRepository(appId: app.documentID)!)
         ..add(FetchMemberHasChatComponent(id: memberHasChatId)),
       child: _memberHasChatBlockBuilder(context),
     );
   }
 
   Widget _memberHasChatBlockBuilder(BuildContext context) {
-    return BlocBuilder<MemberHasChatComponentBloc, MemberHasChatComponentState>(
-        builder: (context, state) {
+    return BlocBuilder<MemberHasChatComponentBloc, MemberHasChatComponentState>(builder: (context, state) {
       if (state is MemberHasChatComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is MemberHasChatComponentPermissionDenied) {
@@ -68,11 +68,7 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry()
-              .styleWithApp(app)
-              .frontEndStyle()
-              .progressIndicatorStyle()
-              .progressIndicator(app, context),
+          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
         );
       }
     });
@@ -83,3 +79,4 @@ abstract class AbstractMemberHasChatComponent extends StatelessWidget {
    */
   Widget yourWidget(BuildContext context, MemberHasChatModel value);
 }
+

@@ -13,17 +13,20 @@
 
 */
 
+
 import 'package:eliud_pkg_chat/model/room_component_bloc.dart';
 import 'package:eliud_pkg_chat/model/room_component_event.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
+import 'package:eliud_pkg_chat/model/room_repository.dart';
 import 'package:eliud_pkg_chat/model/room_component_state.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
+import 'package:eliud_core_model/style/style_registry.dart';
 import 'abstract_repository_singleton.dart';
-import 'package:eliud_core/core/widgets/alert_widget.dart';
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/widgets/alert_widget.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 
 /*
  * AbstractRoomComponent is the base class to extend / implement in case you need to implement a component
@@ -36,24 +39,23 @@ abstract class AbstractRoomComponent extends StatelessWidget {
   /*
    * Construct AbstractRoomComponent
    */
-  AbstractRoomComponent({super.key, required this.app, required this.roomId});
+  AbstractRoomComponent({Key? key, required this.app, required this.roomId}): super(key: key);
 
   /*
    * build the component
    */
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<RoomComponentBloc>(
-      create: (context) => RoomComponentBloc(
-          roomRepository: roomRepository(appId: app.documentID)!)
+    return BlocProvider<RoomComponentBloc> (
+          create: (context) => RoomComponentBloc(
+            roomRepository: roomRepository(appId: app.documentID)!)
         ..add(FetchRoomComponent(id: roomId)),
       child: _roomBlockBuilder(context),
     );
   }
 
   Widget _roomBlockBuilder(BuildContext context) {
-    return BlocBuilder<RoomComponentBloc, RoomComponentState>(
-        builder: (context, state) {
+    return BlocBuilder<RoomComponentBloc, RoomComponentState>(builder: (context, state) {
       if (state is RoomComponentLoaded) {
         return yourWidget(context, state.value);
       } else if (state is RoomComponentPermissionDenied) {
@@ -66,11 +68,7 @@ abstract class AbstractRoomComponent extends StatelessWidget {
         return AlertWidget(app: app, title: 'Error', content: state.message);
       } else {
         return Center(
-          child: StyleRegistry.registry()
-              .styleWithApp(app)
-              .frontEndStyle()
-              .progressIndicatorStyle()
-              .progressIndicator(app, context),
+          child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().progressIndicatorStyle().progressIndicator(app, context),
         );
       }
     });
@@ -81,3 +79,4 @@ abstract class AbstractRoomComponent extends StatelessWidget {
    */
   Widget yourWidget(BuildContext context, RoomModel value);
 }
+

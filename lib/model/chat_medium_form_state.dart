@@ -41,9 +41,9 @@ class ChatMediumFormInitialized extends ChatMediumFormState {
   final ChatMediumModel? value;
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
-  const ChatMediumFormInitialized({this.value});
+  const ChatMediumFormInitialized({ this.value });
 }
 
 // Menu has been initialised and hence a menu is available
@@ -51,9 +51,9 @@ abstract class ChatMediumFormError extends ChatMediumFormInitialized {
   final String? message;
 
   @override
-  List<Object?> get props => [message, value];
+  List<Object?> get props => [ message, value ];
 
-  const ChatMediumFormError({this.message, super.value});
+  const ChatMediumFormError({this.message, ChatMediumModel? value }) : super(value: value);
 
   @override
   String toString() {
@@ -63,12 +63,11 @@ abstract class ChatMediumFormError extends ChatMediumFormInitialized {
     }''';
   }
 }
-
-class DocumentIDChatMediumFormError extends ChatMediumFormError {
-  const DocumentIDChatMediumFormError({super.message, super.value});
+class DocumentIDChatMediumFormError extends ChatMediumFormError { 
+  const DocumentIDChatMediumFormError({ String? message, ChatMediumModel? value }): super(message: message, value: value);
 
   @override
-  List<Object?> get props => [message, value];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -79,11 +78,12 @@ class DocumentIDChatMediumFormError extends ChatMediumFormError {
   }
 }
 
-class MemberMediumChatMediumFormError extends ChatMediumFormError {
-  const MemberMediumChatMediumFormError({super.message, super.value});
+
+class MemberMediumChatMediumFormError extends ChatMediumFormError { 
+  const MemberMediumChatMediumFormError({ String? message, ChatMediumModel? value }): super(message: message, value: value);
 
   @override
-  List<Object?> get props => [message, value];
+  List<Object?> get props => [ message, value ];
 
   @override
   String toString() {
@@ -94,11 +94,12 @@ class MemberMediumChatMediumFormError extends ChatMediumFormError {
   }
 }
 
-class ChatMediumFormLoaded extends ChatMediumFormInitialized {
-  const ChatMediumFormLoaded({super.value});
+
+class ChatMediumFormLoaded extends ChatMediumFormInitialized { 
+  const ChatMediumFormLoaded({ ChatMediumModel? value }): super(value: value);
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() {
@@ -108,11 +109,12 @@ class ChatMediumFormLoaded extends ChatMediumFormInitialized {
   }
 }
 
-class SubmittableChatMediumForm extends ChatMediumFormInitialized {
-  const SubmittableChatMediumForm({super.value});
+
+class SubmittableChatMediumForm extends ChatMediumFormInitialized { 
+  const SubmittableChatMediumForm({ ChatMediumModel? value }): super(value: value);
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() {
@@ -121,3 +123,5 @@ class SubmittableChatMediumForm extends ChatMediumFormInitialized {
     }''';
   }
 }
+
+

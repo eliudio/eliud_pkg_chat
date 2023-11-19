@@ -36,7 +36,7 @@ class ChatComponentUninitialized extends ChatComponentState {}
  */
 class ChatComponentError extends ChatComponentState {
   final String? message;
-  ChatComponentError({this.message});
+  ChatComponentError({ this.message });
 }
 
 /* 
@@ -55,13 +55,13 @@ class ChatComponentLoaded extends ChatComponentState {
   /* 
    * construct ChatComponentLoaded
    */
-  const ChatComponentLoaded({required this.value});
+  const ChatComponentLoaded({ required this.value });
 
   /* 
    * copy method
    */
-  ChatComponentLoaded copyWith({ChatModel? copyThis}) {
-    return ChatComponentLoaded(value: copyThis ?? value);
+  ChatComponentLoaded copyWith({ ChatModel? copyThis }) {
+    return ChatComponentLoaded(value: copyThis ?? this.value);
   }
 
   @override
@@ -70,3 +70,4 @@ class ChatComponentLoaded extends ChatComponentState {
   @override
   String toString() => 'ChatComponentLoaded { value: $value }';
 }
+

@@ -29,22 +29,20 @@ abstract class ChatMemberInfoComponentState extends Equatable {
 /* 
  * ChatMemberInfoComponentUninitialized is the uninitialized state of the ChatMemberInfoComponentBloc 
  */
-class ChatMemberInfoComponentUninitialized
-    extends ChatMemberInfoComponentState {}
+class ChatMemberInfoComponentUninitialized extends ChatMemberInfoComponentState {}
 
 /* 
  * ChatMemberInfoComponentError is the error state of the ChatMemberInfoComponentBloc 
  */
 class ChatMemberInfoComponentError extends ChatMemberInfoComponentState {
   final String? message;
-  ChatMemberInfoComponentError({this.message});
+  ChatMemberInfoComponentError({ this.message });
 }
 
 /* 
  * ChatMemberInfoComponentPermissionDenied is to indicate permission denied state of the ChatMemberInfoComponentBloc 
  */
-class ChatMemberInfoComponentPermissionDenied
-    extends ChatMemberInfoComponentState {
+class ChatMemberInfoComponentPermissionDenied extends ChatMemberInfoComponentState {
   ChatMemberInfoComponentPermissionDenied();
 }
 
@@ -57,13 +55,13 @@ class ChatMemberInfoComponentLoaded extends ChatMemberInfoComponentState {
   /* 
    * construct ChatMemberInfoComponentLoaded
    */
-  const ChatMemberInfoComponentLoaded({required this.value});
+  const ChatMemberInfoComponentLoaded({ required this.value });
 
   /* 
    * copy method
    */
-  ChatMemberInfoComponentLoaded copyWith({ChatMemberInfoModel? copyThis}) {
-    return ChatMemberInfoComponentLoaded(value: copyThis ?? value);
+  ChatMemberInfoComponentLoaded copyWith({ ChatMemberInfoModel? copyThis }) {
+    return ChatMemberInfoComponentLoaded(value: copyThis ?? this.value);
   }
 
   @override
@@ -72,3 +70,4 @@ class ChatMemberInfoComponentLoaded extends ChatMemberInfoComponentState {
   @override
   String toString() => 'ChatMemberInfoComponentLoaded { value: $value }';
 }
+

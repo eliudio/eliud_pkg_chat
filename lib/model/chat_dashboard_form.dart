@@ -13,19 +13,42 @@
 
 */
 
-import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/core/blocs/access/state/access_state.dart';
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import '../tools/bespoke_models.dart';
-import 'package:eliud_core/core/navigate/router.dart' as eliudrouter;
+import 'package:eliud_core_model/apis/action_api/action_model.dart';
+
+import 'package:eliud_core_model/apis/apis.dart';
+
+import 'package:eliud_core_model/tools/etc/screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
+import 'package:flutter/foundation.dart';
+import 'package:eliud_core_model/tools/common_tools.dart';
+import 'package:eliud_core_model/style/style_registry.dart';
+import 'package:eliud_core_model/style/admin/admin_form_style.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
+import 'package:eliud_core_model/model/internal_component.dart';
+import 'package:eliud_pkg_chat/model/embedded_component.dart';
+import 'package:eliud_pkg_chat/tools/bespoke_formfields.dart';
+import 'package:eliud_core_model/tools/bespoke_formfields.dart';
 
-import 'package:eliud_core/tools/enums.dart';
+import 'package:eliud_core_model/tools/etc/enums.dart';
+import 'package:eliud_core_model/tools/etc/etc.dart';
 
-import 'package:eliud_core/model/model_export.dart';
+import 'package:eliud_core_model/model/repository_export.dart';
+import 'package:eliud_core_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core_model/model/embedded_component.dart';
+import 'package:eliud_pkg_chat/model/embedded_component.dart';
+import 'package:eliud_core_model/model/model_export.dart';
+import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core_model/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_list_event.dart';
@@ -34,65 +57,55 @@ import 'package:eliud_pkg_chat/model/chat_dashboard_form_bloc.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_form_event.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_form_state.dart';
 
+
 class ChatDashboardForm extends StatelessWidget {
   final AppModel app;
   final FormAction formAction;
   final ChatDashboardModel? value;
   final ActionModel? submitAction;
 
-  ChatDashboardForm(
-      {super.key,
-      required this.app,
-      required this.formAction,
-      required this.value,
-      this.submitAction});
+  ChatDashboardForm({Key? key, required this.app, required this.formAction, required this.value, this.submitAction}) : super(key: key);
 
-  /// Build the ChatDashboardForm
+  /**
+   * Build the ChatDashboardForm
+   */
   @override
   Widget build(BuildContext context) {
     //var accessState = AccessBloc.getState(context);
     var appId = app.documentID;
     if (formAction == FormAction.showData) {
-      return BlocProvider<ChatDashboardFormBloc>(
-        create: (context) => ChatDashboardFormBloc(
-          appId,
-          formAction: formAction,
-        )..add(InitialiseChatDashboardFormEvent(value: value)),
-        child: _MyChatDashboardForm(
-            app: app, submitAction: submitAction, formAction: formAction),
-      );
-    }
-    if (formAction == FormAction.showPreloadedData) {
-      return BlocProvider<ChatDashboardFormBloc>(
-        create: (context) => ChatDashboardFormBloc(
-          appId,
-          formAction: formAction,
-        )..add(InitialiseChatDashboardFormNoLoadEvent(value: value)),
-        child: _MyChatDashboardForm(
-            app: app, submitAction: submitAction, formAction: formAction),
-      );
+      return BlocProvider<ChatDashboardFormBloc >(
+            create: (context) => ChatDashboardFormBloc(appId,
+                                       formAction: formAction,
+
+                                                )..add(InitialiseChatDashboardFormEvent(value: value)),
+  
+        child: _MyChatDashboardForm(app:app, submitAction: submitAction, formAction: formAction),
+          );
+    } if (formAction == FormAction.showPreloadedData) {
+      return BlocProvider<ChatDashboardFormBloc >(
+            create: (context) => ChatDashboardFormBloc(appId,
+                                       formAction: formAction,
+
+                                                )..add(InitialiseChatDashboardFormNoLoadEvent(value: value)),
+  
+        child: _MyChatDashboardForm(app:app, submitAction: submitAction, formAction: formAction),
+          );
     } else {
       return Scaffold(
-          appBar: StyleRegistry.registry()
-              .styleWithApp(app)
-              .adminFormStyle()
-              .appBarWithString(app, context,
-                  title: formAction == FormAction.updateAction
-                      ? 'Update ChatDashboard'
-                      : 'Add ChatDashboard'),
-          body: BlocProvider<ChatDashboardFormBloc>(
-            create: (context) => ChatDashboardFormBloc(
-              appId,
-              formAction: formAction,
-            )..add((formAction == FormAction.updateAction
-                ? InitialiseChatDashboardFormEvent(value: value)
-                : InitialiseNewChatDashboardFormEvent())),
-            child: _MyChatDashboardForm(
-                app: app, submitAction: submitAction, formAction: formAction),
+        appBar: StyleRegistry.registry().styleWithApp(app).adminFormStyle().appBarWithString(app, context, title: formAction == FormAction.updateAction ? 'Update ChatDashboard' : 'Add ChatDashboard'),
+        body: BlocProvider<ChatDashboardFormBloc >(
+            create: (context) => ChatDashboardFormBloc(appId,
+                                       formAction: formAction,
+
+                                                )..add((formAction == FormAction.updateAction ? InitialiseChatDashboardFormEvent(value: value) : InitialiseNewChatDashboardFormEvent())),
+  
+        child: _MyChatDashboardForm(app: app, submitAction: submitAction, formAction: formAction),
           ));
     }
   }
 }
+
 
 class _MyChatDashboardForm extends StatefulWidget {
   final AppModel app;
@@ -101,10 +114,9 @@ class _MyChatDashboardForm extends StatefulWidget {
 
   _MyChatDashboardForm({required this.app, this.formAction, this.submitAction});
 
-  @override
-  State<_MyChatDashboardForm> createState() =>
-      _MyChatDashboardFormState(formAction);
+  State<_MyChatDashboardForm> createState() => _MyChatDashboardFormState(this.formAction);
 }
+
 
 class _MyChatDashboardFormState extends State<_MyChatDashboardForm> {
   final FormAction? formAction;
@@ -114,6 +126,7 @@ class _MyChatDashboardFormState extends State<_MyChatDashboardForm> {
   final TextEditingController _appIdController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   int? _membersTypeSelectedRadioTile;
+
 
   _MyChatDashboardFormState(this.formAction);
 
@@ -129,227 +142,143 @@ class _MyChatDashboardFormState extends State<_MyChatDashboardForm> {
 
   @override
   Widget build(BuildContext context) {
-    var accessState = AccessBloc.getState(context);
-    return BlocBuilder<ChatDashboardFormBloc, ChatDashboardFormState>(
-        builder: (context, state) {
-      if (state is ChatDashboardFormUninitialized) {
-        return Center(
-          child: StyleRegistry.registry()
-              .styleWithApp(widget.app)
-              .adminListStyle()
-              .progressIndicator(widget.app, context),
-        );
-      }
+    return BlocBuilder<ChatDashboardFormBloc, ChatDashboardFormState>(builder: (context, state) {
+      if (state is ChatDashboardFormUninitialized) return Center(
+        child: StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context),
+      );
 
       if (state is ChatDashboardFormLoaded) {
         _documentIDController.text = state.value!.documentID.toString();
         _appIdController.text = state.value!.appId.toString();
         _descriptionController.text = state.value!.description.toString();
-        if (state.value!.membersType != null) {
+        if (state.value!.membersType != null)
           _membersTypeSelectedRadioTile = state.value!.membersType!.index;
-        } else {
+        else
           _membersTypeSelectedRadioTile = 0;
-        }
       }
       if (state is ChatDashboardFormInitialized) {
         List<Widget> children = [];
-        children.add(Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: StyleRegistry.registry()
-                .styleWithApp(widget.app)
-                .adminFormStyle()
-                .groupTitle(widget.app, context, 'General')));
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
+                ));
 
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .radioListTile(
-                widget.app,
-                context,
-                0,
-                _membersTypeSelectedRadioTile,
-                'followingMembers',
-                'followingMembers',
-                !accessState.memberIsOwner(widget.app.documentID)
-                    ? null
-                    : (dynamic val) => setSelectionMembersType(val)));
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .radioListTile(
-                widget.app,
-                context,
-                0,
-                _membersTypeSelectedRadioTile,
-                'allMembers',
-                'allMembers',
-                !accessState.memberIsOwner(widget.app.documentID)
-                    ? null
-                    : (dynamic val) => setSelectionMembersType(val)));
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _membersTypeSelectedRadioTile, 'followingMembers', 'followingMembers', !Apis.apis().getCoreApi().memberIsOwner(context, widget.app.documentID) ? null : (dynamic val) => setSelectionMembersType(val))
+          );
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().radioListTile(widget.app, context, 0, _membersTypeSelectedRadioTile, 'allMembers', 'allMembers', !Apis.apis().getCoreApi().memberIsOwner(context, widget.app.documentID) ? null : (dynamic val) => setSelectionMembersType(val))
+          );
+
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .divider(widget.app, context));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
-        children.add(Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: StyleRegistry.registry()
-                .styleWithApp(widget.app)
-                .adminFormStyle()
-                .groupTitle(widget.app, context, 'General')));
 
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .textFormField(widget.app, context,
-                labelText: 'Document ID',
-                icon: Icons.vpn_key,
-                readOnly: (formAction == FormAction.updateAction),
-                textEditingController: _documentIDController,
-                keyboardType: TextInputType.text,
-                validator: (_) => state is DocumentIDChatDashboardFormError
-                    ? state.message
-                    : null,
-                hintText: null));
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'General')
+                ));
 
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .textFormField(widget.app, context,
-                labelText: 'App Identifier',
-                icon: Icons.text_format,
-                readOnly: _readOnly(accessState, state),
-                textEditingController: _appIdController,
-                keyboardType: TextInputType.text,
-                validator: (_) =>
-                    state is AppIdChatDashboardFormError ? state.message : null,
-                hintText: 'field.remark'));
+        children.add(
 
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .textFormField(widget.app, context,
-                labelText: 'Description',
-                icon: Icons.text_format,
-                readOnly: _readOnly(accessState, state),
-                textEditingController: _descriptionController,
-                keyboardType: TextInputType.text,
-                validator: (_) => state is DescriptionChatDashboardFormError
-                    ? state.message
-                    : null,
-                hintText: null));
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Document ID', icon: Icons.vpn_key, readOnly: (formAction == FormAction.updateAction), textEditingController: _documentIDController, keyboardType: TextInputType.text, validator: (_) => state is DocumentIDChatDashboardFormError ? state.message : null, hintText: null)
+          );
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'App Identifier', icon: Icons.text_format, readOnly: _readOnly(context, state), textEditingController: _appIdController, keyboardType: TextInputType.text, validator: (_) => state is AppIdChatDashboardFormError ? state.message : null, hintText: 'field.remark')
+          );
+
+        children.add(
+
+                  StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().textFormField(widget.app, context, labelText: 'Description', icon: Icons.text_format, readOnly: _readOnly(context, state), textEditingController: _descriptionController, keyboardType: TextInputType.text, validator: (_) => state is DescriptionChatDashboardFormError ? state.message : null, hintText: null)
+          );
+
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .divider(widget.app, context));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
-        children.add(Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: StyleRegistry.registry()
-                .styleWithApp(widget.app)
-                .adminFormStyle()
-                .groupTitle(widget.app, context, 'Conditions')));
+
+         children.add(Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().groupTitle(widget.app, context, 'Conditions')
+                ));
+
+
 
         children.add(Container(height: 20.0));
-        children.add(StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .divider(widget.app, context));
+        children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().divider(widget.app, context));
 
-        if ((formAction != FormAction.showData) &&
-            (formAction != FormAction.showPreloadedData)) {
-          children.add(StyleRegistry.registry()
-              .styleWithApp(widget.app)
-              .adminFormStyle()
-              .button(
-                widget.app,
-                context,
-                label: 'Submit',
-                onPressed: _readOnly(accessState, state)
-                    ? null
-                    : () {
-                        if (state is ChatDashboardFormError) {
-                          return;
-                        } else {
-                          if (formAction == FormAction.updateAction) {
-                            BlocProvider.of<ChatDashboardListBloc>(context)
-                                .add(UpdateChatDashboardList(
-                                    value: state.value!.copyWith(
-                              documentID: state.value!.documentID,
-                              appId: state.value!.appId,
-                              description: state.value!.description,
-                              conditions: state.value!.conditions,
-                              membersType: state.value!.membersType,
-                            )));
-                          } else {
-                            BlocProvider.of<ChatDashboardListBloc>(context)
-                                .add(AddChatDashboardList(
-                                    value: ChatDashboardModel(
-                              documentID: state.value!.documentID,
-                              appId: state.value!.appId,
-                              description: state.value!.description,
-                              conditions: state.value!.conditions,
-                              membersType: state.value!.membersType,
-                            )));
-                          }
-                          if (widget.submitAction != null) {
-                            eliudrouter.Router.navigateTo(
-                                context, widget.submitAction!);
-                          } else {
-                            Navigator.pop(context);
-                          }
-                        }
-                      },
-              ));
-        }
 
-        return StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminFormStyle()
-            .container(
-                widget.app,
-                context,
-                Form(
-                  child: ListView(
-                      padding: const EdgeInsets.all(8),
-                      physics: ((formAction == FormAction.showData) ||
-                              (formAction == FormAction.showPreloadedData))
-                          ? NeverScrollableScrollPhysics()
-                          : null,
-                      shrinkWrap: ((formAction == FormAction.showData) ||
-                          (formAction == FormAction.showPreloadedData)),
-                      children: children),
-                ),
-                formAction!);
+        if ((formAction != FormAction.showData) && (formAction != FormAction.showPreloadedData))
+          children.add(StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().button(widget.app, context, label: 'Submit',
+                  onPressed: _readOnly(context, state) ? null : () {
+                    if (state is ChatDashboardFormError) {
+                      return null;
+                    } else {
+                      if (formAction == FormAction.updateAction) {
+                        BlocProvider.of<ChatDashboardListBloc>(context).add(
+                          UpdateChatDashboardList(value: state.value!.copyWith(
+                              documentID: state.value!.documentID, 
+                              appId: state.value!.appId, 
+                              description: state.value!.description, 
+                              conditions: state.value!.conditions, 
+                              membersType: state.value!.membersType, 
+                        )));
+                      } else {
+                        BlocProvider.of<ChatDashboardListBloc>(context).add(
+                          AddChatDashboardList(value: ChatDashboardModel(
+                              documentID: state.value!.documentID, 
+                              appId: state.value!.appId, 
+                              description: state.value!.description, 
+                              conditions: state.value!.conditions, 
+                              membersType: state.value!.membersType, 
+                          )));
+                      }
+                      if (widget.submitAction != null) {
+                        Apis.apis().getRouterApi().navigateTo(context, widget.submitAction!);
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    }
+                  },
+                ));
+
+        return StyleRegistry.registry().styleWithApp(widget.app).adminFormStyle().container(widget.app, context, Form(
+            child: ListView(
+              padding: const EdgeInsets.all(8),
+              physics: ((formAction == FormAction.showData) || (formAction == FormAction.showPreloadedData)) ? NeverScrollableScrollPhysics() : null,
+              shrinkWrap: ((formAction == FormAction.showData) || (formAction == FormAction.showPreloadedData)),
+              children: children as List<Widget>
+            ),
+          ), formAction!
+        );
       } else {
-        return StyleRegistry.registry()
-            .styleWithApp(widget.app)
-            .adminListStyle()
-            .progressIndicator(widget.app, context);
+        return StyleRegistry.registry().styleWithApp(widget.app).adminListStyle().progressIndicator(widget.app, context);
       }
     });
   }
 
   void _onDocumentIDChanged() {
-    _myFormBloc
-        .add(ChangedChatDashboardDocumentID(value: _documentIDController.text));
+    _myFormBloc.add(ChangedChatDashboardDocumentID(value: _documentIDController.text));
   }
+
 
   void _onAppIdChanged() {
     _myFormBloc.add(ChangedChatDashboardAppId(value: _appIdController.text));
   }
 
+
   void _onDescriptionChanged() {
-    _myFormBloc.add(
-        ChangedChatDashboardDescription(value: _descriptionController.text));
+    _myFormBloc.add(ChangedChatDashboardDescription(value: _descriptionController.text));
   }
+
 
   void setSelectionMembersType(int? val) {
     setState(() {
@@ -357,6 +286,8 @@ class _MyChatDashboardFormState extends State<_MyChatDashboardForm> {
     });
     _myFormBloc.add(ChangedChatDashboardMembersType(value: toMembersType(val)));
   }
+
+
 
   @override
   void dispose() {
@@ -366,10 +297,15 @@ class _MyChatDashboardFormState extends State<_MyChatDashboardForm> {
     super.dispose();
   }
 
-  /// Is the form read-only?
-  bool _readOnly(AccessState accessState, ChatDashboardFormInitialized state) {
-    return (formAction == FormAction.showData) ||
-        (formAction == FormAction.showPreloadedData) ||
-        (!accessState.memberIsOwner(widget.app.documentID));
+  /**
+   * Is the form read-only?
+   */
+  bool _readOnly(BuildContext context, ChatDashboardFormInitialized state) {
+    return (formAction == FormAction.showData) || (formAction == FormAction.showPreloadedData) || (!Apis.apis().getCoreApi().memberIsOwner(context, widget.app.documentID));
   }
+  
+
 }
+
+
+

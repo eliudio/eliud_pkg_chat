@@ -15,7 +15,19 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:eliud_core_model/tools/common_tools.dart';
+import 'package:eliud_core_model/model/repository_export.dart';
+import 'package:eliud_core_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core_model/model/model_export.dart';
+import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core_model/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
+
 
 @immutable
 abstract class RoomFormEvent extends Equatable {
@@ -25,13 +37,15 @@ abstract class RoomFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InitialiseNewRoomFormEvent extends RoomFormEvent {}
+class InitialiseNewRoomFormEvent extends RoomFormEvent {
+}
+
 
 class InitialiseRoomFormEvent extends RoomFormEvent {
   final RoomModel? value;
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   InitialiseRoomFormEvent({this.value});
 }
@@ -40,7 +54,7 @@ class InitialiseRoomFormNoLoadEvent extends RoomFormEvent {
   final RoomModel? value;
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   InitialiseRoomFormNoLoadEvent({this.value});
 }
@@ -51,7 +65,7 @@ class ChangedRoomDocumentID extends RoomFormEvent {
   ChangedRoomDocumentID({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedRoomDocumentID{ value: $value }';
@@ -63,7 +77,7 @@ class ChangedRoomOwnerId extends RoomFormEvent {
   ChangedRoomOwnerId({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedRoomOwnerId{ value: $value }';
@@ -75,7 +89,7 @@ class ChangedRoomAppId extends RoomFormEvent {
   ChangedRoomAppId({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedRoomAppId{ value: $value }';
@@ -87,7 +101,7 @@ class ChangedRoomDescription extends RoomFormEvent {
   ChangedRoomDescription({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedRoomDescription{ value: $value }';
@@ -99,7 +113,7 @@ class ChangedRoomIsRoom extends RoomFormEvent {
   ChangedRoomIsRoom({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedRoomIsRoom{ value: $value }';
@@ -111,7 +125,7 @@ class ChangedRoomMembers extends RoomFormEvent {
   ChangedRoomMembers({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedRoomMembers{ value: $value }';
@@ -123,8 +137,9 @@ class ChangedRoomTimestamp extends RoomFormEvent {
   ChangedRoomTimestamp({this.value});
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'ChangedRoomTimestamp{ value: $value }';
 }
+

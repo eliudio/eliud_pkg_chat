@@ -36,14 +36,13 @@ class MemberHasChatComponentUninitialized extends MemberHasChatComponentState {}
  */
 class MemberHasChatComponentError extends MemberHasChatComponentState {
   final String? message;
-  MemberHasChatComponentError({this.message});
+  MemberHasChatComponentError({ this.message });
 }
 
 /* 
  * MemberHasChatComponentPermissionDenied is to indicate permission denied state of the MemberHasChatComponentBloc 
  */
-class MemberHasChatComponentPermissionDenied
-    extends MemberHasChatComponentState {
+class MemberHasChatComponentPermissionDenied extends MemberHasChatComponentState {
   MemberHasChatComponentPermissionDenied();
 }
 
@@ -56,13 +55,13 @@ class MemberHasChatComponentLoaded extends MemberHasChatComponentState {
   /* 
    * construct MemberHasChatComponentLoaded
    */
-  const MemberHasChatComponentLoaded({required this.value});
+  const MemberHasChatComponentLoaded({ required this.value });
 
   /* 
    * copy method
    */
-  MemberHasChatComponentLoaded copyWith({MemberHasChatModel? copyThis}) {
-    return MemberHasChatComponentLoaded(value: copyThis ?? value);
+  MemberHasChatComponentLoaded copyWith({ MemberHasChatModel? copyThis }) {
+    return MemberHasChatComponentLoaded(value: copyThis ?? this.value);
   }
 
   @override
@@ -71,3 +70,4 @@ class MemberHasChatComponentLoaded extends MemberHasChatComponentState {
   @override
   String toString() => 'MemberHasChatComponentLoaded { value: $value }';
 }
+

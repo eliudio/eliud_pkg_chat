@@ -70,5 +70,5 @@
   "listFields": {
     "title": "value.description != null ? Center(child: text(app, context, value.description!)) : Center(child: text(app, context, value.documentID))"
   },
-  "depends": ["eliud_core" ]
+  "depends": ["eliud_core_model"]
 }

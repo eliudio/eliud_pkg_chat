@@ -13,56 +13,41 @@
 
 */
 
-import '../model/internal_component.dart';
-import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/tools/component/component_spec.dart';
-import 'abstract_repository_singleton.dart';
 
-import '../extensions/chat_dashboard_component.dart';
-import '../editors/chat_dashboard_component_editor.dart';
+import '../model/internal_component.dart';
+import 'package:eliud_core_model/tools/component/component_spec.dart';
+import 'abstract_repository_singleton.dart';
+import 'package:eliud_core_model/tools/component/component_constructor.dart';
+import 'package:eliud_core_model/apis/apis.dart';
+
 import 'chat_dashboard_component_selector.dart';
+import 'package:eliud_pkg_chat/model/internal_component.dart';
+
+
+
 
 /* 
  * Component registry contains a list of components
  */
 class ComponentRegistry {
+
   /* 
    * Initialise the component registry
    */
-  void init() {
-    Registry.registry()!.addInternalComponents('eliud_pkg_chat', [
-      "chats",
-      "chatDashboards",
-      "chatMemberInfos",
-      "memberHasChats",
-      "rooms",
-    ]);
+  init(ComponentConstructor chatDashboardComponentConstructorDefault, ComponentEditorConstructor chatDashboardComponentEditorConstructor, ) {
+    Apis.apis().getRegistryApi().addInternalComponents('eliud_pkg_chat', ["chats", "chatDashboards", "chatMemberInfos", "memberHasChats", "rooms", ]);
 
-    Registry.registry()!.register(
-        componentName: "eliud_pkg_chat_internalWidgets",
-        componentConstructor: ListComponentFactory());
-    Registry.registry()!.addDropDownSupporter(
-        "chatDashboards", DropdownButtonComponentFactory());
-    Registry.registry()!.register(
-        componentName: "chatDashboards",
-        componentConstructor: ChatDashboardComponentConstructorDefault());
-    Registry.registry()!.addComponentSpec('eliud_pkg_chat', 'chat', [
-      ComponentSpec(
-          'chatDashboards',
-          ChatDashboardComponentConstructorDefault(),
-          ChatDashboardComponentSelector(),
-          ChatDashboardComponentEditorConstructor(),
-          ({String? appId}) => chatDashboardRepository(appId: appId)!),
+    Apis.apis().getRegistryApi().register(componentName: "eliud_pkg_chat_internalWidgets", componentConstructor: ListComponentFactory());
+    Apis.apis().getRegistryApi().addDropDownSupporter("chatDashboards", DropdownButtonComponentFactory());
+    Apis.apis().getRegistryApi().register(componentName: "chatDashboards", componentConstructor: chatDashboardComponentConstructorDefault);
+    Apis.apis().getRegistryApi().addComponentSpec('eliud_pkg_chat', 'chat', [
+      ComponentSpec('chatDashboards', chatDashboardComponentConstructorDefault, ChatDashboardComponentSelector(), chatDashboardComponentEditorConstructor, ({String? appId}) => chatDashboardRepository(appId: appId)! ), 
     ]);
-    Registry.registry()!.registerRetrieveRepository(
-        'eliud_pkg_chat',
-        'chatDashboards',
-        ({String? appId}) => chatDashboardRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository(
-        'eliud_pkg_chat',
-        'memberHasChats',
-        ({String? appId}) => memberHasChatRepository(appId: appId)!);
-    Registry.registry()!.registerRetrieveRepository('eliud_pkg_chat', 'rooms',
-        ({String? appId}) => roomRepository(appId: appId)!);
+      Apis.apis().getRegistryApi().registerRetrieveRepository('eliud_pkg_chat', 'chatDashboards', ({String? appId}) => chatDashboardRepository(appId: appId)!);
+      Apis.apis().getRegistryApi().registerRetrieveRepository('eliud_pkg_chat', 'memberHasChats', ({String? appId}) => memberHasChatRepository(appId: appId)!);
+      Apis.apis().getRegistryApi().registerRetrieveRepository('eliud_pkg_chat', 'rooms', ({String? appId}) => roomRepository(appId: appId)!);
   }
+
 }
+
+

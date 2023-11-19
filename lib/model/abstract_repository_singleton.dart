@@ -15,23 +15,18 @@
 
 import '../model/chat_repository.dart';
 import '../model/chat_dashboard_repository.dart';
+import '../model/chat_medium_repository.dart';
 import '../model/chat_member_info_repository.dart';
 import '../model/member_has_chat_repository.dart';
 import '../model/room_repository.dart';
-import 'package:eliud_core/package/package.dart';
+import 'package:eliud_core_model/tools/common_tools.dart';
+import 'package:eliud_core_model/tools/member_collection_info.dart';
 
-ChatRepository? chatRepository({String? appId, String? roomId}) =>
-    AbstractRepositorySingleton.singleton.chatRepository(appId, roomId);
-ChatDashboardRepository? chatDashboardRepository({String? appId}) =>
-    AbstractRepositorySingleton.singleton.chatDashboardRepository(appId);
-ChatMemberInfoRepository? chatMemberInfoRepository(
-        {String? appId, String? roomId}) =>
-    AbstractRepositorySingleton.singleton
-        .chatMemberInfoRepository(appId, roomId);
-MemberHasChatRepository? memberHasChatRepository({String? appId}) =>
-    AbstractRepositorySingleton.singleton.memberHasChatRepository(appId);
-RoomRepository? roomRepository({String? appId}) =>
-    AbstractRepositorySingleton.singleton.roomRepository(appId);
+ChatRepository? chatRepository({ String? appId,  String? roomId}) => AbstractRepositorySingleton.singleton.chatRepository(appId, roomId);
+ChatDashboardRepository? chatDashboardRepository({ String? appId }) => AbstractRepositorySingleton.singleton.chatDashboardRepository(appId);
+ChatMemberInfoRepository? chatMemberInfoRepository({ String? appId,  String? roomId}) => AbstractRepositorySingleton.singleton.chatMemberInfoRepository(appId, roomId);
+MemberHasChatRepository? memberHasChatRepository({ String? appId }) => AbstractRepositorySingleton.singleton.memberHasChatRepository(appId);
+RoomRepository? roomRepository({ String? appId }) => AbstractRepositorySingleton.singleton.roomRepository(appId);
 
 abstract class AbstractRepositorySingleton {
   static List<MemberCollectionInfo> collections = [
@@ -44,8 +39,7 @@ abstract class AbstractRepositorySingleton {
 
   ChatRepository? chatRepository(String? appId, String? roomId);
   ChatDashboardRepository? chatDashboardRepository(String? appId);
-  ChatMemberInfoRepository? chatMemberInfoRepository(
-      String? appId, String? roomId);
+  ChatMemberInfoRepository? chatMemberInfoRepository(String? appId, String? roomId);
   MemberHasChatRepository? memberHasChatRepository(String? appId);
   RoomRepository? roomRepository(String? appId);
 

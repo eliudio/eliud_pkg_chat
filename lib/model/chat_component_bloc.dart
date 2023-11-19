@@ -16,9 +16,11 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 
+import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/model/chat_component_event.dart';
 import 'package:eliud_pkg_chat/model/chat_component_state.dart';
 import 'package:eliud_pkg_chat/model/chat_repository.dart';
+import 'package:flutter/services.dart';
 
 class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
   final ChatRepository? chatRepository;
@@ -36,12 +38,11 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
   /*
    * Construct ChatComponentBloc
    */
-  ChatComponentBloc({this.chatRepository})
-      : super(ChatComponentUninitialized()) {
-    on<FetchChatComponent>((event, emit) {
+  ChatComponentBloc({ this.chatRepository }): super(ChatComponentUninitialized()) {
+    on <FetchChatComponent> ((event, emit) {
       _mapLoadChatComponentUpdateToState(event.id!);
     });
-    on<ChatComponentUpdated>((event, emit) {
+    on <ChatComponentUpdated> ((event, emit) {
       emit(ChatComponentLoaded(value: event.value));
     });
   }
@@ -54,4 +55,6 @@ class ChatComponentBloc extends Bloc<ChatComponentEvent, ChatComponentState> {
     _chatSubscription?.cancel();
     return super.close();
   }
+
 }
+

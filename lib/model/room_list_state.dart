@@ -33,20 +33,21 @@ class RoomListLoaded extends RoomListState {
   const RoomListLoaded({this.mightHaveMore, this.values = const []});
 
   @override
-  List<Object?> get props => [values, mightHaveMore];
+  List<Object?> get props => [ values, mightHaveMore ];
 
   @override
   String toString() => 'RoomListLoaded { values: $values }';
 
   @override
-  bool operator ==(Object other) =>
-      other is RoomListLoaded &&
-      runtimeType == other.runtimeType &&
-      ListEquality().equals(values, other.values) &&
-      mightHaveMore == other.mightHaveMore;
+  bool operator ==(Object other) => 
+          other is RoomListLoaded &&
+              runtimeType == other.runtimeType &&
+              ListEquality().equals(values, other.values) &&
+              mightHaveMore == other.mightHaveMore;
 
   @override
   int get hashCode => values.hashCode ^ mightHaveMore.hashCode;
 }
 
 class RoomNotLoaded extends RoomListState {}
+

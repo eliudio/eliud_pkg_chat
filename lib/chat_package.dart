@@ -1,12 +1,15 @@
 import 'package:eliud_core/core/blocs/access/access_bloc.dart';
 import 'package:eliud_core/core/blocs/access/access_event.dart';
-import 'package:eliud_core/core/wizards/registry/registry.dart';
 import 'package:eliud_core/core_package.dart';
 import 'package:eliud_core/eliud.dart';
-import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/model/member_model.dart';
+import 'package:eliud_core_model/apis/apis.dart';
+import 'package:eliud_core_model/model/access_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:eliud_core/package/package.dart';
-import 'package:eliud_core/model/access_model.dart';
+import 'package:eliud_core_model/model/member_model.dart';
+import 'package:eliud_core_model/tools/member_collection_info.dart';
+import 'package:eliud_pkg_chat/editors/chat_dashboard_component_editor.dart';
+import 'package:eliud_pkg_chat/extensions/chat_dashboard_component.dart';
 import 'package:eliud_pkg_chat/wizards/chat_page_wizard.dart';
 import 'package:eliud_pkg_follow/follow_package.dart';
 import 'package:eliud_pkg_medium/medium_package.dart';
@@ -98,10 +101,10 @@ abstract class ChatPackage extends Package {
 
   @override
   void init() {
-    ComponentRegistry().init();
+    ComponentRegistry().init(ChatDashboardComponentConstructorDefault(), ChatDashboardComponentEditorConstructor() );
 
     // wizards
-    NewAppWizardRegistry.registry().register(ChatPageWizard());
+    Apis.apis().getWizardApi().register(ChatPageWizard());
 
     AbstractRepositorySingleton.singleton = RepositorySingleton();
   }

@@ -46,5 +46,5 @@
   "listFields": {
     "title": "Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID))"
   },
-  "depends": ["eliud_core"]
+  "depends": ["eliud_core_model"]
 }

@@ -1,13 +1,14 @@
 import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/model/member_medium_model.dart';
-import 'package:eliud_core/style/frontend/has_button.dart';
-import 'package:eliud_core/style/frontend/has_dialog.dart';
-import 'package:eliud_core/style/frontend/has_divider.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/style/frontend/has_text_bubble.dart';
-import 'package:eliud_core/style/frontend/has_text_form_field.dart';
-import 'package:eliud_core/tools/random.dart';
+import 'package:eliud_core_model/apis/apis.dart';
+import 'package:eliud_core_model/model/app_model.dart';
+import 'package:eliud_core_model/model/member_medium_model.dart';
+import 'package:eliud_core_model/style/frontend/has_button.dart';
+import 'package:eliud_core_model/style/frontend/has_dialog.dart';
+import 'package:eliud_core_model/style/frontend/has_divider.dart';
+import 'package:eliud_core_model/style/frontend/has_text.dart';
+import 'package:eliud_core_model/style/frontend/has_text_bubble.dart';
+import 'package:eliud_core_model/style/frontend/has_text_form_field.dart';
+import 'package:eliud_core_model/tools/etc/random.dart';
 import 'package:tuple/tuple.dart';
 import '../../model/chat_dashboard_model.dart';
 import 'all_chats_widget.dart';
@@ -18,7 +19,7 @@ import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
-import 'package:eliud_core/tools/firestore/firestore_tools.dart';
+import 'package:eliud_core_model/tools/firestore/firestore_tools.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:flutter/material.dart';
@@ -140,11 +141,11 @@ class _ChatWidgetState extends State<ChatWidget> {
               var medium = itemMedia[index];
               if (medium.mediumType == MediumType.photo) {
                 var photos = itemMedia;
-                Registry.registry()!
+                Apis.apis()
                     .getMediumApi()
                     .showPhotos(context, widget.app, photos, index);
               } else {
-                Registry.registry()!
+                Apis.apis()
                     .getMediumApi()
                     .showVideo(context, widget.app, medium);
               }
@@ -205,11 +206,11 @@ class _ChatWidgetState extends State<ChatWidget> {
         var medium = media[index];
         if (medium.mediumType == MediumType.photo) {
           var photos = media;
-          Registry.registry()!
+          Apis.apis()
               .getMediumApi()
               .showPhotos(context, widget.app, photos, index);
         } else {
-          Registry.registry()!
+          Apis.apis()
               .getMediumApi()
               .showVideo(context, widget.app, medium);
         }

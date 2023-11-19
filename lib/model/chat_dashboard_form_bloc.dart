@@ -16,46 +16,59 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core_model/tools/firestore/firestore_tools.dart';
+import 'package:flutter/cupertino.dart';
 
-import 'package:eliud_core/tools/enums.dart';
+import 'package:eliud_core_model/tools/etc/enums.dart';
+import 'package:eliud_core_model/tools/common_tools.dart';
 
+import 'package:eliud_core_model/model/rgb_model.dart';
+
+import 'package:eliud_core_model/tools/etc/string_validator.dart';
+
+import 'package:eliud_core_model/model/repository_export.dart';
+import 'package:eliud_core_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
 import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core_model/model/model_export.dart';
+import '../tools/bespoke_models.dart';
 import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core_model/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
+import 'package:eliud_pkg_chat/model/entity_export.dart';
 
 import 'package:eliud_pkg_chat/model/chat_dashboard_form_event.dart';
 import 'package:eliud_pkg_chat/model/chat_dashboard_form_state.dart';
+import 'package:eliud_pkg_chat/model/chat_dashboard_repository.dart';
 
-class ChatDashboardFormBloc
-    extends Bloc<ChatDashboardFormEvent, ChatDashboardFormState> {
+class ChatDashboardFormBloc extends Bloc<ChatDashboardFormEvent, ChatDashboardFormState> {
   final FormAction? formAction;
   final String? appId;
 
-  ChatDashboardFormBloc(this.appId, {this.formAction})
-      : super(ChatDashboardFormUninitialized()) {
-    on<InitialiseNewChatDashboardFormEvent>((event, emit) {
-      ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(
-          value: ChatDashboardModel(
-        documentID: "",
-        appId: "",
-        description: "",
-      ));
-      emit(loaded);
-    });
+  ChatDashboardFormBloc(this.appId, { this.formAction }): super(ChatDashboardFormUninitialized()) {
+      on <InitialiseNewChatDashboardFormEvent> ((event, emit) {
+        ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: ChatDashboardModel(
+                                               documentID: "",
+                                 appId: "",
+                                 description: "",
 
-    on<InitialiseChatDashboardFormEvent>((event, emit) async {
-      // Need to re-retrieve the document from the repository so that I get all associated types
-      ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(
-          value: await chatDashboardRepository(appId: appId)!
-              .get(event.value!.documentID));
-      emit(loaded);
-    });
-    on<InitialiseChatDashboardFormNoLoadEvent>((event, emit) async {
-      ChatDashboardFormLoaded loaded =
-          ChatDashboardFormLoaded(value: event.value);
-      emit(loaded);
-    });
-    ChatDashboardModel? newValue;
-    on<ChangedChatDashboardDocumentID>((event, emit) async {
+        ));
+        emit(loaded);
+      });
+
+
+      on <InitialiseChatDashboardFormEvent> ((event, emit) async {
+        // Need to re-retrieve the document from the repository so that I get all associated types
+        ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: await chatDashboardRepository(appId: appId)!.get(event.value!.documentID));
+        emit(loaded);
+      });
+      on <InitialiseChatDashboardFormNoLoadEvent> ((event, emit) async {
+        ChatDashboardFormLoaded loaded = ChatDashboardFormLoaded(value: event.value);
+        emit(loaded);
+      });
+      ChatDashboardModel? newValue = null;
+      on <ChangedChatDashboardDocumentID> ((event, emit) async {
       if (state is ChatDashboardFormInitialized) {
         final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(documentID: event.value);
@@ -64,52 +77,50 @@ class ChatDashboardFormBloc
         } else {
           emit(SubmittableChatDashboardForm(value: newValue));
         }
+
       }
-    });
-    on<ChangedChatDashboardAppId>((event, emit) async {
+      });
+      on <ChangedChatDashboardAppId> ((event, emit) async {
       if (state is ChatDashboardFormInitialized) {
         final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(appId: event.value);
         emit(SubmittableChatDashboardForm(value: newValue));
+
       }
-    });
-    on<ChangedChatDashboardDescription>((event, emit) async {
+      });
+      on <ChangedChatDashboardDescription> ((event, emit) async {
       if (state is ChatDashboardFormInitialized) {
         final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(description: event.value);
         emit(SubmittableChatDashboardForm(value: newValue));
+
       }
-    });
-    on<ChangedChatDashboardConditions>((event, emit) async {
+      });
+      on <ChangedChatDashboardConditions> ((event, emit) async {
       if (state is ChatDashboardFormInitialized) {
         final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(conditions: event.value);
         emit(SubmittableChatDashboardForm(value: newValue));
+
       }
-    });
-    on<ChangedChatDashboardMembersType>((event, emit) async {
+      });
+      on <ChangedChatDashboardMembersType> ((event, emit) async {
       if (state is ChatDashboardFormInitialized) {
         final currentState = state as ChatDashboardFormInitialized;
         newValue = currentState.value!.copyWith(membersType: event.value);
         emit(SubmittableChatDashboardForm(value: newValue));
+
       }
-    });
+      });
   }
 
-  DocumentIDChatDashboardFormError error(
-          String message, ChatDashboardModel newValue) =>
-      DocumentIDChatDashboardFormError(message: message, value: newValue);
 
-  Future<ChatDashboardFormState> _isDocumentIDValid(
-      String? value, ChatDashboardModel newValue) async {
-    if (value == null) {
-      return Future.value(error("Provide value for documentID", newValue));
-    }
-    if (value.isEmpty) {
-      return Future.value(error("Provide value for documentID", newValue));
-    }
-    Future<ChatDashboardModel?> findDocument =
-        chatDashboardRepository(appId: appId)!.get(value);
+  DocumentIDChatDashboardFormError error(String message, ChatDashboardModel newValue) => DocumentIDChatDashboardFormError(message: message, value: newValue);
+
+  Future<ChatDashboardFormState> _isDocumentIDValid(String? value, ChatDashboardModel newValue) async {
+    if (value == null) {return Future.value(error("Provide value for documentID", newValue));}
+    if (value.length == 0) {return Future.value(error("Provide value for documentID", newValue));}
+    Future<ChatDashboardModel?> findDocument = chatDashboardRepository(appId: appId)!.get(value);
     return await findDocument.then((documentFound) {
       if (documentFound == null) {
         return SubmittableChatDashboardForm(value: newValue);
@@ -118,4 +129,7 @@ class ChatDashboardFormBloc
       }
     });
   }
+
+
 }
+

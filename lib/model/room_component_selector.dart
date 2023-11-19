@@ -14,19 +14,22 @@
 */
 
 import 'dart:math';
-import 'package:eliud_core/model/app_model.dart';
-import 'package:eliud_core/style/frontend/has_button.dart';
-import 'package:eliud_core/style/frontend/has_divider.dart';
-import 'package:eliud_core/style/frontend/has_list_tile.dart';
-import 'package:eliud_core/style/frontend/has_tabs.dart';
-import 'package:eliud_core/style/frontend/has_text.dart';
-import 'package:eliud_core/tools/component/component_spec.dart';
+import 'package:eliud_core_model/model/app_model.dart';
+import 'package:eliud_core_model/style/frontend/has_button.dart';
+import 'package:eliud_core_model/style/frontend/has_divider.dart';
+import 'package:eliud_core_model/style/frontend/has_list_tile.dart';
+import 'package:eliud_core_model/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core_model/style/frontend/has_tabs.dart';
+import 'package:eliud_core_model/style/frontend/has_text.dart';
+import 'package:eliud_core_model/tools/component/component_spec.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_core/style/style_registry.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/style/style_registry.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 import 'abstract_repository_singleton.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
 import 'room_list_bloc.dart';
 import 'room_list_event.dart';
 import 'room_list_state.dart';
@@ -36,20 +39,21 @@ import 'room_model.dart';
  * RoomComponentSelector is a component selector for Room, allowing to select a Room component
  */
 class RoomComponentSelector extends ComponentSelector {
+
   /* 
    * createSelectWidget creates the widget
    */
   @override
-  Widget createSelectWidget(BuildContext context, AppModel app,
-      int privilegeLevel, double height, SelectComponent selected, editor) {
+  Widget createSelectWidget(BuildContext context, AppModel app, int privilegeLevel, double height,
+      SelectComponent selected, editor) {
     var appId = app.documentID;
     return BlocProvider<RoomListBloc>(
-      create: (context) => RoomListBloc(
-        eliudQuery: getComponentSelectorQuery(0, app.documentID),
-        roomRepository: roomRepository(appId: appId)!,
-      )..add(LoadRoomList()),
-      child: _SelectRoomWidget(
-          app: app,
+          create: (context) => RoomListBloc(
+          eliudQuery: getComponentSelectorQuery(0, app.documentID),
+          roomRepository:
+              roomRepository(appId: appId)!,
+          )..add(LoadRoomList()),
+      child: _SelectRoomWidget(app: app,
           height: height,
           containerPrivilege: privilegeLevel,
           selected: selected,
@@ -69,11 +73,13 @@ class _SelectRoomWidget extends StatefulWidget {
   final ComponentEditorConstructor editorConstructor;
 
   const _SelectRoomWidget(
-      {required this.app,
+      {Key? key,
+      required this.app,
       required this.containerPrivilege,
       required this.height,
       required this.selected,
-      required this.editorConstructor});
+      required this.editorConstructor})
+      : super(key: key);
 
   @override
   State<_SelectRoomWidget> createState() {
@@ -81,8 +87,7 @@ class _SelectRoomWidget extends StatefulWidget {
   }
 }
 
-class _SelectRoomWidgetState extends State<_SelectRoomWidget>
-    with TickerProviderStateMixin {
+class _SelectRoomWidgetState extends State<_SelectRoomWidget> with TickerProviderStateMixin {
   TabController? _privilegeTabController;
   final List<String> _privilegeItems = ['No', 'L1', 'L2', 'Owner'];
   final int _initialPrivilege = 0;
@@ -90,9 +95,9 @@ class _SelectRoomWidgetState extends State<_SelectRoomWidget>
 
   @override
   void initState() {
-    var privilegeASize = _privilegeItems.length;
+    var _privilegeASize = _privilegeItems.length;
     _privilegeTabController =
-        TabController(vsync: this, length: privilegeASize);
+        TabController(vsync: this, length: _privilegeASize);
     _privilegeTabController!.addListener(_handlePrivilegeTabSelection);
     _privilegeTabController!.index = _initialPrivilege;
 
@@ -110,15 +115,14 @@ class _SelectRoomWidgetState extends State<_SelectRoomWidget>
   void _handlePrivilegeTabSelection() {
     if ((_privilegeTabController != null) &&
         (_privilegeTabController!.indexIsChanging)) {
-      _currentPrivilege = _privilegeTabController!.index;
-      BlocProvider.of<RoomListBloc>(context).add(RoomChangeQuery(
-          newQuery: getComponentSelectorQuery(
-              _currentPrivilege, widget.app.documentID)));
+        _currentPrivilege = _privilegeTabController!.index;
+        BlocProvider.of<RoomListBloc>(context).add(
+            RoomChangeQuery(newQuery: getComponentSelectorQuery(_currentPrivilege, widget.app.documentID)));
     }
   }
 
   Widget theList(BuildContext context, List<RoomModel?> values) {
-    var app = widget.app;
+    var app = widget.app; 
     return ListView.builder(
         shrinkWrap: true,
         physics: ScrollPhysics(),
@@ -146,24 +150,11 @@ class _SelectRoomWidgetState extends State<_SelectRoomWidget>
                     if (selectedValue == 1) {
                       widget.selected(value.documentID);
                     } else if (selectedValue == 2) {
-                      widget.editorConstructor.updateComponent(
-                          widget.app, context, value, (_, __) {});
+                      widget.editorConstructor.updateComponent(widget.app, context, value, (_, __) {});
                     }
                   }),
-              title: Center(
-                  child: StyleRegistry.registry()
-                      .styleWithApp(app)
-                      .frontEndStyle()
-                      .textStyle()
-                      .text(app, context, value.documentID)),
-              subtitle: value.description != null
-                  ? Center(
-                      child: StyleRegistry.registry()
-                          .styleWithApp(app)
-                          .frontEndStyle()
-                          .textStyle()
-                          .text(app, context, value.description!))
-                  : Container(),
+              title: Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.documentID)),
+              subtitle: value.description != null ? Center(child: StyleRegistry.registry().styleWithApp(app).frontEndStyle().textStyle().text(app, context, value.description!)) : Container(),
             );
           } else {
             return Container();
@@ -173,18 +164,13 @@ class _SelectRoomWidgetState extends State<_SelectRoomWidget>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RoomListBloc, RoomListState>(builder: (context, state) {
+    return BlocBuilder<RoomListBloc, RoomListState>(
+        builder: (context, state) {
       var children = <Widget>[];
       var newPrivilegeItems = <Widget>[];
       int i = 0;
       for (var privilegeItem in _privilegeItems) {
-        newPrivilegeItems.add(Wrap(children: [
-          (i <= widget.containerPrivilege)
-              ? Icon(Icons.check)
-              : Icon(Icons.close),
-          Container(width: 2),
-          text(widget.app, context, privilegeItem)
-        ]));
+        newPrivilegeItems.add(Wrap(children: [(i <= widget.containerPrivilege) ? Icon(Icons.check) : Icon(Icons.close), Container(width: 2), text(widget.app, context, privilegeItem)]));
         i++;
       }
       children.add(tabBar2(widget.app, context,
@@ -198,18 +184,16 @@ class _SelectRoomWidgetState extends State<_SelectRoomWidget>
             )));
       } else {
         children.add(Container(
-          height: max(30, widget.height - 101),
-        ));
+            height: max(30, widget.height - 101),
+            ));
       }
       children.add(Column(children: [
         divider(widget.app, context),
         Center(
-            child: iconButton(
-          widget.app,
+            child: iconButton(widget.app, 
           context,
           onPressed: () {
-            widget.editorConstructor
-                .createNewComponent(widget.app, context, (_, __) {});
+            widget.editorConstructor.createNewComponent(widget.app, context, (_, __) {});
           },
           icon: Icon(Icons.add),
         ))
@@ -219,3 +203,6 @@ class _SelectRoomWidgetState extends State<_SelectRoomWidget>
     });
   }
 }
+
+
+

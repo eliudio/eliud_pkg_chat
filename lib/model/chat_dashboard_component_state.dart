@@ -36,14 +36,13 @@ class ChatDashboardComponentUninitialized extends ChatDashboardComponentState {}
  */
 class ChatDashboardComponentError extends ChatDashboardComponentState {
   final String? message;
-  ChatDashboardComponentError({this.message});
+  ChatDashboardComponentError({ this.message });
 }
 
 /* 
  * ChatDashboardComponentPermissionDenied is to indicate permission denied state of the ChatDashboardComponentBloc 
  */
-class ChatDashboardComponentPermissionDenied
-    extends ChatDashboardComponentState {
+class ChatDashboardComponentPermissionDenied extends ChatDashboardComponentState {
   ChatDashboardComponentPermissionDenied();
 }
 
@@ -56,13 +55,13 @@ class ChatDashboardComponentLoaded extends ChatDashboardComponentState {
   /* 
    * construct ChatDashboardComponentLoaded
    */
-  const ChatDashboardComponentLoaded({required this.value});
+  const ChatDashboardComponentLoaded({ required this.value });
 
   /* 
    * copy method
    */
-  ChatDashboardComponentLoaded copyWith({ChatDashboardModel? copyThis}) {
-    return ChatDashboardComponentLoaded(value: copyThis ?? value);
+  ChatDashboardComponentLoaded copyWith({ ChatDashboardModel? copyThis }) {
+    return ChatDashboardComponentLoaded(value: copyThis ?? this.value);
   }
 
   @override
@@ -71,3 +70,4 @@ class ChatDashboardComponentLoaded extends ChatDashboardComponentState {
   @override
   String toString() => 'ChatDashboardComponentLoaded { value: $value }';
 }
+

@@ -16,6 +16,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_model.dart';
 
+
 /*
  * ChatComponentEvent is the base class for events to be used with constructing a ChatComponentBloc 
  */
@@ -33,7 +34,7 @@ class FetchChatComponent extends ChatComponentEvent {
   /*
    * Construct the FetchChatComponent
    */
-  FetchChatComponent({this.id});
+  FetchChatComponent({ this.id });
 }
 
 /*
@@ -45,5 +46,7 @@ class ChatComponentUpdated extends ChatComponentEvent {
   /*
    * Construct the ChatComponentUpdated
    */
-  ChatComponentUpdated({required this.value});
+  ChatComponentUpdated({ required this.value });
 }
+
+

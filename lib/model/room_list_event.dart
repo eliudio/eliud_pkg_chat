@@ -13,7 +13,7 @@
 
 */
 
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 
@@ -30,10 +30,10 @@ class NewPage extends RoomListEvent {}
 class AddRoomList extends RoomListEvent {
   final RoomModel? value;
 
-  const AddRoomList({this.value});
+  const AddRoomList({ this.value });
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'AddRoomList{ value: $value }';
@@ -42,10 +42,10 @@ class AddRoomList extends RoomListEvent {
 class UpdateRoomList extends RoomListEvent {
   final RoomModel? value;
 
-  const UpdateRoomList({this.value});
+  const UpdateRoomList({ this.value });
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'UpdateRoomList{ value: $value }';
@@ -54,10 +54,10 @@ class UpdateRoomList extends RoomListEvent {
 class DeleteRoomList extends RoomListEvent {
   final RoomModel? value;
 
-  const DeleteRoomList({this.value});
+  const DeleteRoomList({ this.value });
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => [ value ];
 
   @override
   String toString() => 'DeleteRoomList{ value: $value }';
@@ -67,24 +67,24 @@ class RoomListUpdated extends RoomListEvent {
   final List<RoomModel?>? value;
   final bool? mightHaveMore;
 
-  const RoomListUpdated({this.value, this.mightHaveMore});
+  const RoomListUpdated({ this.value, this.mightHaveMore });
 
   @override
-  List<Object?> get props => [value, mightHaveMore];
+  List<Object?> get props => [ value, mightHaveMore ];
 
   @override
-  String toString() =>
-      'RoomListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
+  String toString() => 'RoomListUpdated{ value: $value, mightHaveMore: $mightHaveMore }';
 }
 
 class RoomChangeQuery extends RoomListEvent {
   final EliudQuery? newQuery;
 
-  const RoomChangeQuery({required this.newQuery});
+  const RoomChangeQuery({ required this.newQuery });
 
   @override
-  List<Object?> get props => [newQuery];
+  List<Object?> get props => [ newQuery ];
 
   @override
   String toString() => 'RoomChangeQuery{ value: $newQuery }';
 }
+

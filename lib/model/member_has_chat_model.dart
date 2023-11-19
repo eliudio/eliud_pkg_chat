@@ -13,59 +13,59 @@
 
 */
 
-import 'package:eliud_core/core/base/model_base.dart';
+import 'package:eliud_core_model/tools/common_tools.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eliud_core_model/tools/base/model_base.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:eliud_core_model/model/app_model.dart';
 
+import 'package:eliud_core_model/model/repository_export.dart';
+import 'package:eliud_core_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_model/tools/main_abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat/model/repository_export.dart';
+import 'package:eliud_core_model/model/model_export.dart';
+import '../tools/bespoke_models.dart';
+import 'package:eliud_pkg_chat/model/model_export.dart';
+import 'package:eliud_core_model/model/entity_export.dart';
+import '../tools/bespoke_entities.dart';
 import 'package:eliud_pkg_chat/model/entity_export.dart';
 
+
 import 'package:eliud_pkg_chat/model/member_has_chat_entity.dart';
+
+import 'package:eliud_core_model/tools/etc/random.dart';
+
+
 
 class MemberHasChatModel implements ModelBase, WithAppId {
   static const String packageName = 'eliud_pkg_chat';
   static const String id = 'memberHasChats';
 
-  @override
   String documentID;
   String memberId;
 
   // This is the identifier of the app to which this chat belongs
-  @override
   String appId;
   bool? hasUnread;
 
-  MemberHasChatModel({
-    required this.documentID,
-    required this.memberId,
-    required this.appId,
-    this.hasUnread,
-  });
+  MemberHasChatModel({required this.documentID, required this.memberId, required this.appId, this.hasUnread, })  {
+    assert(documentID != null);
+  }
 
-  @override
-  MemberHasChatModel copyWith({
-    String? documentID,
-    String? memberId,
-    String? appId,
-    bool? hasUnread,
-  }) {
-    return MemberHasChatModel(
-      documentID: documentID ?? this.documentID,
-      memberId: memberId ?? this.memberId,
-      appId: appId ?? this.appId,
-      hasUnread: hasUnread ?? this.hasUnread,
-    );
+  MemberHasChatModel copyWith({String? documentID, String? memberId, String? appId, bool? hasUnread, }) {
+    return MemberHasChatModel(documentID: documentID ?? this.documentID, memberId: memberId ?? this.memberId, appId: appId ?? this.appId, hasUnread: hasUnread ?? this.hasUnread, );
   }
 
   @override
-  int get hashCode =>
-      documentID.hashCode ^
-      memberId.hashCode ^
-      appId.hashCode ^
-      hasUnread.hashCode;
+  int get hashCode => documentID.hashCode ^ memberId.hashCode ^ appId.hashCode ^ hasUnread.hashCode;
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MemberHasChatModel &&
-          runtimeType == other.runtimeType &&
+          identical(this, other) ||
+          other is MemberHasChatModel &&
+          runtimeType == other.runtimeType && 
           documentID == other.documentID &&
           memberId == other.memberId &&
           appId == other.appId &&
@@ -76,42 +76,39 @@ class MemberHasChatModel implements ModelBase, WithAppId {
     return 'MemberHasChatModel{documentID: $documentID, memberId: $memberId, appId: $appId, hasUnread: $hasUnread}';
   }
 
-  @override
   Future<List<ModelReference>> collectReferences({String? appId}) async {
     List<ModelReference> referencesCollector = [];
     return referencesCollector;
   }
 
-  @override
   MemberHasChatEntity toEntity({String? appId}) {
     return MemberHasChatEntity(
-      memberId: memberId,
-      appId: appId,
-      hasUnread: (hasUnread != null) ? hasUnread : null,
+          memberId: memberId, 
+          appId: appId, 
+          hasUnread: (hasUnread != null) ? hasUnread : null, 
     );
   }
 
-  static Future<MemberHasChatModel?> fromEntity(
-      String documentID, MemberHasChatEntity? entity) async {
+  static Future<MemberHasChatModel?> fromEntity(String documentID, MemberHasChatEntity? entity) async {
     if (entity == null) return null;
     return MemberHasChatModel(
-      documentID: documentID,
-      memberId: entity.memberId ?? '',
-      appId: entity.appId ?? '',
-      hasUnread: entity.hasUnread,
+          documentID: documentID, 
+          memberId: entity.memberId ?? '', 
+          appId: entity.appId ?? '', 
+          hasUnread: entity.hasUnread, 
     );
   }
 
-  static Future<MemberHasChatModel?> fromEntityPlus(
-      String documentID, MemberHasChatEntity? entity,
-      {String? appId}) async {
+  static Future<MemberHasChatModel?> fromEntityPlus(String documentID, MemberHasChatEntity? entity, { String? appId}) async {
     if (entity == null) return null;
 
     return MemberHasChatModel(
-      documentID: documentID,
-      memberId: entity.memberId ?? '',
-      appId: entity.appId ?? '',
-      hasUnread: entity.hasUnread,
+          documentID: documentID, 
+          memberId: entity.memberId ?? '', 
+          appId: entity.appId ?? '', 
+          hasUnread: entity.hasUnread, 
     );
   }
+
 }
+

@@ -15,19 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_chat/model/member_has_chat_repository.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_list_event.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_list_state.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 import 'member_has_chat_model.dart';
 
-typedef FilterMemberHasChatModels = List<MemberHasChatModel?> Function(
-    List<MemberHasChatModel?> values);
+typedef List<MemberHasChatModel?> FilterMemberHasChatModels(List<MemberHasChatModel?> values);
 
-class MemberHasChatListBloc
-    extends Bloc<MemberHasChatListEvent, MemberHasChatListState> {
+
+
+class MemberHasChatListBloc extends Bloc<MemberHasChatListEvent, MemberHasChatListState> {
   final FilterMemberHasChatModels? filter;
   final MemberHasChatRepository _memberHasChatRepository;
   StreamSubscription? _memberHasChatsListSubscription;
@@ -39,32 +40,24 @@ class MemberHasChatListBloc
   final bool? detailed;
   final int memberHasChatLimit;
 
-  MemberHasChatListBloc(
-      {this.filter,
-      this.paged,
-      this.orderBy,
-      this.descending,
-      this.detailed,
-      this.eliudQuery,
-      required MemberHasChatRepository memberHasChatRepository,
-      this.memberHasChatLimit = 5})
-      : _memberHasChatRepository = memberHasChatRepository,
+  MemberHasChatListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required MemberHasChatRepository memberHasChatRepository, this.memberHasChatLimit = 5})
+      : assert(memberHasChatRepository != null),
+        _memberHasChatRepository = memberHasChatRepository,
         super(MemberHasChatListLoading()) {
-    on<LoadMemberHasChatList>((event, emit) {
+    on <LoadMemberHasChatList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadMemberHasChatListToState();
       } else {
         _mapLoadMemberHasChatListWithDetailsToState();
       }
     });
-
-    on<NewPage>((event, emit) {
-      pages = pages +
-          1; // it doesn't matter so much if we increase pages beyond the end
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadMemberHasChatListWithDetailsToState();
     });
-
-    on<MemberHasChatChangeQuery>((event, emit) {
+    
+    on <MemberHasChatChangeQuery> ((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadMemberHasChatListToState();
@@ -72,20 +65,20 @@ class MemberHasChatListBloc
         _mapLoadMemberHasChatListWithDetailsToState();
       }
     });
-
-    on<AddMemberHasChatList>((event, emit) async {
+      
+    on <AddMemberHasChatList> ((event, emit) async {
       await _mapAddMemberHasChatListToState(event);
     });
-
-    on<UpdateMemberHasChatList>((event, emit) async {
+    
+    on <UpdateMemberHasChatList> ((event, emit) async {
       await _mapUpdateMemberHasChatListToState(event);
     });
-
-    on<DeleteMemberHasChatList>((event, emit) async {
+    
+    on <DeleteMemberHasChatList> ((event, emit) async {
       await _mapDeleteMemberHasChatListToState(event);
     });
-
-    on<MemberHasChatListUpdated>((event, emit) {
+    
+    on <MemberHasChatListUpdated> ((event, emit) {
       emit(_mapMemberHasChatListUpdatedToState(event));
     });
   }
@@ -99,54 +92,44 @@ class MemberHasChatListBloc
   }
 
   Future<void> _mapLoadMemberHasChatListToState() async {
-    int amountNow = (state is MemberHasChatListLoaded)
-        ? (state as MemberHasChatListLoaded).values!.length
-        : 0;
+    int amountNow =  (state is MemberHasChatListLoaded) ? (state as MemberHasChatListLoaded).values!.length : 0;
     _memberHasChatsListSubscription?.cancel();
     _memberHasChatsListSubscription = _memberHasChatRepository.listen(
-        (list) => add(MemberHasChatListUpdated(
-            value: _filter(list), mightHaveMore: amountNow != list.length)),
-        orderBy: orderBy,
-        descending: descending,
-        eliudQuery: eliudQuery,
-        limit: ((paged != null) && paged!) ? pages * memberHasChatLimit : null);
+          (list) => add(MemberHasChatListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+      orderBy: orderBy,
+      descending: descending,
+      eliudQuery: eliudQuery,
+      limit: ((paged != null) && paged!) ? pages * memberHasChatLimit : null
+    );
   }
 
   Future<void> _mapLoadMemberHasChatListWithDetailsToState() async {
-    int amountNow = (state is MemberHasChatListLoaded)
-        ? (state as MemberHasChatListLoaded).values!.length
-        : 0;
+    int amountNow =  (state is MemberHasChatListLoaded) ? (state as MemberHasChatListLoaded).values!.length : 0;
     _memberHasChatsListSubscription?.cancel();
-    _memberHasChatsListSubscription =
-        _memberHasChatRepository.listenWithDetails(
-            (list) => add(MemberHasChatListUpdated(
-                value: _filter(list), mightHaveMore: amountNow != list.length)),
-            orderBy: orderBy,
-            descending: descending,
-            eliudQuery: eliudQuery,
-            limit: ((paged != null) && paged!)
-                ? pages * memberHasChatLimit
-                : null);
+    _memberHasChatsListSubscription = _memberHasChatRepository.listenWithDetails(
+            (list) => add(MemberHasChatListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * memberHasChatLimit : null
+    );
   }
 
-  Future<void> _mapAddMemberHasChatListToState(
-      AddMemberHasChatList event) async {
+  Future<void> _mapAddMemberHasChatListToState(AddMemberHasChatList event) async {
     var value = event.value;
     if (value != null) {
       await _memberHasChatRepository.add(value);
     }
   }
 
-  Future<void> _mapUpdateMemberHasChatListToState(
-      UpdateMemberHasChatList event) async {
+  Future<void> _mapUpdateMemberHasChatListToState(UpdateMemberHasChatList event) async {
     var value = event.value;
     if (value != null) {
       await _memberHasChatRepository.update(value);
     }
   }
 
-  Future<void> _mapDeleteMemberHasChatListToState(
-      DeleteMemberHasChatList event) async {
+  Future<void> _mapDeleteMemberHasChatListToState(DeleteMemberHasChatList event) async {
     var value = event.value;
     if (value != null) {
       await _memberHasChatRepository.delete(value);
@@ -154,9 +137,7 @@ class MemberHasChatListBloc
   }
 
   MemberHasChatListLoaded _mapMemberHasChatListUpdatedToState(
-          MemberHasChatListUpdated event) =>
-      MemberHasChatListLoaded(
-          values: event.value, mightHaveMore: event.mightHaveMore);
+      MemberHasChatListUpdated event) => MemberHasChatListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -164,3 +145,5 @@ class MemberHasChatListBloc
     return super.close();
   }
 }
+
+

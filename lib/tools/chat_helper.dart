@@ -1,4 +1,4 @@
-import 'package:eliud_core/model/app_model.dart';
+import 'package:eliud_core_model/model/app_model.dart';
 import 'package:flutter/cupertino.dart';
 import '../extensions/widgets/chat_bloc/chat_bloc.dart';
 import '../extensions/widgets/chat_bloc/chat_event.dart';

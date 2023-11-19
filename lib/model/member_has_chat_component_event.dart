@@ -16,6 +16,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/member_has_chat_model.dart';
 
+
 /*
  * MemberHasChatComponentEvent is the base class for events to be used with constructing a MemberHasChatComponentBloc 
  */
@@ -33,7 +34,7 @@ class FetchMemberHasChatComponent extends MemberHasChatComponentEvent {
   /*
    * Construct the FetchMemberHasChatComponent
    */
-  FetchMemberHasChatComponent({this.id});
+  FetchMemberHasChatComponent({ this.id });
 }
 
 /*
@@ -45,5 +46,7 @@ class MemberHasChatComponentUpdated extends MemberHasChatComponentEvent {
   /*
    * Construct the MemberHasChatComponentUpdated
    */
-  MemberHasChatComponentUpdated({required this.value});
+  MemberHasChatComponentUpdated({ required this.value });
 }
+
+

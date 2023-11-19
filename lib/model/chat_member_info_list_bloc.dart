@@ -15,19 +15,20 @@
 
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
 
 import 'package:eliud_pkg_chat/model/chat_member_info_repository.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_event.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_list_state.dart';
-import 'package:eliud_core/tools/query/query_tools.dart';
+import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 import 'chat_member_info_model.dart';
 
-typedef FilterChatMemberInfoModels = List<ChatMemberInfoModel?> Function(
-    List<ChatMemberInfoModel?> values);
+typedef List<ChatMemberInfoModel?> FilterChatMemberInfoModels(List<ChatMemberInfoModel?> values);
 
-class ChatMemberInfoListBloc
-    extends Bloc<ChatMemberInfoListEvent, ChatMemberInfoListState> {
+
+
+class ChatMemberInfoListBloc extends Bloc<ChatMemberInfoListEvent, ChatMemberInfoListState> {
   final FilterChatMemberInfoModels? filter;
   final ChatMemberInfoRepository _chatMemberInfoRepository;
   StreamSubscription? _chatMemberInfosListSubscription;
@@ -39,32 +40,24 @@ class ChatMemberInfoListBloc
   final bool? detailed;
   final int chatMemberInfoLimit;
 
-  ChatMemberInfoListBloc(
-      {this.filter,
-      this.paged,
-      this.orderBy,
-      this.descending,
-      this.detailed,
-      this.eliudQuery,
-      required ChatMemberInfoRepository chatMemberInfoRepository,
-      this.chatMemberInfoLimit = 5})
-      : _chatMemberInfoRepository = chatMemberInfoRepository,
+  ChatMemberInfoListBloc({this.filter, this.paged, this.orderBy, this.descending, this.detailed, this.eliudQuery, required ChatMemberInfoRepository chatMemberInfoRepository, this.chatMemberInfoLimit = 5})
+      : assert(chatMemberInfoRepository != null),
+        _chatMemberInfoRepository = chatMemberInfoRepository,
         super(ChatMemberInfoListLoading()) {
-    on<LoadChatMemberInfoList>((event, emit) {
+    on <LoadChatMemberInfoList> ((event, emit) {
       if ((detailed == null) || (!detailed!)) {
         _mapLoadChatMemberInfoListToState();
       } else {
         _mapLoadChatMemberInfoListWithDetailsToState();
       }
     });
-
-    on<NewPage>((event, emit) {
-      pages = pages +
-          1; // it doesn't matter so much if we increase pages beyond the end
+    
+    on <NewPage> ((event, emit) {
+      pages = pages + 1; // it doesn't matter so much if we increase pages beyond the end
       _mapLoadChatMemberInfoListWithDetailsToState();
     });
-
-    on<ChatMemberInfoChangeQuery>((event, emit) {
+    
+    on <ChatMemberInfoChangeQuery> ((event, emit) {
       eliudQuery = event.newQuery;
       if ((detailed == null) || (!detailed!)) {
         _mapLoadChatMemberInfoListToState();
@@ -72,20 +65,20 @@ class ChatMemberInfoListBloc
         _mapLoadChatMemberInfoListWithDetailsToState();
       }
     });
-
-    on<AddChatMemberInfoList>((event, emit) async {
+      
+    on <AddChatMemberInfoList> ((event, emit) async {
       await _mapAddChatMemberInfoListToState(event);
     });
-
-    on<UpdateChatMemberInfoList>((event, emit) async {
+    
+    on <UpdateChatMemberInfoList> ((event, emit) async {
       await _mapUpdateChatMemberInfoListToState(event);
     });
-
-    on<DeleteChatMemberInfoList>((event, emit) async {
+    
+    on <DeleteChatMemberInfoList> ((event, emit) async {
       await _mapDeleteChatMemberInfoListToState(event);
     });
-
-    on<ChatMemberInfoListUpdated>((event, emit) {
+    
+    on <ChatMemberInfoListUpdated> ((event, emit) {
       emit(_mapChatMemberInfoListUpdatedToState(event));
     });
   }
@@ -99,55 +92,44 @@ class ChatMemberInfoListBloc
   }
 
   Future<void> _mapLoadChatMemberInfoListToState() async {
-    int amountNow = (state is ChatMemberInfoListLoaded)
-        ? (state as ChatMemberInfoListLoaded).values!.length
-        : 0;
+    int amountNow =  (state is ChatMemberInfoListLoaded) ? (state as ChatMemberInfoListLoaded).values!.length : 0;
     _chatMemberInfosListSubscription?.cancel();
     _chatMemberInfosListSubscription = _chatMemberInfoRepository.listen(
-        (list) => add(ChatMemberInfoListUpdated(
-            value: _filter(list), mightHaveMore: amountNow != list.length)),
-        orderBy: orderBy,
-        descending: descending,
-        eliudQuery: eliudQuery,
-        limit:
-            ((paged != null) && paged!) ? pages * chatMemberInfoLimit : null);
+          (list) => add(ChatMemberInfoListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+      orderBy: orderBy,
+      descending: descending,
+      eliudQuery: eliudQuery,
+      limit: ((paged != null) && paged!) ? pages * chatMemberInfoLimit : null
+    );
   }
 
   Future<void> _mapLoadChatMemberInfoListWithDetailsToState() async {
-    int amountNow = (state is ChatMemberInfoListLoaded)
-        ? (state as ChatMemberInfoListLoaded).values!.length
-        : 0;
+    int amountNow =  (state is ChatMemberInfoListLoaded) ? (state as ChatMemberInfoListLoaded).values!.length : 0;
     _chatMemberInfosListSubscription?.cancel();
-    _chatMemberInfosListSubscription =
-        _chatMemberInfoRepository.listenWithDetails(
-            (list) => add(ChatMemberInfoListUpdated(
-                value: _filter(list), mightHaveMore: amountNow != list.length)),
-            orderBy: orderBy,
-            descending: descending,
-            eliudQuery: eliudQuery,
-            limit: ((paged != null) && paged!)
-                ? pages * chatMemberInfoLimit
-                : null);
+    _chatMemberInfosListSubscription = _chatMemberInfoRepository.listenWithDetails(
+            (list) => add(ChatMemberInfoListUpdated(value: _filter(list), mightHaveMore: amountNow != list.length)),
+        orderBy: orderBy,
+        descending: descending,
+        eliudQuery: eliudQuery,
+        limit: ((paged != null) && paged!) ? pages * chatMemberInfoLimit : null
+    );
   }
 
-  Future<void> _mapAddChatMemberInfoListToState(
-      AddChatMemberInfoList event) async {
+  Future<void> _mapAddChatMemberInfoListToState(AddChatMemberInfoList event) async {
     var value = event.value;
     if (value != null) {
       await _chatMemberInfoRepository.add(value);
     }
   }
 
-  Future<void> _mapUpdateChatMemberInfoListToState(
-      UpdateChatMemberInfoList event) async {
+  Future<void> _mapUpdateChatMemberInfoListToState(UpdateChatMemberInfoList event) async {
     var value = event.value;
     if (value != null) {
       await _chatMemberInfoRepository.update(value);
     }
   }
 
-  Future<void> _mapDeleteChatMemberInfoListToState(
-      DeleteChatMemberInfoList event) async {
+  Future<void> _mapDeleteChatMemberInfoListToState(DeleteChatMemberInfoList event) async {
     var value = event.value;
     if (value != null) {
       await _chatMemberInfoRepository.delete(value);
@@ -155,9 +137,7 @@ class ChatMemberInfoListBloc
   }
 
   ChatMemberInfoListLoaded _mapChatMemberInfoListUpdatedToState(
-          ChatMemberInfoListUpdated event) =>
-      ChatMemberInfoListLoaded(
-          values: event.value, mightHaveMore: event.mightHaveMore);
+      ChatMemberInfoListUpdated event) => ChatMemberInfoListLoaded(values: event.value, mightHaveMore: event.mightHaveMore);
 
   @override
   Future<void> close() {
@@ -165,3 +145,5 @@ class ChatMemberInfoListBloc
     return super.close();
   }
 }
+
+

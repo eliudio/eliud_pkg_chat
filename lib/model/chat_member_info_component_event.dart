@@ -16,6 +16,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
 
+
 /*
  * ChatMemberInfoComponentEvent is the base class for events to be used with constructing a ChatMemberInfoComponentBloc 
  */
@@ -33,7 +34,7 @@ class FetchChatMemberInfoComponent extends ChatMemberInfoComponentEvent {
   /*
    * Construct the FetchChatMemberInfoComponent
    */
-  FetchChatMemberInfoComponent({this.id});
+  FetchChatMemberInfoComponent({ this.id });
 }
 
 /*
@@ -45,5 +46,7 @@ class ChatMemberInfoComponentUpdated extends ChatMemberInfoComponentEvent {
   /*
    * Construct the ChatMemberInfoComponentUpdated
    */
-  ChatMemberInfoComponentUpdated({required this.value});
+  ChatMemberInfoComponentUpdated({ required this.value });
 }
+
+

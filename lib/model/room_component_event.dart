@@ -16,6 +16,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:eliud_pkg_chat/model/room_model.dart';
 
+
 /*
  * RoomComponentEvent is the base class for events to be used with constructing a RoomComponentBloc 
  */
@@ -33,7 +34,7 @@ class FetchRoomComponent extends RoomComponentEvent {
   /*
    * Construct the FetchRoomComponent
    */
-  FetchRoomComponent({this.id});
+  FetchRoomComponent({ this.id });
 }
 
 /*
@@ -45,5 +46,7 @@ class RoomComponentUpdated extends RoomComponentEvent {
   /*
    * Construct the RoomComponentUpdated
    */
-  RoomComponentUpdated({required this.value});
+  RoomComponentUpdated({ required this.value });
 }
+
+
