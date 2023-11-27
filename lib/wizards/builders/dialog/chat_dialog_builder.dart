@@ -1,17 +1,17 @@
-import 'package:eliud_core/core/wizards/builders/dialog_builder.dart';
-import 'package:eliud_core_model/model/abstract_repository_singleton.dart'
+import 'package:eliud_core_main/apis/action_api/actions/open_dialog.dart';
+import 'package:eliud_core_main/model/body_component_model.dart';
+import 'package:eliud_core_main/model/dialog_model.dart';
+import 'package:eliud_core_main/model/display_conditions_model.dart';
+import 'package:eliud_core_main/wizards/builders/dialog_builder.dart';
+import 'package:eliud_core_main/model/abstract_repository_singleton.dart'
     as corerepo;
-import 'package:eliud_core/core/wizards/tools/document_identifier.dart';
-import 'package:eliud_core_model/apis_impl/action/open_dialog.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/model/body_component_model.dart';
-import 'package:eliud_core_model/model/dialog_model.dart';
-import 'package:eliud_core_model/model/display_conditions_model.dart';
-import 'package:eliud_core_model/model/storage_conditions_model.dart';
+import 'package:eliud_core_main/wizards/tools/document_identifier.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/storage_conditions_model.dart';
 import 'package:eliud_pkg_chat/chat_package.dart';
-import 'package:eliud_pkg_chat/model/chat_dashboard_component.dart';
-import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/chat_dashboard_component.dart';
+import 'package:eliud_pkg_chat_model/model/chat_dashboard_model.dart';
 
 class ChatDialogBuilder extends DialogBuilder {
   ChatDialogBuilder(

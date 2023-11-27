@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:eliud_core_helpers/query/query_tools.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/chat_member_info_model.dart';
-import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
+import 'package:eliud_pkg_chat_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/chat_member_info_model.dart';
+import 'package:eliud_pkg_chat_model/model/chat_model.dart';
 import 'chat_event.dart';
 import 'chat_state.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   StreamSubscription? _chatsListSubscription;

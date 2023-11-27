@@ -1,22 +1,22 @@
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/core/blocs/access/access_event.dart';
+import 'package:eliud_core/access/access_bloc.dart';
+import 'package:eliud_core/access/access_event.dart';
 import 'package:eliud_core/core_package.dart';
 import 'package:eliud_core/eliud.dart';
-import 'package:eliud_core_model/apis/apis.dart';
+import 'package:eliud_core_main/apis/apis.dart';
+import 'package:eliud_core_main/tools/etc/member_collection_info.dart';
 import 'package:eliud_core_model/model/access_model.dart';
-import 'package:eliud_core_model/model/app_model.dart';
+import 'package:eliud_core_main/model/app_model.dart';
 import 'package:eliud_core/package/package.dart';
-import 'package:eliud_core_model/model/member_model.dart';
-import 'package:eliud_core_model/tools/member_collection_info.dart';
+import 'package:eliud_core_main/model/member_model.dart';
 import 'package:eliud_pkg_chat/editors/chat_dashboard_component_editor.dart';
 import 'package:eliud_pkg_chat/extensions/chat_dashboard_component.dart';
 import 'package:eliud_pkg_chat/wizards/chat_page_wizard.dart';
+import 'package:eliud_pkg_chat_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/component_registry.dart';
+import 'package:eliud_pkg_chat_model/model/member_has_chat_model.dart';
+import 'package:eliud_pkg_chat_model/model/repository_singleton.dart';
 import 'package:eliud_pkg_follow/follow_package.dart';
 import 'package:eliud_pkg_medium/medium_package.dart';
-import 'model/abstract_repository_singleton.dart';
-import 'model/component_registry.dart';
-import 'model/member_has_chat_model.dart';
-import 'model/repository_singleton.dart';
 
 import 'package:eliud_pkg_chat/chat_package_stub.dart'
     if (dart.library.io) 'chat_mobile_package.dart'
@@ -101,7 +101,8 @@ abstract class ChatPackage extends Package {
 
   @override
   void init() {
-    ComponentRegistry().init(ChatDashboardComponentConstructorDefault(), ChatDashboardComponentEditorConstructor() );
+    ComponentRegistry().init(ChatDashboardComponentConstructorDefault(),
+        ChatDashboardComponentEditorConstructor());
 
     // wizards
     Apis.apis().getWizardApi().register(ChatPageWizard());

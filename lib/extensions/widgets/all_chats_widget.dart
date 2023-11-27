@@ -1,13 +1,14 @@
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/style/frontend/has_button.dart';
-import 'package:eliud_core_model/style/frontend/has_dialog.dart';
-import 'package:eliud_core_model/style/frontend/has_divider.dart';
-import 'package:eliud_core_model/style/frontend/has_progress_indicator.dart';
-import 'package:eliud_core_model/style/frontend/has_split.dart';
-import 'package:eliud_core_model/style/frontend/has_text.dart';
-import 'package:eliud_core_model/tools/firestore/firestore_tools.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
+import 'package:eliud_core_helpers/firestore/firestore_tools.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_button.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_dialog.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_divider.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_progress_indicator.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_split.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_text.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
+import 'package:eliud_pkg_chat_model/model/chat_dashboard_model.dart';
+import 'package:eliud_pkg_chat_model/model/room_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -18,8 +19,6 @@ import 'all_chats_bloc/all_chats_state.dart';
 import 'chat_widget.dart';
 import 'members_widget.dart';
 import 'dart:math';
-
-import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 
 class AllChatsWidget extends StatefulWidget {
   final String memberId;

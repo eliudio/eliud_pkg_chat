@@ -1,26 +1,25 @@
-import 'package:eliud_core_model/model/abstract_repository_singleton.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/model/background_model.dart';
-import 'package:eliud_core_model/model/decoration_color_model.dart';
-import 'package:eliud_core_model/model/member_public_info_list.dart';
-import 'package:eliud_core_model/model/member_public_info_list_bloc.dart';
-import 'package:eliud_core_model/model/member_public_info_list_event.dart';
-import 'package:eliud_core_model/model/member_public_info_model.dart';
-import 'package:eliud_core_model/model/rgb_model.dart';
-import 'package:eliud_core_model/style/frontend/has_list_tile.dart';
-import 'package:eliud_core_model/style/frontend/has_text.dart';
+import 'package:eliud_core_helpers/query/query_tools.dart';
+import 'package:eliud_core_main/model/abstract_repository_singleton.dart';
+import 'package:eliud_core_main/model/decoration_color_model.dart';
+import 'package:eliud_core_main/model/member_public_info_list.dart';
+import 'package:eliud_core_main/model/member_public_info_list_bloc.dart';
+import 'package:eliud_core_main/model/member_public_info_list_event.dart';
+import 'package:eliud_core_main/model/member_public_info_model.dart';
+import 'package:eliud_core_main/model/rgb_model.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/background_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_list_tile.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_text.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/selected_member.dart';
-import 'package:eliud_pkg_follow/model/following_list.dart';
-import 'package:eliud_pkg_follow/model/following_list_event.dart';
-import 'package:eliud_pkg_follow/model/following_model.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
-import 'package:eliud_pkg_follow/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_follow/model/following_list_bloc.dart';
+import 'package:eliud_pkg_chat_model/model/chat_dashboard_model.dart';
+import 'package:eliud_pkg_follow_model/model/following_list.dart';
+import 'package:eliud_pkg_follow_model/model/following_list_event.dart';
+import 'package:eliud_pkg_follow_model/model/following_model.dart';
+import 'package:eliud_pkg_follow_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_follow_model/model/following_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
-
-import '../../model/chat_dashboard_model.dart';
 
 class MembersWidget extends StatefulWidget {
   final AppModel app;

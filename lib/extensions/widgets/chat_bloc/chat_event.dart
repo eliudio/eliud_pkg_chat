@@ -1,7 +1,7 @@
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_bloc/all_chats_state.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
+import 'package:eliud_pkg_chat_model/model/chat_model.dart';
+import 'package:eliud_pkg_chat_model/model/room_model.dart';
 import 'package:equatable/equatable.dart';
-import 'package:eliud_pkg_chat/model/chat_model.dart';
 
 abstract class ChatEvent extends Equatable {
   const ChatEvent();

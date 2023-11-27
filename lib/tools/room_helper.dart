@@ -1,6 +1,6 @@
-import 'package:eliud_core_model/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
+import 'package:eliud_core_main/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/room_model.dart';
 
 import '../extensions/widgets/all_chats_bloc/all_chats_state.dart';
 

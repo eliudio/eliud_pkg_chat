@@ -1,4 +1,4 @@
-import 'package:eliud_pkg_chat/model/room_model.dart';
+import 'package:eliud_pkg_chat_model/model/room_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

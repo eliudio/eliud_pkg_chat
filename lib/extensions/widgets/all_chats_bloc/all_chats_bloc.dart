@@ -1,16 +1,14 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
+import 'package:eliud_core/access/state/logged_in.dart';
+import 'package:eliud_core_helpers/query/query_tools.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_bloc.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/chat_bloc/chat_event.dart';
+import 'package:eliud_pkg_chat_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/room_model.dart';
+import 'package:eliud_pkg_chat_model/model/room_repository.dart';
 import '../../../tools/room_helper.dart';
 import 'all_chats_event.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
-
-import 'package:eliud_pkg_chat/model/room_repository.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
 
 import 'all_chats_state.dart';
 

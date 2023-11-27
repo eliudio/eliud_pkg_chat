@@ -1,26 +1,25 @@
-import 'package:eliud_core/core/registry.dart';
-import 'package:eliud_core_model/apis/apis.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/model/member_medium_model.dart';
-import 'package:eliud_core_model/style/frontend/has_button.dart';
-import 'package:eliud_core_model/style/frontend/has_dialog.dart';
-import 'package:eliud_core_model/style/frontend/has_divider.dart';
-import 'package:eliud_core_model/style/frontend/has_text.dart';
-import 'package:eliud_core_model/style/frontend/has_text_bubble.dart';
-import 'package:eliud_core_model/style/frontend/has_text_form_field.dart';
-import 'package:eliud_core_model/tools/etc/random.dart';
+import 'package:eliud_core_helpers/firestore/firestore_tools.dart';
+import 'package:eliud_core_main/apis/apis.dart';
+import 'package:eliud_core_main/model/app_model.dart';
+import 'package:eliud_core_main/model/member_medium_model.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_button.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_dialog.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_divider.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_text.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_text_bubble.dart';
+import 'package:eliud_core_main/apis/style/frontend/has_text_form_field.dart';
+import 'package:eliud_core_helpers/etc/random.dart';
+import 'package:eliud_pkg_chat_model/model/chat_dashboard_model.dart';
+import 'package:eliud_pkg_chat_model/model/chat_medium_model.dart';
+import 'package:eliud_pkg_chat_model/model/chat_model.dart';
+import 'package:eliud_pkg_chat_model/model/room_model.dart';
 import 'package:tuple/tuple.dart';
-import '../../model/chat_dashboard_model.dart';
 import 'all_chats_widget.dart';
 import 'chat_bloc/chat_bloc.dart';
 import 'chat_bloc/chat_event.dart';
 import 'chat_bloc/chat_state.dart';
-import 'package:eliud_pkg_chat/model/chat_medium_model.dart';
-import 'package:eliud_pkg_chat/model/chat_model.dart';
 import 'package:eliud_pkg_medium/tools/media_buttons.dart';
 import 'package:eliud_pkg_medium/tools/media_helper.dart';
-import 'package:eliud_core_model/tools/firestore/firestore_tools.dart';
-import 'package:eliud_pkg_chat/model/room_model.dart';
 import 'package:eliud_pkg_chat/tools/room_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -210,9 +209,7 @@ class _ChatWidgetState extends State<ChatWidget> {
               .getMediumApi()
               .showPhotos(context, widget.app, photos, index);
         } else {
-          Apis.apis()
-              .getMediumApi()
-              .showVideo(context, widget.app, medium);
+          Apis.apis().getMediumApi().showVideo(context, widget.app, medium);
         }
       });
     } else {

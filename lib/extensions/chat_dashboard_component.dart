@@ -1,17 +1,17 @@
-import 'package:eliud_core/core/blocs/access/access_bloc.dart';
-import 'package:eliud_core/core/blocs/access/state/access_determined.dart';
-import 'package:eliud_core/core/blocs/access/state/logged_in.dart';
-import 'package:eliud_core_model/model/app_model.dart';
-import 'package:eliud_core_model/tools/component/component_constructor.dart';
-import 'package:eliud_core_model/tools/query/query_tools.dart';
+import 'package:eliud_core/access/access_bloc.dart';
+import 'package:eliud_core/access/state/access_determined.dart';
+import 'package:eliud_core/access/state/logged_in.dart';
+import 'package:eliud_core_helpers/query/query_tools.dart';
+import 'package:eliud_core_main/apis/registryapi/component/component_constructor.dart';
+import 'package:eliud_core_main/model/app_model.dart';
 import 'package:eliud_pkg_chat/extensions/widgets/all_chats_widget.dart';
+import 'package:eliud_pkg_chat_model/model/abstract_repository_singleton.dart';
+import 'package:eliud_pkg_chat_model/model/chat_dashboard_component.dart';
+import 'package:eliud_pkg_chat_model/model/chat_dashboard_model.dart';
 import 'widgets/all_chats_bloc/all_chats_bloc.dart';
 import 'widgets/all_chats_bloc/all_chats_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eliud_pkg_chat/model/abstract_repository_singleton.dart';
-import 'package:eliud_pkg_chat/model/chat_dashboard_component.dart';
-import 'package:eliud_pkg_chat/model/chat_dashboard_model.dart';
 
 import 'widgets/chat_bloc/chat_bloc.dart';
 
