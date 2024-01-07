@@ -6,31 +6,24 @@ homepage: https://eliud.io
 repository: https://github.com/eliudio/eliud_pkg_chat
 version: 1.1.5+5
 environment:
-  sdk: '>=2.17.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: '>=3.0.0'
 dependencies:
-  bloc: ^8.1.2
-  cloud_firestore: ^4.12.2
-  collection: ^1.17.2
-  eliud_core:
+  eliud_core:                                                                                        # ANDROID IOS             WEB
     path: ../eliud_core
-  eliud_core_main:
+  eliud_core_main:                                                                                   # ANDROID IOS             WEB
     path: ../eliud_core_main
-  eliud_core_helpers:
+  eliud_core_helpers:                                                                                # ANDROID IOS             WEB
     path: ../eliud_core_helpers
-  eliud_core_model:
-    path: ../eliud_core_model
-  eliud_pkg_follow:
-    path: ../eliud_pkg_follow
-  eliud_pkg_chat_model:
+  eliud_pkg_chat_model:                                                                              # ANDROID IOS             WEB
     path: ../eliud_pkg_chat_model
-  eliud_pkg_medium:
+  eliud_pkg_follow:                                                                                  # ANDROID IOS             WEB
+    path: ../eliud_pkg_follow
+  eliud_pkg_follow_model:                                                                            # ANDROID IOS             WEB
+    path: ../eliud_pkg_follow_model
+  eliud_pkg_medium:                                                                                  # ANDROID IOS             WEB
     path: ../eliud_pkg_medium
-  equatable: ^2.0.5
-  flutter_bloc: ^8.1.3
-  meta: ^1.9.1
-  transparent_image: ^2.0.1
-  tuple: ^2.0.2
+
   flutter:
     sdk: flutter
 dev_dependencies:
