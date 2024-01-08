@@ -35,9 +35,10 @@ Eliud chat package.
 <!-- dependencies -->
 
 ### Direct dependencies
-- [eliud_pkg_medium](https://pub.dev/packages/eliud_pkg_medium)
-- [eliud_core_main](https://pub.dev/packages/eliud_core_main)
+- [eliud_core_model](https://pub.dev/packages/eliud_core_model)
 - [eliud_core_helpers](https://pub.dev/packages/eliud_core_helpers)
+- [eliud_core_main](https://pub.dev/packages/eliud_core_main)
+- [eliud_pkg_medium](https://pub.dev/packages/eliud_pkg_medium)
 - [eliud_core](https://pub.dev/packages/eliud_core)
 - [eliud_pkg_follow_model](https://pub.dev/packages/eliud_pkg_follow_model)
 - [eliud_pkg_follow](https://pub.dev/packages/eliud_pkg_follow)
@@ -45,7 +46,6 @@ Eliud chat package.
 
 ### Transitive dependencies
 - [eliud_pkg_medium_model](https://pub.dev/packages/eliud_pkg_medium_model)
-- [eliud_core_model](https://pub.dev/packages/eliud_core_model)
 - [eliud_pkg_etc_model](https://pub.dev/packages/eliud_pkg_etc_model)
 - [eliud_pkg_notifications](https://pub.dev/packages/eliud_pkg_notifications)
 - [eliud_pkg_notifications_model](https://pub.dev/packages/eliud_pkg_notifications_model)
